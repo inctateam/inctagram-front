@@ -9,7 +9,10 @@
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "lint": "eslint src --ext .jsx,.js,.tsx,.ts --no-error-on-unmatched-pattern && stylelint src/{,*/}*.{scss,css} --allow-empty-input",
-    "lint:fix": "eslint src --ext .jsx,.js,.tsx,.ts --no-error-on-unmatched-pattern --fix && stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input"
+    "lint:fix": "eslint src --ext .jsx,.js,.tsx,.ts --no-error-on-unmatched-pattern --fix && stylelint --fix src/{,*/}*.{scss,css} --allow-empty-input",
+    "sb": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "next": "14.2.12",
@@ -17,16 +20,27 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "1.9.0",
     "@it-incubator/eslint-config": "^1.0.3",
     "@it-incubator/prettier-config": "^0.1.2",
     "@it-incubator/stylelint-config": "^2.0.0",
+    "@storybook/addon-essentials": "8.3.2",
+    "@storybook/addon-interactions": "8.3.2",
+    "@storybook/addon-links": "8.3.2",
+    "@storybook/addon-onboarding": "8.3.2",
+    "@storybook/blocks": "8.3.2",
+    "@storybook/nextjs": "8.3.2",
+    "@storybook/react": "8.3.2",
+    "@storybook/test": "8.3.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.12",
+    "eslint-plugin-storybook": "^0.8.0",
     "postcss": "^8",
     "prettier": "^3.3.3",
+    "storybook": "8.3.2",
     "stylelint": "^16.9.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
