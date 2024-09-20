@@ -1,0 +1,20 @@
+addReviewers: true
+addAssignees: author
+useReviewGroups: true
+
+reviewGroups:
+  groupA:
+    - blue-script
+    - nooraiym
+    - apelsinom
+    - olesya-sh-dev
+    - VadimSel
+  groupB:
+    - apastan
+
+numberOfReviewers: 2
+useAssigneeGroups: false
+
+skipKeywords:
+  - wip
+  - WIP
