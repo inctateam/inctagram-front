@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-import { palette } from '@/styles/palette'
+import { palette } from './src/styles/palette'
 
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
