@@ -3,7 +3,9 @@ import { Meta, StoryObj } from '@storybook/react'
 import { Tabs } from './tabs'
 
 const meta: Meta<typeof Tabs> = {
+  args: {},
   component: Tabs,
+  tags: ['autodocs'],
   title: 'UI/Tabs',
 }
 
@@ -13,7 +15,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    children: 'Tabs',
+    title: 'Tabs',
     value: 'Tabs',
   },
 }
