@@ -1,37 +1,51 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
 import { cn } from '@/shared/utils'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
+export const tabsVariants = {
+  primary: [
+    `w-[85px] h-9 text-base font-600 border-b-2 text-accent-500 border-accent-500`,
+    `hover: bg-accent-900 hover: opacity-15`,
+    `focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15`,
+    `active: bg-accent-100 active: opacity-15`,
+    `disabled: text-primary-900 disabled: cursor-none`,
+  ],
+  secondary: [
+    `w-[85px] h-9 text-base font-600 border-b-2 text-dark-100 border-dark-100`,
+    `hover: bg-primary-900 hover: opacity-15`,
+    `focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15`,
+    `active: bg-primary-100 hover: opacity-15`,
+    `disabled: text-dark-300 disabled: cursor-none disabled: border-dark-300`,
+  ],
+}
 type TabsProps = {
+  children: ReactNode
+  className?: string
+  disabled?: boolean
+  hover?: boolean
+  isActive?: boolean
+  isFocused?: boolean
   value: string
   //variant?: keyof typeof tabsVariants
 } & ComponentPropsWithoutRef<'button'>
 
-// export const tabsVariants = {
-//   primary: [
-//     `w-[85px] h-9 text-base font-600 border-b-2 text-accent-500 border-accent-500`,
-//     `hover: bg-accent-900 hover: opacity-15`,
-//     `focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15`,
-//     `active: bg-accent-100 active: opacity-15`,
-//     `disabled: text-primary-900 disabled: cursor-none`,
-//   ],
-//   secondary: [
-//     `w-[85px] h-9 text-base font-600 border-b-2 text-dark-100 border-dark-100`,
-//     `hover: bg-primary-900 hover: opacity-15`,
-//     `focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15`,
-//     `active: bg-primary-100 hover: opacity-15`,
-//     `disabled: text-dark-300 disabled: cursor-none disabled: border-dark-300`,
-//   ],
-// }
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-  ({ children, className, value, ...props }, ref) => {
-    const stringValue = Array.isArray(value) ? value[0] : value
-
+  ({ children, className, disabled, hover, isActive, isFocused, value, ...props }, ref) => {
     return (
       <TabsRoot ref={ref}>
         <TabsList>
-          <TabsTrigger {...props} className={className} value={stringValue} />
+          <TabsTrigger
+            className={className}
+            disabled={disabled}
+            hover={hover}
+            isActive={isActive}
+            isFocused={isFocused}
+            {...props}
+            value={value}
+          >
+            {value}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value={value}>{children}</TabsContent>
       </TabsRoot>
@@ -54,29 +68,47 @@ const TabsTrigger = forwardRef<
   ElementRef<typeof TabsPrimitive.Trigger>,
   {
     disabled?: boolean
+    hover?: boolean
     isActive?: boolean
     isFocused?: boolean
-    //tabsVariant?: keyof typeof tabsVariants
     value: string
   } & ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, disabled = false, isActive = false, isFocused = false, value, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    className={cn(
-      `
-      w-[85px] h-9 text-base font-600 border-b-2 text-accent-500 border-accent-500`,
-      // hover: bg-accent-900 hover: opacity-15
-      // focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15
-
-      disabled && `text-primary-900 disabled: cursor-none`,
-      isFocused && `outline-accent-500 opacity-15`,
-      isActive && `bg-accent-100 opacity-15`,
-      className
-    )}
-    ref={ref}
-    value={value}
-    {...props}
-  />
-))
+>(
+  (
+    {
+      className,
+      disabled = false,
+      hover = false,
+      isActive = false,
+      isFocused = false,
+      value,
+      ...props
+    },
+    ref
+  ) => (
+    <TabsPrimitive.Trigger
+      className={cn(
+        `
+      relative
+      w-[85px] h-9 text-base font-600 border-b-2 text-accent-500 border-accent-500
+      hover:bg-accent-900 hover:opacity-15
+      focus-visible:outline focus-visible:outline-accent-500 focus-visible:opacity-15`,
+        disabled && `text-accent-900 border-accent-900 cursor-none`,
+        isFocused && `outline outline-accent-500`,
+        isActive && `bg-accent-100`,
+        className
+      )}
+      ref={ref}
+      value={value}
+      {...props}
+    >
+      {isFocused && <div className={'absolute inset-0 opacity-15'}></div>}
+      {isActive && <div className={'absolute inset-0 bg-accent-100 opacity-15'}></div>}
+      {hover && <div className={'absolute inset-0 bg-accent-900 opacity-15'}></div>}
+      <span className={'relative z-10'}>{value}</span>
+    </TabsPrimitive.Trigger>
+  )
+)
 
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 

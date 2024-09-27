@@ -15,35 +15,33 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    title: 'Tabs',
     value: 'Tabs',
   },
 }
 
 export const Active: Story = {
   args: {
-    className: 'active',
-    value: 'Tabs',
-  },
-}
-
-export const Hover: Story = {
-  args: {
-    className: 'hover',
+    isActive: true,
     value: 'Tabs',
   },
 }
 
 export const Focus: Story = {
   args: {
-    className: 'focus',
+    isFocused: true,
     value: 'Tabs',
   },
 }
 
 export const Disabled: Story = {
   args: {
-    className: 'disabled',
+    disabled: true,
+    value: 'Tabs',
+  },
+}
+export const Hover: Story = {
+  args: {
+    hover: true,
     value: 'Tabs',
   },
 }
