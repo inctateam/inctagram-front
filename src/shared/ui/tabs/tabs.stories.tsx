@@ -3,6 +3,12 @@ import { Meta, StoryObj } from '@storybook/react'
 import { Tabs } from './tabs'
 
 const meta: Meta<typeof Tabs> = {
+  argTypes: {
+    variant: {
+      control: { type: 'radio' },
+      options: ['primary', 'secondary'],
+    },
+  },
   args: {},
   component: Tabs,
   tags: ['autodocs'],
