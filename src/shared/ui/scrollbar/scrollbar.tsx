@@ -1,35 +1,34 @@
 'use client'
 
-import * as React from 'react'
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 
 import { cn } from '@/shared/utils'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 
-const ScrollArea = React.forwardRef<
-  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-  { orientation?: 'horizontal' | 'vertical' } & React.ComponentPropsWithoutRef<
-    typeof ScrollAreaPrimitive.Root
-  >
->(({ children, className, ...props }, ref) => (
-  <ScrollAreaPrimitive.Root
-    className={cn('relative overflow-hidden', className)}
-    ref={ref}
-    {...props}
-  >
-    <ScrollAreaPrimitive.Viewport className={'h-full w-full'}>
-      {children}
-    </ScrollAreaPrimitive.Viewport>
+type ScrollAreaProps = {
+  orientation?: 'horizontal' | 'vertical'
+} & ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
 
-    <ScrollBar orientation={'horizontal'} />
-    <ScrollBar orientation={'vertical'} />
-  </ScrollAreaPrimitive.Root>
-))
+const ScrollArea = forwardRef<ElementRef<typeof ScrollAreaPrimitive.Root>, ScrollAreaProps>(
+  ({ children, className, ...props }, ref) => (
+    <ScrollAreaPrimitive.Root className={cn(' h-full w-full', className)} ref={ref} {...props}>
+      <ScrollAreaPrimitive.Viewport className={'h-full w-full'}>
+        {children}
+      </ScrollAreaPrimitive.Viewport>
+
+      <ScrollBar className={`h-2`} orientation={'horizontal'} />
+      <ScrollBar className={`w-2`} orientation={'vertical'} />
+    </ScrollAreaPrimitive.Root>
+  )
+)
 
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
 
-const ScrollBar = React.forwardRef<
-  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+type ScrollBarProps = ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+
+const ScrollBar = forwardRef<
+  ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  ScrollBarProps
 >(({ className, orientation = 'vertical', ...props }, ref) => (
   <ScrollAreaPrimitive.ScrollAreaScrollbar
     className={cn(
@@ -43,8 +42,8 @@ const ScrollBar = React.forwardRef<
   >
     <ScrollAreaPrimitive.ScrollAreaThumb
       className={cn(
-        orientation === 'vertical' && 'relative flex-1 h-[45px] bg-light-900 rounded-sm',
-        orientation === 'horizontal' && 'relative flex-1 h-5 w-[45px] bg-light-900 rounded-sm',
+        orientation === 'vertical' && 'flex-1 bg-dark-300 rounded-sm hover:bg-light-900',
+        orientation === 'horizontal' && 'flex-1 bg-dark-300 rounded-sm  hover:bg-light-900',
         'transition-colors'
       )}
     />
