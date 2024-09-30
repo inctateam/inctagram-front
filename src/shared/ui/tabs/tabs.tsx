@@ -75,26 +75,25 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
 
 const TabsRoot = TabsPrimitive.Root
 
-const TabsList = forwardRef<
-  ElementRef<typeof TabsPrimitive.List>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List className={className} ref={ref} {...props} />
-))
+type TabsListProps = ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
+  ({ className, ...props }, ref) => (
+    <TabsPrimitive.List className={className} ref={ref} {...props} />
+  )
+)
 
 TabsList.displayName = TabsPrimitive.List.displayName
 
-const TabsTrigger = forwardRef<
-  ElementRef<typeof TabsPrimitive.Trigger>,
-  {
-    disabled?: boolean
-    hover?: boolean
-    isActive?: boolean
-    isFocused?: boolean
-    value: string
-    variant?: VariantProps<typeof tabsVariants>['variant']
-  } & ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(
+type TabsTriggerProps = {
+  disabled?: boolean
+  hover?: boolean
+  isActive?: boolean
+  isFocused?: boolean
+  value: string
+  variant?: VariantProps<typeof tabsVariants>['variant']
+} & ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+
+const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, TabsTriggerProps>(
   (
     {
       className,
@@ -130,14 +129,15 @@ const TabsTrigger = forwardRef<
 
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 
-const TabsContent = forwardRef<
-  ElementRef<typeof TabsPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ children, className, ...props }, ref) => (
-  <TabsPrimitive.Content className={className} ref={ref} {...props}>
-    {children}
-  </TabsPrimitive.Content>
-))
+type TabsContentProps = ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+
+const TabsContent = forwardRef<ElementRef<typeof TabsPrimitive.Content>, TabsContentProps>(
+  ({ children, className, ...props }, ref) => (
+    <TabsPrimitive.Content className={className} ref={ref} {...props}>
+      {children}
+    </TabsPrimitive.Content>
+  )
+)
 
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
