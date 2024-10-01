@@ -45,9 +45,3 @@ export const Disabled: Story = {
     value: 'Tabs',
   },
 }
-export const Hover: Story = {
-  args: {
-    hover: true,
-    value: 'Tabs',
-  },
-}
