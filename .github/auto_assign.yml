@@ -4,8 +4,6 @@ useReviewGroups: true
 
 reviewGroups:
   groupA:
-    - blue-script
-    - nooraiym
     - apelsinom
     - olesya-sh-dev
     - VadimSel
