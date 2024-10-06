@@ -1,6 +1,5 @@
+import { Pagination } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
-
-import { Pagination } from './pagination'
 
 const meta: Meta<typeof Pagination> = {
   argTypes: {
