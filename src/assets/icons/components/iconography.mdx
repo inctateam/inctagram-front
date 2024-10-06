@@ -1,0 +1,49 @@
+import { IconGallery, IconItem, Meta } from '@storybook/blocks'
+
+import * as FilledOutlinedPairs from './filled-outlined-pairs'
+import * as Other from './other'
+import * as Outlined from './outlined'
+
+<Meta title="Iconography" />
+
+## Filled-Outlined Icons (Pairs)
+
+<div>
+  <IconGallery>
+    {Object.entries(FilledOutlinedPairs).map(([name, Icon]) => (
+      <div key={name} style={{ flexBasis: '25%' }}>
+        <IconItem name={name}>
+          <Icon />
+        </IconItem>
+      </div>
+    ))}
+  </IconGallery>
+</div>
+
+## Outlined Icons
+
+<div>
+  <IconGallery>
+    {Object.entries(Outlined).map(([name, Icon]) => (
+      <div key={name} style={{ flexBasis: '25%' }}>
+        <IconItem name={name}>
+          <Icon />
+        </IconItem>
+      </div>
+    ))}
+  </IconGallery>
+</div>
+
+## Other Icons
+
+<div>
+  <IconGallery>
+    {Object.entries(Other).map(([name, Icon]) => (
+      <div key={name} style={{ flexBasis: '25%' }}>
+        <IconItem name={name}>
+          <Icon />
+        </IconItem>
+      </div>
+    ))}
+  </IconGallery>
+</div>
