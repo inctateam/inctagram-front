@@ -1,8 +1,6 @@
+import { FlagRussia } from '@/assets/icons'
+import { Select } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
-
-import { Select } from './select'
-
-import { FlagRussia } from '@/assets/icons/components/other/FlagRussia'
 
 const meta: Meta<typeof Select> = {
   args: {},
@@ -23,7 +21,7 @@ const options = [
   {
     children: (
       <div className={'flex justify-start items-center gap-2'}>
-        <FlagRussia /> Russian
+        <FlagRussia /> Russian{' '}
       </div>
     ),
     label: 'Russian',

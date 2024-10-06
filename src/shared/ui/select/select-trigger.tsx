@@ -1,8 +1,8 @@
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 
+import { ArrowIosDownOutline } from '@/assets/icons'
 import { cn } from '@/shared/utils/cn'
 import * as SelectPrimitive from '@radix-ui/react-select'
-import { ArrowIosDownOutline } from '@/assets/icons'
 
 const SelectValue = SelectPrimitive.Value
 
