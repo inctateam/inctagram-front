@@ -1,183 +1,41 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Typography } from './index'
+import { Typography } from '@/shared/ui'
 
 const meta = {
   component: Typography,
-  tags: ['autodocs'],
   title: 'UI/Typography',
 } satisfies Meta<typeof Typography>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Large: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'large',
+const text = 'Carosserie Test Zürich Stauffacherstrasse 31 8004 Zürich, ZH, CH'
+
+export const AllVariant: Story = {
+  render: () => {
+    return (
+      <div className={'flex flex-col gap-4'}>
+        <Typography variant={'large'}>large - {text}</Typography>
+        <Typography variant={'h1'}>h1 - {text}</Typography>
+        <Typography variant={'h2'}>h2 - {text}</Typography>
+        <Typography variant={'h3'}>h3 - {text}</Typography>
+        <Typography variant={'regular16'}>regular16 - {text}</Typography>
+        <Typography variant={'bold16'}>bold16 - {text}</Typography>
+        <Typography variant={'regular14'}>regular14 - {text}</Typography>
+        <Typography variant={'medium14'}>medium14 - {text}</Typography>
+        <Typography variant={'bold14'}>bold14 - {text}</Typography>
+        <Typography variant={'small'}>small - {text}</Typography>
+        <Typography variant={'semiSmall'}>semiSmall - {text}</Typography>
+      </div>
+    )
   },
 }
 
-export const H1: Story = {
+export const Polymorphic: Story = {
   args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
+    as: 'span',
+    children: '`span` element with `h1` styles',
     variant: 'h1',
-  },
-}
-
-export const H2: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'h2',
-  },
-}
-
-export const H3: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'h3',
-  },
-}
-
-export const Regular_text_16: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'regular_text_16',
-  },
-}
-
-export const Bold_text_16: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'bold_text_16',
-  },
-}
-
-export const Regular_text_14: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'regular_text_14',
-  },
-}
-
-export const Medium_text_14: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'medium_text_14',
-  },
-}
-
-export const Bold_text_14: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'bold_text_14',
-  },
-}
-
-export const Small_text: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'small_text',
-  },
-}
-
-export const Semi_bold_small_text: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    variant: 'semi_bold_small_text',
-  },
-}
-
-export const Regular_link: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    href: 'google.com',
-    variant: 'regular_link',
-  },
-}
-
-export const Small_link: Story = {
-  args: {
-    children: (
-      <>
-        Carosserie Test Zürich
-        <br /> Stauffacherstrasse 31
-        <br /> 8004 Zürich, ZH, CH
-      </>
-    ),
-    href: 'google.com',
-    variant: 'small_link',
   },
 }
