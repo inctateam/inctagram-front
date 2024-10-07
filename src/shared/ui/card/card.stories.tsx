@@ -1,5 +1,4 @@
-import { Card } from '@/shared/card/card'
-import { Button } from '@/shared/ui'
+import { Button, Card } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Card> = {
