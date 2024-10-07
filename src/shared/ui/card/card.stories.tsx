@@ -28,7 +28,7 @@ export const Base: Story = {
 export const AuthCard: Story = {
   render: () => {
     return (
-      <Card className={'space-y-6 mx-auto'} variant={'authCard'}>
+      <Card className={'space-y-6 mx-auto'} variant={'auth'}>
         <p>Auth Variant Card</p>
         <p>Auth Variant Card</p>
         <p>Auth Variant Card</p>
