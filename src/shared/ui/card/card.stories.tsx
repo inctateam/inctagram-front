@@ -15,7 +15,7 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <p>Card is fullwidth by default.</p>
+        <p>Card is fullwidth by default and zero padding (`padding: 0`).</p>
         <ul>
           <li>Use `max-width` to limit the width of Card but make it responsive</li>
           <li>Or use `max-width` (`width`) for container element</li>
@@ -28,7 +28,7 @@ export const Default: Story = {
 export const LimitWithMaxWidth: Story = {
   render: () => {
     return (
-      <Card className={'space-y-6 max-w-[378px] mx-auto'}>
+      <Card className={'space-y-6 max-w-[378px] mx-auto p-6'}>
         <p>Some text</p>
         <p>Some text</p>
         <p>Some text</p>
@@ -41,7 +41,7 @@ export const LimitWithMaxWidth: Story = {
 export const PolymorphicAsSpan: Story = {
   render: () => {
     return (
-      <Card asChild className={'space-y-6 max-w-[378px] mx-auto'}>
+      <Card asChild className={'space-y-6 max-w-[378px] mx-auto p-6'}>
         <span>
           <p>Some text</p>
           <p>Some text</p>
