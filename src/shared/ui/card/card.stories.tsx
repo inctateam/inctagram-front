@@ -11,7 +11,7 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const Base: Story = {
   args: {
     children: (
       <>
@@ -25,10 +25,23 @@ export const Default: Story = {
   },
 }
 
+export const AuthCard: Story = {
+  render: () => {
+    return (
+      <Card className={'space-y-6 mx-auto'} variant={'authCard'}>
+        <p>Auth Variant Card</p>
+        <p>Auth Variant Card</p>
+        <p>Auth Variant Card</p>
+        <Button className={'w-full'}>Submit</Button>
+      </Card>
+    )
+  },
+}
+
 export const LimitWithMaxWidth: Story = {
   render: () => {
     return (
-      <Card className={'space-y-6 max-w-[378px] mx-auto p-6'}>
+      <Card className={'space-y-6 max-w-[600px] mx-auto p-6'}>
         <p>Some text</p>
         <p>Some text</p>
         <p>Some text</p>
@@ -38,14 +51,12 @@ export const LimitWithMaxWidth: Story = {
   },
 }
 
-export const PolymorphicAsSpan: Story = {
+export const Polymorphic: Story = {
   render: () => {
     return (
       <Card asChild className={'space-y-6 max-w-[378px] mx-auto p-6'}>
         <span>
-          <p>Some text</p>
-          <p>Some text</p>
-          <p>Some text</p>
+          <p>As `span` component</p>
           <Button className={'w-full'}>Submit</Button>
         </span>
       </Card>
