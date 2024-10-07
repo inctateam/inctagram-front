@@ -1,4 +1,5 @@
 export * from './button'
+export * from './card'
 export * from './recaptcha'
 export * from './svg-icon'
 export * from './typography'
