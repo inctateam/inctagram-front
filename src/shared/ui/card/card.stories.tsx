@@ -11,17 +11,20 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const BaseCard: Story = {
   args: {
     children: (
       <>
-        <p>default Card component includes colors and borders</p>
-        <p>variants add paddings, size and flex</p>
-        <p>variants usage:</p>
+        <p>
+          By default, the BaseCard has `border`, `background-color`, and is full-width with zero
+          padding (`padding: 0`).
+        </p>
         <ul>
-          <li>auth - for authorization forms</li>
-          <li>graph - for statistics page</li>
-          <li>devices - for profile devices tab</li>
+          <li>
+            To limit the width of Card but make it responsive use `max-width` fir element or
+            container
+          </li>
+          <li>Or use one of variants</li>
         </ul>
       </>
     ),
@@ -31,11 +34,22 @@ export const Default: Story = {
 export const AuthCard: Story = {
   render: () => {
     return (
-      <Card className={'space-y-6'} variant={'auth'}>
-        <p>Some text</p>
-        <p>Some text</p>
-        <p>Some text</p>
-        <Button className={'w-full'}>Submit</Button>
+      <Card className={'space-y-6 mx-auto flex flex-col items-center'} variant={'auth'}>
+        <p>Auth Variant Card</p>
+        <p>Auth Variant Card</p>
+        <p>Auth Variant Card</p>
+        <Button>Submit</Button>
+      </Card>
+    )
+  },
+}
+
+export const DevicesCard: Story = {
+  render: () => {
+    return (
+      <Card className={'flex justify-between'} variant={'devices'}>
+        <div className={'border border-red-500'}>Content</div>
+        <div className={'border border-red-500'}>Content</div>
       </Card>
     )
   },
@@ -45,33 +59,33 @@ export const GraphCard: Story = {
   render: () => {
     return (
       <Card variant={'graph'}>
-        <div className={'w-full h-full border border-red-500'}>Content</div>
+        <div className={'h-40 border border-red-500'}>Content</div>
       </Card>
     )
   },
 }
 
-export const DevicesCard: Story = {
+export const LimitWithMaxWidth: Story = {
   render: () => {
     return (
-      <Card variant={'devices'}>
-        <div className={'border border-red-500 flex-'}>Content</div>
-        <div className={'border border-red-500'}>Content</div>
+      <Card className={'space-y-6 max-w-[600px] mx-auto p-6'}>
+        <p>Some text</p>
+        <p>Some text</p>
+        <p>Some text</p>
+        <Button className={'w-full'}>Submit</Button>
       </Card>
     )
   },
 }
 
-export const PolymorphicAsSpan: Story = {
+export const Polymorphic: Story = {
   render: () => {
     return (
-      <Card asChild className={'space-y-6 max-w-[378px] mx-auto p-6 flex flex-col items-center'}>
-        <span>
-          <p>Some text</p>
-          <p>Some text</p>
-          <p>Some text</p>
+      <Card asChild className={'space-y-6 max-w-[378px] mx-auto'} variant={'auth'}>
+        <article>
+          <p>As `article` component</p>
           <Button className={'w-full'}>Submit</Button>
-        </span>
+        </article>
       </Card>
     )
   },
