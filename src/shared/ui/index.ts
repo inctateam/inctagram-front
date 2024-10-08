@@ -1,5 +1,6 @@
 export * from './button'
 export * from './card'
+export * from './pagination'
 export * from './recaptcha'
 export * from './svg-icon'
 export * from './typography'
