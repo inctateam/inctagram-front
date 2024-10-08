@@ -11,7 +11,7 @@ type CheckboxProps = {
 } & ComponentPropsWithoutRef<typeof RadixCheckbox.Root> &
   VariantProps<typeof checkboxVariants>
 
-export const labelVariants = cva(['ml-2'], {
+const labelVariants = cva(['ml-2'], {
   variants: {
     disabled: {
       false: 'text-light-500',
@@ -32,7 +32,7 @@ const checkboxVariants = cva(
     'disabled:border-light-900 disabled:text-light-700',
     'after:absolute after:z-[-1] after:w-9 after:h-9 after:rounded-full',
     'hover:after:content-[""] hover:after:bg-dark-300',
-    'focus:after:content-[""] focus:after:bg-dark-500',
+    'focus-visible:after:content-[""] focus-visible:after:bg-dark-500',
     'active:after:bg-dark-100',
   ],
   {
