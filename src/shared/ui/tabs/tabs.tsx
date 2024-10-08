@@ -31,47 +31,109 @@ type TabsProps = {
   disabled?: boolean
   isActive?: boolean
   isFocused?: boolean
+  tabs?: TabItem[]
   value: string
-} & ComponentPropsWithoutRef<'button'> &
-  VariantProps<typeof tabsVariants>
+  variant?: 'primary' | 'secondary' | null
+} & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
 
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
   (
     { children, className, disabled, isActive, isFocused, value, variant = 'primary', ...props },
     ref
   ) => {
+    const tabs = [{ content: children, disabled, isActive, isFocused, label: value, value }]
+
     return (
-      <TabsRoot ref={ref}>
-        <TabsList>
-          <TabsTrigger
-            className={className}
-            disabled={disabled}
-            isActive={isActive}
-            isFocused={isFocused}
-            variant={variant}
-            {...props}
-            value={value}
-          >
-            {value}
-          </TabsTrigger>
-        </TabsList>
+      <TabsRoot defaultValue={value} ref={ref}>
+        <TabsList
+          className={className}
+          disabled={disabled}
+          isActive={isActive}
+          isFocused={isFocused}
+          tabs={tabs}
+          variant={variant ?? 'primary'}
+          {...props}
+        />
         <TabsContent value={value}>{children}</TabsContent>
       </TabsRoot>
     )
   }
 )
 
+// const Tabs = forwardRef<ElementRef<typeof TabsPriTabsPrimitive.mitive.Root>, TabsProps>(
+//   (
+//     { children, className, disabled, isActive, isFocused, value, variant = 'primary', ...props },
+//     ref
+//   ) => {
+//     return (
+//       <TabsRoot ref={ref}>
+//         <TabsList className={className} variant={variant} {...props}>
+//           <TabsTrigger
+//             className={className}
+//             disabled={disabled}
+//             isActive={isActive}
+//             isFocused={isFocused}
+//             variant={variant}
+//             {...props}
+//             value={value}
+//           >
+//             {value}
+//           </TabsTrigger>
+//         </TabsList>
+//         <TabsContent value={value}>{children}</TabsContent>
+//       </TabsRoot>
+//     )
+//   }
+// )
+
 const TabsRoot = TabsPrimitive.Root
 
-type TabsListProps = ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+type TabItem = {
+  content: ReactNode
+  disabled?: boolean
+  isActive?: boolean
+  isFocused?: boolean
+  label: string
+  value: string
+}
+
+type TabsListProps = {
+  className?: string
+  disabled?: boolean
+  isActive?: boolean
+  isFocused?: boolean
+  tabs: TabItem[]
+  variant?: 'primary' | 'secondary'
+} & ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+
+//type TabsListProps = ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+// const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
+//   ({ className, ...props }, ref) =>TabsPrimitive. (
+//     <TabsPrimitive.List className={className} ref={ref} {...props} />
+//   )
+// )
+
+// TabsList.displayName = TabsPrimitive.List.displayName
 const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
-  ({ className, ...props }, ref) => (
-    <TabsPrimitive.List className={className} ref={ref} {...props} />
+  ({ className, tabs, variant = 'primary', ...props }, ref) => (
+    <TabsPrimitive.List className={className} ref={ref} {...props}>
+      {tabs.map(tab => (
+        <TabsTrigger
+          disabled={tab.disabled}
+          isActive={tab.isActive}
+          isFocused={tab.isFocused}
+          key={tab.value}
+          value={tab.value}
+          variant={variant}
+        >
+          {tab.label}
+        </TabsTrigger>
+      ))}
+    </TabsPrimitive.List>
   )
 )
 
 TabsList.displayName = TabsPrimitive.List.displayName
-
 type TabsTriggerProps = {
   disabled?: boolean
   isActive?: boolean
