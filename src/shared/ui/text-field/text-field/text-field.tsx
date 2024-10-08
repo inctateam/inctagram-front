@@ -3,7 +3,6 @@ import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 import { useGenerateId } from '@/shared/hooks'
 import { Label, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
-import { clsx } from 'clsx'
 
 type TextFieldOwnProps = {
   className?: string
@@ -33,18 +32,20 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
 
   const id = useGenerateId(inputId)
 
+  const commonIconStyles = cn(
+    'absolute flex top-1/2 -translate-y-1/2 text-2xl',
+    disabled && 'text-dark-100'
+  )
+
   const styles = {
-    endIcon: clsx(
-      'absolute flex top-1/2 translate-y-[-50%] text-2xl disabled:text-dark-100',
-      'right-3'
-    ),
+    endIcon: cn(commonIconStyles, 'right-3'),
     helperText: cn('text-light-900', error && 'text-danger-500', disabled && 'text-dark-100'),
     input: cn(
       'text-base font-normal text-light-100 placeholder:text-light-900 bg-transparent border border-solid border-dark-100 rounded-sm w-full px-3 py-1.5',
       startIcon && 'pl-10',
       endIcon && 'pr-10',
-      error && 'border-danger-500',
       'hover:border-light-900',
+      error && 'border-danger-500 hover:border-danger-300',
       'active:border-accent-500',
       error && 'active:border-danger-500',
       'focus-visible:border-accent-500 focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent-500',
@@ -53,10 +54,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
       className
     ),
     label: cn('text-light-900', disabled && 'text-dark-100'),
-    startIcon: clsx(
-      'absolute flex top-1/2 translate-y-[-50%] text-2xl disabled:text-dark-100',
-      'left-3'
-    ),
+    startIcon: cn(commonIconStyles, 'left-3'),
   }
 
   return (
@@ -66,7 +64,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
           {label}
         </Typography>
       )}
-      <div className={'relative'}>
+      <div className={'relative w-full'}>
         {startIcon && <span className={styles.startIcon}>{startIcon}</span>}
         <input
           className={styles.input}

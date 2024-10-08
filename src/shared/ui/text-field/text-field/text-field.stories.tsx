@@ -33,9 +33,11 @@ export const Error: Story = {
 export const Disabled: Story = {
   args: {
     disabled: true,
+    endIcon: <CloseOutline />,
     helperText: 'More the 3 characters',
     label: 'Name',
     placeholder: 'Enter your name',
+    startIcon: <SearchOutline />,
   },
 }
 
@@ -63,7 +65,7 @@ export const WithStartIcon: Story = {
     helperText: 'More the 3 characters',
     label: 'Name',
     placeholder: 'Enter your name',
-    startIcon: <SearchOutline />,
+    startIcon: <SearchOutline className={'size-5'} />,
   },
 }
 
