@@ -10,7 +10,7 @@ export const SelectList = ({ setItemsPerPage }: Props) => {
   }
 
   return (
-    <div className={'flex gap-2 mx-[24px]'}>
+    <div className={'flex gap-2 mx-6'}>
       <span>Show</span>
       <select
         className={'border-[1.5px] rounded-sm border-dark-300 bg-dark-500 pl-[6px]'}

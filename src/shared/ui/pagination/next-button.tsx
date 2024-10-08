@@ -1,4 +1,5 @@
 import { ArrowIosForwardOutline } from '@/assets/icons'
+import { cn } from '@/shared/utils'
 
 type Props = {
   currentPage: number
@@ -15,17 +16,7 @@ export const NextButton = ({ currentPage, setCurrentPage, totalPages }: Props) =
 
   return (
     <button disabled={currentPage === totalPages} onClick={nextPageHandler} type={'button'}>
-      {/* <Image
-        alt={'Right Arrow'}
-        height={16}
-        src={currentPage === totalPages ? rightArrowBlack : rightArrowWhite}
-        width={16}
-      /> */}
-      {currentPage === totalPages ? (
-        <ArrowIosForwardOutline className={'text-dark-100'} />
-      ) : (
-        <ArrowIosForwardOutline className={'size-4'} />
-      )}
+      <ArrowIosForwardOutline className={cn(currentPage === totalPages && 'text-dark-100')} />
     </button>
   )
 }
