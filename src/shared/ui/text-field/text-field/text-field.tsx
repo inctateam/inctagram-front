@@ -57,6 +57,8 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
     startIcon: cn(commonIconStyles, 'left-3'),
   }
 
+  const helperTextId = useGenerateId() + '-feedback'
+
   return (
     <div className={'flex flex-col w-full'}>
       {label && (
@@ -67,6 +69,8 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
       <div className={'relative w-full'}>
         {startIcon && <span className={styles.startIcon}>{startIcon}</span>}
         <input
+          aria-describedby={helperText ? helperTextId : undefined}
+          aria-invalid={error ? 'true' : undefined}
           className={styles.input}
           disabled={disabled}
           id={id}
@@ -77,7 +81,12 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
         {endIcon && <span className={styles.endIcon}>{endIcon}</span>}
       </div>
       {helperText && (
-        <Typography className={styles.helperText} variant={'regular14'}>
+        <Typography
+          aria-live={helperText ? 'polite' : undefined}
+          className={styles.helperText}
+          id={helperText ? helperTextId : undefined}
+          variant={'regular14'}
+        >
           {helperText}
         </Typography>
       )}
