@@ -1,9 +1,18 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const Heart = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgHeart = ({ className, ...props }: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <g clipPath={'url(#heart_svg__a)'}>
       <path
         d={
@@ -17,9 +26,9 @@ const Heart = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((p
         <path d={'M0 0h24v24H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgHeart)
+const Memo = memo(ForwardRef)
 
-Heart.displayName = 'Heart'
-
-export { Heart }
+export default Memo

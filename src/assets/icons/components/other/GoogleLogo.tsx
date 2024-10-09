@@ -1,10 +1,15 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
-
-import { SvgIcon } from '@/shared/ui'
-
-const GoogleLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
-    <g clipPath={'url(#google-svgrepo-com-1_svg__a)'}>
+import { Ref, SVGProps, forwardRef, memo } from 'react'
+const SvgGoogleLogo = (props: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    fill={'none'}
+    height={'1em'}
+    ref={ref}
+    viewBox={'0 0 24 24'}
+    width={'1em'}
+    xmlns={'http://www.w3.org/2000/svg'}
+    {...props}
+  >
+    <g clipPath={'url(#google-logo_svg__a)'}>
       <path
         d={
           'M5.266 9.765A7.08 7.08 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65z'
@@ -31,13 +36,13 @@ const GoogleLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
       />
     </g>
     <defs>
-      <clipPath id={'google-svgrepo-com-1_svg__a'}>
+      <clipPath id={'google-logo_svg__a'}>
         <path d={'M0 0h24v24H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgGoogleLogo)
+const Memo = memo(ForwardRef)
 
-GoogleLogo.displayName = 'GoogleLogo'
-
-export { GoogleLogo }
+export default Memo

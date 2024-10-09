@@ -1,9 +1,18 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const PaidStatus = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgPaid = ({ className, ...props }: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <path
       d={
         'M11.365.521a1 1 0 0 1 1.27 0l2.14 1.758a1 1 0 0 0 .694.225l2.765-.164a1 1 0 0 1 1.026.746l.699 2.68a1 1 0 0 0 .429.59L22.72 7.85a1 1 0 0 1 .392 1.207l-1.01 2.58a1 1 0 0 0 0 .729l1.01 2.579a1 1 0 0 1-.392 1.207l-2.333 1.492a1 1 0 0 0-.429.59l-.698 2.68a1 1 0 0 1-1.027.747l-2.765-.164a1 1 0 0 0-.694.225l-2.14 1.758a1 1 0 0 1-1.27 0l-2.14-1.758a1 1 0 0 0-.694-.225l-2.765.164a1 1 0 0 1-1.027-.746l-.698-2.68a1 1 0 0 0-.429-.59L1.28 16.15a1 1 0 0 1-.392-1.207l1.01-2.58a1 1 0 0 0 0-.729L.887 9.056a1 1 0 0 1 .392-1.207l2.333-1.492a1 1 0 0 0 .429-.59l.698-2.68a1 1 0 0 1 1.027-.747l2.765.164a1 1 0 0 0 .694-.225z'
@@ -23,9 +32,9 @@ const PaidStatus = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
         <path d={'M4 4h16v16H4z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgPaid)
+const Memo = memo(ForwardRef)
 
-PaidStatus.displayName = 'PaidStatus'
-
-export { PaidStatus }
+export default Memo

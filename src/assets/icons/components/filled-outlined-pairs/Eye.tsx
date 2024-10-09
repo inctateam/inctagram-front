@@ -1,9 +1,18 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const Eye = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgEye = ({ className, ...props }: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <g clipPath={'url(#eye_svg__a)'} fill={'currentColor'}>
       <path d={'M12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3'} />
       <path
@@ -17,9 +26,9 @@ const Eye = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((pro
         <path d={'M0 0h24v24H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgEye)
+const Memo = memo(ForwardRef)
 
-Eye.displayName = 'Eye'
-
-export { Eye }
+export default Memo

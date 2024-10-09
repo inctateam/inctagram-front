@@ -1,9 +1,18 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const Trash = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgTrash = ({ className, ...props }: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <g clipPath={'url(#trash_svg__a)'}>
       F
       <path
@@ -18,9 +27,9 @@ const Trash = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((p
         <path d={'M0 0h24v24H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgTrash)
+const Memo = memo(ForwardRef)
 
-Trash.displayName = 'Trash'
-
-export { Trash }
+export default Memo

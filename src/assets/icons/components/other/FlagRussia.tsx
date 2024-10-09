@@ -1,9 +1,21 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const FlagRussia = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgFlagRussia = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <path d={'M0 0h24v24H0z'} fill={'url(#flag-russia_svg__a)'} />
     <defs>
       <pattern
@@ -23,9 +35,9 @@ const FlagRussia = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
         }
       />
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgFlagRussia)
+const Memo = memo(ForwardRef)
 
-FlagRussia.displayName = 'FlagRussia'
-
-export { FlagRussia }
+export default Memo
