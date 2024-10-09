@@ -19,6 +19,7 @@ const buttonVariants = cva(
     'px-6 py-1.5',
     'text-base font-600',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-700',
+    'transition',
   ],
   {
     defaultVariants: {
@@ -63,7 +64,7 @@ const buttonVariants = cva(
 )
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { asChild = false, className, size, variant, ...rest } = props
+  const { asChild = false, className, size, variant, ...restProps } = props
 
   const Component = asChild ? Slot : 'button'
 
@@ -71,7 +72,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     <Component
       className={cn(buttonVariants({ className, size, variant }))}
       type={Component === 'button' ? 'button' : undefined}
-      {...rest}
+      {...restProps}
       ref={ref}
     />
   )

@@ -47,7 +47,7 @@ const iconButtonVariants = cva(
 )
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
-  const { asChild, children, className, size, ...restProps } = props
+  const { asChild = false, children, className, size, ...restProps } = props
 
   const Component = asChild ? Slot : 'button'
 
