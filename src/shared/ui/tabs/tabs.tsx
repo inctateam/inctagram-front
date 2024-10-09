@@ -60,32 +60,6 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
   }
 )
 
-// const Tabs = forwardRef<ElementRef<typeof TabsPriTabsPrimitive.mitive.Root>, TabsProps>(
-//   (
-//     { children, className, disabled, isActive, isFocused, value, variant = 'primary', ...props },
-//     ref
-//   ) => {
-//     return (
-//       <TabsRoot ref={ref}>
-//         <TabsList className={className} variant={variant} {...props}>
-//           <TabsTrigger
-//             className={className}
-//             disabled={disabled}
-//             isActive={isActive}
-//             isFocused={isFocused}
-//             variant={variant}
-//             {...props}
-//             value={value}
-//           >
-//             {value}
-//           </TabsTrigger>
-//         </TabsList>
-//         <TabsContent value={value}>{children}</TabsContent>
-//       </TabsRoot>
-//     )
-//   }
-// )
-
 const TabsRoot = TabsPrimitive.Root
 
 type TabItem = {
@@ -106,14 +80,6 @@ type TabsListProps = {
   variant?: 'primary' | 'secondary'
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 
-//type TabsListProps = ComponentPropsWithoutRef<typeof TabsPrimitive.List>
-// const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
-//   ({ className, ...props }, ref) =>TabsPrimitive. (
-//     <TabsPrimitive.List className={className} ref={ref} {...props} />
-//   )
-// )
-
-// TabsList.displayName = TabsPrimitive.List.displayName
 const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
   ({ className, tabs, variant = 'primary', ...props }, ref) => (
     <TabsPrimitive.List className={className} ref={ref} {...props}>
