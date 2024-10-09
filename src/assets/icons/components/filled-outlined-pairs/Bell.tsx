@@ -1,9 +1,18 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const Bell = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgFillBell = ({ className, ...props }: SVGProps<SVGSVGElement>, ref: Ref<SVGSVGElement>) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <path
       clipRule={'evenodd'}
       d={
@@ -35,9 +44,9 @@ const Bell = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((pr
     <g mask={'url(#fill-bell_svg__a)'}>
       <path d={'M0 0h24v24H0z'} fill={'currentColor'} />
     </g>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgFillBell)
+const Memo = memo(ForwardRef)
 
-Bell.displayName = 'Bell'
-
-export { Bell }
+export default Memo

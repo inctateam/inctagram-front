@@ -1,9 +1,21 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const PinOutline = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgPinOutline = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <g clipPath={'url(#pin-outline_svg__a)'} fill={'currentColor'}>
       <path
         d={
@@ -19,9 +31,9 @@ const PinOutline = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
         <path d={'M0 0h24v24H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgPinOutline)
+const Memo = memo(ForwardRef)
 
-PinOutline.displayName = 'PinOutline'
-
-export { PinOutline }
+export default Memo

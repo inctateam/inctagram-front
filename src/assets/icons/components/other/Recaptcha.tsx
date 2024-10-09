@@ -1,9 +1,21 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const Recaptcha = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgRecaptchaLogo = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <path
       d={
         'M18.72 9.93a7 7 0 0 0-.007-.288V4.204L17.21 5.707a6.7 6.7 0 0 0-5.2-2.468 6.7 6.7 0 0 0-5.346 2.655l2.465 2.49c.241-.447.584-.83.998-1.12.43-.336 1.04-.61 1.883-.61q.152 0 .238.034a3.25 3.25 0 0 1 2.484 1.496L12.988 9.93c2.21-.01 4.706-.014 5.732 0'
@@ -28,9 +40,9 @@ const Recaptcha = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>
       }
       fill={'#A6A6A6'}
     />
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgRecaptchaLogo)
+const Memo = memo(ForwardRef)
 
-Recaptcha.displayName = 'Recaptcha'
-
-export { Recaptcha }
+export default Memo
