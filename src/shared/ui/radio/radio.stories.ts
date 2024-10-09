@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Radio } from '@/shared/ui/radio/radio'
+import { Radio } from '@/shared/ui'
 
 const meta = {
   argTypes: {
