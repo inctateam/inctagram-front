@@ -1,11 +1,13 @@
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 
 import { cn } from '@/shared/utils'
-import { Slot } from '@radix-ui/react-slot'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
 
 type ButtonOwnProps = {
   asChild?: boolean
+  endIcon?: ReactNode
+  startIcon?: ReactNode
 }
 
 type ButtonProps = ButtonOwnProps &
@@ -14,7 +16,7 @@ type ButtonProps = ButtonOwnProps &
 
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-3',
+    'inline-flex items-center justify-center',
     'rounded-sm',
     'px-6 py-1.5',
     'text-base font-600',
@@ -64,9 +66,28 @@ const buttonVariants = cva(
 )
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { asChild = false, className, size, variant, ...restProps } = props
+  const {
+    asChild = false,
+    children,
+    className,
+    endIcon,
+    size,
+    startIcon,
+    variant,
+    ...restProps
+  } = props
 
   const Component = asChild ? Slot : 'button'
+
+  const iconCommonStyles = 'text-[24px]'
+
+  const startIconElement = startIcon && (
+    <span className={cn(iconCommonStyles, 'mr-3 -ml-1')}>{startIcon}</span>
+  )
+
+  const endIconElement = endIcon && (
+    <span className={cn(iconCommonStyles, 'ml-3 -mr-1')}>{endIcon}</span>
+  )
 
   return (
     <Component
@@ -74,7 +95,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
       type={Component === 'button' ? 'button' : undefined}
       {...restProps}
       ref={ref}
-    />
+    >
+      {startIconElement}
+      <Slottable>{children}</Slottable>
+      {endIconElement}
+    </Component>
   )
 })
 
