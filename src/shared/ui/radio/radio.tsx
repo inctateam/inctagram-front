@@ -3,10 +3,12 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 import { Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import * as RadixRadio from '@radix-ui/react-radio-group'
+import { cva } from 'class-variance-authority'
 
 export type RadioProps = {
   options: Option[]
 } & ComponentPropsWithoutRef<typeof RadixRadio.Root>
+
 export type Option = {
   defaultValue?: boolean
   disabled?: boolean
@@ -14,6 +16,48 @@ export type Option = {
   label: string
   value: string
 }
+
+const radioItemStyles = cva(
+  [
+    'relative w-[22px] h-[22px] m-[3px] outline-none',
+    'border-2 border-light-100 cursor-pointer rounded-full bg-transparent border:z-0 ',
+    'before:absolute before:w-9 before:h-9 before:top-1/2 before:left-1/2 before:rounded-full',
+    'before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:z-[-1]',
+    'active:before:content-[""] active:before:bg-dark-100',
+    'hover:before:content-[""] hover:before:bg-dark-300',
+    'focus-visible:before:content-[""] focus-visible:before:bg-dark-500',
+  ],
+  {
+    defaultVariants: {
+      disabled: false,
+    },
+    variants: {
+      disabled: {
+        false: '',
+        true: 'disabled:before:content-none disabled:cursor-auto disabled:border-dark-100',
+      },
+    },
+  }
+)
+
+const indicatorStyles = cva(
+  [
+    'relative flex items-center justify-center',
+    'after:block after:size-[10px] after:rounded-full after:bg-light-100',
+  ],
+  {
+    defaultVariants: {
+      disabled: false,
+    },
+    variants: {
+      disabled: {
+        false: 'after:bg-light-100',
+        true: 'after:bg-dark-100',
+      },
+    },
+  }
+)
+
 const Radio = forwardRef<ElementRef<typeof RadixRadio.Root>, RadioProps>((props, ref) => {
   const { className, disabled, options, ...rest } = props
 
@@ -29,28 +73,21 @@ const Radio = forwardRef<ElementRef<typeof RadixRadio.Root>, RadioProps>((props,
         {...rest}
       >
         {options.map(option => {
+          const disabledItem = disabled || option?.disabled
+
           return (
-            <div className={'flex'} key={option.id}>
+            <div aria-disabled={option.disabled} className={'flex'} key={option.id}>
               <RadixRadio.Item
-                className={cn(
-                  'relative w-[22px] h-[22px] m-[3px] border-2 border-light-100 cursor-pointer rounded-full bg-transparent border:z-0 outline-none',
-                  'before:absolute before:top-1/2 before:left-1/2 before:w-9 before:h-9 before:rounded-full before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:z-[-1]',
-                  'hover:before:content-[""] hover:before:bg-dark-300'
-                  // option.disabled && 'cursor-not-allowed border-gray-500'
-                )}
-                disabled={option.disabled}
+                className={cn(radioItemStyles({ disabled: disabledItem }))}
+                disabled={disabledItem}
                 id={option.id}
                 value={option.value}
               >
-                <RadixRadio.Indicator
-                  className={
-                    'relative flex items-center justify-center after:block after:size-[10px] after:rounded-full after:bg-light-100'
-                  }
-                />
+                <RadixRadio.Indicator className={cn(indicatorStyles({ disabled: disabledItem }))} />
               </RadixRadio.Item>
               <Typography
                 as={'label'}
-                className={'ml-2 text-light-100'}
+                className={cn('ml-2', disabledItem && 'text-light-900')}
                 htmlFor={option.id}
                 variant={'regular14'}
               >
@@ -65,16 +102,3 @@ const Radio = forwardRef<ElementRef<typeof RadixRadio.Root>, RadioProps>((props,
 })
 
 export { Radio }
-
-//    'text-light-500',
-//     'w-[18px] h-[18px] m-[3px]',
-//     'border-2 border-light-500 rounded',
-//     'flex items-center justify-center',
-//     'focus:outline-none',
-//     'relative',
-//     'disabled:after:content-none',
-//     'disabled:border-light-900 disabled:text-light-700',
-//     'after:absolute after:z-[-1] after:w-9 after:h-9 after:rounded-full',
-//     'hover:after:content-[""] hover:after:bg-dark-300',
-//     'focus-visible:after:content-[""] focus-visible:after:bg-dark-500',
-//     'active:after:bg-dark-100',
