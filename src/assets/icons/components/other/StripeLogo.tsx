@@ -1,10 +1,22 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const StripeLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
-    <g clipPath={'url(#stripe-svgrepo-com-4_svg__a)'}>
+const SvgStripeLogo = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
+    <g clipPath={'url(#stripe-logo_svg__a)'}>
       <path
         d={
           'M1.913.5h20.174c.79 0 1.413.625 1.413 1.372v12.256c0 .748-.622 1.372-1.413 1.372H1.913C1.123 15.5.5 14.876.5 14.128V1.872C.5 1.125 1.122.5 1.913.5Z'
@@ -22,13 +34,13 @@ const StripeLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
       />
     </g>
     <defs>
-      <clipPath id={'stripe-svgrepo-com-4_svg__a'}>
+      <clipPath id={'stripe-logo_svg__a'}>
         <path d={'M0 0h24v16H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgStripeLogo)
+const Memo = memo(ForwardRef)
 
-StripeLogo.displayName = 'StripeLogo'
-
-export { StripeLogo }
+export default Memo

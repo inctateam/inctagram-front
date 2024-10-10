@@ -1,9 +1,21 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const SafariLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
+const SvgSafariLogo = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
     <g clipPath={'url(#safari_svg__a)'} fill={'currentColor'}>
       <path
         d={
@@ -21,9 +33,9 @@ const SafariLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
         <path d={'M0 0h36v36H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgSafariLogo)
+const Memo = memo(ForwardRef)
 
-SafariLogo.displayName = 'SafariLogo'
-
-export { SafariLogo }
+export default Memo
