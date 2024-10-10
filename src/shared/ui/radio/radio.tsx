@@ -61,7 +61,7 @@ const indicatorStyles = cva(
 const Radio = forwardRef<ElementRef<typeof RadixRadio.Root>, RadioProps>((props, ref) => {
   const { className, disabled, options, ...rest } = props
 
-  const defaultOption = options.find(i => i.defaultValue)?.value || options[0].value
+  const defaultOption = options.find(option => option.defaultValue)?.value || options[0].value
 
   return (
     <div>
