@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
+import { LogOutOutline } from '@/assets/icons'
 import { Button } from '@/shared/ui'
 
 const meta = {
@@ -86,12 +87,14 @@ export const AsLink = {
   },
 }
 
-export const WithIcon = {
-  args: {
-    children: (
-      <>
-        <span>&#128540;</span> With Icon
-      </>
-    ),
+export const WithStartIcon = {
+  render: () => {
+    return <Button startIcon={<LogOutOutline />}>Logout</Button>
+  },
+}
+
+export const WithEndIcon = {
+  render: () => {
+    return <Button endIcon={<LogOutOutline />}>Logout</Button>
   },
 }
