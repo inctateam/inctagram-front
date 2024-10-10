@@ -4,7 +4,7 @@ import { Eye, EyeOff } from '@/assets/icons'
 import { IconButton, TextField, TextFieldProps } from '@/shared/ui'
 
 type PasswordTextFieldOwnProps = {
-  onVisibilityChange?: () => void
+  onVisibilityChange?: (visibility: boolean) => void
 }
 
 type PasswordTextFieldProps = Omit<TextFieldProps, 'endIcon' | 'type'> & PasswordTextFieldOwnProps
@@ -15,14 +15,19 @@ const PasswordTextField = forwardRef<HTMLInputElement, PasswordTextFieldProps>((
   const [showPassword, setShowPassword] = useState(false)
 
   const handleEndIconClick = () => {
-    setShowPassword(state => !state)
+    setShowPassword(state => {
+      const newVisibilityState = !state
 
-    onVisibilityChange?.()
+      onVisibilityChange?.(newVisibilityState)
+
+      return newVisibilityState
+    })
   }
 
   const endIcon = (
     <IconButton
       aria-label={'Toggle password visibility'}
+      className={'p-1'}
       disabled={props.disabled}
       onClick={handleEndIconClick}
     >
