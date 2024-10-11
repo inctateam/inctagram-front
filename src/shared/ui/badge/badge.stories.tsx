@@ -95,7 +95,7 @@ export const EmailBadge: Story = {
 }
 export const EmailOutlineBadge: Story = {
   args: {
-    badgeContent: 100,
+    badgeContent: 10000,
     children: <EmailOutline />,
   },
   render: args => {

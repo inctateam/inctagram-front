@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import { cn } from '@/shared/utils'
+import { Slot } from '@radix-ui/react-slot'
 
 type BadgeProps = {
   badgeContent: number
@@ -9,23 +10,25 @@ type BadgeProps = {
 }
 
 const badgeStyles = {
-  boxWrap: cn('relative w-6 h-6'),
-  icon: cn('absolute flex bottom-0 left-0 -z[-2] m-0'),
+  boxWrap: cn('relative'),
+  icon: cn('relative m-0 h-5 w-5 '),
   indicator: cn(
     'absolute flex justify-center items-center',
     'bg-danger-500',
-    `h-[16px] min-w-[16px] w-fit p-[3px] z-0 rounded-full`,
+    `h-3 min-w-3 w-fit z-0 rounded-full p-[3px]`,
     'text-[10px] leading-2',
-    'top-0 right-0'
+    'bottom-3 left-3'
   ),
 }
 
 const Badge = (props: BadgeProps) => {
   const { badgeContent, children, className } = props
 
+  const Component = Slot
+
   return (
     <div className={badgeStyles.boxWrap}>
-      <div className={badgeStyles.icon}>{children}</div>
+      <Component className={badgeStyles.icon}>{children}</Component>
       {badgeContent > 0 && (
         <div className={cn(badgeStyles.indicator, className)}>{badgeContent}</div>
       )}
