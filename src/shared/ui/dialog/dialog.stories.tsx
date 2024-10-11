@@ -24,6 +24,7 @@ export const WithUseState: Story = {
         <Button onClick={() => setOpen(true)}>Button With Callback</Button>
         <Dialog
           className={'p-6 max-w-[378px]'}
+          closeIcon={'inside'}
           onOpenChange={setOpen}
           open={open}
           title={'Modal Window'}
@@ -41,7 +42,7 @@ export const WithTrigger: Story = {
       <>
         <Dialog
           className={'p-6'}
-          title={'Modal Window'}
+          closeIcon={'outside'}
           trigger={<Button variant={'primary'}>Trigger Button</Button>}
         >
           <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
