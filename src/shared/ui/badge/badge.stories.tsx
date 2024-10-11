@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { useState } from 'react'
-
 import {
   Bell,
   BellOutline,
@@ -10,9 +8,16 @@ import {
   Heart,
   HeartOutline,
 } from '@/assets/icons/components'
-import { Badge } from '@/shared/ui/badge/badge'
+import { Badge } from '@/shared/ui'
 
 const meta = {
+  argTypes: {
+    badgeContent: {
+      control: {
+        type: 'number',
+      },
+    },
+  },
   component: Badge,
   tags: ['autodocs'],
   title: 'UI/Badge',
@@ -21,40 +26,83 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const DefaultBadge: Story = {
+export const DefaultBellBadge: Story = {
   args: {
-    badgeContent: 0,
+    badgeContent: 1,
     children: <Bell />,
   },
   render: args => {
-    const [count, setCount] = useState(args.badgeContent)
-
     return (
-      <div
-        className={'flex gap-3'}
-        onClick={() => {
-          setCount(count + 1)
-        }}
-      >
-        <Badge badgeContent={count}>
-          <Bell />
-        </Badge>
-        <Badge badgeContent={count}>
-          <BellOutline />
-        </Badge>
-        <Badge badgeContent={count}>
-          <Heart />
-        </Badge>
-        <Badge badgeContent={count}>
-          <HeartOutline />
-        </Badge>
-        <Badge badgeContent={count}>
-          <Email />
-        </Badge>
-        <Badge badgeContent={count}>
-          <EmailOutline />
-        </Badge>
-      </div>
+      <Badge badgeContent={args.badgeContent}>
+        <Bell />
+      </Badge>
+    )
+  },
+}
+export const BellOutlineBadge: Story = {
+  args: {
+    badgeContent: 1,
+    children: <BellOutline />,
+  },
+  render: args => {
+    return (
+      <Badge badgeContent={args.badgeContent}>
+        <BellOutline />
+      </Badge>
+    )
+  },
+}
+
+export const HeartBadge: Story = {
+  args: {
+    badgeContent: 10,
+    children: <Heart />,
+  },
+  render: args => {
+    return (
+      <Badge badgeContent={args.badgeContent}>
+        <Heart />
+      </Badge>
+    )
+  },
+}
+export const HeartOutlineBadge: Story = {
+  args: {
+    badgeContent: 10,
+    children: <HeartOutline />,
+  },
+  render: args => {
+    return (
+      <Badge badgeContent={args.badgeContent}>
+        <HeartOutline />
+      </Badge>
+    )
+  },
+}
+
+export const EmailBadge: Story = {
+  args: {
+    badgeContent: 100,
+    children: <Email />,
+  },
+  render: args => {
+    return (
+      <Badge badgeContent={args.badgeContent}>
+        <Email />
+      </Badge>
+    )
+  },
+}
+export const EmailOutlineBadge: Story = {
+  args: {
+    badgeContent: 100,
+    children: <EmailOutline />,
+  },
+  render: args => {
+    return (
+      <Badge badgeContent={args.badgeContent}>
+        <EmailOutline />
+      </Badge>
     )
   },
 }
