@@ -1,10 +1,22 @@
-import { ElementRef, SVGProps, forwardRef } from 'react'
+import { Ref, SVGProps, forwardRef, memo } from 'react'
 
-import { SvgIcon } from '@/shared/ui'
+import {
+  defaultIconAttributes,
+  defaultIconClassName,
+} from '@/assets/icons/components/default-svg-icon-props'
+import { cn } from '@/shared/utils'
 
-const PaypalLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement>>((props, ref) => (
-  <SvgIcon {...props} ref={ref}>
-    <g clipPath={'url(#paypal-svgrepo-com-4_svg__a)'}>
+const SvgPaypalLogo = (
+  { className, ...props }: SVGProps<SVGSVGElement>,
+  ref: Ref<SVGSVGElement>
+) => (
+  <svg
+    className={cn(defaultIconClassName, className)}
+    {...defaultIconAttributes}
+    {...props}
+    ref={ref}
+  >
+    <g clipPath={'url(#paypal-logo_svg__a)'}>
       <path
         d={
           'M1.474.5h21.052c.55 0 .974.431.974.936v13.128c0 .505-.424.936-.974.936H1.474c-.55 0-.974-.431-.974-.936V1.436C.5.93.924.5 1.474.5Z'
@@ -54,13 +66,13 @@ const PaypalLogo = forwardRef<ElementRef<typeof SvgIcon>, SVGProps<SVGSVGElement
       />
     </g>
     <defs>
-      <clipPath id={'paypal-svgrepo-com-4_svg__a'}>
+      <clipPath id={'paypal-logo_svg__a'}>
         <path d={'M0 0h24v16H0z'} fill={'#fff'} />
       </clipPath>
     </defs>
-  </SvgIcon>
-))
+  </svg>
+)
+const ForwardRef = forwardRef(SvgPaypalLogo)
+const Memo = memo(ForwardRef)
 
-PaypalLogo.displayName = 'PaypalLogo'
-
-export { PaypalLogo }
+export default Memo

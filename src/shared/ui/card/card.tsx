@@ -17,8 +17,10 @@ const cardVariants = cva(
     },
     variants: {
       variant: {
-        auth: ['p-6 max-w-[378px]'],
+        auth: 'p-6 max-w-[378px]',
         base: '',
+        devices: 'px-6 py-4',
+        graph: 'pt-3 pb-2 px-6',
       },
     },
   }
