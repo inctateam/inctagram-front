@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { CloseOutline } from '@/assets/icons'
 import { cn } from '@/shared/utils'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 
@@ -29,17 +28,6 @@ export const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close
-        className={cn(
-          'absolute right-4 top-4 rounded-sm transition-opacity focus:outline-none data-[state=open]:text-muted-foreground',
-          'hover:text-accent-100 active:text-accent-500',
-          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-700',
-          'disabled:pointer-events-none disabled:text-dark-100'
-        )}
-      >
-        <CloseOutline className={'h-6 w-6'} />
-        <span className={'sr-only'}>Close</span>
-      </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
 ))
