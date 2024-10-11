@@ -1,6 +1,5 @@
+import { Tabs } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
-
-import { Tabs } from './tabs'
 
 const meta: Meta<typeof Tabs> = {
   argTypes: {
