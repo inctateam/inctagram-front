@@ -18,7 +18,8 @@ type TextFieldOwnProps = {
   startIcon?: ReactNode
 }
 
-type TextFieldProps = ComponentPropsWithoutRef<'input'> & TextFieldOwnProps
+type TextFieldProps = Omit<ComponentPropsWithoutRef<'input'>, keyof TextFieldOwnProps> &
+  TextFieldOwnProps
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
   const {
