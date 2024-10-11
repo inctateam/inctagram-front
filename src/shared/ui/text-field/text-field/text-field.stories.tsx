@@ -6,7 +6,7 @@ import { TextField } from '@/shared/ui'
 const meta = {
   component: TextField,
   tags: ['autodocs'],
-  title: 'UI/TextField',
+  title: 'UI/TextField/TextField',
 } satisfies Meta<typeof TextField>
 
 export default meta
