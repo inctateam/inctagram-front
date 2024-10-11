@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Recaptcha } from './index'
+import { Recaptcha } from '@/shared/ui'
 
 const meta = {
   component: Recaptcha,
