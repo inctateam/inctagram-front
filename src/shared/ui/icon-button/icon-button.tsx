@@ -18,7 +18,7 @@ const iconButtonVariants = cva(
     'inline-flex items-center justify-center',
     'rounded-full',
     'select-none',
-    'text-light-100',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500',
   ],
   {
     compoundVariants: [
@@ -26,20 +26,35 @@ const iconButtonVariants = cva(
         className: [
           'hover:bg-dark-300',
           'active:bg-dark-100',
-          'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500',
           'disabled:text-dark-100 disabled:bg-transparent',
           'transition',
         ],
+        color: 'default',
+        size: ['medium', 'small'],
+      },
+      {
+        className: [
+          'hover:bg-accent-900 hover:bg-opacity-25',
+          'active:bg-accent-900 active:bg-opacity-40',
+          'disabled:text-accent-900 disabled:bg-transparent',
+          'transition',
+        ],
+        color: 'primary',
         size: ['medium', 'small'],
       },
     ],
     defaultVariants: {
+      color: 'default',
       size: 'medium',
     },
     variants: {
+      color: {
+        default: 'text-light-100',
+        primary: 'text-accent-500',
+      },
       size: {
         base: '',
-        medium: 'text-2xl p-2',
+        medium: 'text-2xl p-1.5',
         small: 'text-base p-1.5',
       },
     },
@@ -47,13 +62,13 @@ const iconButtonVariants = cva(
 )
 
 const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
-  const { asChild = false, children, className, size, ...restProps } = props
+  const { asChild = false, children, className, color, size, ...restProps } = props
 
   const Component = asChild ? Slot : 'button'
 
   return (
     <Component
-      className={cn(iconButtonVariants({ className, size }))}
+      className={cn(iconButtonVariants({ className, color, size }))}
       type={Component === 'button' ? 'button' : undefined}
       {...restProps}
       ref={ref}

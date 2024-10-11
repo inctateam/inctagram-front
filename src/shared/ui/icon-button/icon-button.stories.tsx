@@ -15,9 +15,15 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => {
     return (
-      <IconButton size={'medium'}>
-        <Eye />
-      </IconButton>
+      <div>
+        <IconButton size={'medium'}>
+          <Eye />
+        </IconButton>
+
+        <IconButton color={'primary'} size={'medium'}>
+          <Eye />
+        </IconButton>
+      </div>
     )
   },
 }
@@ -25,9 +31,11 @@ export const Default: Story = {
 export const Focused: Story = {
   render: () => {
     return (
-      <IconButton autoFocus size={'medium'}>
-        <Eye />
-      </IconButton>
+      <div>
+        <IconButton autoFocus size={'medium'}>
+          <Eye />
+        </IconButton>
+      </div>
     )
   },
 }
@@ -35,9 +43,15 @@ export const Focused: Story = {
 export const Disabled: Story = {
   render: () => {
     return (
-      <IconButton disabled size={'medium'}>
-        <Eye />
-      </IconButton>
+      <div>
+        <IconButton disabled size={'medium'}>
+          <Eye />
+        </IconButton>
+
+        <IconButton color={'primary'} disabled size={'medium'}>
+          <Eye />
+        </IconButton>
+      </div>
     )
   },
 }
@@ -45,32 +59,38 @@ export const Disabled: Story = {
 export const Sizes: Story = {
   render: () => {
     return (
-      <div className={'flex flex-col gap-4'}>
-        <div className={'flex items-center min-h-[40px]'}>
-          <span className={'w-[200px]'}>small size = 16px</span>
-          <IconButton size={'small'}>
-            <Eye />
-          </IconButton>
+      <>
+        <div className={'flex flex-col gap-4'}>
+          <div className={'flex items-center min-h-[40px]'}>
+            <span className={'w-[200px]'}>small size = 16px</span>
+
+            <IconButton size={'small'}>
+              <Eye />
+            </IconButton>
+          </div>
+          <div className={'flex items-center min-h-[40px]'}>
+            <span className={'w-[200px]'}>medium size = 24px</span>
+
+            <IconButton size={'medium'}>
+              <Eye />
+            </IconButton>
+          </div>
+          <div className={'flex items-center min-h-[40px]'}>
+            <span className={'w-[200px]'}>custom size - the first approach</span>
+
+            <IconButton className={'text-[30px]'}>
+              <Eye />
+            </IconButton>
+          </div>
+          <div className={'flex items-center min-h-[40px]'}>
+            <span className={'w-[200px]'}>custom size - the second approach</span>
+
+            <IconButton>
+              <Eye className={'text-[36px]'} />
+            </IconButton>
+          </div>
         </div>
-        <div className={'flex items-center min-h-[40px]'}>
-          <span className={'w-[200px]'}>medium size = 24px</span>
-          <IconButton size={'medium'}>
-            <Eye />
-          </IconButton>
-        </div>
-        <div className={'flex items-center min-h-[40px]'}>
-          <span className={'w-[200px]'}>custom size - the first approach</span>
-          <IconButton className={'text-[30px]'}>
-            <Eye />
-          </IconButton>
-        </div>
-        <div className={'flex items-center min-h-[40px]'}>
-          <span className={'w-[200px]'}>custom size - the second approach</span>
-          <IconButton>
-            <Eye className={'text-[36px]'} />
-          </IconButton>
-        </div>
-      </div>
+      </>
     )
   },
 }
