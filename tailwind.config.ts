@@ -1,10 +1,11 @@
 import type { Config } from 'tailwindcss'
 
-import { palette } from './src/styles/palette'
+import { palette } from '@/styles/palette'
+import tailwindcss_animate from 'tailwindcss-animate'
 
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
-  plugins: [],
+  plugins: [tailwindcss_animate],
   theme: {
     extend: {
       colors: {
