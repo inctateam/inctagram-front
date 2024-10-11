@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { ComponentPropsWithoutRef } from 'react'
 
 import { CloseOutline } from '@/assets/icons'
 import { IconButton, Typography } from '@/shared/ui'
@@ -12,8 +11,7 @@ type AlertProps = {
   onClose?: () => void
   position?: 'bottom-left' | 'bottom-right' | 'center' | 'top-left' | 'top-right'
   type: 'error' | 'success'
-} & ComponentPropsWithoutRef<typeof AlertDialog.Root> &
-  VariantProps<typeof AlertVariants>
+} & VariantProps<typeof AlertVariants>
 
 const AlertVariants = cva(
   ['fixed flex justify-between items-center wrap w-[387px] h-12 py-3 px-6 border-[1px]'],
