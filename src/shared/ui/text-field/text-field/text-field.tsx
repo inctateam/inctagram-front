@@ -1,7 +1,7 @@
 import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 
 import { useGenerateId } from '@/shared/hooks'
-import { FormLabel, Typography } from '@/shared/ui'
+import { FormHelperText, FormLabel } from '@/shared/ui'
 import { getInputBaseStyles } from '@/shared/ui/text-field/text-field/getInputBaseStyles'
 import { cn } from '@/shared/utils'
 
@@ -82,14 +82,9 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
         {endIcon && <span className={styles.endIcon}>{endIcon}</span>}
       </div>
       {helperText && (
-        <Typography
-          aria-live={helperText ? 'polite' : undefined}
-          className={styles.helperText}
-          id={helperText ? helperTextId : undefined}
-          variant={'regular14'}
-        >
+        <FormHelperText disabled={disabled} error={error} id={helperTextId}>
           {helperText}
-        </Typography>
+        </FormHelperText>
       )}
     </div>
   )

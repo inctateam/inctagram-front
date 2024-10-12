@@ -1,7 +1,7 @@
 import { ChangeEvent, ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 
 import { useGenerateId } from '@/shared/hooks'
-import { FormLabel, Typography } from '@/shared/ui'
+import { FormHelperText, FormLabel } from '@/shared/ui'
 import { getInputBaseStyles } from '@/shared/ui/text-field/text-field/getInputBaseStyles'
 import { cn } from '@/shared/utils'
 
@@ -55,7 +55,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
   }
 
   const styles = {
-    helperText: cn('text-light-900', error && 'text-danger-500', disabled && 'text-dark-100'),
     textarea: cn(
       'min-h-[84px]',
       autoResize && 'overflow-hidden resize-none',
@@ -88,14 +87,9 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
         ref={ref}
       />
       {helperText && (
-        <Typography
-          aria-live={helperText ? 'polite' : undefined}
-          className={styles.helperText}
-          id={helperText ? helperTextId : undefined}
-          variant={'regular14'}
-        >
+        <FormHelperText disabled={disabled} error={error} id={helperTextId}>
           {helperText}
-        </Typography>
+        </FormHelperText>
       )}
     </div>
   )
