@@ -1,7 +1,7 @@
-import { ChangeEvent, ComponentPropsWithoutRef, forwardRef } from 'react'
+import { ChangeEvent, ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 
 import { useGenerateId } from '@/shared/hooks'
-import { Label, Typography } from '@/shared/ui'
+import { FormLabel, Typography } from '@/shared/ui'
 import { getInputBaseStyles } from '@/shared/ui/text-field/text-field/getInputBaseStyles'
 import { cn } from '@/shared/utils'
 
@@ -11,8 +11,11 @@ type TextareaOwnProps = {
   disabled?: boolean
   error?: boolean
   helperText?: string
+  hideRequiredIndicator?: true
   id?: string
   label?: string
+  required?: boolean
+  requiredIndicator?: ReactNode
 }
 
 type TextareaProps = Omit<ComponentPropsWithoutRef<'textarea'>, keyof TextareaOwnProps> &
@@ -25,13 +28,16 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
     disabled,
     error,
     helperText,
-    id: textareaId,
+    hideRequiredIndicator,
+    id: propTextareaId,
     label,
     onChange,
-    ...restProps
+    required,
+    requiredIndicator,
+    ...restTextareaProps
   } = props
 
-  const id = useGenerateId(textareaId)
+  const finalTextareaId = useGenerateId(propTextareaId)
   const helperTextId = useGenerateId() + '-feedback'
 
   const handleResize = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,7 +56,6 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
 
   const styles = {
     helperText: cn('text-light-900', error && 'text-danger-500', disabled && 'text-dark-100'),
-    label: cn('text-light-900', disabled && 'text-dark-100'),
     textarea: cn(
       'min-h-[84px]',
       autoResize && 'overflow-hidden resize-none',
@@ -62,18 +67,24 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
   return (
     <div className={'flex flex-col w-full'}>
       {label && (
-        <Typography as={Label} className={styles.label} htmlFor={id} variant={'regular14'}>
+        <FormLabel
+          disabled={disabled}
+          hideRequiredIndicator={hideRequiredIndicator}
+          htmlFor={finalTextareaId}
+          required={required}
+          requiredIndicator={requiredIndicator}
+        >
           {label}
-        </Typography>
+        </FormLabel>
       )}
       <textarea
         aria-describedby={helperText ? helperTextId : undefined}
         aria-invalid={error ? 'true' : undefined}
         className={styles.textarea}
         disabled={disabled}
-        id={id}
+        id={finalTextareaId}
         onChange={handleChange}
-        {...restProps}
+        {...restTextareaProps}
         ref={ref}
       />
       {helperText && (
