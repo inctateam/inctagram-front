@@ -20,6 +20,39 @@ export const Default: Story = {
   },
 }
 
+export const Required: Story = {
+  args: {
+    helperText: 'More the 3 characters',
+    label: 'Name',
+    placeholder: 'Enter your name',
+    required: true,
+  },
+}
+
+export const CustomRequiredIndicator: Story = {
+  args: {
+    helperText: 'More the 3 characters',
+    label: 'Name',
+    placeholder: 'Enter your name',
+    required: true,
+    requiredIndicator: (
+      <span className={'ml-1'}>
+        (<span className={'text-danger-500'}>required</span>)
+      </span>
+    ),
+  },
+}
+
+export const RequiredWithHiddenIndicator: Story = {
+  args: {
+    helperText: 'More the 3 characters',
+    hideRequiredIndicator: true,
+    label: 'Name',
+    placeholder: 'Enter your name',
+    required: true,
+  },
+}
+
 export const Error: Story = {
   args: {
     error: true,
