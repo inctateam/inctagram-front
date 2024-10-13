@@ -7,11 +7,8 @@ import { VariantProps } from 'class-variance-authority'
 
 export type ModalProps = {
   children?: ReactNode
-  className?: string
   closePosition?: VariantProps<typeof closeVariants>['closePosition']
   dialogContentProps?: ComponentPropsWithoutRef<typeof DialogContent>
-  onOpenChange?: (open: boolean) => void
-  open?: boolean
   trigger?: ReactNode
 } & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 

@@ -24,12 +24,7 @@ export const WithUseState: Story = {
     return (
       <>
         <Button onClick={() => setOpen(true)}>Button With Callback</Button>
-        <Modal
-          className={'max-w-[378px]'}
-          closePosition={'inside'}
-          onOpenChange={setOpen}
-          open={open}
-        >
+        <Modal closePosition={'inside'} onOpenChange={setOpen} open={open}>
           <DialogHeader>
             <Typography as={'h2'} variant={'h1'}>
               Modal Window
