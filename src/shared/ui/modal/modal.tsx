@@ -9,16 +9,23 @@ export type ModalProps = {
   children?: ReactNode
   className?: string
   closePosition?: VariantProps<typeof closeVariants>['closePosition']
+  dialogContentProps?: ComponentPropsWithoutRef<typeof DialogContent>
   onOpenChange?: (open: boolean) => void
   open?: boolean
   trigger?: ReactNode
 } & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 
-export const Modal = ({ children, closePosition, trigger, ...props }: ModalProps) => {
+export const Modal = ({
+  children,
+  closePosition,
+  dialogContentProps,
+  trigger,
+  ...props
+}: ModalProps) => {
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
-      <DialogContent>
+      <DialogContent {...dialogContentProps}>
         <DialogClose closePosition={closePosition} />
         {children}
       </DialogContent>
