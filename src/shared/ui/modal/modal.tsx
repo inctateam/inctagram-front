@@ -1,7 +1,5 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react'
 
-import { CloseOutline } from '@/assets/icons'
-import { IconButton } from '@/shared/ui'
 import { DialogClose, closeVariants } from '@/shared/ui/modal/dialog-close'
 import { DialogContent } from '@/shared/ui/modal/dialog-content'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
@@ -21,11 +19,7 @@ export const Modal = ({ children, closePosition, trigger, ...props }: ModalProps
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
       <DialogContent>
-        <DialogClose asChild closePosition={closePosition}>
-          <IconButton aria-label={'Close'}>
-            <CloseOutline />
-          </IconButton>
-        </DialogClose>
+        <DialogClose closePosition={closePosition} />
         {children}
       </DialogContent>
     </DialogPrimitive.Root>
