@@ -11,4 +11,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const DarkMode: Story = {}
+export const Default: Story = {
+  args: {
+    placeholder: 'Pick a date',
+  },
+}
