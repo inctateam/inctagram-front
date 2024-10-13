@@ -5,20 +5,20 @@ import { DialogContent } from '@/shared/ui/modal/dialog-content'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { VariantProps } from 'class-variance-authority'
 
-export type ModalProps = {
+export type DialogProps = {
   children?: ReactNode
   closePosition?: VariantProps<typeof closeVariants>['closePosition']
   dialogContentProps?: ComponentPropsWithoutRef<typeof DialogContent>
   trigger?: ReactNode
 } & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 
-export const Modal = ({
+export const Dialog = ({
   children,
   closePosition,
   dialogContentProps,
   trigger,
   ...props
-}: ModalProps) => {
+}: DialogProps) => {
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
