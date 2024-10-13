@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Button } from '@/shared/ui'
-import { ConfirmDialog } from '@/shared/ui/modal/dialogs/confirm-dialog'
+import { ConfirmDialog } from '@/shared/ui/modal/dialogs'
 import { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof ConfirmDialog> = {
