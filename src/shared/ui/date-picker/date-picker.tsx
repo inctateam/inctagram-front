@@ -11,7 +11,7 @@ import { format } from 'date-fns'
 type DatePickerProps = {} & Omit<TextFieldProps, 'endIcon' | 'value'>
 
 export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, ref) => {
-  const { ...textFieldProps } = props
+  const { className, error, ...textFieldProps } = props
   const [date, setDate] = useState<DateRange | undefined>(undefined)
   const [open, setOpen] = useState<boolean>(false)
 
@@ -31,16 +31,20 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, 
     <Popover onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <TextField
-          className={cn('text-start', open && 'bg-dark-300')}
+          className={cn(
+            'text-start',
+            open && 'bg-dark-300',
+            error && 'text-danger-500 border-danger-500',
+            className
+          )}
           {...textFieldProps}
-          endIcon={<CalendarIcon className={'h-6 w-6 group-disabled:text-light-100'} />}
+          endIcon={<CalendarIcon className={cn('h-6 w-6', error && 'text-danger-500')} />}
           ref={ref}
           value={dateDisplay}
         />
       </PopoverTrigger>
-      <PopoverContent align={'start'} className={'w-auto p-0'}>
+      <PopoverContent align={'start'}>
         <Calendar
-          defaultMonth={date?.from}
           initialFocus
           mode={'range'}
           numberOfMonths={1}
@@ -51,3 +55,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, 
     </Popover>
   )
 })
+
+// <IconButton aria-label={'Close'}>
+// <CloseOutline />
+// </IconButton>

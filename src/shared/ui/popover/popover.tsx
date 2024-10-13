@@ -15,8 +15,7 @@ const PopoverContent = React.forwardRef<
     <PopoverPrimitive.Content
       align={align}
       className={cn(
-        'max-w-[1200px]',
-        'z-50 rounded-sm border border-dark-300 bg-dark-500 px-6 py-4 outline-none',
+        'z-50 rounded-sm border border-dark-300 bg-dark-500 outline-none',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
         'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
