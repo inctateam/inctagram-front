@@ -15,7 +15,6 @@ export const DialogContent = React.forwardRef<
     />
     <DialogPrimitive.Content
       className={cn(
-        //'w-full',
         'fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]',
         'bg-dark-500 border border-dark-300 rounded-sm',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',

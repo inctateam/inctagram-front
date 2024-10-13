@@ -1,18 +1,18 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react'
 
 import { CloseOutline } from '@/assets/icons'
-import { Typography } from '@/shared/ui'
+import { IconButton, Typography } from '@/shared/ui'
 import { DialogBody } from '@/shared/ui/dialog/dialog-body'
-import { DialogClose } from '@/shared/ui/dialog/dialog-close'
+import { DialogClose, closeVariants } from '@/shared/ui/dialog/dialog-close'
 import { DialogContent } from '@/shared/ui/dialog/dialog-content'
 import { DialogHeader } from '@/shared/ui/dialog/dialog-header'
-import { cn } from '@/shared/utils'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { VariantProps } from 'class-variance-authority'
 
 export type ModalProps = {
   children?: ReactNode
   className?: string
-  closeIcon?: 'inside' | 'outside'
+  closePosition?: VariantProps<typeof closeVariants>['closePosition']
   onOpenChange?: (open: boolean) => void
   open?: boolean
   title?: string
@@ -22,7 +22,7 @@ export type ModalProps = {
 export const Dialog = ({
   children,
   className,
-  closeIcon,
+  closePosition,
   title,
   trigger,
   ...props
@@ -31,16 +31,19 @@ export const Dialog = ({
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
       <DialogContent>
-        <DialogClose closeIcon={closeIcon}>
-          <CloseOutline className={'h-6 w-6'} />
-          <span className={'sr-only'}>Close</span>
+        <DialogClose asChild closePosition={closePosition}>
+          <IconButton aria-label={'Close'}>
+            <CloseOutline />
+          </IconButton>
         </DialogClose>
         {title && (
           <DialogHeader>
-            <Typography variant={'h1'}>{title}</Typography>
+            <Typography as={'h2'} variant={'h1'}>
+              {title}
+            </Typography>
           </DialogHeader>
         )}
-        <DialogBody className={cn('w-full', className)}>{children}</DialogBody>
+        <DialogBody className={className}>{children}</DialogBody>
       </DialogContent>
     </DialogPrimitive.Root>
   )
