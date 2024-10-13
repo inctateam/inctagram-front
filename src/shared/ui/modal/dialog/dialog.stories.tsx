@@ -3,9 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 
 import { Button, Typography } from '@/shared/ui'
-import { Dialog } from '@/shared/ui/modal/dialog'
-import { DialogBody } from '@/shared/ui/modal/dialog-body'
-import { DialogHeader } from '@/shared/ui/modal/dialog-header'
+import { Dialog } from '@/shared/ui/modal/dialog/dialog'
+import { DialogBody } from '@/shared/ui/modal/dialog/dialog-body'
+import { DialogHeader } from '@/shared/ui/modal/dialog/dialog-header'
 
 const meta: Meta<typeof Dialog> = {
   component: Dialog,
