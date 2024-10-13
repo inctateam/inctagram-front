@@ -10,6 +10,7 @@ import { format } from 'date-fns'
 
 export const DatePicker = ({ className }: HTMLAttributes<HTMLDivElement>) => {
   const [date, setDate] = useState<DateRange | undefined>(undefined)
+  const [open, setOpen] = useState<boolean>(false)
 
   let dateDisplay
 
@@ -29,16 +30,21 @@ export const DatePicker = ({ className }: HTMLAttributes<HTMLDivElement>) => {
 
   return (
     <div className={cn('grid gap-2', className)}>
-      <Popover>
+      <Popover onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            className={cn('w-[300px] justify-between font-normal text-4 py-2 px-4')}
+            className={cn(
+              'w-[300px] justify-between font-normal text-4 py-2 px-4  ',
+              'bg-dark-700 border border-dark-300',
+              'hover:bg-dark-500 hover:border-dark-100 hover:text-light-100',
+              'disabled:bg-dark-500 disabled:border-dark-300 disabled:text-light-900 group',
+              open && 'bg-dark-500'
+            )}
             id={'date'}
-            variant={'outline'}
           >
             {dateDisplay}
 
-            <CalendarIcon className={'h-6 w-6'} />
+            <CalendarIcon className={'h-6 w-6 group-disabled:text-light-100'} />
           </Button>
         </PopoverTrigger>
         <PopoverContent align={'start'} className={'w-auto p-0'}>
