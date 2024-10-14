@@ -1,20 +1,19 @@
 import { forwardRef } from 'react'
 
 import { Calendar as CalendarIcon } from '@/assets/icons'
-import { TextField, TextFieldProps } from '@/shared/ui'
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover/popover'
+import { Popover, PopoverContent, PopoverTrigger, TextField, TextFieldProps } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
 type DatePickerProps = {
+  onOpenChange: (open: boolean) => void
   open: boolean
-  setOpen: (open: boolean) => void
 } & Omit<TextFieldProps, 'endIcon'>
 
 export const TextFieldPopover = forwardRef<HTMLInputElement, DatePickerProps>((props, ref) => {
-  const { children, className, error, open, setOpen, ...textFieldProps } = props
+  const { children, className, error, onOpenChange, open, ...textFieldProps } = props
 
   return (
-    <Popover onOpenChange={setOpen} open={open}>
+    <Popover onOpenChange={onOpenChange} open={open}>
       <PopoverTrigger asChild>
         <TextField
           className={cn(

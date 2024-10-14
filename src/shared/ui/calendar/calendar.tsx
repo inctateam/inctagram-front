@@ -2,7 +2,7 @@ import * as React from 'react'
 import { DayPicker } from 'react-day-picker'
 
 import { ArrowIosBackOutline, ArrowIosForwardOutline } from '@/assets/icons'
-import { buttonVariants } from '@/shared/ui/button/button'
+import { buttonVariants } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
