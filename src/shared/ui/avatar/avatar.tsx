@@ -1,56 +1,38 @@
-import { useState } from 'react'
-
-import { MainAvatar } from './main-avatar'
-import { ModalForDeletingAvatar } from './modal-for-deleting-avatar'
-import { ModalWithoutAvatar } from './modal-for-uploading-avatar'
-import { ModalWithAvatar } from './modal-with-avatar'
+import { ImageOutline } from '@/assets/icons/components'
+import { cn } from '@/shared/utils'
+import Image from 'next/image'
 
 type Props = {
-  size: string
+  image: string
+  size: 24 | 36 | 48 | 192 | 204
 }
 
-export const Avatar = ({ size }: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<'' | 'maxSizeError' | 'validFormatsError'>('')
-  const [base64Image, setBase64Image] = useState('')
+export const Avatar = ({ image, size = 192 }: Props) => {
+  const sizes = {
+    24: 'size-6',
+    36: 'size-9',
+    48: 'size-12',
+    192: 'size-48',
+    204: 'w-[204px] h-[204px]',
+  }
 
   return (
-    <div>
-      {/*Основное отображение аватара*/}
-      <MainAvatar
-        base64Image={base64Image}
-        setIsDeleteModalOpen={setIsDeleteModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        size={size}
-      />
-      {/*Модальное окно при удалении аватара*/}
-      {isDeleteModalOpen && (
-        <ModalForDeletingAvatar
-          setBase64Image={setBase64Image}
-          setIsDeleteModalOpen={setIsDeleteModalOpen}
-        />
+    <div
+      className={cn(
+        'bg-dark-500 rounded-full overflow-hidden flex justify-center items-center',
+        sizes[size]
       )}
-      {/*Модальное окно при добавлении аватара*/}
-      {isModalOpen && (
-        <div className={'fixed inset-0 flex justify-center items-center bg-dark-700 bg-opacity-50'}>
-          {base64Image ? (
-            <ModalWithAvatar
-              base64Image={base64Image}
-              setBase64Image={setBase64Image}
-              setErrorMessage={setErrorMessage}
-              setIsModalOpen={setIsModalOpen}
-            />
-          ) : (
-            <ModalWithoutAvatar
-              base64Image={base64Image}
-              errorMessage={errorMessage}
-              setBase64Image={setBase64Image}
-              setErrorMessage={setErrorMessage}
-              setIsModalOpen={setIsModalOpen}
-            />
-          )}
-        </div>
+    >
+      {image ? (
+        <Image
+          alt={'Avatar'}
+          className={'object-cover w-full h-full'}
+          height={size}
+          src={image}
+          width={size}
+        />
+      ) : (
+        <ImageOutline className={'size-[25.25%] flex'} />
       )}
     </div>
   )
