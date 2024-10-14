@@ -5,7 +5,7 @@ import { Calendar, TextFieldProps } from '@/shared/ui'
 import { TextFieldPopover } from '@/shared/ui/popover/text-field-popover/text-field-popover'
 import { format } from 'date-fns'
 
-export const DatePickerSingle = forwardRef<HTMLInputElement, Omit<TextFieldProps, 'endIcon'>>(
+export const DatePickerRange = forwardRef<HTMLInputElement, Omit<TextFieldProps, 'endIcon'>>(
   (props, ref) => {
     const [date, setDate] = useState<DateRange | undefined>(undefined)
     const [open, setOpen] = useState<boolean>(false)

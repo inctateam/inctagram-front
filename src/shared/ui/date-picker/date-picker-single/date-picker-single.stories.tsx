@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { DatePickerSingle } from '@/shared/ui/date-picker/date-picker-single'
+import { DatePickerSingle } from '@/shared/ui/date-picker/date-picker-single/date-picker-single'
 
 const meta = {
   component: DatePickerSingle,
