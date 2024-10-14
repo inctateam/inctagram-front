@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react'
 
 import { Calendar, TextFieldProps } from '@/shared/ui'
-import { TextFieldPopover } from '@/shared/ui/date-picker/text-field-popover'
+import { TextFieldPopover } from '@/shared/ui/popover/text-field-popover/text-field-popover'
 import { format } from 'date-fns'
 
 export const DatePickerSingle = forwardRef<HTMLInputElement, Omit<TextFieldProps, 'endIcon'>>(
