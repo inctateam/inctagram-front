@@ -18,10 +18,9 @@ function Calendar({ className, classNames, ...props }: CalendarProps) {
           'h-9 w-9 text-center text-base p-0 relative focus-within:relative focus-within:z-20',
           'last:text-danger-300 [&:nth-child(6)]:text-danger-300',
           '[&:has([aria-selected])]:bg-accent-900',
-          '[&:has([aria-selected])]:rounded-full',
-          '[&:has([aria-selected].day-range-middle)]:rounded-none',
-          '[&:has([aria-selected].day-range-end)]:rounded-l-none',
-          '[&:has([aria-selected].day-range-start)]:rounded-r-none'
+          props.mode === 'single' && '[&:has([aria-selected])]:rounded-full',
+          props.mode === 'range' &&
+            '[&:has([aria-selected].day-range-start)]:rounded-l-full [&:has([aria-selected].day-range-end)]:rounded-r-full'
         ),
         day: cn(
           'h-9 w-9 p-0 outline-0 rounded-full font-normal text-base',
@@ -30,9 +29,8 @@ function Calendar({ className, classNames, ...props }: CalendarProps) {
         ),
         day_outside: 'day-outside text-light-900',
         day_range_end: 'day-range-end',
-        day_range_middle: 'day-range-middle aria-selected:rounded-sm',
+        day_range_middle: 'day-range-middle',
         day_range_start: 'day-range-start',
-        day_selected: '',
         day_today: 'text-accent-500',
         head_cell: 'text-light-900 w-9 font-normal my-3',
         head_row: 'flex h-10 items-center mb-1',
