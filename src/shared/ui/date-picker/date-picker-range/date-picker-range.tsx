@@ -20,7 +20,7 @@ export const DatePickerRange = forwardRef<HTMLInputElement, Omit<TextFieldProps,
     }
 
     return (
-      <TextFieldPopover open={open} setOpen={setOpen} value={dateDisplay} {...props} ref={ref}>
+      <TextFieldPopover onOpenChange={setOpen} open={open} value={dateDisplay} {...props} ref={ref}>
         <Calendar initialFocus mode={'range'} onSelect={setDate} selected={date} />
       </TextFieldPopover>
     )
