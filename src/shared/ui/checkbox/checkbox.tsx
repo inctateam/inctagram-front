@@ -44,8 +44,9 @@ const checkboxVariants = cva(
         false: ['bg-transparent', 'border-light-500', 'text-light-500'],
         indeterminate: [''],
         true: [
-          'bg-transparent',
-          'text-light-700',
+          'bg-light-100',
+          'text-dark-900',
+          'border-light-100',
           'disabled:border-light-900 disabled:text-light-700 disabled:bg-light-900',
         ],
       },

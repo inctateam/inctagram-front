@@ -5,6 +5,8 @@ import { Checkbox } from '@/shared/ui'
 const meta: Meta<typeof Checkbox> = {
   argTypes: {
     checked: { type: 'boolean' },
+    disabled: { type: 'boolean' },
+    label: { type: 'string' },
   },
   component: Checkbox,
   tags: ['autodocs'],
