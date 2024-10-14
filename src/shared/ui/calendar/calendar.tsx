@@ -16,18 +16,21 @@ function Calendar({ className, classNames, ...props }: CalendarProps) {
         caption_label: 'text-base font-bold',
         cell: cn(
           'h-9 w-9 text-center text-base p-0 relative focus-within:relative focus-within:z-20',
-          '[&:has([aria-selected].day-range-end)]:rounded-r-full',
-          '[&:has([aria-selected].day-range-start)]:rounded-l-full',
-          '[&:has([aria-selected].day-outside)]:bg-accent-900 [&:has([aria-selected])]:bg-accent-900',
-          'last:text-danger-300 [&:nth-child(6)]:text-danger-300'
+          'last:text-danger-300 [&:nth-child(6)]:text-danger-300',
+          '[&:has([aria-selected])]:bg-accent-900',
+          '[&:has([aria-selected])]:rounded-full',
+          '[&:has([aria-selected].day-range-middle)]:rounded-none',
+          '[&:has([aria-selected].day-range-end)]:rounded-l-none',
+          '[&:has([aria-selected].day-range-start)]:rounded-r-none'
         ),
         day: cn(
           'h-9 w-9 p-0 outline-0 rounded-full font-normal text-base',
-          'hover:bg-accent-700 hover:rounded-full',
+          'hover:bg-accent-700',
           'focus-visible:border-2 focus-visible:border-accent-300'
         ),
         day_outside: 'day-outside text-light-900',
         day_range_end: 'day-range-end',
+        day_range_middle: 'day-range-middle aria-selected:rounded-sm',
         day_range_start: 'day-range-start',
         day_selected: '',
         day_today: 'text-accent-500',
