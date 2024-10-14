@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { DatePickerRange } from '@/shared/ui/date-picker/date-picker-range'
+import { DatePickerSingle } from '@/shared/ui/date-picker/date-picker-single'
 
 const meta = {
-  component: DatePickerRange,
+  component: DatePickerSingle,
   tags: ['autodocs'],
-  title: 'UI/DatePicker/DatePickerRange',
-} satisfies Meta<typeof DatePickerRange>
+  title: 'UI/DatePicker/DatePickerSingle',
+} satisfies Meta<typeof DatePickerSingle>
 
 export default meta
 type Story = StoryObj<typeof meta>
