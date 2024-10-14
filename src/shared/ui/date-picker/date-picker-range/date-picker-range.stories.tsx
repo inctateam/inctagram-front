@@ -12,5 +12,20 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  args: {},
+  args: { label: 'name' },
+}
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    label: 'name',
+  },
+}
+
+export const WithError: Story = {
+  args: {
+    error: true,
+    helperText: 'Error',
+    label: 'name',
+  },
 }
