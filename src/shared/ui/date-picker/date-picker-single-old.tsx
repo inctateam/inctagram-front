@@ -1,5 +1,4 @@
 import { forwardRef, useState } from 'react'
-import { DateRange } from 'react-day-picker'
 
 import { Calendar as CalendarIcon } from '@/assets/icons'
 import { TextField, TextFieldProps } from '@/shared/ui'
@@ -10,25 +9,19 @@ import { format } from 'date-fns'
 
 type DatePickerProps = {} & Omit<TextFieldProps, 'endIcon' | 'value'>
 
-export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, ref) => {
+export const DatePickerSingleOld = forwardRef<HTMLInputElement, DatePickerProps>((props, ref) => {
   const { className, error, ...textFieldProps } = props
-  const [date, setDate] = useState<DateRange | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(undefined)
   const [open, setOpen] = useState<boolean>(false)
 
-  let dateDisplay
+  let dateDisplay = 'Pick a date'
 
-  if (date?.from) {
-    if (date.to) {
-      dateDisplay = `${format(date.from, 'dd/LL/y')} - ${format(date.to, 'dd/LL/y')}`
-    } else {
-      dateDisplay = format(date.from, 'dd/LL/y')
-    }
-  } else {
-    dateDisplay = 'Pick a date'
+  if (date) {
+    dateDisplay = format(date, 'dd/LL/y')
   }
 
   return (
-    <Popover onOpenChange={setOpen}>
+    <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
         <TextField
           className={cn(
@@ -37,6 +30,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, 
             error && 'text-danger-500 border-danger-500',
             className
           )}
+          placeholder={'Pick a date'}
           {...textFieldProps}
           endIcon={<CalendarIcon className={cn('h-6 w-6', error && 'text-danger-500')} />}
           ref={ref}
@@ -46,7 +40,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>((props, 
       <PopoverContent align={'start'}>
         <Calendar
           initialFocus
-          mode={'range'}
+          mode={'single'}
           numberOfMonths={1}
           onSelect={setDate}
           selected={date}
