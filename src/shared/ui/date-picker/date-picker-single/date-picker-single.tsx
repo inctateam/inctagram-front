@@ -1,14 +1,16 @@
 import { MouseEvent, forwardRef, useState } from 'react'
 import { ActiveModifiers, DayPickerSingleProps, SelectSingleEventHandler } from 'react-day-picker'
 
-import { Calendar, DatePickerPopover, TextFieldPopoverProps } from '@/shared/ui'
+import { Calendar } from '@/shared/ui'
 import { format } from 'date-fns'
+
+import { DatePickerPopover, DatePickerPopoverProps } from '../date-picker-popover'
 
 type DatePickerSingleProps = {
   date?: DayPickerSingleProps['selected']
   onDateSelect?: SelectSingleEventHandler
   otherDatePickerProps?: Omit<DayPickerSingleProps, 'mode' | 'onSelect' | 'selected'>
-} & Omit<TextFieldPopoverProps, 'value'>
+} & Omit<DatePickerPopoverProps, 'value'>
 
 export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSingleProps>(
   ({ date, onDateSelect, otherDatePickerProps, ...popoverTextFieldProps }, ref) => {

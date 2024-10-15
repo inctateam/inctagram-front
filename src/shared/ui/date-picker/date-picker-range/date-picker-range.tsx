@@ -6,14 +6,16 @@ import {
   SelectRangeEventHandler,
 } from 'react-day-picker'
 
-import { Calendar, DatePickerPopover, TextFieldPopoverProps, TextFieldProps } from '@/shared/ui'
+import { Calendar, TextFieldProps } from '@/shared/ui'
 import { format } from 'date-fns'
+
+import { DatePickerPopover, DatePickerPopoverProps } from '../date-picker-popover'
 
 type DatePickerRangeProps = {
   date?: DayPickerRangeProps['selected']
   onDateSelect?: SelectRangeEventHandler
   otherDatePickerProps?: Omit<DayPickerRangeProps, 'mode' | 'onSelect' | 'selected'>
-} & Omit<TextFieldPopoverProps, 'value'>
+} & Omit<DatePickerPopoverProps, 'value'>
 
 export const DatePickerRange = forwardRef<
   HTMLInputElement,
