@@ -1,3 +1,5 @@
+@import 'react-toastify/dist/ReactToastify.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,4 +14,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--success {
+  border: 1px solid #0a6638;
+}
+
+.Toastify__toast-theme--dark.Toastify__toast--error {
+  border: 1px solid #660a1d;
 }
