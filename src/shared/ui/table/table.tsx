@@ -30,19 +30,7 @@ export const Table = ({ data }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/*Заглушка*/}
-
-          <TableRow>
-            <TableCell>12.12.2022</TableCell>
-            <TableCell>12.12.2022</TableCell>
-            <TableCell align={'right'}>$10</TableCell>
-            <TableCell>1 day</TableCell>
-            <TableCell>Stripe</TableCell>
-          </TableRow>
-
-          {/*Для будущих данных*/}
-
-          {/* {data.map((data, index) => (
+          {data.map((data, index) => (
             <TableRow key={index}>
               <TableCell>{new Date(data.dateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
               <TableCell>{new Date(data.endDateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
@@ -50,7 +38,7 @@ export const Table = ({ data }: Props) => {
               <TableCell>{data.subscriptionType}</TableCell>
               <TableCell>{data.paymentType}</TableCell>
             </TableRow>
-          ))} */}
+          ))}
         </TableBody>
       </TableContainer>
     </>
