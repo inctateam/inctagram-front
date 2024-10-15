@@ -1,23 +1,49 @@
-import { forwardRef, useState } from 'react'
+import { MouseEvent, forwardRef, useState } from 'react'
+import { ActiveModifiers, DayPickerSingleProps, SelectSingleEventHandler } from 'react-day-picker'
 
-import { Calendar, TextFieldPopover, TextFieldProps } from '@/shared/ui'
+import { Calendar, DatePickerPopover, TextFieldPopoverProps } from '@/shared/ui'
 import { format } from 'date-fns'
 
-export const DatePickerSingle = forwardRef<HTMLInputElement, Omit<TextFieldProps, 'endIcon'>>(
-  (props, ref) => {
-    const [date, setDate] = useState<Date | undefined>(undefined)
-    const [open, setOpen] = useState<boolean>(false)
+type DatePickerSingleProps = {
+  date?: DayPickerSingleProps['selected']
+  onDateSelect?: SelectSingleEventHandler
+  otherDatePickerProps?: Omit<DayPickerSingleProps, 'mode' | 'onSelect' | 'selected'>
+} & Omit<TextFieldPopoverProps, 'value'>
 
-    let dateDisplay = 'Pick a date'
+export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSingleProps>(
+  ({ date, onDateSelect, otherDatePickerProps, ...popoverTextFieldProps }, ref) => {
+    const isControlled = date
 
-    if (date) {
-      dateDisplay = format(date, 'dd/LL/y')
+    const [uncontrolledDate, setUncontrolledDate] = useState<Date>()
+
+    const finalDate = isControlled ? date : uncontrolledDate
+
+    const handleDaySelect: SelectSingleEventHandler = (
+      date: Date | undefined,
+      selectedDay: Date,
+      activeModifiers: ActiveModifiers,
+      e: MouseEvent
+    ) => {
+      onDateSelect?.(date, selectedDay, activeModifiers, e)
+      setUncontrolledDate(date)
+    }
+
+    let formattedDate = 'Pick a date'
+
+    if (finalDate) {
+      formattedDate = format(finalDate, 'dd/LL/y')
     }
 
     return (
-      <TextFieldPopover onOpenChange={setOpen} open={open} value={dateDisplay} {...props} ref={ref}>
-        <Calendar initialFocus mode={'single'} onSelect={setDate} selected={date} />
-      </TextFieldPopover>
+      <DatePickerPopover value={formattedDate} {...popoverTextFieldProps} ref={ref}>
+        <Calendar
+          initialFocus
+          mode={'single'}
+          onSelect={handleDaySelect}
+          selected={finalDate}
+          {...otherDatePickerProps}
+        />
+      </DatePickerPopover>
     )
   }
 )

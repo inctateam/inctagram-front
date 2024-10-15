@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { DatePickerRange } from '@/shared/ui/date-picker/date-picker-range/date-picker-range'
+import { useState } from 'react'
+import { DateRange } from 'react-day-picker'
+
+import { DatePickerRange } from '@/shared/ui'
+import { format } from 'date-fns'
 
 const meta = {
   component: DatePickerRange,
@@ -27,5 +31,27 @@ export const WithError: Story = {
     error: true,
     helperText: 'Error',
     label: 'name',
+  },
+}
+
+export const GetSelectedDateRange: Story = {
+  render: () => {
+    const [dateRange, setDateRange] = useState<DateRange>()
+
+    const handleDaySelect = (dateRange: DateRange | undefined) => {
+      setDateRange(dateRange)
+    }
+
+    return (
+      <div>
+        <div>
+          From: {dateRange && dateRange.from ? format(dateRange.from, 'dd/LL/y') : 'not selected'}
+        </div>
+        <div>
+          To: {dateRange && dateRange.to ? format(dateRange.to, 'dd/LL/y') : 'not selected'}
+        </div>
+        <DatePickerRange date={dateRange} onDateSelect={handleDaySelect} />
+      </div>
+    )
   },
 }

@@ -1,11 +1,10 @@
-import * as React from 'react'
-import { DayPicker } from 'react-day-picker'
+import { DayPicker, DayPickerRangeProps, DayPickerSingleProps } from 'react-day-picker'
 
 import { ArrowIosBackOutline, ArrowIosForwardOutline } from '@/assets/icons'
 import { buttonVariants } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+export type CalendarProps = DayPickerRangeProps | DayPickerSingleProps
 
 function Calendar({ className, classNames, ...props }: CalendarProps) {
   return (
