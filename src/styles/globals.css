@@ -16,10 +16,31 @@ body {
   }
 }
 
-.Toastify__toast-theme--dark.Toastify__toast--success {
-  border: 1px solid #0a6638;
+.Toastify__toast {
+  min-height: 24px;
+  padding: 4px 24px;
+  border-radius: 2px;
 }
 
-.Toastify__toast-theme--dark.Toastify__toast--error {
-  border: 1px solid #660a1d;
+.Toastify__toast-body {
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 24px;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  /* @apply border-s-success-900 border-success-500 */
+  background-color: #0a6638;
+  border: 1px solid #14cc70;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  background-color: #660a1d;
+  border: 1px solid #cc1439;
+}
+
+.Toastify__close-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
 }

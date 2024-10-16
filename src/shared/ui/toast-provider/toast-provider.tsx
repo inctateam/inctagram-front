@@ -7,7 +7,7 @@ import { IconButton } from '@/shared/ui'
 export const ToastProvider = () => {
   return (
     <ToastContainer
-      autoClose={5000}
+      autoClose={false}
       closeButton={CustomCloseButton}
       closeOnClick
       draggable
@@ -18,7 +18,7 @@ export const ToastProvider = () => {
       pauseOnHover
       position={'top-right'}
       rtl={false}
-      theme={'dark'}
+      theme={'colored'}
     />
   )
 }
