@@ -16,7 +16,7 @@ export const ControlledCheckbox = <TFieldValues extends FieldValues>({
   ...checkboxProps
 }: ControlledCheckboxProps<TFieldValues>) => {
   const {
-    field: { onChange, value },
+    field: { onChange, value, ...field },
   } = useController({
     control,
     defaultValue,
@@ -24,5 +24,7 @@ export const ControlledCheckbox = <TFieldValues extends FieldValues>({
     shouldUnregister,
   })
 
-  return <Checkbox checked={value} id={name} onCheckedChange={onChange} {...checkboxProps} />
+  return (
+    <Checkbox checked={value} id={name} onCheckedChange={onChange} {...checkboxProps} {...field} />
+  )
 }
