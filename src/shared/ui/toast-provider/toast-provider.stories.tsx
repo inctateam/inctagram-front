@@ -35,7 +35,7 @@ export const Error: Story = {
   render: () => {
     return (
       <div>
-        <Button onClick={() => toast.error('Error text!')}>success toast</Button>
+        <Button onClick={() => toast.error('Error text')}>error toast</Button>
       </div>
     )
   },
