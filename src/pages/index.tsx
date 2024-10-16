@@ -1,3 +1,6 @@
+import SignUp from './auth/sign-up'
+
 export default function Home() {
-  return <div>Hello</div>
+  return <SignUp />
+  //<div>Hello</div>
 }
