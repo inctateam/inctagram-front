@@ -16,7 +16,7 @@ export const ControlledTextField = <TFieldValues extends FieldValues>({
   ...textFieldProps
 }: ControlledTextFieldProps<TFieldValues>) => {
   const {
-    field: { onChange, value, ...field },
+    field: { onChange, value },
   } = useController({
     control,
     defaultValue,
@@ -24,5 +24,5 @@ export const ControlledTextField = <TFieldValues extends FieldValues>({
     shouldUnregister,
   })
 
-  return <TextField id={name} onChange={onChange} value={value} {...textFieldProps} {...field} />
+  return <TextField id={name} onChange={onChange} value={value} {...textFieldProps} />
 }

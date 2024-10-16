@@ -36,12 +36,9 @@ const signUpSchema = z
       .min(6, 'Minimum number of characters 6')
       .max(30, 'Maximum number of characters 30')
       .refine(value => {
-        if (!value) {
+        if (value === 'Username') {
           return false
         }
-
-        // Здесь можно добавить логику для проверки уникальности username
-        return true
       }, 'User with this username is already registered'),
   })
   .refine(data => data.password === data.passwordConfirmation, {
@@ -82,7 +79,6 @@ export default function SignUp() {
           label={<FormLabel required>Username</FormLabel>}
           name={'username'}
           placeholder={'Epam11'}
-          //rules={{ required: true }}
         />
         {errors.username && (
           <FormHelperText error style={{ alignSelf: 'start' }}>
@@ -94,7 +90,6 @@ export default function SignUp() {
           label={<FormLabel required>Email</FormLabel>}
           name={'email'}
           placeholder={'Epam@epam.com'}
-          rules={{ required: true }}
         />
         {errors.email && <FormHelperText error>{errors.email.message}</FormHelperText>}
         <ControlledPasswordTextField
@@ -102,7 +97,6 @@ export default function SignUp() {
           label={<FormLabel required>Password</FormLabel>}
           name={'password'}
           placeholder={'******************'}
-          rules={{ required: true }}
         />
         {errors.password && (
           <FormHelperText error style={{ alignSelf: 'start' }}>
@@ -114,7 +108,6 @@ export default function SignUp() {
           label={<FormLabel required>Password confirmation</FormLabel>}
           name={'passwordConfirmation'}
           placeholder={'******************'}
-          rules={{ required: true }}
         />
         {errors.passwordConfirmation && (
           <FormHelperText error style={{ alignSelf: 'start' }}>
@@ -140,7 +133,6 @@ export default function SignUp() {
             </div>
           }
           name={'agreesToTerms'}
-          rules={{ required: true }}
         />
         {errors.agreesToTerms && (
           <FormHelperText error>{errors.agreesToTerms.message}</FormHelperText>
