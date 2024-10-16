@@ -4,20 +4,24 @@ import { CloseOutline } from '@/assets/icons'
 import { Button, ButtonProps, IconButton, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import * as RadixAlertDialog from '@radix-ui/react-alert-dialog'
+import { AlertDialogProps as AlertDialogRootProps } from '@radix-ui/react-alert-dialog'
 import { VariantProps, cva } from 'class-variance-authority'
 
 type AlertDialogProps = {
   cancelButton?: ReactNode
   confirmButton?: ReactNode
+  defaultOpen?: AlertDialogRootProps['defaultOpen']
   description?: string
+  onOpenChange?: AlertDialogRootProps['onOpenChange']
+  open?: AlertDialogRootProps['open']
   position?: VariantProps<typeof alertDialogVariants>['position']
   title?: string
   trigger?: ReactNode
-} & ComponentPropsWithoutRef<typeof RadixAlertDialog.Root>
+} & ComponentPropsWithoutRef<typeof RadixAlertDialog.Content>
 
 const alertDialogVariants = cva(
   [
-    'fixed flex flex-col max-w-[487px] bg-dark-300 border border-solid border-dark-100 py-3 rounded-sm',
+    'fixed flex flex-col max-w-[438px] bg-dark-300 border border-solid border-dark-100 py-3 rounded-sm',
   ],
   {
     variants: {
@@ -35,11 +39,12 @@ const alertDialogVariants = cva(
   }
 )
 
-const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Root>, AlertDialogProps>(
+const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, AlertDialogProps>(
   (props, ref) => {
     const {
       cancelButton,
       confirmButton,
+      defaultOpen,
       description,
       onOpenChange,
       open,
@@ -50,39 +55,39 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Root>, AlertDi
     } = props
 
     return (
-      <RadixAlertDialog.Root {...rest} onOpenChange={onOpenChange} open={open}>
+      <RadixAlertDialog.Root defaultOpen={defaultOpen} onOpenChange={onOpenChange} open={open}>
         <RadixAlertDialog.Trigger asChild>{trigger}</RadixAlertDialog.Trigger>
         <RadixAlertDialog.Portal>
           <RadixAlertDialog.Overlay className={'fixed inset-0 bg-dark-900 opacity-60'} />
-          <div className={cn(alertDialogVariants({ position }))} ref={ref}>
-            <RadixAlertDialog.Content>
-              <div className={'border-b-[1px] pb-3 border-solid border-b-dark-100 pl-6 pr-3'}>
-                <div className={'flex h-9 justify-between'}>
-                  <RadixAlertDialog.Title>
-                    <Typography as={'span'} variant={'h1'}>
-                      {title}
-                    </Typography>
-                  </RadixAlertDialog.Title>
-                  <RadixAlertDialog.Cancel asChild>
-                    <IconButton className={'hover:bg-dark-100'}>
-                      <CloseOutline />
-                    </IconButton>
-                  </RadixAlertDialog.Cancel>
-                </div>
-              </div>
-              <div>
-                <RadixAlertDialog.Description className={'flex py-[30px] px-6 '}>
-                  <Typography as={'span'} className={'break-words'} variant={'regular16'}>
-                    {description}
+          <RadixAlertDialog.Content
+            className={cn(alertDialogVariants({ position }))}
+            {...rest}
+            ref={ref}
+          >
+            <div className={'border-b-[1px] pb-3 border-solid border-b-dark-100 pl-6 pr-3'}>
+              <div className={'flex h-9 justify-between'}>
+                <RadixAlertDialog.Title>
+                  <Typography as={'h2'} variant={'h1'}>
+                    {title}
                   </Typography>
-                </RadixAlertDialog.Description>
+                </RadixAlertDialog.Title>
+                <RadixAlertDialog.Cancel asChild>
+                  <IconButton className={'hover:bg-dark-100'}>
+                    <CloseOutline />
+                  </IconButton>
+                </RadixAlertDialog.Cancel>
               </div>
-              <div className={'flex justify-end pb-3 gap-6 px-6'}>
-                <RadixAlertDialog.Action asChild>{confirmButton}</RadixAlertDialog.Action>
-                <RadixAlertDialog.Cancel asChild>{cancelButton}</RadixAlertDialog.Cancel>
-              </div>
-            </RadixAlertDialog.Content>
-          </div>
+            </div>
+            <RadixAlertDialog.Description className={'flex py-[30px] px-6'}>
+              <Typography as={'p'} className={'break-words'} variant={'regular16'}>
+                {description}
+              </Typography>
+            </RadixAlertDialog.Description>
+            <div className={'flex justify-end pb-3 gap-6 px-6'}>
+              <RadixAlertDialog.Action asChild>{confirmButton}</RadixAlertDialog.Action>
+              <RadixAlertDialog.Cancel asChild>{cancelButton}</RadixAlertDialog.Cancel>
+            </div>
+          </RadixAlertDialog.Content>
         </RadixAlertDialog.Portal>
       </RadixAlertDialog.Root>
     )
