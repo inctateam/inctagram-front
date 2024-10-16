@@ -1,16 +1,24 @@
-import { ReactNode } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+
+import { cn } from '@/shared/utils'
 
 type Props = {
-  children: ReactNode
   isHeader?: boolean
-}
+} & ComponentPropsWithoutRef<'tr'>
 
-export const TableRow = ({ children, isHeader }: Props) => {
-  return (
-    <tr
-      className={`text-sm flex justify-between ${isHeader ? 'font-semibold' : 'border border-t-0 border-dark-500'}`}
-    >
-      {children}
-    </tr>
-  )
-}
+export const TableRow = forwardRef<ElementRef<'tr'>, Props>(
+  ({ children, className, isHeader, ...rest }, ref) => {
+    return (
+      <tr
+        ref={ref}
+        {...rest}
+        className={cn(
+          `text-sm flex justify-between ${isHeader ? 'font-semibold' : 'border border-t-0 border-dark-500'}`,
+          className
+        )}
+      >
+        {children}
+      </tr>
+    )
+  }
+)

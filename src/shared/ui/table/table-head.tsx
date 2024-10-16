@@ -1,9 +1,15 @@
-import { ReactNode } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 
-type Props = {
-  children: ReactNode
-}
+import { cn } from '@/shared/utils'
 
-export const TableHead = ({ children }: Props) => {
-  return <thead className={'bg-dark-500'}>{children}</thead>
-}
+type Props = ComponentPropsWithoutRef<'thead'>
+
+export const TableHead = forwardRef<ElementRef<'thead'>, Props>(
+  ({ children, className, ...rest }, ref) => {
+    return (
+      <thead ref={ref} {...rest} className={cn('bg-dark-500', className)}>
+        {children}
+      </thead>
+    )
+  }
+)

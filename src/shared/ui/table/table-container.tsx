@@ -1,9 +1,15 @@
-import { ReactNode } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 
-type Props = {
-  children: ReactNode
-}
+import { cn } from '@/shared/utils'
 
-export const TableContainer = ({ children }: Props) => {
-  return <table className={'w-[972px] mx-auto'}>{children}</table>
-}
+type Props = ComponentPropsWithoutRef<'table'>
+
+export const TableContainer = forwardRef<ElementRef<'table'>, Props>(
+  ({ children, className, ...rest }, ref) => {
+    return (
+      <table ref={ref} {...rest} className={cn('w-[972px] mx-auto', className)}>
+        {children}
+      </table>
+    )
+  }
+)
