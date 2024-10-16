@@ -29,11 +29,11 @@ const alertDialogVariants = cva(
         position: 'bottom-left',
       },
       position: {
-        ['bottom-left']: ['bottom-4 left-4'],
-        ['bottom-right']: ['bottom-4 right-4'],
-        ['center']: ['top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'],
-        ['top-left']: ['top-4 left-4'],
-        ['top-right']: ['top-4 right-4'],
+        bottomLeft: ['bottom-4 left-4'],
+        bottomRight: ['bottom-4 right-4'],
+        center: ['top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'],
+        topLeft: ['top-4 left-4'],
+        topRight: ['top-4 right-4'],
       },
     },
   }
