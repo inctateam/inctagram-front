@@ -1,24 +1,23 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
 import { CloseOutline } from '@/assets/icons'
-import { Button, IconButton, Typography } from '@/shared/ui'
+import { Button, ButtonProps, IconButton, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import * as RadixAlertDialog from '@radix-ui/react-alert-dialog'
-import { cva } from 'class-variance-authority'
+import { VariantProps, cva } from 'class-variance-authority'
 
 type AlertDialogProps = {
-  canselButtonName?: string
-  confirmButtonName?: string
+  cancelButton?: ReactNode
+  confirmButton?: ReactNode
   description?: string
-  onCansel?: () => void
-  onConfirm?: () => void
-  position?: 'bottom-left' | 'bottom-right' | 'center' | 'top-left' | 'top-right'
+  position?: VariantProps<typeof alertDialogVariants>['position']
   title?: string
+  trigger?: ReactNode
 } & ComponentPropsWithoutRef<typeof RadixAlertDialog.Root>
 
-const AlertDialogVariants = cva(
+const alertDialogVariants = cva(
   [
-    'fixed flex flex-col max-w-[487px] bg-dark-300 border-[1px] border-solid border-dark-100 py-3 rounded-[2px]',
+    'fixed flex flex-col max-w-[487px] bg-dark-300 border border-solid border-dark-100 py-3 rounded-sm',
   ],
   {
     variants: {
@@ -39,42 +38,33 @@ const AlertDialogVariants = cva(
 const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Root>, AlertDialogProps>(
   (props, ref) => {
     const {
-      canselButtonName = 'No',
-      confirmButtonName = 'Yes',
+      cancelButton,
+      confirmButton,
       description,
-      onCansel,
-      onConfirm,
       onOpenChange,
       open,
       position = 'center',
       title,
+      trigger,
       ...rest
     } = props
 
-    const onConfirmHandler = () => {
-      onConfirm?.()
-      onOpenChange?.(false)
-    }
-    const onCanselHandler = () => {
-      onCansel?.()
-      onOpenChange?.(false)
-    }
-
     return (
       <RadixAlertDialog.Root {...rest} onOpenChange={onOpenChange} open={open}>
+        <RadixAlertDialog.Trigger asChild>{trigger}</RadixAlertDialog.Trigger>
         <RadixAlertDialog.Portal>
           <RadixAlertDialog.Overlay className={'fixed inset-0 bg-dark-900 opacity-60'} />
-          <div className={cn(AlertDialogVariants({ position }))} ref={ref}>
+          <div className={cn(alertDialogVariants({ position }))} ref={ref}>
             <RadixAlertDialog.Content>
-              <div className={'border-b-[1px] pb-3 border-solid border-b-dark-100 px-6'}>
-                <div className={'flex h-9 justify-between '}>
+              <div className={'border-b-[1px] pb-3 border-solid border-b-dark-100 pl-6 pr-3'}>
+                <div className={'flex h-9 justify-between'}>
                   <RadixAlertDialog.Title>
                     <Typography as={'span'} variant={'h1'}>
                       {title}
                     </Typography>
                   </RadixAlertDialog.Title>
                   <RadixAlertDialog.Cancel asChild>
-                    <IconButton>
+                    <IconButton className={'hover:bg-dark-100'}>
                       <CloseOutline />
                     </IconButton>
                   </RadixAlertDialog.Cancel>
@@ -88,16 +78,8 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Root>, AlertDi
                 </RadixAlertDialog.Description>
               </div>
               <div className={'flex justify-end pb-3 gap-6 px-6'}>
-                <RadixAlertDialog.Action asChild>
-                  <Button className={'px-6'} onClick={onConfirmHandler} variant={'outline'}>
-                    {confirmButtonName}
-                  </Button>
-                </RadixAlertDialog.Action>
-                <RadixAlertDialog.Cancel asChild>
-                  <Button className={'px-6'} onClick={onCanselHandler} variant={'primary'}>
-                    {canselButtonName}
-                  </Button>
-                </RadixAlertDialog.Cancel>
+                <RadixAlertDialog.Action asChild>{confirmButton}</RadixAlertDialog.Action>
+                <RadixAlertDialog.Cancel asChild>{cancelButton}</RadixAlertDialog.Cancel>
               </div>
             </RadixAlertDialog.Content>
           </div>
@@ -107,4 +89,12 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Root>, AlertDi
   }
 )
 
-export { AlertDialog, type AlertDialogProps }
+const CancelButton = ({ className, ...props }: ButtonProps) => {
+  return <Button className={cn('px-6', className)} variant={'primary'} {...props} />
+}
+
+const ConfirmButton = ({ className, ...props }: ButtonProps) => {
+  return <Button className={cn('px-6', className)} variant={'outline'} {...props} />
+}
+
+export { AlertDialog, type AlertDialogProps, CancelButton, ConfirmButton }

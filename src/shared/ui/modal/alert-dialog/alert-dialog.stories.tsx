@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-import { Button } from '@/shared/ui'
-import { AlertDialog } from '@/shared/ui/alert-dialog/alert-dialog'
+import { AlertDialog, Button, CancelButton, ConfirmButton } from '@/shared/ui'
 
 const meta = {
   argTypes: {
@@ -11,12 +10,12 @@ const meta = {
   },
   component: AlertDialog,
   tags: ['autodocs'],
-  title: 'UI/AlertDialog',
+  title: 'UI/Modal/AlertDialog',
 }
 
 export default meta
 
-export const DeleteDialog = {
+export const Controlled = {
   args: {
     description: 'Are you sure you want to delete this post?',
     position: 'bottom-left',
@@ -38,13 +37,21 @@ export const DeleteDialog = {
         >
           Show alert dialog
         </Button>
-        {isVisible && <AlertDialog open={isVisible} {...args} onOpenChange={handleOpenChange} />}
+        {isVisible && (
+          <AlertDialog
+            open={isVisible}
+            {...args}
+            cancelButton={<CancelButton>No</CancelButton>}
+            confirmButton={<ConfirmButton>Yes</ConfirmButton>}
+            onOpenChange={handleOpenChange}
+          />
+        )}
       </div>
     )
   },
 }
 
-export const ClosePostDialog = {
+export const Uncontrolled = {
   args: {
     description:
       'Do you really want to close the edition of the publication? If you close changes won’t be saved',
@@ -52,23 +59,13 @@ export const ClosePostDialog = {
     title: 'Close post',
   },
   render: ({ ...args }) => {
-    const [isVisible, setIsVisible] = useState(false)
-
-    const handleOpenChange = (open: boolean) => {
-      setIsVisible(open)
-    }
-
     return (
-      <div>
-        <Button
-          onClick={() => {
-            setIsVisible(true)
-          }}
-        >
-          Show alert dialog
-        </Button>
-        {isVisible && <AlertDialog open={isVisible} {...args} onOpenChange={handleOpenChange} />}
-      </div>
+      <AlertDialog
+        {...args}
+        cancelButton={<CancelButton>No</CancelButton>}
+        confirmButton={<ConfirmButton>Yes</ConfirmButton>}
+        trigger={<Button>Show alert dialog</Button>}
+      />
     )
   },
 }
