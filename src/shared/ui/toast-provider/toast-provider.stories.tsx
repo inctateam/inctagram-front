@@ -6,6 +6,14 @@ import { Button, ToastProvider } from '@/shared/ui'
 
 const meta = {
   component: ToastProvider,
+  decorators: [
+    Story => (
+      <>
+        <ToastProvider />
+        <Story />
+      </>
+    ),
+  ],
   tags: ['autodocs'],
   title: 'UI/Toast',
 } satisfies Meta<typeof ToastProvider>
@@ -17,7 +25,6 @@ export const Success: Story = {
   render: () => {
     return (
       <div>
-        <ToastProvider />
         <Button onClick={() => toast.success('Success!')}>success toast</Button>
       </div>
     )
@@ -28,7 +35,6 @@ export const Error: Story = {
   render: () => {
     return (
       <div>
-        <ToastProvider />
         <Button onClick={() => toast.error('Error text!')}>success toast</Button>
       </div>
     )
