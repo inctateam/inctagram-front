@@ -12,7 +12,6 @@ export const ControlledTextField = <TFieldValues extends FieldValues>({
   control,
   defaultValue,
   name,
-  rules,
   shouldUnregister,
   ...textFieldProps
 }: ControlledTextFieldProps<TFieldValues>) => {
@@ -22,7 +21,6 @@ export const ControlledTextField = <TFieldValues extends FieldValues>({
     control,
     defaultValue,
     name,
-    rules,
     shouldUnregister,
   })
 

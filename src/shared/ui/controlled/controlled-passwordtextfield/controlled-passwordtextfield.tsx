@@ -12,7 +12,6 @@ export const ControlledPasswordTextField = <TFieldValues extends FieldValues>({
   control,
   defaultValue,
   name,
-  rules,
   shouldUnregister,
   ...passwordTextFieldProps
 }: ControlledPasswordTextFieldProps<TFieldValues>) => {
@@ -22,7 +21,6 @@ export const ControlledPasswordTextField = <TFieldValues extends FieldValues>({
     control,
     defaultValue,
     name,
-    rules,
     shouldUnregister,
   })
 
