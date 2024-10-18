@@ -4,12 +4,12 @@ pipeline {
     agent any
     environment {
         ENV_TYPE = "production"
-        PORT = 3565
+        PORT = 3569
         NAMESPACE = "content-universe-store"
         REGISTRY_HOSTNAME = "contentuniverse"
         REGISTRY = "registry.hub.docker.com"
-        PROJECT = "inctagram-front-public"
-        DEPLOYMENT_NAME = "inctagram-front-public-deployment"
+        PROJECT = "front-public"
+        DEPLOYMENT_NAME = "front-public-deployment"
         IMAGE_NAME = "${env.BUILD_ID}_${env.ENV_TYPE}_${env.GIT_COMMIT}"
         DOCKER_BUILD_NAME = "${env.REGISTRY_HOSTNAME}/${env.PROJECT}:${env.IMAGE_NAME}"
     }
