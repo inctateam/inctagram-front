@@ -7,7 +7,7 @@ import { Button, Dialog, DialogBody, DialogHeader, Typography } from '@/shared/u
 const meta: Meta<typeof Dialog> = {
   component: Dialog,
   tags: ['autodocs'],
-  title: 'UI/Modal',
+  title: 'UI/Modal/Dialog',
 } satisfies Meta<typeof Dialog>
 
 export default meta
