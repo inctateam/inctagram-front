@@ -1,3 +1,5 @@
+import { CenteredLayout } from '@/layouts'
+
 export default function Home() {
-  return <div>Hello</div>
+  return <CenteredLayout className={'pt-6'}>Home Page</CenteredLayout>
 }

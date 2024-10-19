@@ -1,5 +1,5 @@
-const PasswordReset = () => {
-  return 'PasswordReset'
+const PasswordRecovery = () => {
+  return 'Password Recovery Page'
 }
 
-export default PasswordReset
+export default PasswordRecovery
