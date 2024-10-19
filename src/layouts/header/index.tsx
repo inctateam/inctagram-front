@@ -15,6 +15,21 @@ export const Header = () => {
         >
           Inctagram
         </TextLink>
+
+        {/* Remove later*/}
+        <div className={'flex gap-5'}>
+          <TextLink href={PATH.SIGN_UP}>Sigh up</TextLink>
+
+          <TextLink href={PATH.SIGN_IN}>Sigh in</TextLink>
+
+          <TextLink href={PATH.PASSWORD_RECOVERY}>Forgot password</TextLink>
+          <TextLink href={PATH.PASSWORD_RESET}>Reset password</TextLink>
+
+          <TextLink href={PATH.TERMS_OF_SERVICE}>Terms of service</TextLink>
+          <TextLink href={PATH.PRIVACY_POLICY}>Privacy Policy</TextLink>
+        </div>
+        {/* Remove later*/}
+
         <span>Select language</span>
       </LayoutContainer>
     </div>
