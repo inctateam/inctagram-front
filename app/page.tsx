@@ -1,5 +1,9 @@
 import { CenteredLayout } from '@/layouts'
 
 export default function Home() {
-  return <CenteredLayout className={'pt-6'}>Home Page</CenteredLayout>
+  return (
+    <CenteredLayout>
+      <div className={'w-full max-w-[972px] mx-auto'}>Home Page</div>
+    </CenteredLayout>
+  )
 }

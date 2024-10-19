@@ -12,7 +12,7 @@ export const CenteredLayout = ({ children, className }: Props) => {
   return (
     <div>
       <Header />
-      <LayoutContainer className={cn('flex items-start justify-center pt-9', className)}>
+      <LayoutContainer className={cn('sm:pt-6', className)}>
         <main>{children}</main>
       </LayoutContainer>
     </div>

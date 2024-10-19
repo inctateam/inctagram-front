@@ -12,7 +12,9 @@ export const AuthLayout = ({ children, className }: Props) => {
   return (
     <div className={'h-screen flex flex-col'}>
       <Header />
-      <LayoutContainer className={cn('flex items-start justify-center flex-grow pt-9', className)}>
+      <LayoutContainer
+        className={cn('flex items-start justify-center flex-grow sm:pt-9', className)}
+      >
         <main>{children}</main>
       </LayoutContainer>
     </div>
