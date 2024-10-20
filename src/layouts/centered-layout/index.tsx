@@ -5,14 +5,13 @@ import { cn } from '@/shared/utils'
 
 type Props = {
   children: ReactNode
-  className?: string
 }
 
-export const CenteredLayout = ({ children, className }: Props) => {
+export const CenteredLayout = ({ children }: Props) => {
   return (
     <div>
       <Header />
-      <LayoutContainer className={cn('sm:pt-6', className)}>
+      <LayoutContainer className={cn('sm:pt-6')}>
         <main>{children}</main>
       </LayoutContainer>
     </div>
