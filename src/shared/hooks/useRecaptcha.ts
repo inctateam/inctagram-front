@@ -17,10 +17,10 @@ const useRecaptcha = () => {
       }
     }
 
-    let tokenRefreshTimeout: NodeJS.Timeout | null = null
+    let tokenRefreshTimeout: ReturnType<typeof setTimeout> | null = null
 
     if (captchaToken) {
-      tokenRefreshTimeout = setTimeout(refreshCaptcha, 110000) // 110 seconds
+      tokenRefreshTimeout = setTimeout(refreshCaptcha, 110000)
     }
 
     return () => {
@@ -30,7 +30,7 @@ const useRecaptcha = () => {
     }
   }, [captchaToken])
 
-  return { captchaToken, handleRecaptcha, recaptchaRef }
+  return { captchaToken, handleRecaptcha, recaptchaRef, setCaptchaToken }
 }
 
 export { useRecaptcha }
