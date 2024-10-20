@@ -1,6 +1,5 @@
+import { locales } from '@/i18n/i18n.config'
 import createMiddleware from 'next-intl/middleware'
-
-import { locales } from './i18n.config'
 
 export default createMiddleware({
   // Use this locale when we can't match
@@ -8,12 +7,12 @@ export default createMiddleware({
   // and when no locale is explicitly set.
   defaultLocale: 'en',
 
-  // we cover locale detection.
-  localeDetection: false,
-
   // Automatic locale detection is enabled by
   // default. We're disabling it to keep things
   // simple for now. We'll enable it later when
+  // false - we cover locale detection.
+  localeDetection: false,
+
   // List all supported locales (en-us, ar-eg).
   locales,
 })
