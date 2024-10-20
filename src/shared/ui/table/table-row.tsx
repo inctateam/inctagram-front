@@ -13,7 +13,7 @@ export const TableRow = forwardRef<ElementRef<'tr'>, Props>(
         ref={ref}
         {...rest}
         className={cn(
-          `text-sm flex justify-between ${isHeader ? 'font-semibold' : 'border border-t-0 border-dark-500'}`,
+          `text-sm ${isHeader ? 'font-semibold' : 'border border-t-0 border-dark-500'}`,
           className
         )}
       >
