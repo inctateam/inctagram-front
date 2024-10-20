@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:production": "next build",
     "start": "next start",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
@@ -36,10 +37,11 @@
     "date-fns": "^4.1.0",
     "next": "14.2.12",
     "react": "^18",
-    "react-datepicker": "^7.3.0",
+    "react-day-picker": "8.10.1",
     "react-dom": "^18",
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.53.0",
+    "react-toastify": "^10.0.6",
     "tailwind-merge": "^2.5.2",
     "zod": "^3.23.8"
   },
