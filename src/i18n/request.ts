@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import { getRequestConfig } from 'next-intl/server'
 
-import { LOCALES, type Locale } from './i18n.config'
+import { type AppLocale, LOCALES } from './i18n.config'
 
 // Load the translation file for the active locale
 // on each request and make it available to our
 // pages, components, etc.
 export default getRequestConfig(async ({ locale }) => {
-  if (!LOCALES.includes(locale as Locale)) {
+  if (!LOCALES.includes(locale as AppLocale)) {
     return notFound()
   }
 

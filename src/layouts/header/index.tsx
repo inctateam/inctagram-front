@@ -2,6 +2,7 @@ import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
 import { TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
+import { LocaleSwitcher } from '@/widgets'
 
 export const Header = () => {
   return (
@@ -35,7 +36,7 @@ export const Header = () => {
         </div>
         {/* Remove later*/}
 
-        <span>Select language</span>
+        <LocaleSwitcher />
       </LayoutContainer>
     </div>
   )
