@@ -11,7 +11,7 @@ export const CenteredLayout = ({ children }: Props) => {
   return (
     <div>
       <Header />
-      <LayoutContainer className={cn('sm:pt-6')}>
+      <LayoutContainer className={cn('sm:pt-6 pt-4')}>
         <main>{children}</main>
       </LayoutContainer>
     </div>
