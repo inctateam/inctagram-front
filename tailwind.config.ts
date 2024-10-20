@@ -18,6 +18,12 @@ const config: Config = {
         sm: ['0.875rem', '1.5rem'],
         xl: ['1.25rem', '2.25rem'],
       },
+      keyframes: {
+        rotation: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+      },
     },
   },
 }
