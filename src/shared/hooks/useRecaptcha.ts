@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import GoogleReCAPTCHA from 'react-google-recaptcha'
 
-const useRecaptcha = () => {
+const useRecaptcha = (refreshTimeout = 110000) => {
   const [captchaToken, setCaptchaToken] = useState<null | string>('')
   const recaptchaRef = useRef<GoogleReCAPTCHA | null>(null)
 
@@ -20,7 +20,7 @@ const useRecaptcha = () => {
     let tokenRefreshTimeout: ReturnType<typeof setTimeout> | null = null
 
     if (captchaToken) {
-      tokenRefreshTimeout = setTimeout(refreshCaptcha, 110000)
+      tokenRefreshTimeout = setTimeout(refreshCaptcha, refreshTimeout)
     }
 
     return () => {
