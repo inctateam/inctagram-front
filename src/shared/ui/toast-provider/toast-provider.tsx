@@ -4,10 +4,12 @@ import { CloseButton, ToastContainer } from 'react-toastify'
 import { CloseOutline } from '@/assets/icons'
 import { IconButton } from '@/shared/ui'
 
+import './react-toastify.css'
+
 export const ToastProvider = () => {
   return (
     <ToastContainer
-      autoClose={false}
+      autoClose={5000}
       closeButton={CustomCloseButton}
       closeOnClick
       draggable
@@ -28,8 +30,8 @@ const CustomCloseButton = ({
 }: {
   closeToast: ComponentPropsWithoutRef<typeof CloseButton>['closeToast']
 }) => (
-  <span>
-    <IconButton onClick={closeToast}>
+  <span className={'self-center'}>
+    <IconButton className={'hover:bg-opacity-60 p-1'} onClick={closeToast}>
       <CloseOutline />
     </IconButton>
   </span>
