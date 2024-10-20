@@ -19,11 +19,16 @@ export const Header = () => {
         {/* Remove later*/}
         <div className={'flex gap-5'}>
           <TextLink href={PATH.SIGN_UP}>Sigh up</TextLink>
+          <TextLink href={PATH.CONFIRM_EMAIL + '?token=983274981-27390128039-8213098-3459083495'}>
+            Confirm Email
+          </TextLink>
 
           <TextLink href={PATH.SIGN_IN}>Sigh in</TextLink>
 
           <TextLink href={PATH.PASSWORD_RECOVERY}>Forgot password</TextLink>
-          <TextLink href={PATH.PASSWORD_RESET}>Reset password</TextLink>
+          <TextLink href={PATH.PASSWORD_RESET + '?token=2348230-842084-23093482039-23492390'}>
+            Reset password
+          </TextLink>
 
           <TextLink href={PATH.TERMS_OF_SERVICE}>Terms of service</TextLink>
           <TextLink href={PATH.PRIVACY_POLICY}>Privacy Policy</TextLink>

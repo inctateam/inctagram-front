@@ -1,5 +1,5 @@
 export const PATH = {
-  EMAIL_CONFIRM: '/confirm-email',
+  CONFIRM_EMAIL: '/confirm-email',
   PASSWORD_RECOVERY: '/password-recovery', // forgot password page
   PASSWORD_RESET: '/password-reset', // creating new password
   PRIVACY_POLICY: '/privacy-policy',
