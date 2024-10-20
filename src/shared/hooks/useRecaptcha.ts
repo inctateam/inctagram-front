@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import GoogleReCAPTCHA from 'react-google-recaptcha'
 
 const useRecaptcha = (refreshTimeout = 110000) => {
-  const [captchaToken, setCaptchaToken] = useState<null | string>('')
+  const [captchaToken, setCaptchaToken] = useState<null | string>(null)
   const recaptchaRef = useRef<GoogleReCAPTCHA | null>(null)
 
   const handleRecaptcha = useCallback((token: null | string) => {
@@ -13,7 +13,7 @@ const useRecaptcha = (refreshTimeout = 110000) => {
     const refreshCaptcha = () => {
       if (recaptchaRef.current && captchaToken) {
         recaptchaRef.current.reset()
-        setCaptchaToken('')
+        setCaptchaToken(null)
       }
     }
 
