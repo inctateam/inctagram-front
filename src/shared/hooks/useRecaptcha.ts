@@ -28,7 +28,7 @@ const useRecaptcha = (refreshTimeout = 110000) => {
         clearTimeout(tokenRefreshTimeout)
       }
     }
-  }, [captchaToken])
+  }, [captchaToken, refreshTimeout])
 
   return { captchaToken, handleRecaptcha, recaptchaRef, setCaptchaToken }
 }
