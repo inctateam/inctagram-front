@@ -1,0 +1,24 @@
+@import 'react-toastify/dist/ReactToastify.css';
+
+.Toastify__toast {
+  min-height: auto;
+  padding: 8px 16px 8px 24px;
+  border-radius: 2px;
+}
+
+.Toastify__toast-body {
+  padding: 0;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5rem;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background-color: #0a6638;
+  border: 1px solid #14cc70;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  background-color: #660a1d;
+  border: 1px solid #cc1439;
+}

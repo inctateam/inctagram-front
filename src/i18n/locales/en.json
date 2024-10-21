@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "signIn": "Sigh In",
+    "signUp": "Sigh Up",
+    "confirmEmail": "Confirm Email",
+    "passwordRecovery": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "terms": "Terms of service",
+    "privacyPolicy": "Privacy Policy"
+  }
+}

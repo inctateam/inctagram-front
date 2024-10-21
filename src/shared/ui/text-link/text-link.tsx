@@ -1,9 +1,9 @@
 import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
 
+import { Link } from '@/i18n/routing'
 import { cn } from '@/shared/utils'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
-import Link from 'next/link'
 
 type TextLinkOwnProps = {
   asChild?: ReactNode

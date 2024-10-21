@@ -5,7 +5,7 @@ import tailwindcss_animate from 'tailwindcss-animate'
 import { palette } from './src/styles/palette'
 
 const config: Config = {
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
   plugins: [tailwindcss_animate],
   theme: {
     extend: {
