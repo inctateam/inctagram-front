@@ -48,7 +48,7 @@ const signUpSchema = z
 
 type SignUpFields = z.infer<typeof signUpSchema>
 
-export default function SignUp() {
+export function SignUp() {
   const {
     control,
     formState: { errors },
