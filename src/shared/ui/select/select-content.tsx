@@ -3,7 +3,7 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
 import { cn } from '@/shared/utils/cn'
 import * as SelectPrimitive from '@radix-ui/react-select'
 
-type SelectContentProps = ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+export type SelectContentProps = ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 
 export const SelectContent = forwardRef<
   ElementRef<typeof SelectPrimitive.Content>,
@@ -15,7 +15,7 @@ export const SelectContent = forwardRef<
         `
         w-[var(--radix-select-trigger-width)] h-[var(--radix-select-content-height)] border border-light-100 border-solid border-t-0 rounded-b-sm
         `,
-        position === 'popper' && 'bg-transparent text-light-100 hover:text-light-900',
+        position === 'popper' && 'bg-dark-700 text-light-100 hover:text-light-900',
         className
       )}
       position={position}
