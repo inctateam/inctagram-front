@@ -1,44 +1,27 @@
 import { ReactNode } from 'react'
 
-import { SelectContent } from './select-content'
-import { SelectItem } from './select-item'
-import { SelectRoot } from './select-root'
+import { FormLabel } from '@/shared/ui'
+
+import { SelectContent, SelectContentProps } from './select-content'
+import { SelectRoot, SelectRootProps } from './select-root'
 import { SelectTrigger } from './select-trigger'
 
-interface SelectProps {
-  className?: string
-  disabled?: boolean
-  isFocused?: boolean
-  open?: boolean
-  options: { children: ReactNode; label: string }[]
-  placeholder?: string
-  title: string
+type SelectOwnProps = {
+  label?: ReactNode
+  placeholder?: ReactNode
+  selectContentProps?: SelectContentProps
 }
-export const Select = ({
-  className,
-  disabled,
-  isFocused,
-  open,
-  options,
-  placeholder,
-  title,
-  ...props
-}: SelectProps) => {
+
+export type SelectProps = SelectOwnProps & SelectRootProps
+
+export const Select = ({ children, label, placeholder, ...restProps }: SelectProps) => {
   return (
-    <SelectRoot className={className} title={title} {...props} disabled={disabled} open={open}>
-      <SelectTrigger
-        className={className}
-        disabled={disabled}
-        isFocused={isFocused}
-        placeholder={placeholder}
-      />
-      <SelectContent>
-        {options.map(({ children, label }) => (
-          <SelectItem key={label} value={label}>
-            {children}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </SelectRoot>
+    <>
+      {label && <FormLabel>{label}</FormLabel>}
+      <SelectRoot {...restProps}>
+        <SelectTrigger placeholder={placeholder} />
+        <SelectContent>{children}</SelectContent>
+      </SelectRoot>
+    </>
   )
 }

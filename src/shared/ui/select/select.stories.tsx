@@ -1,5 +1,5 @@
-import { FlagRussia } from '@/assets/icons'
-import { Select } from '@/shared/ui'
+import { LOCALES, LOCALES_NAMES } from '@/i18n/i18n.config'
+import { Select, SelectItem, SelectProps } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Select> = {
@@ -13,53 +13,25 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-const options = [
-  { children: 'English', label: 'English' },
-  { children: 'French', label: 'French' },
-  { children: 'Italian', label: 'Italian' },
-  { children: 'Chineese', label: 'Chineese' },
-  {
-    children: (
-      <div className={'flex justify-start items-center gap-2'}>
-        <FlagRussia /> Russian{' '}
-      </div>
-    ),
-    label: 'Russian',
-  },
-]
+const currentLocale = 'en'
+const SELECT = (props: SelectProps) => (
+  <Select defaultValue={currentLocale} {...props}>
+    {LOCALES.map(loc => (
+      <SelectItem key={loc} value={loc}>
+        {LOCALES_NAMES[loc]}
+      </SelectItem>
+    ))}
+  </Select>
+)
 
 export const Default: Story = {
-  args: {
-    options,
-    placeholder: 'Choose a language',
-    title: 'Select-box',
+  render: () => {
+    return <SELECT />
   },
 }
 
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-    options,
-    placeholder: 'Choose a language',
-    title: 'Select-box',
-  },
-}
-
-export const Active: Story = {
-  args: {
-    open: true,
-    options,
-    placeholder: 'Choose a language',
-    title: 'Select-box',
-  },
-}
-
-export const Focus: Story = {
-  args: {
-    isFocused: true,
-    open: false,
-    options,
-    placeholder: 'Choose a language',
-    title: 'Select-box',
+  render: () => {
+    return <SELECT disabled />
   },
 }
