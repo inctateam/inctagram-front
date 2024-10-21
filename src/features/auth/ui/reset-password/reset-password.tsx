@@ -1,14 +1,13 @@
 import { useForm } from 'react-hook-form'
 
-import { Button } from '../button'
-import { PasswordTextField } from '../text-field'
+import { Button, PasswordTextField } from '@/shared/ui'
 
 type FormData = {
   confirmPassword: string
   password: string
 }
 
-export const CreateNewPassword = () => {
+export const ResetPassword = () => {
   const {
     formState: { errors },
     handleSubmit,
@@ -62,7 +61,7 @@ export const CreateNewPassword = () => {
         placeholder={'Password confirmation'}
       />
       <Button className={`${errors.password?.message && 'mt-6'}`} type={'submit'}>
-        Sign Up
+        Create new password
       </Button>
     </form>
   )
