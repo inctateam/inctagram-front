@@ -1,36 +1,34 @@
 'use client'
 
-import { ChangeEvent } from 'react'
-
+import { FlagRussia, FlagUnitedKingdom } from '@/assets/icons'
 import { type AppLocale, LOCALES, LOCALES_NAMES } from '@/i18n/i18n.config'
 import { usePathname, useRouter } from '@/i18n/routing'
+import { Select, SelectItem } from '@/shared/ui'
 import { useLocale } from 'next-intl'
 
-const _LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
+const localeIcons = {
+  en: <FlagUnitedKingdom />,
+  ru: <FlagRussia />,
+}
+
+export const LocaleSwitcher = () => {
   const router = useRouter()
   const pathname = usePathname()
+  const locale = useLocale() as AppLocale
 
-  const changeLocale = (e: ChangeEvent<HTMLSelectElement>) => {
-    const locale = e.currentTarget.value as AppLocale
-
-    router.replace(pathname, { locale })
+  const handleLocaleChange = (value: AppLocale) => {
+    router.replace(pathname, { locale: value })
   }
 
   return (
     <div>
-      <select className={'text-dark-500'} onChange={changeLocale} value={locale}>
+      <Select defaultValue={locale} onValueChange={handleLocaleChange}>
         {LOCALES.map(loc => (
-          <option key={loc} value={loc}>
-            {LOCALES_NAMES[loc]}
-          </option>
+          <SelectItem key={loc} value={loc}>
+            <span className={'mr-2'}>{localeIcons[loc]}</span> {LOCALES_NAMES[loc]}
+          </SelectItem>
         ))}
-      </select>
+      </Select>
     </div>
   )
-}
-
-export const LocaleSwitcher = () => {
-  const locale = useLocale() as AppLocale
-
-  return <_LocaleSwitcher locale={locale} />
 }
