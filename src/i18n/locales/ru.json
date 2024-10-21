@@ -1,5 +1,11 @@
 {
   "Header": {
-    "appTitle": "Привет мир!"
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "confirmEmail": "Подтверждение email",
+    "passwordRecovery": "Забыл пароль",
+    "resetPassword": "Сбросить пароль",
+    "terms": "Условия",
+    "privacyPolicy": "Конфеденциальность"
   }
 }
