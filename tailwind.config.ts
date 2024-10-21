@@ -23,9 +23,14 @@ const config: Config = {
           '0%': { left: '-100%', width: '100%' },
           '100%': { left: '100%', width: '10%' },
         },
+
         progressBar2: {
           '0%': { left: '-150%', width: '100%' },
           '100%': { left: '100%', width: '10%' },
+        },
+        rotation: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
         },
       },
     },
