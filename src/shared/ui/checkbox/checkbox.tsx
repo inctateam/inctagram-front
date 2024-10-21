@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
 import { CheckmarkOutline } from '@/assets/icons'
 import { useGenerateId } from '@/shared/hooks'
@@ -7,7 +7,7 @@ import { cn } from '@/shared/utils'
 import * as RadixCheckbox from '@radix-ui/react-checkbox'
 
 type CheckboxProps = {
-  label?: string
+  label?: ReactNode
 } & ComponentPropsWithoutRef<typeof RadixCheckbox.Root>
 
 const Checkbox = forwardRef<ElementRef<typeof RadixCheckbox.Root>, CheckboxProps>(
