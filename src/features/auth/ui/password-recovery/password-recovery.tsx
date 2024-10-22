@@ -1,5 +1,6 @@
 import { Button, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
+import Image from 'next/image'
 
 type PasswordRecoveryProps = {
   mt?: string
@@ -16,7 +17,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryProps) => {
   }
 
   return (
-    <div className={cn('flex flex-col w-[474px] gap-7 mx-auto', `mt-${mt}`)}>
+    <div className={cn('flex flex-col w-[474px] gap-7', `mt-${mt}`)}>
       <div className={'mx-auto'}>
         <Typography as={'h2'} variant={'h1'}>
           Email verification link expired
@@ -30,8 +31,8 @@ const PasswordRecoveryForm = (props: PasswordRecoveryProps) => {
           Resend link
         </Button>
       </div>
-      <div className={'w-[474px] h-[352px] border-[1px] border-solid border-light-900'}>
-        {/*<img alt={'time-management-image'} src={''} />*/}
+      <div>
+        <Image alt={'expired image'} height={352} src={'/images/expired.svg'} width={474} />
       </div>
     </div>
   )

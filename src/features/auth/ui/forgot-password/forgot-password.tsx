@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { ForgotPasswordModal } from '@/shared/forms/forgot-password-form/forgot-password-modal'
+import { ForgotPasswordModal } from '@/features/auth/ui/forgot-password/forgot-password.modal'
+import { useRecaptcha } from '@/shared/hooks/useRecaptcha'
 import { Button, Card, ControlledTextField, Recaptcha, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,15 +16,22 @@ const emailScheme = z.object({
 
 type ForgotPasswordFormValues = z.infer<typeof emailScheme>
 
+type onSubmitArgs = {
+  email: string
+  token: string
+}
+
 type ForgotPasswordProps = {
   mt?: string
+  onSubmit: ({ email, token }: onSubmitArgs) => void
 }
 
 const ForgotPassword = (props: ForgotPasswordProps) => {
-  const { mt = '32' } = props
-  const [captchaToken, setCaptchaToken] = useState<null | string>(null)
+  const { mt = '32', onSubmit } = props
   const [showDialog, setShowDialog] = useState(false)
   const [userEmail, setUserEmail] = useState('')
+
+  const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
   const {
     control,
@@ -34,18 +42,15 @@ const ForgotPassword = (props: ForgotPasswordProps) => {
     resolver: zodResolver(emailScheme),
   })
 
-  const onChangeCaptcha = (token: null | string) => {
-    setCaptchaToken(token)
-  }
-
   const onSubmitHandler = (data: ForgotPasswordFormValues) => {
+    onSubmit({ email: data.email, token: captchaToken! })
     setUserEmail(data.email)
     setShowDialog(true)
   }
 
   return (
     <>
-      <Card className={cn('flex flex-col items-center mx-auto gap-9', `mt-${mt}`)} variant={'auth'}>
+      <Card className={cn('flex flex-col items-center gap-9', `mt-${mt}`)} variant={'auth'}>
         <Typography variant={'h1'}>Forgot Password</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <div className={'min-h-28'}>
@@ -79,7 +84,7 @@ const ForgotPassword = (props: ForgotPasswordProps) => {
           </div>
           {!userEmail && (
             <div className={'flex justify-center py-1'}>
-              <Recaptcha onChange={onChangeCaptcha} />
+              <Recaptcha onChange={handleRecaptcha} ref={recaptchaRef} />
             </div>
           )}
         </form>
