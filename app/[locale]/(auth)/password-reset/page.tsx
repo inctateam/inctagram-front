@@ -1,5 +1,9 @@
+'use client'
+
+import { PasswordResetPage } from '@/features/auth/ui'
+
 const PasswordReset = () => {
-  return 'Password Reset Page'
+  return <PasswordResetPage />
 }
 
 export default PasswordReset

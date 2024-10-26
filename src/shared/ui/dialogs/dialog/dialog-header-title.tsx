@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Typography } from '@/shared/ui'
-import { DialogHeader } from '@/shared/ui/modal/dialog/dialog-header'
+import { DialogHeader, Typography } from '@/shared/ui'
 
 export const DialogHeaderTitle = ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   return (

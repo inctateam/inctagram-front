@@ -1,6 +1,8 @@
+'use client'
 import { useForm } from 'react-hook-form'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
+import { PATH } from '@/shared/constants'
 import {
   Button,
   Card,
@@ -24,7 +26,7 @@ type Props = {
   onSubmit: (data: LoginFields) => void
 }
 
-export const SignIn = ({ onSubmit }: Props) => {
+export const SignInForm = ({ onSubmit }: Props) => {
   const {
     control,
     formState: { errors },
@@ -34,7 +36,7 @@ export const SignIn = ({ onSubmit }: Props) => {
   })
 
   return (
-    <Card className={'flex flex-col'} variant={'auth'}>
+    <Card className={'flex flex-col w-[378px]'} variant={'auth'}>
       <Typography className={'text-center'} variant={'h1'}>
         Sign In
       </Typography>
@@ -50,7 +52,7 @@ export const SignIn = ({ onSubmit }: Props) => {
         </IconButton>
       </div>
 
-      <form className={'flex flex-col space-y-6'} onSubmit={handleSubmit(onSubmit)}>
+      <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
         <ControlledTextField
           control={control}
           error={!!errors.email?.message}
@@ -71,7 +73,7 @@ export const SignIn = ({ onSubmit }: Props) => {
           className={
             'flex justify-end text-light-900 hover:text-accent-500 hover:underline duration-200 mt-9 mb-6 '
           }
-          href={'/forgot-password'}
+          href={PATH.PASSWORD_RECOVERY}
           underline={false}
         >
           Forgot Password?
@@ -85,10 +87,10 @@ export const SignIn = ({ onSubmit }: Props) => {
       </Typography>
       <TextLink
         className={'text-base font-semibold hover:text-accent-300 hover:underline'}
-        href={'/sign-up'}
+        href={PATH.SIGN_UP}
         underline={false}
       >
-        Sign In
+        Sign Up
       </TextLink>
     </Card>
   )

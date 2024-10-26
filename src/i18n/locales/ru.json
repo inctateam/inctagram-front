@@ -7,5 +7,6 @@
     "resetPassword": "Сбросить пароль",
     "terms": "Условия",
     "privacyPolicy": "Конфеденциальность"
-  }
+  },
+  "auth": {}
 }

@@ -1,5 +1,7 @@
+import { SignUpPage } from '@/features/auth/ui/sign-up/sign-up-page'
+
 const SignUp = () => {
-  return 'SignUp Page'
+  return <SignUpPage />
 }
 
 export default SignUp

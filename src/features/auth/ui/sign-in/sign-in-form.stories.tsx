@@ -1,11 +1,15 @@
-import { SignIn } from '@/features/auth/ui'
 import { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 
+import { SignInForm } from './sign-in-form'
+
 const meta = {
-  component: SignIn,
-  title: 'Auth/SignIn',
-} satisfies Meta<typeof SignIn>
+  component: SignInForm,
+  parameters: {
+    layout: 'centered',
+  },
+  title: 'Auth/Sign In Form',
+} satisfies Meta<typeof SignInForm>
 
 export default meta
 

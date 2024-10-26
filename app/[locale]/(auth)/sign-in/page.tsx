@@ -1,5 +1,7 @@
+import { SignInPage } from '@/features/auth/ui'
+
 const SignIn = () => {
-  return 'SignIn Page'
+  return <SignInPage />
 }
 
 export default SignIn

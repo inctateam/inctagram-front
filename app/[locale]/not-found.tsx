@@ -10,7 +10,7 @@ export default function NotFound() {
         'flex gap-3 flex-col justify-center items-center bg-dark-700 text-white text-center'
       }
     >
-      <Image alt={'Error404'} src={error404} />
+      <Image alt={'Error 404'} src={error404} />
       <Typography variant={'h1'}>Page Not Found</Typography>
       <TextLink
         className={

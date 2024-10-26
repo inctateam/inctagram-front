@@ -10,7 +10,7 @@ const meta = {
   },
   component: AlertDialog,
   tags: ['autodocs'],
-  title: 'UI/Modal/AlertDialog',
+  title: 'UI/Dialogs/AlertDialog',
 }
 
 export default meta

@@ -9,7 +9,14 @@ export const Header = () => {
   const t = useTranslations('Header')
 
   return (
-    <div className={cn('sticky top-0', 'w-full h-[59px]', 'border-b border-dark-300 border-solid')}>
+    <div
+      className={cn(
+        'sticky top-0',
+        'w-full h-[59px] min-h-[59px]',
+        'border-b border-dark-300 border-solid bg-dark-700',
+        'z-50'
+      )}
+    >
       <LayoutContainer className={'h-full flex items-center justify-between'}>
         <TextLink
           className={'text-2.5xl font-medium'}
