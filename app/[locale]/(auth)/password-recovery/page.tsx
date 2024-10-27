@@ -1,5 +1,7 @@
+import { PasswordRecoveryPage } from '@/features/auth/ui'
+
 const PasswordRecovery = () => {
-  return 'Password Recovery Page'
+  return <PasswordRecoveryPage />
 }
 
 export default PasswordRecovery

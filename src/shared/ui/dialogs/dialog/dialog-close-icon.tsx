@@ -22,24 +22,31 @@ export const closeVariants = cva(
   }
 )
 
-export const DialogClose = forwardRef<
+const DefaultCloseButton = () => {
+  return (
+    <IconButton aria-label={'Close'}>
+      <CloseOutline />
+    </IconButton>
+  )
+}
+
+export const DialogCloseIcon = forwardRef<
   ElementRef<typeof DialogPrimitive.Close>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Close> & VariantProps<typeof closeVariants>
->(({ asChild = true, children = defaultCloseButton, className, closePosition, ...props }, ref) => (
-  <DialogPrimitive.Close
-    asChild={asChild}
-    className={cn(closeVariants({ className, closePosition }))}
-    ref={ref}
-    {...props}
-  >
-    {children}
-  </DialogPrimitive.Close>
-))
-
-DialogClose.displayName = DialogPrimitive.Close.displayName
-
-const defaultCloseButton = (
-  <IconButton aria-label={'Close'}>
-    <CloseOutline />
-  </IconButton>
+>(
+  (
+    { asChild = true, children = DefaultCloseButton(), className, closePosition, ...props },
+    ref
+  ) => (
+    <DialogPrimitive.Close
+      asChild={asChild}
+      className={cn(closeVariants({ className, closePosition }))}
+      ref={ref}
+      {...props}
+    >
+      {children}
+    </DialogPrimitive.Close>
+  )
 )
+
+DialogCloseIcon.displayName = 'DialogCloseIcon'

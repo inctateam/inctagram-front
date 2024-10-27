@@ -1,5 +1,5 @@
-export * from './forgot-password'
+export * from './email-sent-modal'
 export * from './password-recovery'
-export * from './reset-password'
+export * from './password-reset'
 export * from './sign-in'
 export * from './sign-up'

@@ -7,5 +7,6 @@
     "resetPassword": "Reset Password",
     "terms": "Terms of service",
     "privacyPolicy": "Privacy Policy"
-  }
+  },
+  "auth": {}
 }

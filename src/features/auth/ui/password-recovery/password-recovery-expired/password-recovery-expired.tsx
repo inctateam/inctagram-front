@@ -1,15 +1,14 @@
+'use client'
 import { Button, Typography } from '@/shared/ui'
-import { cn } from '@/shared/utils'
 import Image from 'next/image'
 
 type PasswordRecoveryProps = {
-  mt?: string
   resendEmail: (email: string) => void
   userEmail: string
 }
 
-const PasswordRecoveryForm = (props: PasswordRecoveryProps) => {
-  const { mt = '6', resendEmail, userEmail } = props
+const PasswordRecoveryFormExpired = (props: PasswordRecoveryProps) => {
+  const { resendEmail, userEmail } = props
   const onClickHandler = () => {
     if (userEmail) {
       resendEmail(userEmail!)
@@ -17,7 +16,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryProps) => {
   }
 
   return (
-    <div className={cn('flex flex-col w-[474px] gap-7', `mt-${mt}`)}>
+    <div className={'flex flex-col w-[474px] gap-7'}>
       <div className={'mx-auto'}>
         <Typography as={'h2'} variant={'h1'}>
           Email verification link expired
@@ -38,4 +37,4 @@ const PasswordRecoveryForm = (props: PasswordRecoveryProps) => {
   )
 }
 
-export { PasswordRecoveryForm }
+export { PasswordRecoveryFormExpired }

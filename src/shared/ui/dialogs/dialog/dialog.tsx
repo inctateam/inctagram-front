@@ -1,9 +1,10 @@
 import { ComponentPropsWithoutRef, ReactNode } from 'react'
 
-import { DialogClose, closeVariants } from '@/shared/ui/modal/dialog/dialog-close'
-import { DialogContent } from '@/shared/ui/modal/dialog/dialog-content'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { VariantProps } from 'class-variance-authority'
+
+import { DialogCloseIcon, closeVariants } from './dialog-close-icon'
+import { DialogContent } from './dialog-content'
 
 export type DialogProps = {
   children?: ReactNode
@@ -23,7 +24,7 @@ export const Dialog = ({
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
       <DialogContent {...dialogContentProps}>
-        <DialogClose closePosition={closePosition} />
+        <DialogCloseIcon closePosition={closePosition} />
         {children}
       </DialogContent>
     </DialogPrimitive.Root>
