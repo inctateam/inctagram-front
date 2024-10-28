@@ -1,5 +1,7 @@
+'use client'
 import { ReactNode } from 'react'
 
+import { StoreProvider } from '@/services'
 import { ToastProvider } from '@/shared/ui'
 import { NextIntlClientProvider } from 'next-intl'
 
@@ -19,10 +21,12 @@ export default function RootLayout({
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider locale={locale}>
-          <ToastProvider />
-          {children}
-        </NextIntlClientProvider>
+        <StoreProvider>
+          <NextIntlClientProvider locale={locale}>
+            <ToastProvider />
+            {children}
+          </NextIntlClientProvider>
+        </StoreProvider>
       </body>
     </html>
   )
