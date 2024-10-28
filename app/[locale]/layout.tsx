@@ -19,15 +19,15 @@ export default function RootLayout({
   params: { locale: string }
 }) {
   return (
-    <StoreProvider>
-      <html lang={locale}>
-        <body>
+    <html lang={locale}>
+      <body>
+        <StoreProvider>
           <NextIntlClientProvider locale={locale}>
             <ToastProvider />
             {children}
           </NextIntlClientProvider>
-        </body>
-      </html>
-    </StoreProvider>
+        </StoreProvider>
+      </body>
+    </html>
   )
 }
