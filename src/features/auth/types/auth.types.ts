@@ -4,3 +4,8 @@ export interface MeResponse {
   userId: number
   username: string
 }
+
+export interface PasswordRecoveryArgs {
+  email: string
+  recaptcha: string
+}

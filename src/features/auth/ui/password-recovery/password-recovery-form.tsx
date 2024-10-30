@@ -23,12 +23,14 @@ type onSubmitArgs = {
 }
 
 type PasswordRecoveryFormProps = {
+  modalOpen: boolean
   onSubmit: ({ email, token }: onSubmitArgs) => void
+  setModalOpen: (open: boolean) => void
 }
 
 const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
-  const { onSubmit } = props
-  const [modalOpen, setModalOpen] = useState(false)
+  const { modalOpen, onSubmit, setModalOpen } = props
+  // const [modalOpen, setModalOpen] = useState(false)
   const [userEmail, setUserEmail] = useState('')
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
@@ -45,7 +47,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     onSubmit({ email: data.email, token: captchaToken! })
     setUserEmail(data.email)
-    setModalOpen(true)
+    // setModalOpen(true)
   }
 
   return (
@@ -102,4 +104,4 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   )
 }
 
-export { PasswordRecoveryForm, type PasswordRecoveryFormValues, emailScheme }
+export { PasswordRecoveryForm, type PasswordRecoveryFormValues, emailScheme, type onSubmitArgs }
