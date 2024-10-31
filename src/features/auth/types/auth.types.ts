@@ -6,6 +6,7 @@ export interface MeResponse {
 }
 
 export interface PasswordRecoveryArgs {
+  baseUrl?: string
   email: string
-  recaptcha: string
+  token: string
 }

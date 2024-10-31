@@ -46,7 +46,9 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     onSubmit({ email: data.email, token: captchaToken! })
-    setUserEmail(data.email)
+    if (modalOpen) {
+      setUserEmail(data.email)
+    }
     // setModalOpen(true)
   }
 

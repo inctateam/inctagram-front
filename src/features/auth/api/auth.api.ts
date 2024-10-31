@@ -1,6 +1,5 @@
 import { MeResponse, PasswordRecoveryArgs } from '@/features/auth/types'
 import { instagramApi } from '@/services'
-import { BaseQueryArg } from '@reduxjs/toolkit/query'
 
 export const authApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
@@ -11,9 +10,14 @@ export const authApi = instagramApi.injectEndpoints({
       }),
     }),
     passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
-      query: (user: { email: string; recaptcha: string }) => {
+      query: data => {
+        const { email, token } = data
+
         return {
-          body: { ...user },
+          body: { email },
+          headers: {
+            recaptcha_google_v2: token,
+          },
           method: 'POST',
           url: 'v1/auth/password-recovery',
         }
