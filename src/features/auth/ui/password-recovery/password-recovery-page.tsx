@@ -8,12 +8,6 @@ import { usePasswordRecoveryMutation } from '@/features/auth/api'
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
 import { PasswordRecoveryForm, onSubmitArgs } from './password-recovery-form'
 
-type ApiPasswordRecoveryResponse = {
-  data?: unknown
-  message: string
-  status: number
-}
-
 export const PasswordRecoveryPage = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const isExpired = false
@@ -22,26 +16,14 @@ export const PasswordRecoveryPage = () => {
   const [submitForm] = usePasswordRecoveryMutation()
 
   const onSubmitHandler = async (data: onSubmitArgs): Promise<void> => {
-    try {
-      const resData = await submitForm({ email: data.email, token: data.token }).unwrap()
+    const { email, token } = data
 
-      toast.success('Submission successful' + resData)
+    console.log('token: ' + token)
+    const resData = await submitForm({ email, token })
 
-      setModalOpen(true)
-    } catch (error) {
-      const apiError = error as ApiPasswordRecoveryResponse
-
-      if ('status' in apiError) {
-        if (apiError.status === 400) {
-          toast.error('Input data has incorrect value')
-        } else if (apiError.status === 403) {
-          toast.error('reCAPTCHA verification failed')
-        } else {
-          toast.error(apiError.message || 'This user does not have existing email')
-        }
-      } else {
-        toast.error('An unknown error occurred')
-      }
+    if (resData?.error) {
+      console.log('Error' + resData.error)
+      toast.error('Error')
     }
   }
 
