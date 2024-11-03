@@ -7,6 +7,7 @@ import { PATH } from '@/shared/constants'
 import { useRecaptcha } from '@/shared/hooks/useRecaptcha'
 import { Button, Card, ControlledTextField, Recaptcha, TextLink, Typography } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 import { z } from 'zod'
 
 const emailScheme = z.object({
@@ -30,6 +31,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const { onSubmit } = props
   const [modalOpen, setModalOpen] = useState(false)
   const [userEmail, setUserEmail] = useState('')
+  const t = useTranslations('auth')
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
@@ -51,7 +53,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   return (
     <>
       <Card className={'flex flex-col items-center gap-9 w-[378px]'} variant={'auth'}>
-        <Typography variant={'h1'}>Forgot Password</Typography>
+        <Typography variant={'h1'}>{t('forgotPassword')}</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <ControlledTextField
             control={control}
