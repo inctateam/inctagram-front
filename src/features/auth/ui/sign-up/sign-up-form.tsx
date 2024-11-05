@@ -1,8 +1,10 @@
 'use client'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
+import { useSignupMutation } from '@/features/auth/api'
 import { EmailSentModal } from '@/features/auth/ui'
 import { PATH } from '@/shared/constants'
 import {
@@ -25,7 +27,6 @@ const signUpSchema = z
     agreesToTerms: z.literal(true, {
       errorMap: () => ({ message: 'You have to agree our terms and conditions' }),
     }),
-
     email: z.string().email({ message: 'The email must match the format example@example.com' }),
     password: z
       .string()
@@ -54,22 +55,47 @@ export function SignUpForm() {
     formState: { errors },
     handleSubmit,
   } = useForm<SignUpFields>({
+    mode: 'onBlur', // Валидация при потере фокуса
     resolver: zodResolver(signUpSchema),
   })
+  const [signup, { isLoading }] = useSignupMutation()
 
   const [userEmail, setUserEmail] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const onSubmit = handleSubmit(data => {
     setUserEmail(data.email)
-    setModalOpen(true)
+    //setModalOpen(true)
+    signup({
+      email: data.email,
+      password: data.password,
+      username: data.username,
+    })
+      .unwrap()
+      .then(() => {
+        setModalOpen(true)
+        setErrorMessage('')
+      })
+      .catch(error => {
+        console.log(error)
+        setModalOpen(false)
+        if (error.status === 400 && error.data.errorsMessages === 'existed_email') {
+          toast.error('User with this email is already registered')
+        }
+        if (error.status === 400 && error.data.errorsMessages === 'existed_login') {
+          toast.error('User with this username is already registered')
+        } else {
+          toast.error(error.data.errorsMessages)
+        }
+      })
   })
 
   return (
     <>
       <Card className={'w-[378px]'} variant={'auth'}>
         <Typography className={'text-center'} variant={'h1'}>
-          Sign In
+          Sign Up
         </Typography>
 
         <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
@@ -151,7 +177,8 @@ export function SignUpForm() {
           {errors.agreesToTerms && (
             <FormHelperText error>{errors.agreesToTerms.message}</FormHelperText>
           )}
-          <Button className={'w-full'} type={'submit'}>
+          {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
+          <Button className={'w-full'} disabled={isLoading} type={'submit'}>
             Sign up
           </Button>
           <Typography className={'text-center'} variant={'regular16'}>

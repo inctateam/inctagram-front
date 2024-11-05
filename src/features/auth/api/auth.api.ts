@@ -1,4 +1,4 @@
-import { MeResponse } from '@/features/auth/types'
+import { MeResponse, SignUpArgs } from '@/features/auth/types'
 import { instagramApi } from '@/services'
 
 export const authApi = instagramApi.injectEndpoints({
@@ -9,7 +9,15 @@ export const authApi = instagramApi.injectEndpoints({
         url: 'v1/auth/me',
       }),
     }),
+    signup: builder.mutation<void, SignUpArgs>({
+      query: body => ({
+        body,
+        credentials: 'include',
+        method: 'POST',
+        url: '/v1/auth/registration',
+      }),
+    }),
   }),
 })
 
-export const { useMeQuery } = authApi
+export const { useMeQuery, useSignupMutation } = authApi
