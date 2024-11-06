@@ -12,18 +12,34 @@ export const PasswordRecoveryPage = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const isExpired = false
   const resendEmail = () => {}
-  const userEmail = 'test@gmail.com'
+  const [userEmail, setUserEmail] = useState('')
+  // const userEmail = 'test@gmail.com'
   const [submitForm] = usePasswordRecoveryMutation()
 
   const onSubmitHandler = async (data: onSubmitArgs): Promise<void> => {
     const { email, token } = data
 
-    console.log('token: ' + token)
-    const resData = await submitForm({ email, token })
+    console.log(token)
+    try {
+      const resData = await submitForm({ email, token })
 
-    if (resData?.error) {
-      console.log('Error' + resData.error)
-      toast.error('Error')
+      if (resData.data) {
+        console.log(resData)
+        setUserEmail(email)
+      } else if (resData.error) {
+        if ('status' in resData.error) {
+          // FetchBaseQueryError
+          console.error('FetchBaseQueryError:', resData.error)
+          toast.error(`Status: ${resData.error.status}`)
+        } else {
+          // SerializedError
+          console.error('SerializedError:', resData.error)
+          toast.error(`Error: ${resData.error.message}`)
+        }
+      }
+    } catch (error) {
+      console.error('Request error:', error)
+      toast.error('Request error')
     }
   }
 
@@ -34,6 +50,7 @@ export const PasswordRecoveryPage = () => {
       modalOpen={modalOpen}
       onSubmit={onSubmitHandler}
       setModalOpen={setModalOpen}
+      userEmail={userEmail}
     />
   )
 }
