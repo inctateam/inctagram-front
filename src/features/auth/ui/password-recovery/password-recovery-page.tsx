@@ -23,6 +23,7 @@ export const PasswordRecoveryPage = () => {
     try {
       const resData = await submitForm({ email, token })
 
+      setModalOpen(true)
       if (resData.data) {
         console.log(resData)
         setUserEmail(email)

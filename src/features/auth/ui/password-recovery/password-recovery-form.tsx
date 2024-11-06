@@ -1,5 +1,4 @@
 'use client'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { EmailSentModal } from '@/features/auth/ui'
@@ -24,13 +23,14 @@ type onSubmitArgs = {
 }
 
 type PasswordRecoveryFormProps = {
+  modalOpen: boolean
   onSubmit: ({ email, token }: onSubmitArgs) => void
+  setModalOpen: (open: boolean) => void
+  userEmail: string
 }
 
 const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
-  const { onSubmit } = props
-  const [modalOpen, setModalOpen] = useState(false)
-  const [userEmail, setUserEmail] = useState('')
+  const { modalOpen, onSubmit, setModalOpen, userEmail } = props
   const t = useTranslations('auth')
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
@@ -46,8 +46,6 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     onSubmit({ email: data.email, token: captchaToken! })
-    setUserEmail(data.email)
-    setModalOpen(true)
   }
 
   return (
@@ -65,26 +63,25 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
           />
 
           <Typography className={'mt-2 text-light-900'} variant={'regular14'}>
-            Enter your email address and we will send you further instructions
+            {t('enterEmail')}
           </Typography>
           {userEmail && (
             <div>
               <Typography className={'mt-6'} variant={'regular14'}>
-                The link has been sent by email. If you don’t receive an email send link again
+                {t('linkSent')}
               </Typography>
             </div>
           )}
           <div className={'flex flex-col gap-6 mt-[26px] mb-4'}>
             <Button className={'w-full'} disabled={!captchaToken} type={'submit'}>
-              {userEmail ? 'Send Link Again' : 'Send Link'}
+              {userEmail ? t('sendLinkAgain') : t('sendLink')}
             </Button>
-
             <TextLink
               className={'text-base font-semibold hover:text-accent-300 hover:underline'}
               href={PATH.SIGN_IN}
               underline={false}
             >
-              Back to Sign In
+              {t('backToSignIn')}
             </TextLink>
           </div>
           {!userEmail && (
@@ -94,7 +91,6 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
           )}
         </form>
       </Card>
-
       <EmailSentModal
         onOpenChange={open => setModalOpen(open)}
         open={modalOpen}
@@ -104,4 +100,4 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   )
 }
 
-export { PasswordRecoveryForm, type PasswordRecoveryFormValues, emailScheme }
+export { PasswordRecoveryForm, type PasswordRecoveryFormValues, type onSubmitArgs }
