@@ -8,5 +8,16 @@
     "terms": "Terms of service",
     "privacyPolicy": "Privacy Policy"
   },
-  "auth": {}
+  "auth": {
+    "forgotPassword": "Forgot Password",
+    "enterEmail": "Enter your email address and we will send you further instructions",
+    "sendLink": "Send Link",
+    "sendLinkAgain": "Send Link Again",
+    "backToSignIn": "Back to Sign In",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email address",
+    "linkSent": "The link has been sent to your email. If you don’t receive an email, send the link again",
+    "emailSentTitle": "Email sent",
+    "emailSentBody": "We have sent a link to confirm your email to"
+  }
 }
