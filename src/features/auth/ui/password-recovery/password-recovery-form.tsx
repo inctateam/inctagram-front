@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { EmailSentModal } from '@/features/auth/ui'
@@ -24,16 +24,14 @@ type onSubmitArgs = {
 }
 
 type PasswordRecoveryFormProps = {
-  modalOpen: boolean
   onSubmit: ({ email, token }: onSubmitArgs) => void
-  setModalOpen: (open: boolean) => void
-  userEmail: string
 }
 
 const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
-  const { modalOpen, onSubmit, setModalOpen, userEmail } = props
-  // const [modalOpen, setModalOpen] = useState(false)
-  // const [userEmail, setUserEmail] = useState('')
+  const { onSubmit } = props
+  const [modalOpen, setModalOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
+  const t = useTranslations('auth')
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
@@ -48,16 +46,14 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     onSubmit({ email: data.email, token: captchaToken! })
-    //   setUserEmail(data.email)
-    // }
-    // setModalOpen(true)
+    setUserEmail(data.email)
+    setModalOpen(true)
   }
-  // const t = useTranslations('auth')
 
   return (
     <>
       <Card className={'flex flex-col items-center gap-9 w-[378px]'} variant={'auth'}>
-        <Typography variant={'h1'}>Forgot Password</Typography>
+        <Typography variant={'h1'}>{t('forgotPassword')}</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <ControlledTextField
             control={control}
@@ -108,4 +104,4 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   )
 }
 
-export { PasswordRecoveryForm, type PasswordRecoveryFormValues, emailScheme, type onSubmitArgs }
+export { PasswordRecoveryForm, type PasswordRecoveryFormValues, emailScheme }
