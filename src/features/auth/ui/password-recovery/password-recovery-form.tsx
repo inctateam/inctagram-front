@@ -45,7 +45,9 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   })
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
-    onSubmit({ email: data.email, token: captchaToken! })
+    if (captchaToken) {
+      onSubmit({ email: data.email, token: captchaToken })
+    }
   }
 
   return (

@@ -16,31 +16,28 @@ export const PasswordRecoveryPage = () => {
   // const userEmail = 'test@gmail.com'
   const [submitForm] = usePasswordRecoveryMutation()
 
-  const onSubmitHandler = async (data: onSubmitArgs): Promise<void> => {
+  const onSubmitHandler = async (data: onSubmitArgs) => {
     const { email, token } = data
 
-    console.log(token)
     try {
-      const resData = await submitForm({ email, token })
+      const resData = await submitForm({ email, token }).unwrap()
 
-      setModalOpen(true)
-      if (resData.data) {
+      console.log(resData)
+
+      if (resData?.status === 204) {
         console.log(resData)
         setUserEmail(email)
-      } else if (resData.error) {
-        if ('status' in resData.error) {
-          // FetchBaseQueryError
-          console.error('FetchBaseQueryError:', resData.error)
-          toast.error(`Status: ${resData.error.status}`)
-        } else {
-          // SerializedError
-          console.error('SerializedError:', resData.error)
-          toast.error(`Error: ${resData.error.message}`)
-        }
+        setModalOpen(true)
+        toast.success('Success')
+      } else if (resData?.status === 403 || resData?.status === 409) {
+        toast.error(`Status: ${resData.message}`)
+      } else if (resData?.status === 400) {
+        toast.error('Error 400')
+        // toast.error(`Error: ${resData?.errorsMessages[0]?.message ?? '400'}`)
       }
-    } catch (error) {
-      console.error('Request error:', error)
-      toast.error('Request error')
+    } catch (error: unknown) {
+      console.log(error)
+      toast.error('Unknown error')
     }
   }
 

@@ -1,4 +1,4 @@
-import { MeResponse, PasswordRecoveryArgs } from '@/features/auth/types'
+import { MeResponse, PasswordRecoveryArgs, PasswordRecoveryResponse } from '@/features/auth/types'
 import { instagramApi } from '@/services'
 
 export const authApi = instagramApi.injectEndpoints({
@@ -9,14 +9,16 @@ export const authApi = instagramApi.injectEndpoints({
         url: 'v1/auth/me',
       }),
     }),
-    passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
+    passwordRecovery: builder.mutation<PasswordRecoveryResponse, PasswordRecoveryArgs>({
       query: data => {
         const { email, token } = data
+
+        console.log(token)
 
         return {
           body: { email },
           headers: {
-            recaptcha_google_v2: token,
+            recaptchagooglev2: token,
           },
           method: 'POST',
           url: 'v1/auth/password-recovery',
