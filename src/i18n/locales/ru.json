@@ -8,5 +8,20 @@
     "terms": "Условия",
     "privacyPolicy": "Конфеденциальность"
   },
-  "auth": {}
+  "auth": {
+    "SignUp": {
+      "title": "Регистрация",
+      "username": "Имя пользователя",
+      "email": "Электронная почта",
+      "password": "Пароль",
+      "passwordConfirmation": "Подтверждение пароля",
+      "agreeToTerms": "Я согласен с",
+      "termsOfService": "условиями обслуживания",
+      "and": " и ",
+      "privacyPolicy": "политикой конфиденциальности",
+      "haveAccount": "У вас уже есть аккаунт?",
+      "signIn": "Войти",
+      "signUp": "Зарегистрироваться"
+    }
+  }
 }

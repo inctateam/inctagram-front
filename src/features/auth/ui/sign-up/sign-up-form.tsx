@@ -31,6 +31,7 @@ const signUpSchema = z
     password: z
       .string()
       .min(6, 'Minimum number of characters 6')
+      .max(20, 'Maximum number of characters 20')
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])/,
         'Password must contain a-z, A-Z, ! " # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~'
@@ -49,13 +50,17 @@ const signUpSchema = z
 
 type SignUpFields = z.infer<typeof signUpSchema>
 
-export function SignUpForm() {
+type Props = {
+  translatedForm: Record<string, string>
+}
+export function SignUpForm({ translatedForm }: Props) {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
+    watch,
   } = useForm<SignUpFields>({
-    mode: 'onBlur', // Валидация при потере фокуса
+    mode: 'onBlur',
     resolver: zodResolver(signUpSchema),
   })
   const [signup, { isLoading }] = useSignupMutation()
@@ -63,6 +68,19 @@ export function SignUpForm() {
   const [userEmail, setUserEmail] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [validatedFields, setValidatedFields] = useState({
+    agreesToTerms: false,
+    email: false,
+    password: false,
+    passwordConfirmation: false,
+    username: false,
+  })
+  const agreesToTerms = watch('agreesToTerms')
+  const handleBlur = (fieldName: keyof typeof validatedFields) => {
+    setValidatedFields(prev => ({ ...prev, [fieldName]: true }))
+  }
+  const shouldValidateOnChange = (fieldName: keyof typeof validatedFields) =>
+    validatedFields[fieldName]
 
   const onSubmit = handleSubmit(data => {
     setUserEmail(data.email)
@@ -80,13 +98,15 @@ export function SignUpForm() {
       .catch(error => {
         console.log(error)
         setModalOpen(false)
-        if (error.status === 400 && error.data.errorsMessages === 'existed_email') {
+        if (error.status === 409 && error.data.message === 'existed_email') {
           toast.error('User with this email is already registered')
         }
-        if (error.status === 400 && error.data.errorsMessages === 'existed_login') {
+        if (error.status === 409 && error.data.message === 'existed_login') {
           toast.error('User with this username is already registered')
         } else {
-          toast.error(error.data.errorsMessages)
+          toast.error(
+            error.data.errorsMessages[0].message + ' ' + error.data.errorsMessages[0].field
+          )
         }
       })
   })
@@ -95,7 +115,7 @@ export function SignUpForm() {
     <>
       <Card className={'w-[378px]'} variant={'auth'}>
         <Typography className={'text-center'} variant={'h1'}>
-          Sign Up
+          {translatedForm.title}
         </Typography>
 
         <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
@@ -114,40 +134,48 @@ export function SignUpForm() {
             control={control}
             error={!!errors?.username?.message}
             helperText={errors?.username?.message}
-            label={<FormLabel required>Username</FormLabel>}
+            label={<FormLabel required>{translatedForm.username}</FormLabel>}
             name={'username'}
+            onBlur={() => handleBlur('username')}
             placeholder={'Epam11'}
+            shouldValidateOnChange={shouldValidateOnChange('username')}
           />
           <ControlledTextField
             control={control}
             error={!!errors?.email?.message}
             helperText={errors?.email?.message}
-            label={<FormLabel required>Email</FormLabel>}
+            label={<FormLabel required>{translatedForm.email}</FormLabel>}
             name={'email'}
+            onBlur={() => handleBlur('email')}
             placeholder={'Epam@epam.com'}
+            shouldValidateOnChange={shouldValidateOnChange('email')}
           />
           <ControlledPasswordTextField
             control={control}
             error={!!errors?.password?.message}
             helperText={errors?.password?.message}
-            label={<FormLabel required>Password</FormLabel>}
+            label={<FormLabel required>{translatedForm.password}</FormLabel>}
             name={'password'}
+            onBlur={() => handleBlur('password')}
             placeholder={'******************'}
+            shouldValidateOnChange={shouldValidateOnChange('password')}
           />
 
           <ControlledPasswordTextField
             control={control}
             error={!!errors?.passwordConfirmation?.message}
             helperText={errors?.passwordConfirmation?.message}
-            label={<FormLabel required>Password confirmation</FormLabel>}
+            label={<FormLabel required>{translatedForm.passwordConfirmation}</FormLabel>}
             name={'passwordConfirmation'}
+            onBlur={() => handleBlur('passwordConfirmation')}
             placeholder={'******************'}
+            shouldValidateOnChange={shouldValidateOnChange('passwordConfirmation')}
           />
           <ControlledCheckbox
             control={control}
             label={
               <div className={'flex items-center'}>
-                <Typography variant={'small'}>{'I agree to the '}</Typography>
+                <Typography variant={'small'}>{translatedForm.agreeToTerms}</Typography>
                 <span className={'mx-1'}>
                   <TextLink
                     className={'mb-1'}
@@ -155,10 +183,10 @@ export function SignUpForm() {
                     href={PATH.TERMS_OF_SERVICE}
                     size={'small'}
                   >
-                    Terms of service
+                    {translatedForm.termsOfService}
                   </TextLink>
                 </span>
-                <Typography variant={'small'}> and </Typography>
+                <Typography variant={'small'}>{translatedForm.and}</Typography>
                 <span className={'mx-1'}>
                   <TextLink
                     className={'mb-1'}
@@ -167,29 +195,35 @@ export function SignUpForm() {
                     size={'small'}
                     underline
                   >
-                    Privacy policy
+                    {translatedForm.privacyPolicy}
                   </TextLink>
                 </span>
               </div>
             }
             name={'agreesToTerms'}
+            onBlur={() => handleBlur('agreesToTerms')}
+            shouldValidateOnChange={shouldValidateOnChange('agreesToTerms')}
           />
           {errors.agreesToTerms && (
             <FormHelperText error>{errors.agreesToTerms.message}</FormHelperText>
           )}
           {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
-          <Button className={'w-full'} disabled={isLoading} type={'submit'}>
-            Sign up
+          <Button
+            className={'w-full'}
+            disabled={!isValid || !agreesToTerms || isLoading}
+            type={'submit'}
+          >
+            {translatedForm.signUp}
           </Button>
           <Typography className={'text-center'} variant={'regular16'}>
-            Do you have an account?
+            {translatedForm.haveAccount}
           </Typography>
           <TextLink
             className={'text-base font-semibold hover:text-accent-300 hover:underline'}
             href={PATH.SIGN_IN}
             underline={false}
           >
-            Sign In
+            {translatedForm.signIn}
           </TextLink>
         </form>
       </Card>

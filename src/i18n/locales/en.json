@@ -8,5 +8,21 @@
     "terms": "Terms of service",
     "privacyPolicy": "Privacy Policy"
   },
-  "auth": {}
+  "auth": {
+    "SignUp": {
+      "title": "Sign Up",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "passwordConfirmation": "Password confirmation",
+      "agreeToTerms": "I agree to the",
+      "and": " and ",
+      "termsOfService": "Terms of service",
+      "privacyPolicy": "Privacy policy",
+      "haveAccount": "Do you have an account?",
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    }
+  }
+
 }
