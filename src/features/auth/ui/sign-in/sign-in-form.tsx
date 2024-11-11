@@ -2,31 +2,28 @@
 import { useForm } from 'react-hook-form'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
+import { PropsTranslations } from '@/features/auth/ui'
+import { LoginFields, createLoginSchema } from '@/features/auth/ui/utils/login-shema'
 import { PATH } from '@/shared/constants'
 import {
   Button,
   Card,
   ControlledPasswordTextField,
   ControlledTextField,
+  FormLabel,
   IconButton,
   TextLink,
   Typography,
 } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6).max(30),
-})
-
-export type LoginFields = z.infer<typeof loginSchema>
 
 type Props = {
   onSubmit: (data: LoginFields) => void
-}
+} & PropsTranslations
 
-export const SignInForm = ({ onSubmit }: Props) => {
+export function SignInForm({ messagesErrors, onSubmit, translAuth }: Props) {
+  const loginSchema = createLoginSchema(messagesErrors)
+
   const {
     control,
     formState: { errors },
@@ -38,16 +35,16 @@ export const SignInForm = ({ onSubmit }: Props) => {
   return (
     <Card className={'flex flex-col w-[378px]'} variant={'auth'}>
       <Typography className={'text-center'} variant={'h1'}>
-        Sign In
+        {translAuth.signIn}
       </Typography>
 
       <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
-        <IconButton asChild className={'text-4xl'} size={'base'}>
+        <IconButton asChild className={'text-4xl'}>
           <a href={'https://google.com'} rel={'noreferrer'} target={'_blank'}>
             <GoogleLogo />
           </a>
         </IconButton>
-        <IconButton className={'text-4xl'} size={'base'}>
+        <IconButton className={'text-4xl'}>
           <GithubLogo />
         </IconButton>
       </div>
@@ -55,19 +52,19 @@ export const SignInForm = ({ onSubmit }: Props) => {
       <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
         <ControlledTextField
           control={control}
-          error={!!errors.email?.message}
-          helperText={errors.email?.message}
-          label={'Email'}
-          name={'email'}
-          placeholder={'Email'}
+          error={!!errors.loginOrEmail?.message}
+          helperText={errors.loginOrEmail?.message}
+          label={<FormLabel required>{translAuth.loginOrEmail}</FormLabel>}
+          name={'loginOrEmail'}
+          placeholder={translAuth.loginOrEmail}
         />
         <ControlledPasswordTextField
           control={control}
           error={!!errors.password?.message}
           helperText={errors.password?.message}
-          label={'Password'}
+          label={<FormLabel required>{translAuth.password}</FormLabel>}
           name={'password'}
-          placeholder={'Password'}
+          placeholder={translAuth.password}
         />
         <TextLink
           className={
@@ -76,21 +73,21 @@ export const SignInForm = ({ onSubmit }: Props) => {
           href={PATH.PASSWORD_RECOVERY}
           underline={false}
         >
-          Forgot Password?
+          {translAuth.forgotPassword}?
         </TextLink>
         <Button className={'w-full font-semibold'} type={'submit'} variant={'primary'}>
-          Sign In
+          {translAuth.signIn}
         </Button>
       </form>
       <Typography className={'text-center mt-4 mb-3'} variant={'regular16'}>
-        Don’t have an account?
+        {translAuth.dontHaveAnAccount}?
       </Typography>
       <TextLink
         className={'text-base font-semibold hover:text-accent-300 hover:underline'}
         href={PATH.SIGN_UP}
         underline={false}
       >
-        Sign Up
+        {translAuth.signUp}
       </TextLink>
     </Card>
   )
