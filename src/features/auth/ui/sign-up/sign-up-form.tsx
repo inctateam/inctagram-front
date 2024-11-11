@@ -63,6 +63,7 @@ export function SignUpForm() {
   const onSubmit = handleSubmit(data => {
     setUserEmail(data.email)
     setModalOpen(true)
+    console.log(data)
   })
 
   return (
@@ -73,12 +74,12 @@ export function SignUpForm() {
         </Typography>
 
         <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
-          <IconButton asChild className={'text-4xl'} size={'base'}>
+          <IconButton asChild className={'text-4xl'}>
             <a href={'https://google.com'} rel={'noreferrer'} target={'_blank'}>
               <GoogleLogo />
             </a>
           </IconButton>
-          <IconButton className={'text-4xl'} size={'base'}>
+          <IconButton className={'text-4xl'}>
             <GithubLogo />
           </IconButton>
         </div>
