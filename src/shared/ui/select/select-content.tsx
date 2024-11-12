@@ -13,7 +13,7 @@ export const SelectContent = forwardRef<
     <SelectPrimitive.Content
       className={cn(
         `
-        w-[var(--radix-select-trigger-width)] h-[var(--radix-select-content-height)] border border-light-100 border-solid border-t-0 rounded-b-sm
+        w-[var(--radix-select-trigger-width)] h-[var(--radix-select-content-height)] border border-light-100 border-solid border-t-0 rounded-b-sm z-50
         `,
         position === 'popper' && 'bg-dark-700 text-light-100 hover:text-light-900',
         className

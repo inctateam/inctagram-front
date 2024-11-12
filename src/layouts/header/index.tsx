@@ -11,10 +11,10 @@ export const Header = () => {
   return (
     <div
       className={cn(
-        'sticky top-0',
+        'sticky top-0 overflow-hidden',
         'w-full h-[59px] min-h-[59px]',
         'border-b border-dark-300 border-solid bg-dark-700',
-        'z-50'
+        'z-40'
       )}
     >
       <LayoutContainer className={'h-full flex items-center justify-between'}>
