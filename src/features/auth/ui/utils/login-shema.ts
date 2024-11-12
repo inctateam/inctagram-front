@@ -2,12 +2,6 @@ import { z } from 'zod'
 
 export const createLoginSchema = (messages: Record<string, string>) => {
   return z.object({
-    loginOrEmail: z
-      .string()
-      .min(1, messages.requiredField)
-      // .email(messages.invalidEmail)
-      .refine(value => !/[а-яА-ЯёЁ]/.test(value), messages.cyrillicNotAllowed)
-      .refine(value => value.trim() !== '', messages.requiredField),
     password: z
       .string()
       .min(1, messages.requiredField)
@@ -21,6 +15,12 @@ export const createLoginSchema = (messages: Record<string, string>) => {
         password => /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(password),
         messages.characterPassword
       )
+      .refine(value => value.trim() !== '', messages.requiredField),
+    usernameOrEmail: z
+      .string()
+      .min(1, messages.requiredField)
+      // .email(messages.invalidEmail)
+      .refine(value => !/[а-яА-ЯёЁ]/.test(value), messages.cyrillicNotAllowed)
       .refine(value => value.trim() !== '', messages.requiredField),
   })
 }

@@ -8,10 +8,10 @@ const SignIn = () => {
     dontHaveAnAccount: t('dontHaveAnAccount'),
     email: t('email'),
     forgotPassword: t('signUp'),
-    loginOrEmail: t('loginOrEmail'),
     password: t('password'),
     signIn: t('signIn'),
     signUp: t('signUp'),
+    usernameOrEmail: t('usernameOrEmail'),
   }
   const messagesErrors = {
     characterPassword: tl('characterPassword'),

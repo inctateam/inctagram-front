@@ -16,7 +16,7 @@
     "email": "Email",
     "password": "Password",
     "dontHaveAnAccount": "Don’t have an account",
-    "loginOrEmail": "Login or email"
+    "usernameOrEmail": "Name or email"
   },
   "LoginSchema": {
     "invalidEmail": "Invalid email format",

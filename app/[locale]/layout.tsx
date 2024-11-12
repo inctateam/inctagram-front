@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 
 import { StoreProvider } from '@/services'
 import { ToastProvider } from '@/shared/ui'
+import { MeTest } from '@/shared/ui/me-test'
 import { NextIntlClientProvider } from 'next-intl'
 
 import '@/styles/globals.css'

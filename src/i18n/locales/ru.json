@@ -16,7 +16,7 @@
     "email": "Электронная почта",
     "password": "Пароль",
     "dontHaveAnAccount": "Нет учетной записи",
-    "loginOrEmail": "Имя или адрес электронной почты"
+    "usernameOrEmail": "Имя или адрес электронной почты"
   },
   "LoginSchema": {
     "invalidEmail": "Недопустимый формат электронной почты",

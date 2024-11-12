@@ -1,10 +1,12 @@
 'use client'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { SignInForm } from '@/features/auth/ui'
 import { LoginFields } from '@/features/auth/ui/utils/login-shema'
 import { useLoginMutation } from '@/services/api/auth/auth.api'
-import { useRouter } from 'next/navigation'
+import { MeTest } from '@/shared/ui/me-test'
+// import { useRouter } from 'next/navigation'
 
 export type PropsTranslations = {
   messagesErrors: Record<string, string>
@@ -12,7 +14,8 @@ export type PropsTranslations = {
 }
 export const SignInPage = ({ ...rect }: PropsTranslations) => {
   const [login] = useLoginMutation()
-  const router = useRouter()
+  const [meTest, setMeTest] = useState<boolean>(false)
+  // const router = useRouter()
 
   const handleSubmit = async (data: LoginFields) => {
     try {
@@ -21,11 +24,13 @@ export const SignInPage = ({ ...rect }: PropsTranslations) => {
       if (response) {
         localStorage.setItem('access_token', response.accessToken)
       }
-      await router.push('/')
+
+      // await router.push('/')
+      setMeTest(true)
     } catch (e) {
       toast.error(`${e.data.errorsMessages[0].field}: ${e.data.errorsMessages[0].message}`)
     }
   }
 
-  return <SignInForm onSubmit={handleSubmit} {...rect} />
+  return <>{meTest ? <MeTest /> : <SignInForm onSubmit={handleSubmit} {...rect} />}</>
 }

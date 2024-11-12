@@ -1,6 +1,6 @@
 export type LoginArgs = {
-  loginOrEmail: string
   password: string
+  usernameOrEmail: string
 }
 export type LoginResponse = {
   accessToken: string
