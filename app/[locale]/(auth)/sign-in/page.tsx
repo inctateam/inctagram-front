@@ -7,7 +7,7 @@ const SignIn = () => {
   const translAuth = {
     dontHaveAnAccount: t('dontHaveAnAccount'),
     email: t('email'),
-    forgotPassword: t('signUp'),
+    forgotPassword: t('forgotPassword'),
     password: t('password'),
     signIn: t('signIn'),
     signUp: t('signUp'),

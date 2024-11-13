@@ -12,7 +12,7 @@
   "Auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
-    "forgotPassword": "ForgotPassword",
+    "forgotPassword": "Forgot Password",
     "email": "Email",
     "password": "Password",
     "dontHaveAnAccount": "Don’t have an account",
