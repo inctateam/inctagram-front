@@ -63,7 +63,6 @@ export function SignUpForm() {
   const onSubmit = handleSubmit(data => {
     setUserEmail(data.email)
     setModalOpen(true)
-    console.log(data)
   })
 
   return (

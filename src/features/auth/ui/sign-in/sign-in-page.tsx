@@ -27,8 +27,8 @@ export const SignInPage = ({ ...rect }: PropsTranslations) => {
 
       // await router.push('/')
       setMeTest(true)
-    } catch (e) {
-      toast.error(`${e.data.errorsMessages[0].field}: ${e.data.errorsMessages[0].message}`)
+    } catch (e: any) {
+      toast.error(`Error logging in. Status code: ${e.status}`)
     }
   }
 

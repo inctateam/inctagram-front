@@ -19,7 +19,7 @@ export const MeTest = () => {
       <div
         className={'text-danger-100 mx-auto w-full xl:px-[60px] px-4 sm:pt-6 pt-4 max-w-[1280px]'}
       >
-        Произошла ошибка: {error.data.message}
+        Произошла ошибка
       </div>
     )
   }

@@ -98,7 +98,7 @@ export const Sizes: Story = {
 export const ExtendsFromBase: Story = {
   render: () => {
     return (
-      <IconButton className={'text-4xl'} size={'base'}>
+      <IconButton className={'text-4xl'} size={'default'}>
         <GithubLogo />
       </IconButton>
     )
@@ -108,7 +108,7 @@ export const ExtendsFromBase: Story = {
 export const PolymorphicAsChild: Story = {
   render: () => {
     return (
-      <IconButton asChild className={'text-4xl'} size={'base'}>
+      <IconButton asChild className={'text-4xl'} size={'default'}>
         <a href={'https://google.com'} rel={'noreferrer'} target={'_blank'}>
           <GoogleLogo />
         </a>
