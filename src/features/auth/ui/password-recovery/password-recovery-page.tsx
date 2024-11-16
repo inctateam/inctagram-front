@@ -1,43 +1,60 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { usePasswordRecoveryMutation } from '@/features/auth/api'
+import { PasswordRecoveryResponse, ValidationErrorResponse } from '@/features/auth/types'
+import { useRouter } from 'next/navigation'
 
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
 import { PasswordRecoveryForm, onSubmitArgs } from './password-recovery-form'
 
 export const PasswordRecoveryPage = () => {
+  const router = useRouter()
+
   const [modalOpen, setModalOpen] = useState(false)
-  const isExpired = false
+  const [recoveryCode, setRecoveryCode] = useState<null | string>(null)
+  const [isExpired, setIsExpired] = useState(false)
   const resendEmail = () => {}
   const [userEmail, setUserEmail] = useState('')
-  // const userEmail = 'test@gmail.com'
   const [submitForm] = usePasswordRecoveryMutation()
 
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    const code = query.get('recoveryCode')
+
+    setRecoveryCode(code)
+    if (code !== null && isExpired) {
+      setIsExpired(true)
+    }
+  }, [])
+  if (recoveryCode !== null && !isExpired) {
+    router.push('/password-reset')
+  }
   const onSubmitHandler = async (data: onSubmitArgs) => {
     const { email, token } = data
 
     try {
       const resData = await submitForm({ email, token }).unwrap()
 
-      console.log(resData)
-
-      if (resData?.status === 204) {
-        console.log(resData)
+      if (resData === null) {
         setUserEmail(email)
         setModalOpen(true)
         toast.success('Success')
-      } else if (resData?.status === 403 || resData?.status === 409) {
-        toast.error(`Status: ${resData.message}`)
-      } else if (resData?.status === 400) {
-        toast.error('Error 400')
-        // toast.error(`Error: ${resData?.errorsMessages[0]?.message ?? '400'}`)
       }
-    } catch (error: unknown) {
-      console.log(error)
-      toast.error('Unknown error')
+    } catch (error) {
+      if ((error as PasswordRecoveryResponse)?.status === 400) {
+        const err = error as ValidationErrorResponse
+
+        toast.error(`Error 400: ${err.errorsMessages?.[0]?.message ?? 'Validation error'}`)
+      } else if ((error as PasswordRecoveryResponse)?.status === 403) {
+        toast.error('Error 403: reCAPTCHA verification failed or token is invalid')
+      } else if ((error as PasswordRecoveryResponse)?.status === 409) {
+        toast.error('Error 409: Not existed email')
+      } else {
+        toast.error('Unknown Error')
+      }
     }
   }
 

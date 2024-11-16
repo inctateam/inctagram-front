@@ -28,3 +28,7 @@ export type PasswordRecoveryResponse = {
   timestamp?: string
   url?: string
 }
+
+export type ValidationErrorResponse = {
+  errorsMessages: [{ field: string; message: string }]
+}

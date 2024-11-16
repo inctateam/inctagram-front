@@ -13,8 +13,6 @@ export const authApi = instagramApi.injectEndpoints({
       query: data => {
         const { email, token } = data
 
-        console.log(token)
-
         return {
           body: { email },
           headers: {
