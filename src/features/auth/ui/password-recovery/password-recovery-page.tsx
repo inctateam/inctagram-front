@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { usePasswordRecoveryMutation } from '@/features/auth/api'
+import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
 import { PasswordRecoveryResponse, ValidationErrorResponse } from '@/features/auth/types'
+import { Spinner } from '@/shared/ui'
 import { useRouter } from 'next/navigation'
 
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
@@ -14,24 +15,43 @@ export const PasswordRecoveryPage = () => {
   const router = useRouter()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [recoveryCode, setRecoveryCode] = useState<null | string>(null)
   const [isExpired, setIsExpired] = useState(false)
-  const resendEmail = () => {}
   const [userEmail, setUserEmail] = useState('')
-  const [submitForm] = usePasswordRecoveryMutation()
+
+  const [submitForm, { isLoading: isSubmiting }] = usePasswordRecoveryMutation()
+  const [checkRecoveryCode, { isLoading: isChecking }] = useCodeValidationCheckMutation()
+
+  const resendEmail = (email: string) => {
+    setUserEmail(email)
+    setIsExpired(false)
+    router.push('password-recovery')
+  }
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search)
     const code = query.get('recoveryCode')
 
-    setRecoveryCode(code)
-    if (code !== null && isExpired) {
-      setIsExpired(true)
+    if (code) {
+      const checkCode = async () => {
+        try {
+          const res = await checkRecoveryCode(code).unwrap()
+
+          console.log(res)
+          setIsExpired(false)
+
+          router.push('password-reset')
+        } catch (e) {
+          setIsExpired(true)
+          toast.error('Код восстановления истёк или неверен')
+
+          return e
+        }
+      }
+
+      checkCode()
     }
   }, [])
-  if (recoveryCode !== null && !isExpired) {
-    router.push('/password-reset')
-  }
+
   const onSubmitHandler = async (data: onSubmitArgs) => {
     const { email, token } = data
 
@@ -39,7 +59,6 @@ export const PasswordRecoveryPage = () => {
       const resData = await submitForm({ email, token }).unwrap()
 
       if (resData === null) {
-        setUserEmail(email)
         setModalOpen(true)
         toast.success('Success')
       }
@@ -55,7 +74,13 @@ export const PasswordRecoveryPage = () => {
       } else {
         toast.error('Unknown Error')
       }
+    } finally {
+      setUserEmail(email)
     }
+  }
+
+  if (isSubmiting || isChecking) {
+    return <Spinner />
   }
 
   return isExpired ? (

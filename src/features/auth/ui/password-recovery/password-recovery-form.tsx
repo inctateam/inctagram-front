@@ -33,7 +33,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const { modalOpen, onSubmit, setModalOpen, userEmail } = props
   const t = useTranslations('auth')
 
-  const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
+  const { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha } = useRecaptcha()
 
   const {
     control,
@@ -44,9 +44,11 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
     resolver: zodResolver(emailScheme),
   })
 
+  console.log('Captcha token:', captchaToken)
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     if (captchaToken) {
       onSubmit({ email: data.email, token: captchaToken })
+      refreshCaptcha()
     }
   }
 
@@ -57,11 +59,12 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <ControlledTextField
             control={control}
+            defaultValue={userEmail}
             error={!!errors.email?.message}
             helperText={errors.email?.message}
             label={'Email'}
             name={'email'}
-            placeholder={'example-email@gmail.com'}
+            placeholder={userEmail || 'example-email@gmail.com'}
           />
 
           <Typography className={'mt-2 text-light-900'} variant={'regular14'}>
@@ -86,11 +89,13 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
               {t('backToSignIn')}
             </TextLink>
           </div>
-          {!userEmail && (
-            <div className={'flex justify-center py-1'}>
-              <Recaptcha onChange={handleRecaptcha} ref={recaptchaRef} />
-            </div>
-          )}
+          <div className={'flex justify-center py-1'}>
+            <Recaptcha
+              onChange={handleRecaptcha}
+              ref={recaptchaRef}
+              // style={{ display: !captchaToken ? 'block' : 'none' }}
+            />
+          </div>
         </form>
       </Card>
       <EmailSentModal

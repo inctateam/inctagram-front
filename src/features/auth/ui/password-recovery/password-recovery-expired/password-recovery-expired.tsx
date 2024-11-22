@@ -1,6 +1,7 @@
 'use client'
 import { Button, Typography } from '@/shared/ui'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 type PasswordRecoveryProps = {
   resendEmail: (email: string) => void
@@ -9,25 +10,29 @@ type PasswordRecoveryProps = {
 
 const PasswordRecoveryFormExpired = (props: PasswordRecoveryProps) => {
   const { resendEmail, userEmail } = props
+
   const onClickHandler = () => {
-    if (userEmail) {
-      resendEmail(userEmail!)
-    }
+    resendEmail(userEmail)
+    //fix later!!!
+    // if (userEmail) {
+    //   resendEmail(userEmail)
+    // }
   }
+  const t = useTranslations('auth')
 
   return (
     <div className={'flex flex-col w-[474px] gap-7'}>
-      <div className={'mx-auto'}>
+      <div className={'mx-auto text-center'}>
         <Typography as={'h2'} variant={'h1'}>
-          Email verification link expired
+          {t('emailVerificationLinkExpired')}
         </Typography>
-        <div className={'w-[294px] mt-5'}>
+        <div className={'w-[294px] mx-auto mt-5'}>
           <Typography className={'break-words text-center'} variant={'regular16'}>
-            Looks like the verification link has expired. Not to worry, we can send the link again
+            {t('expiredLinkDescription')}
           </Typography>
         </div>
         <Button className={'w-full mt-5'} onClick={onClickHandler}>
-          Resend link
+          {t('resendLink')}
         </Button>
       </div>
       <div>

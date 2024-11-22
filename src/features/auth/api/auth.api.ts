@@ -3,6 +3,15 @@ import { instagramApi } from '@/services'
 
 export const authApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    codeValidationCheck: builder.mutation<void, string>({
+      query: code => {
+        return {
+          body: { code },
+          method: 'POST',
+          url: 'v1/auth/code-validation-check',
+        }
+      },
+    }),
     me: builder.query<MeResponse, void>({
       providesTags: ['Me'],
       query: () => ({
@@ -26,4 +35,4 @@ export const authApi = instagramApi.injectEndpoints({
   }),
 })
 
-export const { useMeQuery, usePasswordRecoveryMutation } = authApi
+export const { useCodeValidationCheckMutation, useMeQuery, usePasswordRecoveryMutation } = authApi

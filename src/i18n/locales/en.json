@@ -18,6 +18,9 @@
     "invalidEmail": "Invalid email address",
     "linkSent": "The link has been sent to your email. If you don’t receive an email, send the link again",
     "emailSentTitle": "Email sent",
-    "emailSentBody": "We have sent a link to confirm your email to"
+    "emailSentBody": "We have sent a link to confirm your email to",
+    "resendLink": "Resend link",
+    "emailVerificationLinkExpired": "Email verification link expired",
+    "expiredLinkDescription": "Looks like the verification link has expired. Not to worry, we can send the link again"
   }
 }
