@@ -9,14 +9,18 @@ const useRecaptcha = (refreshTimeout = 110000) => {
     setCaptchaToken(token || '')
   }, [])
 
-  useEffect(() => {
-    const refreshCaptcha = () => {
-      if (recaptchaRef.current && captchaToken) {
+  const refreshCaptcha = useCallback(() => {
+    try {
+      if (recaptchaRef.current) {
         recaptchaRef.current.reset()
         setCaptchaToken(null)
       }
+    } catch (error) {
+      console.error('Failed to reset recaptcha:', error)
     }
+  }, [recaptchaRef])
 
+  useEffect(() => {
     let tokenRefreshTimeout: ReturnType<typeof setTimeout> | null = null
 
     if (captchaToken) {
@@ -28,9 +32,9 @@ const useRecaptcha = (refreshTimeout = 110000) => {
         clearTimeout(tokenRefreshTimeout)
       }
     }
-  }, [captchaToken, refreshTimeout])
+  }, [captchaToken, refreshTimeout, refreshCaptcha])
 
-  return { captchaToken, handleRecaptcha, recaptchaRef, setCaptchaToken }
+  return { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha, setCaptchaToken }
 }
 
 export { useRecaptcha }
