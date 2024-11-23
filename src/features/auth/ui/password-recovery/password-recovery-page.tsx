@@ -15,11 +15,10 @@ export const PasswordRecoveryPage = () => {
   const router = useRouter()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [isExpired, setIsExpired] = useState(false)
+  const [isExpired, setIsExpired] = useState<boolean | null>(null)
   const [userEmail, setUserEmail] = useState('')
-
-  const [submitForm, { isLoading: isSubmiting }] = usePasswordRecoveryMutation()
-  const [checkRecoveryCode, { isLoading: isChecking }] = useCodeValidationCheckMutation()
+  const [submitForm] = usePasswordRecoveryMutation()
+  const [checkRecoveryCode] = useCodeValidationCheckMutation()
 
   const resendEmail = (email: string) => {
     setUserEmail(email)
@@ -32,23 +31,17 @@ export const PasswordRecoveryPage = () => {
     const code = query.get('recoveryCode')
 
     if (code) {
-      const checkCode = async () => {
-        try {
-          const res = await checkRecoveryCode(code).unwrap()
-
-          console.log(res)
-          setIsExpired(false)
-
-          router.push('password-reset')
-        } catch (e) {
+      checkRecoveryCode(code)
+        .unwrap()
+        .then(() => {
+          router.push('/password-reset') // Если успешно, перенаправляем
+        })
+        .catch(() => {
           setIsExpired(true)
-          toast.error('Код восстановления истёк или неверен')
-
-          return e
-        }
-      }
-
-      checkCode()
+          toast.error('Recovery code is invalid or has expired.')
+        })
+    } else {
+      setIsExpired(false)
     }
   }, [])
 
@@ -79,7 +72,7 @@ export const PasswordRecoveryPage = () => {
     }
   }
 
-  if (isSubmiting || isChecking) {
+  if (isExpired === null) {
     return <Spinner />
   }
 

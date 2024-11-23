@@ -4,7 +4,15 @@ import { useForm } from 'react-hook-form'
 import { EmailSentModal } from '@/features/auth/ui'
 import { PATH } from '@/shared/constants'
 import { useRecaptcha } from '@/shared/hooks/useRecaptcha'
-import { Button, Card, ControlledTextField, Recaptcha, TextLink, Typography } from '@/shared/ui'
+import {
+  Button,
+  Card,
+  ControlledTextField,
+  Recaptcha,
+  Spinner,
+  TextLink,
+  Typography,
+} from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { z } from 'zod'
@@ -35,6 +43,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha } = useRecaptcha()
 
+  console.log('ref:', recaptchaRef)
   const {
     control,
     formState: { errors },
@@ -44,7 +53,6 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
     resolver: zodResolver(emailScheme),
   })
 
-  console.log('Captcha token:', captchaToken)
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     if (captchaToken) {
       onSubmit({ email: data.email, token: captchaToken })
@@ -90,11 +98,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
             </TextLink>
           </div>
           <div className={'flex justify-center py-1'}>
-            <Recaptcha
-              onChange={handleRecaptcha}
-              ref={recaptchaRef}
-              // style={{ display: !captchaToken ? 'block' : 'none' }}
-            />
+            <Recaptcha onChange={handleRecaptcha} ref={recaptchaRef} />
           </div>
         </form>
       </Card>
