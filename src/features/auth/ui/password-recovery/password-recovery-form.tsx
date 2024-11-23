@@ -4,15 +4,7 @@ import { useForm } from 'react-hook-form'
 import { EmailSentModal } from '@/features/auth/ui'
 import { PATH } from '@/shared/constants'
 import { useRecaptcha } from '@/shared/hooks/useRecaptcha'
-import {
-  Button,
-  Card,
-  ControlledTextField,
-  Recaptcha,
-  Spinner,
-  TextLink,
-  Typography,
-} from '@/shared/ui'
+import { Button, Card, ControlledTextField, Recaptcha, TextLink, Typography } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { z } from 'zod'
@@ -43,7 +35,6 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha } = useRecaptcha()
 
-  console.log('ref:', recaptchaRef)
   const {
     control,
     formState: { errors },
