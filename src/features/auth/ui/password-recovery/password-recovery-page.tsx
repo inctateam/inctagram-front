@@ -13,7 +13,6 @@ import { PasswordRecoveryForm, onSubmitArgs } from './password-recovery-form'
 
 export const PasswordRecoveryPage = () => {
   const router = useRouter()
-
   const [modalOpen, setModalOpen] = useState(false)
   const [isExpired, setIsExpired] = useState<boolean | null>(null)
   const [userEmail, setUserEmail] = useState('')
@@ -34,7 +33,7 @@ export const PasswordRecoveryPage = () => {
       checkRecoveryCode(code)
         .unwrap()
         .then(() => {
-          router.push('/password-reset') // Если успешно, перенаправляем
+          router.push('/password-reset')
         })
         .catch(() => {
           setIsExpired(true)
@@ -43,7 +42,7 @@ export const PasswordRecoveryPage = () => {
     } else {
       setIsExpired(false)
     }
-  }, [])
+  }, [checkRecoveryCode, router])
 
   const onSubmitHandler = async (data: onSubmitArgs) => {
     const { email, token } = data

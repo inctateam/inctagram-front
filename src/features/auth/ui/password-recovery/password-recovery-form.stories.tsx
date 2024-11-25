@@ -16,6 +16,9 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    modalOpen: false,
     onSubmit: fn(),
+    setModalOpen: fn(),
+    userEmail: 'example@gmail.com',
   },
 }
