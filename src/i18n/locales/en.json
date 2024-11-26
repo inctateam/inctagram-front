@@ -1,7 +1,7 @@
 {
   "Header": {
-    "signIn": "Sigh In",
-    "signUp": "Sigh Up",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
     "confirmEmail": "Confirm Email",
     "passwordRecovery": "Forgot Password",
     "resetPassword": "Reset Password",
@@ -21,8 +21,20 @@
       "privacyPolicy": "Privacy policy",
       "haveAccount": "Do you have an account?",
       "signIn": "Sign In",
-      "signUp": "Sign Up"
+      "signUp": "Sign Up",
+      "errors": {
+        "agreesToTerms": "You have to agree our terms and conditions",
+        "email": "The email must match the format example@example.com",
+        "emailExists": "User with this email is already registered",
+        "password": "Password must contain a-z, A-Z and special characters",
+        "passwordMinLength": "Minimum number of characters 6",
+        "passwordMaxLength": "Maximum number of characters 20",
+        "passwordConfirmation": "The passwords must match",
+        "username": "User with this username is already registered",
+        "usernameMinLength": "Minimum number of characters 6",
+        "usernameMaxLength": "Maximum number of characters 30",
+        "requiredField": "Required"
+      }
     }
   }
-
 }

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
@@ -20,54 +20,25 @@ import {
   Typography,
 } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 
-const signUpSchema = z
-  .object({
-    agreesToTerms: z.literal(true, {
-      errorMap: () => ({ message: 'You have to agree our terms and conditions' }),
-    }),
-    email: z.string().email({ message: 'The email must match the format example@example.com' }),
-    password: z
-      .string()
-      .min(6, 'Minimum number of characters 6')
-      .max(20, 'Maximum number of characters 20')
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])/,
-        'Password must contain a-z, A-Z, ! " # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~'
-      ),
-    passwordConfirmation: z.string(),
-    username: z
-      .string()
-      .min(6, 'Minimum number of characters 6')
-      .max(30, 'Maximum number of characters 30')
-      .refine(value => value !== 'Username', 'User with this username is already registered'),
-  })
-  .refine(data => data.password === data.passwordConfirmation, {
-    message: 'The passwords must match',
-    path: ['passwordConfirmation'],
-  })
+import { SignUpFields, signUpSchema } from '../utils/signup-schema'
+import { SignUpPageProps } from './sign-up-page'
 
-type SignUpFields = z.infer<typeof signUpSchema>
-
-type Props = {
-  translatedForm: Record<string, string>
-}
-export function SignUpForm({ translatedForm }: Props) {
+export function SignUpForm({ translatedForm }: SignUpPageProps) {
   const {
     control,
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
     watch,
   } = useForm<SignUpFields>({
     mode: 'onBlur',
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema({ tErrors: translatedForm.errors, translatedForm })),
   })
   const [signup, { isLoading }] = useSignupMutation()
 
   const [userEmail, setUserEmail] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+
   const [validatedFields, setValidatedFields] = useState({
     agreesToTerms: false,
     email: false,
@@ -75,7 +46,19 @@ export function SignUpForm({ translatedForm }: Props) {
     passwordConfirmation: false,
     username: false,
   })
-  const agreesToTerms = watch('agreesToTerms')
+  const agreesToTerms = watch('agreesToTerms', false)
+  const password = watch('password', '')
+  const passwordConfirmation = watch('passwordConfirmation', '')
+  const [passwordError, setPasswordError] = useState('')
+
+  useEffect(() => {
+    if (password && passwordConfirmation && password !== passwordConfirmation) {
+      setPasswordError(translatedForm.errors.passwordConfirmation)
+    } else {
+      setPasswordError('')
+    }
+  }, [password, passwordConfirmation, translatedForm.errors.passwordConfirmation])
+
   const handleBlur = (fieldName: keyof typeof validatedFields) => {
     setValidatedFields(prev => ({ ...prev, [fieldName]: true }))
   }
@@ -84,7 +67,6 @@ export function SignUpForm({ translatedForm }: Props) {
 
   const onSubmit = handleSubmit(data => {
     setUserEmail(data.email)
-    //setModalOpen(true)
     signup({
       email: data.email,
       password: data.password,
@@ -93,20 +75,17 @@ export function SignUpForm({ translatedForm }: Props) {
       .unwrap()
       .then(() => {
         setModalOpen(true)
-        setErrorMessage('')
       })
       .catch(error => {
-        console.log(error)
         setModalOpen(false)
         if (error.status === 409 && error.data.message === 'existed_email') {
-          toast.error('User with this email is already registered')
-        }
-        if (error.status === 409 && error.data.message === 'existed_login') {
-          toast.error('User with this username is already registered')
+          toast.error(translatedForm.errors.emailExists)
+        } else if (error.status === 409 && error.data.message === 'existed_login') {
+          toast.error(translatedForm.errors.username)
         } else {
-          toast.error(
-            error.data.errorsMessages[0].message + ' ' + error.data.errorsMessages[0].field
-          )
+          toast.error('Something went wrong')
+
+          //return error
         }
       })
   })
@@ -163,8 +142,8 @@ export function SignUpForm({ translatedForm }: Props) {
 
           <ControlledPasswordTextField
             control={control}
-            error={!!errors?.passwordConfirmation?.message}
-            helperText={errors?.passwordConfirmation?.message}
+            error={!!errors?.passwordConfirmation?.message || !!passwordError}
+            helperText={errors?.passwordConfirmation?.message || passwordError}
             label={<FormLabel required>{translatedForm.passwordConfirmation}</FormLabel>}
             name={'passwordConfirmation'}
             onBlur={() => handleBlur('passwordConfirmation')}
@@ -204,15 +183,10 @@ export function SignUpForm({ translatedForm }: Props) {
             onBlur={() => handleBlur('agreesToTerms')}
             shouldValidateOnChange={shouldValidateOnChange('agreesToTerms')}
           />
-          {errors.agreesToTerms && (
-            <FormHelperText error>{errors.agreesToTerms.message}</FormHelperText>
+          {!agreesToTerms && (
+            <FormHelperText error>{translatedForm.errors.agreesToTerms}</FormHelperText>
           )}
-          {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
-          <Button
-            className={'w-full'}
-            disabled={!isValid || !agreesToTerms || isLoading}
-            type={'submit'}
-          >
+          <Button className={'w-full'} disabled={!agreesToTerms || isLoading} type={'submit'}>
             {translatedForm.signUp}
           </Button>
           <Typography className={'text-center'} variant={'regular16'}>
@@ -227,7 +201,6 @@ export function SignUpForm({ translatedForm }: Props) {
           </TextLink>
         </form>
       </Card>
-
       <EmailSentModal
         onOpenChange={open => setModalOpen(open)}
         open={modalOpen}
