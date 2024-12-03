@@ -53,7 +53,7 @@ const iconButtonVariants = cva(
         primary: 'text-accent-500',
       },
       size: {
-        base: '',
+        default: '',
         medium: 'text-2xl p-1.5',
         small: 'text-base p-1.5',
       },

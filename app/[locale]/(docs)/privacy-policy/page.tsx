@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
     <div>
       <TextLink color={'regular'} href={PATH.SIGN_UP} size={'medium'} underline={false}>
         <ArrowBackOutline className={'mr-3 w-6 h-6'} />
-        Back to Sign Up
+        {t('backToSignUp')}?
       </TextLink>
       <Typography className={'text-center my-6'} variant={'h1'}>
         {t('privacyPolicy')}
@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
           <strong>Introduction</strong>
           At [Social Network Name], we are committed to protecting your privacy. This Privacy Policy
           outlines how we collect, use, and share your personal information when you use our
-          services. By accessing our platform, you agree to the terms outlined in this policy.{' '}
+          services. By accessing our platform, you agree to the terms outlined in this policy.
           <br />
           <strong>Information We Collect</strong>
           We collect various types of information to provide and improve our services. This
