@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
 import { PasswordRecoveryResponse, ValidationErrorResponse } from '@/features/auth/types'
 import { Spinner } from '@/shared/ui'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
 import { PasswordRecoveryForm, onSubmitArgs } from './password-recovery-form'
@@ -24,10 +24,12 @@ export const PasswordRecoveryPage = () => {
     setIsExpired(false)
     router.push('password-recovery')
   }
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search)
-    const code = query.get('recoveryCode')
+    // const query = new URLSearchParams(window.location.search)
+    // const code = query.get('recoveryCode')
+    const code = searchParams.get('recoveryCode')
 
     if (code) {
       checkRecoveryCode(code)
