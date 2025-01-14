@@ -6,7 +6,8 @@
     "passwordRecovery": "Forgot Password",
     "resetPassword": "Reset Password",
     "terms": "Terms of service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "backToSignUp": "Back to Sign Up"
   },
   "auth": {
     "SignUp": {
@@ -36,5 +37,27 @@
         "requiredField": "Required"
       }
     }
+  },
+  "Auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "forgotPassword": "Forgot Password",
+    "email": "Email",
+    "password": "Password",
+    "dontHaveAnAccount": "Don’t have an account",
+    "usernameOrEmail": "Name or email"
+  },
+  "LoginSchema": {
+    "invalidEmail": "Invalid email format",
+    "minPassword": "Password must be at least 6 characters long",
+    "minUsername": "Username must be at least 3 characters long",
+    "maxPassword": "Password must not exceed 20 characters",
+    "maxUsername": "Username must not exceed 10 characters",
+    "lowercasePassword": "Password must include a lowercase letter",
+    "uppercasePassword": "Password must include an uppercase letter",
+    "numberPassword": "Password must include a number",
+    "characterPassword": "Password must include a special character",
+    "requiredField": "Required field",
+    "cyrillicNotAllowed": "The use of Russian letters is not allowed"
   }
 }

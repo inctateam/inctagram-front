@@ -18,7 +18,7 @@ export const PasswordResetForm = () => {
   } = useForm<FormData>()
 
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    return data
   }
 
   return (
