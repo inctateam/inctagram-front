@@ -4,3 +4,8 @@ export interface MeResponse {
   userId: number
   username: string
 }
+export interface SignUpArgs {
+  email: string
+  password: string
+  username: string
+}
