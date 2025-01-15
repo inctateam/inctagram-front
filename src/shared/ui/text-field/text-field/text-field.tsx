@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react'
+import React, { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
 import { useGenerateId } from '@/shared/hooks'
 import { FormHelperText, FormLabel } from '@/shared/ui'
@@ -14,15 +14,17 @@ type TextFieldOwnProps = {
   hideRequiredIndicator?: true
   id?: string
   label?: ReactNode
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void // Добавьте onChange
   required?: boolean
   requiredIndicator?: ReactNode
   startIcon?: ReactNode
+  value?: string // Добавьте value
 }
 
 type TextFieldProps = Omit<ComponentPropsWithoutRef<'input'>, keyof TextFieldOwnProps> &
   TextFieldOwnProps
 
-const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
+const TextField = forwardRef<ElementRef<'input'>, TextFieldProps>((props, ref) => {
   const {
     className,
     disabled,
@@ -32,9 +34,11 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
     hideRequiredIndicator,
     id: propInputId,
     label,
+    onChange,
     required,
     requiredIndicator,
     startIcon,
+    value = '', // Убедитесь, что value инициализировано
     ...restInputProps
   } = props
 
@@ -75,7 +79,9 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
           className={styles.input}
           disabled={disabled}
           id={finalInputId}
+          onChange={onChange} // Обработчик изменения
           type={'text'}
+          value={value} // Передавайте значение
           {...restInputProps}
           ref={ref}
         />

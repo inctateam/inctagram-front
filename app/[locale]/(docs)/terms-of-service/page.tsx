@@ -10,7 +10,7 @@ const TermsOfService = () => {
     <div>
       <TextLink color={'regular'} href={PATH.SIGN_UP} size={'medium'} underline={false}>
         <ArrowBackOutline className={'mr-3 w-6 h-6'} />
-        Back to Sign Up
+        {t('backToSignUp')}?
       </TextLink>
       <Typography className={'text-center my-6'} variant={'h1'}>
         {t('terms')}

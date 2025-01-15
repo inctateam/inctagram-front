@@ -31,7 +31,7 @@ const defaultVariant = 'regular14'
 
 type DefaultElement = (typeof VariantTagMap)[typeof defaultVariant]
 
-const typographyVariants = cva('text-light-100', {
+const typographyVariants = cva('text-light-100 cursor-default', {
   defaultVariants: {
     variant: defaultVariant,
   },

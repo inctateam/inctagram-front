@@ -1,26 +1,78 @@
 {
   "Header": {
-    "signIn": "Sigh In",
-    "signUp": "Sigh Up",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
     "confirmEmail": "Confirm Email",
     "passwordRecovery": "Forgot Password",
     "resetPassword": "Reset Password",
     "terms": "Terms of service",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "backToSignUp": "Back to Sign Up"
   },
   "auth": {
-    "forgotPassword": "Forgot Password",
-    "enterEmail": "Enter your email address and we will send you further instructions",
-    "sendLink": "Send Link",
-    "sendLinkAgain": "Send Link Again",
-    "backToSignIn": "Back to Sign In",
-    "emailRequired": "Email is required",
-    "invalidEmail": "Invalid email address",
-    "linkSent": "The link has been sent to your email. If you don’t receive an email, send the link again",
-    "emailSentTitle": "Email sent",
-    "emailSentBody": "We have sent a link to confirm your email to",
-    "resendLink": "Resend link",
-    "emailVerificationLinkExpired": "Email verification link expired",
-    "expiredLinkDescription": "Looks like the verification link has expired. Not to worry, we can send the link again"
+    "SignUp": {
+      "title": "Sign Up",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "passwordConfirmation": "Password confirmation",
+      "agreeToTerms": "I agree to the",
+      "and": " and ",
+      "termsOfService": "Terms of service",
+      "privacyPolicy": "Privacy policy",
+      "haveAccount": "Do you have an account?",
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "errors": {
+        "agreesToTerms": "You have to agree our terms and conditions",
+        "email": "The email must match the format example@example.com",
+        "emailExists": "User with this email is already registered",
+        "password": "Password must contain a-z, A-Z and special characters",
+        "passwordMinLength": "Minimum number of characters 6",
+        "passwordMaxLength": "Maximum number of characters 20",
+        "passwordConfirmation": "The passwords must match",
+        "username": "User with this username is already registered",
+        "usernameMinLength": "Minimum number of characters 6",
+        "usernameMaxLength": "Maximum number of characters 30",
+        "requiredField": "Required"
+      }
+    },
+    "ForgotPassword": {
+      "forgotPassword": "Forgot Password",
+      "enterEmail": "Enter your email address and we will send you further instructions",
+      "sendLink": "Send Link",
+      "sendLinkAgain": "Send Link Again",
+      "backToSignIn": "Back to Sign In",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Invalid email address",
+      "linkSent": "The link has been sent to your email. If you don’t receive an email, send the link again",
+      "emailSentTitle": "Email sent",
+      "emailSentBody": "We have sent a link to confirm your email to",
+      "resendLink": "Resend link",
+      "emailVerificationLinkExpired": "Email verification link expired",
+      "expiredLinkDescription": "Looks like the verification link has expired. Not to worry, we can send the link again"
+    },
+    "Auth": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot Password",
+      "email": "Email",
+      "password": "Password",
+      "dontHaveAnAccount": "Don’t have an account",
+      "usernameOrEmail": "Name or email"
+    },
+    "LoginSchema": {
+      "invalidEmail": "Invalid email format",
+      "minPassword": "Password must be at least 6 characters long",
+      "minUsername": "Username must be at least 3 characters long",
+      "maxPassword": "Password must not exceed 20 characters",
+      "maxUsername": "Username must not exceed 10 characters",
+      "lowercasePassword": "Password must include a lowercase letter",
+      "uppercasePassword": "Password must include an uppercase letter",
+      "numberPassword": "Password must include a number",
+      "characterPassword": "Password must include a special character",
+      "requiredField": "Required field",
+      "cyrillicNotAllowed": "The use of Russian letters is not allowed"
+    }
   }
 }

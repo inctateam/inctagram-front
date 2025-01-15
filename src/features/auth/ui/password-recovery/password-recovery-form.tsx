@@ -31,7 +31,7 @@ type PasswordRecoveryFormProps = {
 
 const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const { modalOpen, onSubmit, setModalOpen, userEmail } = props
-  const t = useTranslations('auth')
+  const t = useTranslations('auth.ForgotPassword')
 
   const { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha } = useRecaptcha()
 
