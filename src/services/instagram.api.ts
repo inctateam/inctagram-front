@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const instagramApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://auth.content-universe.store/api/',
+    baseUrl: 'https://inctagram.work/api/',
     prepareHeaders: headers => {
       const token = localStorage.getItem('access_token')
 
