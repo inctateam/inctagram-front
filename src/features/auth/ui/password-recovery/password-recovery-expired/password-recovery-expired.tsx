@@ -18,7 +18,7 @@ const PasswordRecoveryFormExpired = (props: PasswordRecoveryProps) => {
     //   resendEmail(userEmail)
     // }
   }
-  const t = useTranslations('auth')
+  const t = useTranslations('auth.ForgotPassword')
 
   return (
     <div className={'flex flex-col w-[474px] gap-7'}>

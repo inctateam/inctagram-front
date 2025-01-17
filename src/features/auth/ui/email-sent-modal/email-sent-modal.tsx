@@ -19,7 +19,7 @@ export type EmailSentModalProps = EmailSentModalOwnProps &
   Omit<DialogProps, keyof EmailSentModalOwnProps>
 
 export const EmailSentModal = ({ onOpenChange, open, userEmail }: EmailSentModalProps) => {
-  const t = useTranslations('auth')
+  const t = useTranslations('auth.ForgotPassword')
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>

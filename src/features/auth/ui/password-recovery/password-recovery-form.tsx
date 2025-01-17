@@ -1,6 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
+import { PasswordRecoveryArgs } from '@/features/auth/types'
 import { EmailSentModal } from '@/features/auth/ui'
 import { PATH } from '@/shared/constants'
 import { useRecaptcha } from '@/shared/hooks/useRecaptcha'
@@ -17,14 +18,14 @@ const emailScheme = z.object({
 
 type PasswordRecoveryFormValues = z.infer<typeof emailScheme>
 
-type onSubmitArgs = {
-  email: string
-  token: string
-}
+// type onSubmitArgs = {
+//   email: string
+//   recaptcha: string
+// }
 
 type PasswordRecoveryFormProps = {
   modalOpen: boolean
-  onSubmit: ({ email, token }: onSubmitArgs) => void
+  onSubmit: ({ email, recaptcha }: PasswordRecoveryArgs) => void
   setModalOpen: (open: boolean) => void
   userEmail: string
 }
@@ -33,7 +34,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const { modalOpen, onSubmit, setModalOpen, userEmail } = props
   const t = useTranslations('auth.ForgotPassword')
 
-  const { captchaToken, handleRecaptcha, recaptchaRef, refreshCaptcha } = useRecaptcha()
+  const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
   const {
     control,
@@ -46,8 +47,8 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     if (captchaToken) {
-      onSubmit({ email: data.email, token: captchaToken })
-      refreshCaptcha()
+      onSubmit({ email: data.email, recaptcha: captchaToken })
+      // refreshCaptcha()
     }
   }
 
@@ -102,4 +103,4 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   )
 }
 
-export { PasswordRecoveryForm, type PasswordRecoveryFormValues, type onSubmitArgs }
+export { PasswordRecoveryForm, type PasswordRecoveryFormValues }

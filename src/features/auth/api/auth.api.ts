@@ -1,4 +1,4 @@
-import { MeResponse, SignUpArgs, PasswordRecoveryArgs, PasswordRecoveryResponse  } from '@/features/auth/types'
+import { MeResponse, PasswordRecoveryArgs, SignUpArgs } from '@/features/auth/types'
 import { instagramApi } from '@/services'
 
 export const authApi = instagramApi.injectEndpoints({
@@ -6,9 +6,9 @@ export const authApi = instagramApi.injectEndpoints({
     codeValidationCheck: builder.mutation<void, string>({
       query: code => {
         return {
-          body: { code },
+          body: { recoveryCode: code },
           method: 'POST',
-          url: 'v1/auth/code-validation-check',
+          url: 'v1/auth/check-recovery-code',
         }
       },
     }),
@@ -18,15 +18,13 @@ export const authApi = instagramApi.injectEndpoints({
         url: 'v1/auth/me',
       }),
     }),
-    passwordRecovery: builder.mutation<PasswordRecoveryResponse, PasswordRecoveryArgs>({
+    passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
       query: data => {
-        const { email, token } = data
+        const { email, recaptcha } = data
 
         return {
-          body: { email },
-          headers: {
-            recaptchagooglev2: token,
-          },
+          body: { email, recaptcha },
+          credentials: 'include',
           method: 'POST',
           url: 'v1/auth/password-recovery',
         }
@@ -43,4 +41,9 @@ export const authApi = instagramApi.injectEndpoints({
   }),
 })
 
-export const { useCodeValidationCheckMutation, useMeQuery, usePasswordRecoveryMutation, useSignupMutation } = authApi
+export const {
+  useCodeValidationCheckMutation,
+  useMeQuery,
+  usePasswordRecoveryMutation,
+  useSignupMutation,
+} = authApi
