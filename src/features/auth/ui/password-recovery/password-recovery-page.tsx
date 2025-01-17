@@ -27,19 +27,14 @@ export const PasswordRecoveryPage = () => {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // const query = new URLSearchParams(window.location.search)
-    // const code = query.get('recoveryCode')
-    // const code = searchParams.get('recoveryCode')
     const code = searchParams.get('code')
     const email = searchParams.get('email')
 
-    //
-    // router.replace(`/recovery?code=${code}&email=${email}`)
     if (code) {
       checkRecoveryCode(code)
         .unwrap()
         .then(() => {
-          router.push(`/password-reset?code${code}`)
+          router.push(`password-reset?code=${code}&email=${email}`)
         })
         .catch(() => {
           setIsExpired(true)

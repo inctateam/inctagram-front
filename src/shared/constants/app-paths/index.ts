@@ -1,10 +1,10 @@
 export const PATH = {
-  CONFIRM_EMAIL: '/confirm-email',
-  PASSWORD_RECOVERY: '/recovery', // forgot password page
+  CONFIRM_EMAIL: 'auth/confirm-email',
+  PASSWORD_RECOVERY: 'auth/recovery', // forgot password page
   PASSWORD_RESET: '/password-reset', // creating new password
   PRIVACY_POLICY: '/privacy-policy',
   ROOT: '/',
-  SIGN_IN: '/sign-in', // login page
-  SIGN_UP: '/sign-up', // register new user
+  SIGN_IN: 'auth/sign-in', // login page
+  SIGN_UP: 'auth/sign-up', // register new user
   TERMS_OF_SERVICE: '/terms-of-service',
 } as const
