@@ -33,12 +33,13 @@ export const PasswordRecoveryPage = () => {
     const code = searchParams.get('code')
     const email = searchParams.get('email')
 
-    router.replace(`/password-recovery?code=${code}&email=${email}`)
+    //
+    // router.replace(`/recovery?code=${code}&email=${email}`)
     if (code) {
       checkRecoveryCode(code)
         .unwrap()
         .then(() => {
-          router.push('/password-reset')
+          router.push(`/password-reset?code${code}`)
         })
         .catch(() => {
           setIsExpired(true)
