@@ -13,10 +13,6 @@ const PasswordRecoveryFormExpired = (props: PasswordRecoveryProps) => {
 
   const onClickHandler = () => {
     resendEmail(userEmail)
-    //fix later!!!
-    // if (userEmail) {
-    //   resendEmail(userEmail)
-    // }
   }
   const t = useTranslations('auth.ForgotPassword')
 

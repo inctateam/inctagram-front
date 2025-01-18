@@ -7,6 +7,7 @@ import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/f
 import { PasswordRecoveryArgs, PasswordRecoveryError } from '@/features/auth/types'
 import { Spinner } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
 import { PasswordRecoveryForm } from './password-recovery-form'
@@ -22,9 +23,10 @@ export const PasswordRecoveryPage = () => {
   const resendEmail = (email: string) => {
     setUserEmail(email)
     setIsExpired(false)
-    router.push('password-recovery')
+    router.push('recovery')
   }
   const searchParams = useSearchParams()
+  const tToast = useTranslations('auth.ForgotPassword.toastMessages')
 
   useEffect(() => {
     const code = searchParams.get('code')
@@ -38,7 +40,7 @@ export const PasswordRecoveryPage = () => {
         })
         .catch(() => {
           setIsExpired(true)
-          toast.error('Recovery code is invalid or has expired.')
+          toast.error(tToast('expiredCode'))
         })
     } else {
       setIsExpired(false)
@@ -51,19 +53,17 @@ export const PasswordRecoveryPage = () => {
 
       if (resData === null) {
         setModalOpen(true)
-        toast.success('Success')
+        toast.success(tToast('success'))
       }
     } catch (error) {
       const apiError = error as PasswordRecoveryError
 
       if (apiError?.messages?.[0]?.message) {
-        console.log('Ошибка Recaptcha:', apiError.messages[0].message)
         toast.error(
-          `Error ${apiError?.statusCode}: ${apiError.messages?.[0]?.message ?? 'Recaptcha error'}`
+          `Error ${apiError?.statusCode}: ${apiError.messages?.[0]?.message ?? tToast('recaptchaError')}`
         )
       } else {
-        console.error('Неизвестная ошибка:', error)
-        toast.error('Unknown Error')
+        toast.error(tToast('unknownError'))
       }
     } finally {
       setUserEmail(data.email)

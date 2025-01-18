@@ -50,7 +50,17 @@
       "emailSentBody": "We have sent a link to confirm your email to",
       "resendLink": "Resend link",
       "emailVerificationLinkExpired": "Email verification link expired",
-      "expiredLinkDescription": "Looks like the verification link has expired. Not to worry, we can send the link again"
+      "expiredLinkDescription": "Looks like the verification link has expired. Not to worry, we can send the link again",
+      "validationErrors": {
+        "invalidEmail": "Invalid email address",
+        "requiredEmail": "Email is required"
+      },
+      "toastMessages": {
+        "success": "Success",
+        "expiredCode": "Recovery code is invalid or has expired",
+        "recaptchaError": "Recaptcha error",
+        "unknownError": "Unknown Error"
+      }
     },
     "Auth": {
       "signIn": "Sign In",

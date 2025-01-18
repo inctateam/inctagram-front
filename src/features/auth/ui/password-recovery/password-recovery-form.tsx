@@ -12,16 +12,12 @@ import { z } from 'zod'
 
 const emailScheme = z.object({
   email: z
-    .string({ required_error: 'Email is required' })
-    .email({ message: 'Invalid email address' }),
+    .string({ required_error: 'requiredEmail' })
+    .min(1, { message: 'requiredEmail' })
+    .email({ message: 'invalidEmail' }),
 })
 
 type PasswordRecoveryFormValues = z.infer<typeof emailScheme>
-
-// type onSubmitArgs = {
-//   email: string
-//   recaptcha: string
-// }
 
 type PasswordRecoveryFormProps = {
   modalOpen: boolean
@@ -33,22 +29,22 @@ type PasswordRecoveryFormProps = {
 const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
   const { modalOpen, onSubmit, setModalOpen, userEmail } = props
   const t = useTranslations('auth.ForgotPassword')
+  const tErrors = useTranslations('auth.ForgotPassword.validationErrors')
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm<PasswordRecoveryFormValues>({
-    mode: 'onSubmit',
+    mode: 'onChange',
     resolver: zodResolver(emailScheme),
   })
 
   const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
     if (captchaToken) {
       onSubmit({ email: data.email, recaptcha: captchaToken })
-      // refreshCaptcha()
     }
   }
 
@@ -61,7 +57,10 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
             control={control}
             defaultValue={userEmail}
             error={!!errors.email?.message}
-            helperText={errors.email?.message}
+            helperText={
+              errors.email?.message &&
+              tErrors(errors.email.message as 'invalidEmail' | 'requiredEmail')
+            }
             label={'Email'}
             name={'email'}
             placeholder={userEmail || 'example-email@gmail.com'}
@@ -78,7 +77,7 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
             </div>
           )}
           <div className={'flex flex-col gap-6 mt-[26px] mb-4'}>
-            <Button className={'w-full'} disabled={!captchaToken} type={'submit'}>
+            <Button className={'w-full'} disabled={!captchaToken || !isValid} type={'submit'}>
               {userEmail ? t('sendLinkAgain') : t('sendLink')}
             </Button>
             <TextLink
