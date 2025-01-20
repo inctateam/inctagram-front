@@ -2,8 +2,8 @@ import { SignInPage } from '@/features/auth/ui'
 import { useTranslations } from 'next-intl'
 
 const SignIn = () => {
-  const t = useTranslations('Auth')
-  const tl = useTranslations('LoginSchema')
+  const t = useTranslations('auth.Auth')
+  const tl = useTranslations('auth.LoginSchema')
   const translAuth = {
     dontHaveAnAccount: t('dontHaveAnAccount'),
     email: t('email'),
