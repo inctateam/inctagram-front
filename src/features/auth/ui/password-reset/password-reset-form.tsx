@@ -4,22 +4,42 @@ import { useForm } from 'react-hook-form'
 import { useNewPasswordMutation } from '@/features/auth/api'
 import { Button, Card, ControlledPasswordTextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
-type FormData = {
-  confirmPassword: string
-  password: string
-}
+const passwordResetSchema = z
+  .object({
+    confirmPassword: z.string({
+      required_error: 'Required field',
+    }),
+    password: z
+      .string({
+        required_error: 'Required field',
+      })
+      .min(6, 'Minimum number of characters 6')
+      .max(20, 'Maximum number of characters 20')
+      .refine(
+        password => /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(password),
+        'Password must contain only Latin letters, numbers, and special characters.'
+      ),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })
+
+type FormValues = z.infer<typeof passwordResetSchema>
 
 export const PasswordResetForm = () => {
   const {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormData>()
+  } = useForm<FormValues>({ resolver: zodResolver(passwordResetSchema) })
 
   const [submitNewPassword] = useNewPasswordMutation()
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: FormValues) => {
     const { password } = data
 
     try {
