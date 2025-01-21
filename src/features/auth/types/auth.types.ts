@@ -7,10 +7,10 @@ export interface MeResponse {
 export interface SignUpArgs {
   email: string
   password: string
-  username: string
+  userName: string
 }
 
-export interface NewPassword {
+export interface NewPasswordArgs {
   newPassword: string
   recoveryCode: string
 }
@@ -20,10 +20,13 @@ export interface PasswordRecoveryArgs {
   email: string
   recaptcha: string
 }
-export interface PasswordRecoveryError {
-  error?: string
-  messages?: { field?: string; message: string }[]
-  statusCode?: number
+export interface FieldErrorResponse {
+  data: {
+    error?: string
+    messages?: { field?: string; message: string }[]
+    statusCode?: number
+  }
+  status: number
 }
 
 // export type PasswordRecoveryResponse = {

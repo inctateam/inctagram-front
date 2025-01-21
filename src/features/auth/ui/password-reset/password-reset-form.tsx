@@ -1,10 +1,12 @@
 'use client'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
-import { useNewPasswordMutation } from '@/features/auth/api'
+import { NewPasswordArgs } from '@/features/auth/types'
 import { Button, Card, ControlledPasswordTextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
 const passwordResetSchema = z
@@ -30,25 +32,25 @@ const passwordResetSchema = z
 
 type FormValues = z.infer<typeof passwordResetSchema>
 
-export const PasswordResetForm = () => {
+type Props = {
+  onSubmit: ({ newPassword, recoveryCode }: NewPasswordArgs) => void
+}
+
+export const PasswordResetForm = ({ onSubmit }: Props) => {
+  const searchParams = useSearchParams()
+  const code = searchParams.get('code')
+
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm<FormValues>({ resolver: zodResolver(passwordResetSchema) })
 
-  const [submitNewPassword] = useNewPasswordMutation()
-
-  const onSubmit = async (data: FormValues) => {
-    const { password } = data
-
-    try {
-      submitNewPassword({
-        newPassword: 'test',
-        recoveryCode: '12345',
-      }).unwrap()
-    } catch (error) {
-      console.error(error)
+  const onSubmitHandler = async ({ password }: FormValues) => {
+    if (code) {
+      onSubmit({ newPassword: password, recoveryCode: code })
+    } else {
+      toast.error('No confirmation code found')
     }
   }
 
@@ -56,7 +58,7 @@ export const PasswordResetForm = () => {
     <>
       <Card className={'flex flex-col items-center gap-9'} variant={'auth'}>
         <Typography variant={'h1'}>Forgot Password</Typography>
-        <form className={'w-full'} onSubmit={handleSubmit(onSubmit)}>
+        <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <div className={'flex flex-col gap-6 mb-2'}>
             <ControlledPasswordTextField
               control={control}
