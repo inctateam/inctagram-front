@@ -1,7 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
-import { Button, Card, PasswordTextField, Typography } from '@/shared/ui'
+import { Button, Card, ControlledPasswordTextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
 type FormData = {
@@ -11,10 +11,9 @@ type FormData = {
 
 export const PasswordResetForm = () => {
   const {
+    control,
     formState: { errors },
     handleSubmit,
-    register,
-    watch,
   } = useForm<FormData>()
 
   const onSubmit = (data: FormData) => {
@@ -27,40 +26,21 @@ export const PasswordResetForm = () => {
         <Typography variant={'h1'}>Forgot Password</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmit)}>
           <div className={'flex flex-col gap-6 mb-2'}>
-            <PasswordTextField
-              label={'Password'}
-              {...register('password', {
-                minLength: {
-                  message: 'Minimum number of characters 6',
-                  value: 6,
-                },
-                pattern: {
-                  message:
-                    'Password must contain a-z, A-Z, ! " # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~',
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]).+$/,
-                },
-                required: 'Password is required',
-              })}
+            <ControlledPasswordTextField
+              control={control}
               error={!!errors.password}
               helperText={errors.password?.message}
+              label={'Password'}
+              name={'password'}
               placeholder={'Password'}
             />
-            <PasswordTextField
-              label={'Password confirmation'}
-              {...register('confirmPassword', {
-                required: 'The passwords must match',
-                validate: value => {
-                  if (errors.password) {
-                    return true
-                  }
-
-                  return value === watch('password') || 'The passwords must match'
-                },
-              })}
+            <ControlledPasswordTextField
               error={!!errors.confirmPassword && !errors.password}
               helperText={
                 !errors.password && errors.confirmPassword ? errors.confirmPassword.message : ''
               }
+              label={'Password confirmation'}
+              name={'confirmPassword'}
               placeholder={'Password confirmation'}
             />
           </div>
