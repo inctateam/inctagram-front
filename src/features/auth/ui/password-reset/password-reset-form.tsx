@@ -1,6 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
+import { useNewPasswordMutation } from '@/features/auth/api'
 import { Button, Card, ControlledPasswordTextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
@@ -16,8 +17,19 @@ export const PasswordResetForm = () => {
     handleSubmit,
   } = useForm<FormData>()
 
-  const onSubmit = (data: FormData) => {
-    return data
+  const [submitNewPassword] = useNewPasswordMutation()
+
+  const onSubmit = async (data: FormData) => {
+    const { password } = data
+
+    try {
+      submitNewPassword({
+        newPassword: 'test',
+        recoveryCode: '12345',
+      }).unwrap()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -35,6 +47,7 @@ export const PasswordResetForm = () => {
               placeholder={'Password'}
             />
             <ControlledPasswordTextField
+              control={control}
               error={!!errors.confirmPassword && !errors.password}
               helperText={
                 !errors.password && errors.confirmPassword ? errors.confirmPassword.message : ''

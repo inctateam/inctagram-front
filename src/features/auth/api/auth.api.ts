@@ -1,4 +1,4 @@
-import { MeResponse, PasswordRecoveryArgs, SignUpArgs } from '@/features/auth/types'
+import { MeResponse, NewPassword, PasswordRecoveryArgs, SignUpArgs } from '@/features/auth/types'
 import { instagramApi } from '@/services'
 
 export const authApi = instagramApi.injectEndpoints({
@@ -16,6 +16,13 @@ export const authApi = instagramApi.injectEndpoints({
       providesTags: ['Me'],
       query: () => ({
         url: 'v1/auth/me',
+      }),
+    }),
+    newPassword: builder.mutation<void, NewPassword>({
+      query: body => ({
+        body,
+        method: 'POST',
+        url: '/v1/auth/new-password',
       }),
     }),
     passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
@@ -44,6 +51,7 @@ export const authApi = instagramApi.injectEndpoints({
 export const {
   useCodeValidationCheckMutation,
   useMeQuery,
+  useNewPasswordMutation,
   usePasswordRecoveryMutation,
   useSignupMutation,
 } = authApi

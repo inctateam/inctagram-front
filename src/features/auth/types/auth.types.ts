@@ -10,6 +10,11 @@ export interface SignUpArgs {
   username: string
 }
 
+export interface NewPassword {
+  newPassword: string
+  recoveryCode: string
+}
+
 export interface PasswordRecoveryArgs {
   baseUrl?: string
   email: string
