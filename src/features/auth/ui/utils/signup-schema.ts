@@ -1,6 +1,5 @@
+import { SignUpPageProps } from '@/features/auth/ui'
 import { z } from 'zod'
-
-import { SignUpPageProps } from '../sign-up/sign-up-page'
 
 type SchemaProps = {
   tErrors: SignUpPageProps['translatedForm']['errors']
@@ -8,7 +7,7 @@ type SchemaProps = {
 export const signUpSchema = ({ tErrors }: SchemaProps) =>
   z
     .object({
-      agreesToTerms: z.boolean().refine(value => value === true, {
+      agreesToTerms: z.boolean().refine(value => value, {
         message: tErrors.agreesToTerms,
         path: ['agreesToTerms'],
       }),
@@ -32,7 +31,7 @@ export const signUpSchema = ({ tErrors }: SchemaProps) =>
         .string()
         .min(1, tErrors.requiredField)
         .refine(value => value.trim() !== '', tErrors.requiredField),
-      username: z
+      userName: z
         .string()
         .min(1, tErrors.requiredField)
         .min(6, tErrors.usernameMinLength)

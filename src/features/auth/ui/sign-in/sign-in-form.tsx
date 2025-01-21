@@ -52,11 +52,11 @@ export function SignInForm({ messagesErrors, onSubmit, translAuth }: Props) {
       <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
         <ControlledTextField
           control={control}
-          error={!!errors.usernameOrEmail?.message}
-          helperText={errors.usernameOrEmail?.message}
-          label={<FormLabel required>{translAuth.usernameOrEmail}</FormLabel>}
-          name={'usernameOrEmail'}
-          placeholder={translAuth.usernameOrEmail}
+          error={!!errors.email?.message}
+          helperText={errors.email?.message}
+          label={<FormLabel required>{translAuth.email}</FormLabel>}
+          name={'email'}
+          placeholder={translAuth.email}
         />
         <ControlledPasswordTextField
           control={control}

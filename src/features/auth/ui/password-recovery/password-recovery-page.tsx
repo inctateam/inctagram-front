@@ -45,7 +45,7 @@ export const PasswordRecoveryPage = () => {
     } else {
       setIsExpired(false)
     }
-  }, [checkRecoveryCode, router])
+  }, [checkRecoveryCode, router, searchParams, tToast])
 
   const onSubmitHandler = async (data: PasswordRecoveryArgs) => {
     try {

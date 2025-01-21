@@ -5,9 +5,10 @@ export interface MeResponse {
   username: string
 }
 export interface SignUpArgs {
+  baseUrl?: string
   email: string
   password: string
-  username: string
+  userName: string
 }
 
 export interface PasswordRecoveryArgs {
