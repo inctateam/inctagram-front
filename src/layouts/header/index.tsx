@@ -37,7 +37,7 @@ export const Header = () => {
           <TextLink href={PATH.SIGN_IN}>{t('signIn')}</TextLink>
 
           <TextLink href={PATH.PASSWORD_RECOVERY}>{t('passwordRecovery')}</TextLink>
-          <TextLink href={PATH.PASSWORD_RESET + '?token=2348230-842084-23093482039-23492390'}>
+          <TextLink href={PATH.PASSWORD_RESET + '?code=2348230-842084-23093482039-23492390'}>
             {t('resetPassword')}
           </TextLink>
 
