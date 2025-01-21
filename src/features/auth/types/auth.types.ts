@@ -4,6 +4,7 @@ export interface MeResponse {
   userId: number
   username: string
 }
+
 export interface SignUpArgs {
   baseUrl?: string
   email: string
@@ -11,15 +12,23 @@ export interface SignUpArgs {
   userName: string
 }
 
+export interface NewPasswordArgs {
+  newPassword: string
+  recoveryCode: string
+}
+
 export interface PasswordRecoveryArgs {
   baseUrl?: string
   email: string
   recaptcha: string
 }
-export interface PasswordRecoveryError {
-  error?: string
-  messages?: { field?: string; message: string }[]
-  statusCode?: number
+export interface FieldErrorResponse {
+  data: {
+    error?: string
+    messages?: { field?: string; message: string }[]
+    statusCode?: number
+  }
+  status: number
 }
 
 // export type PasswordRecoveryResponse = {

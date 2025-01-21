@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
-import { PasswordRecoveryArgs, PasswordRecoveryError } from '@/features/auth/types'
+import { FieldErrorResponse, PasswordRecoveryArgs } from '@/features/auth/types'
 import { Spinner } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -56,11 +56,11 @@ export const PasswordRecoveryPage = () => {
         toast.success(tToast('success'))
       }
     } catch (error) {
-      const apiError = error as PasswordRecoveryError
+      const apiError = error as FieldErrorResponse
 
-      if (apiError?.messages?.[0]?.message) {
+      if (apiError?.data.messages?.[0]?.message) {
         toast.error(
-          `Error ${apiError?.statusCode}: ${apiError.messages?.[0]?.message ?? tToast('recaptchaError')}`
+          `Error ${apiError?.data.statusCode}: ${apiError.data.messages?.[0]?.message ?? tToast('recaptchaError')}`
         )
       } else {
         toast.error(tToast('unknownError'))
