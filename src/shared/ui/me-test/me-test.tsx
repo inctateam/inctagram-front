@@ -29,9 +29,10 @@ export const MeTest = () => {
     <div className={'text-amber-600 mx-auto w-full xl:px-[60px] px-4 sm:pt-6 pt-4 max-w-[1280px]'}>
       {user ? (
         <div>
-          <h2>Добро пожаловать, {user.username}!</h2>
+          <h2>Добро пожаловать, {user.userName}!</h2>
           <p>Email: {user.email}</p>
           <p>User ID: {user.userId}</p>
+          <p>Is blocked: {user.isBlocked}</p>
         </div>
       ) : (
         <div>Пользователь не найден</div>
