@@ -1,12 +1,13 @@
 export type LoginArgs = {
+  email: string
   password: string
-  usernameOrEmail: string
 }
 export type LoginResponse = {
   accessToken: string
 }
 export type ResponseMe = {
   email: string
+  isBlocked: boolean
   userId: string
-  username: string
+  userName: string
 }

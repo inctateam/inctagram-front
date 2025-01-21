@@ -11,7 +11,6 @@ const SignIn = () => {
     password: t('password'),
     signIn: t('signIn'),
     signUp: t('signUp'),
-    usernameOrEmail: t('usernameOrEmail'),
   }
   const messagesErrors = {
     characterPassword: tl('characterPassword'),

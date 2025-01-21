@@ -44,7 +44,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
     email: false,
     password: false,
     passwordConfirmation: false,
-    username: false,
+    userName: false,
   })
   const agreesToTerms = watch('agreesToTerms', false)
   const password = watch('password', '')
@@ -70,7 +70,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
     signup({
       email: data.email,
       password: data.password,
-      username: data.username,
+      userName: data.userName,
     })
       .unwrap()
       .then(() => {
@@ -111,13 +111,13 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
         <form className={'flex flex-col space-y-4 w-full'} onSubmit={onSubmit}>
           <ControlledTextField
             control={control}
-            error={!!errors?.username?.message}
-            helperText={errors?.username?.message}
+            error={!!errors?.userName?.message}
+            helperText={errors?.userName?.message}
             label={<FormLabel required>{translatedForm.username}</FormLabel>}
-            name={'username'}
-            onBlur={() => handleBlur('username')}
+            name={'userName'}
+            onBlur={() => handleBlur('userName')}
             placeholder={'Epam11'}
-            shouldValidateOnChange={shouldValidateOnChange('username')}
+            shouldValidateOnChange={shouldValidateOnChange('userName')}
           />
           <ControlledTextField
             control={control}
