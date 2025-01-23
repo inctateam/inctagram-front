@@ -9,34 +9,37 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
-const passwordResetSchema = z
-  .object({
-    confirmPassword: z.string({
-      required_error: 'Required field',
-    }),
-    password: z
-      .string({
-        required_error: 'Required field',
-      })
-      .min(6, 'Minimum number of characters 6')
-      .max(20, 'Maximum number of characters 20')
-      .refine(
-        password => /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(password),
-        'Password must contain only Latin letters, numbers, and special characters.'
-      ),
-  })
-  .refine(data => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  })
+import { TPasswordReset } from '../../../../../app/[locale]/auth/password-reset/page'
 
-type FormValues = z.infer<typeof passwordResetSchema>
+type PasswordResetSchemaType = TPasswordReset['scheme']
+
+export const passwordResetSchema = ({ ...scheme }: PasswordResetSchemaType) =>
+  z
+    .object({
+      confirmPassword: z.string({
+        required_error: scheme.required,
+      }),
+      password: z
+        .string({
+          required_error: scheme.required,
+        })
+        .min(6, 'Minimum number of characters 6')
+        .max(20, 'Maximum number of characters 20')
+        .refine(password => /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(password), scheme.regex),
+    })
+    .refine(data => data.password === data.confirmPassword, {
+      message: scheme.dontMatch,
+      path: ['confirmPassword'],
+    })
+
+type FormValues = z.infer<ReturnType<typeof passwordResetSchema>>
 
 type Props = {
   onSubmit: ({ newPassword, recoveryCode }: NewPasswordArgs) => void
+  translatedForm: TPasswordReset
 }
 
-export const PasswordResetForm = ({ onSubmit }: Props) => {
+export const PasswordResetForm = ({ onSubmit, translatedForm }: Props) => {
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
 
@@ -44,29 +47,28 @@ export const PasswordResetForm = ({ onSubmit }: Props) => {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormValues>({ resolver: zodResolver(passwordResetSchema) })
+  } = useForm<FormValues>({ resolver: zodResolver(passwordResetSchema(translatedForm.scheme)) })
 
   const onSubmitHandler = async ({ password }: FormValues) => {
     if (code) {
       onSubmit({ newPassword: password, recoveryCode: code })
     } else {
-      toast.error('No confirmation code found')
+      toast.error(translatedForm.errors.noCode)
     }
   }
 
   return (
     <>
       <Card className={'flex flex-col items-center gap-9'} variant={'auth'}>
-        <Typography variant={'h1'}>Forgot Password</Typography>
+        <Typography variant={'h1'}>{translatedForm.form.passwordReset}</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
           <div className={'flex flex-col gap-6 mb-2'}>
             <ControlledPasswordTextField
               control={control}
               error={!!errors.password}
               helperText={errors.password?.message}
-              label={'Password'}
+              label={translatedForm.form.password}
               name={'password'}
-              placeholder={'Password'}
             />
             <ControlledPasswordTextField
               control={control}
@@ -74,21 +76,20 @@ export const PasswordResetForm = ({ onSubmit }: Props) => {
               helperText={
                 !errors.password && errors.confirmPassword ? errors.confirmPassword.message : ''
               }
-              label={'Password confirmation'}
+              label={translatedForm.form.passwordConfirm}
               name={'confirmPassword'}
-              placeholder={'Password confirmation'}
             />
           </div>
 
           <Typography className={'text-light-900'} variant={'regular14'}>
-            Your password must be between 6 and 20 characters
+            {translatedForm.form.description}
           </Typography>
 
           <Button
             className={cn('w-full mt-10', `${errors.password?.message && 'mt-6'}`)}
             type={'submit'}
           >
-            Create new password
+            {translatedForm.form.createNewPassword}
           </Button>
         </form>
       </Card>
