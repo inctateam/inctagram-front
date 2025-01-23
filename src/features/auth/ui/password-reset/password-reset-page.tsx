@@ -6,7 +6,11 @@ import { FieldErrorResponse, NewPasswordArgs } from '@/features/auth/types'
 
 import { PasswordResetForm } from './password-reset-form'
 
-export const PasswordResetPage = () => {
+export type PasswordResetPageProps = {
+  translatedForm: IntlMessages['auth']['passwordReset']
+}
+
+export const PasswordResetPage = ({ translatedForm }: PasswordResetPageProps) => {
   const [submitNewPassword] = useNewPasswordMutation()
 
   const onSubmitHandler = async (data: NewPasswordArgs) => {
@@ -20,21 +24,21 @@ export const PasswordResetPage = () => {
         })
           .unwrap()
           .then(() => {
-            toast('success')
+            toast(translatedForm.errors.newPasswordSuccess)
           })
       } catch (error) {
         const fieldError = error as FieldErrorResponse
 
         if (fieldError?.data.messages?.[0]?.message) {
           toast.error(
-            `Error ${fieldError?.data.statusCode}: ${fieldError.data.messages?.[0]?.message}`
+            `${translatedForm.errors.error} ${fieldError?.data.statusCode}: ${fieldError.data.messages?.[0]?.message}`
           )
         } else {
-          toast.error('Some error')
+          toast.error(translatedForm.errors.someError)
         }
       }
     }
   }
 
-  return <PasswordResetForm onSubmit={onSubmitHandler} />
+  return <PasswordResetForm onSubmit={onSubmitHandler} translatedForm={translatedForm} />
 }

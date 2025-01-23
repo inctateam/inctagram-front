@@ -83,6 +83,28 @@
       "characterPassword": "Password must include a special character",
       "requiredField": "Required field",
       "cyrillicNotAllowed": "The use of Russian letters is not allowed"
+    },
+    "passwordReset": {
+      "form": {
+        "passwordReset": "Password Reset",
+        "createNewPassword": "Create new password",
+        "description": "Your password must be between 6 and 20 characters",
+        "password": "Password",
+        "passwordConfirm": "Password Confirmation"
+      },
+      "errors": {
+        "newPasswordSuccess": "Password successfully changed",
+        "someError": "Something went wrong",
+        "error": "Error",
+        "noCode": "No confirmation code found. Check if your url is right"
+      },
+      "scheme": {
+        "required": "Required field",
+        "min": "Minimum number of characters 6",
+        "max": "Maximum number of characters 20",
+        "dontMatch": "Passwords don't match",
+        "regex": "Password must contain only Latin letters, numbers, and special characters."
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 'use strict'
+'use client'
 import { useMeQuery } from '@/services/api/auth/auth.api'
 import { ResponseMe } from '@/services/api/auth/auth.types'
 
