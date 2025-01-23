@@ -103,7 +103,7 @@
         "min": "Minimum number of characters 6",
         "max": "Maximum number of characters 20",
         "dontMatch": "Passwords don't match",
-        "regex": "Password must contain only Latin letters, numbers, and special characters.",
+        "regex": "Password must contain only Latin letters, numbers, and special characters."
       }
     }
   }

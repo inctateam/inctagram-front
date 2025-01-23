@@ -4,11 +4,10 @@ import { toast } from 'react-toastify'
 import { useNewPasswordMutation } from '@/features/auth/api'
 import { FieldErrorResponse, NewPasswordArgs } from '@/features/auth/types'
 
-import { TPasswordReset } from '../../../../../app/[locale]/auth/password-reset/page'
 import { PasswordResetForm } from './password-reset-form'
 
 export type PasswordResetPageProps = {
-  translatedForm: TPasswordReset
+  translatedForm: IntlMessages['auth']['passwordReset']
 }
 
 export const PasswordResetPage = ({ translatedForm }: PasswordResetPageProps) => {

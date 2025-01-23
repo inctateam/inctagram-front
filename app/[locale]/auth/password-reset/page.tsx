@@ -1,16 +1,12 @@
 import { PasswordResetPage } from '@/features/auth/ui'
 import { useTranslations } from 'next-intl'
 
-import { Messages } from '../../../../global'
-
-export type TPasswordReset = Messages['auth']['passwordReset']
-
 const PasswordReset = () => {
   const tErrors = useTranslations('auth.passwordReset.errors')
   const tScheme = useTranslations('auth.passwordReset.scheme')
   const tForm = useTranslations('auth.passwordReset.form')
 
-  const translatedForm: TPasswordReset = {
+  const translatedForm: IntlMessages['auth']['passwordReset'] = {
     errors: {
       error: tErrors('error'),
       newPasswordSuccess: tErrors('newPasswordSuccess'),
