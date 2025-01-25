@@ -6,6 +6,7 @@ const PasswordReset = () => {
   const tScheme = useTranslations('auth.passwordReset.scheme')
   const tForm = useTranslations('auth.passwordReset.form')
 
+  /*global IntlMessages*/
   const translatedForm: IntlMessages['auth']['passwordReset'] = {
     errors: {
       error: tErrors('error'),

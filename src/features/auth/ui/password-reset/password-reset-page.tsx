@@ -6,6 +6,7 @@ import { FieldErrorResponse, NewPasswordArgs } from '@/features/auth/types'
 
 import { PasswordResetForm } from './password-reset-form'
 
+/*global IntlMessages*/
 export type PasswordResetPageProps = {
   translatedForm: IntlMessages['auth']['passwordReset']
 }

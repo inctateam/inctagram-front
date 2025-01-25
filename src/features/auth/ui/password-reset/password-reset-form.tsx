@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
+/*global IntlMessages*/
 type PasswordResetSchemaType = IntlMessages['auth']['passwordReset']['scheme']
 
 export const passwordResetSchema = ({ ...scheme }: PasswordResetSchemaType) =>
