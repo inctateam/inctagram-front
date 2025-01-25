@@ -1,4 +1,5 @@
 import {
+  ConfirmEmailArgs,
   MeResponse,
   NewPasswordArgs,
   PasswordRecoveryArgs,
@@ -16,6 +17,13 @@ export const authApi = instagramApi.injectEndpoints({
           url: 'v1/auth/check-recovery-code',
         }
       },
+    }),
+    confirmEmail: builder.mutation<void, ConfirmEmailArgs>({
+      query: args => ({
+        body: args,
+        method: 'POST',
+        url: `v1/auth/registration-confirmation`,
+      }),
     }),
     me: builder.query<MeResponse, void>({
       providesTags: ['Me'],
@@ -55,6 +63,7 @@ export const authApi = instagramApi.injectEndpoints({
 
 export const {
   useCodeValidationCheckMutation,
+  useConfirmEmailMutation,
   useMeQuery,
   useNewPasswordMutation,
   usePasswordRecoveryMutation,

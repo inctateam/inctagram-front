@@ -12,6 +12,10 @@ export interface SignUpArgs {
   userName: string
 }
 
+export interface ConfirmEmailArgs {
+  confirmationCode: string
+}
+
 export interface NewPasswordArgs {
   newPassword: string
   recoveryCode: string
