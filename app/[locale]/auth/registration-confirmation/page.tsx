@@ -1,5 +1,7 @@
+import { RegistrationConformationPage } from '@/features/auth/ui'
+
 const ConfirmEmail = () => {
-  return 'Confirm Email Page'
+  return <RegistrationConformationPage />
 }
 
 export default ConfirmEmail
