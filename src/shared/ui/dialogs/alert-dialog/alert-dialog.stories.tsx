@@ -18,7 +18,7 @@ export default meta
 export const Controlled = {
   args: {
     description: 'Are you sure you want to delete this post?',
-    position: 'bottom-left',
+    position: 'center',
     title: 'Delete post',
   },
   render: ({ ...args }) => {

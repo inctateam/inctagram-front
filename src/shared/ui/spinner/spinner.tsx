@@ -7,7 +7,10 @@ type Props = {
 export const Spinner = ({ fullScreen = false }: Props) => {
   return (
     <div
-      className={cn(fullScreen ? 'h-screen' : 'h-full', 'flex items-center justify-center w-full')}
+      className={cn(
+        fullScreen ? 'h-screen fixed top-0 left-0' : 'h-full',
+        'flex items-center justify-center w-full'
+      )}
     >
       <span
         className={cn(

@@ -1,7 +1,9 @@
 import {
+  ConfirmEmailArgs,
   MeResponse,
   NewPasswordArgs,
   PasswordRecoveryArgs,
+  ResendConfirmationArgs,
   SignUpArgs,
 } from '@/features/auth/types'
 import { instagramApi } from '@/services'
@@ -16,6 +18,13 @@ export const authApi = instagramApi.injectEndpoints({
           url: 'v1/auth/check-recovery-code',
         }
       },
+    }),
+    confirmEmail: builder.mutation<void, ConfirmEmailArgs>({
+      query: args => ({
+        body: args,
+        method: 'POST',
+        url: `v1/auth/registration-confirmation`,
+      }),
     }),
     me: builder.query<MeResponse, void>({
       providesTags: ['Me'],
@@ -42,6 +51,13 @@ export const authApi = instagramApi.injectEndpoints({
         }
       },
     }),
+    resendConfirmation: builder.mutation<void, ResendConfirmationArgs>({
+      query: body => ({
+        body,
+        method: 'POST',
+        url: '/v1/auth/registration-email-resending',
+      }),
+    }),
     signup: builder.mutation<void, SignUpArgs>({
       query: body => ({
         body,
@@ -55,8 +71,10 @@ export const authApi = instagramApi.injectEndpoints({
 
 export const {
   useCodeValidationCheckMutation,
+  useConfirmEmailMutation,
   useMeQuery,
   useNewPasswordMutation,
   usePasswordRecoveryMutation,
+  useResendConfirmationMutation,
   useSignupMutation,
 } = authApi
