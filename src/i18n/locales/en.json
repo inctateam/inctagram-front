@@ -84,6 +84,23 @@
       "requiredField": "Required field",
       "cyrillicNotAllowed": "The use of Russian letters is not allowed"
     },
+    "ResendConfirm": {
+      "form": {
+        "emailSentDescription": "We have sent a link to confirm your email to",
+        "emailSent": "Email sent",
+        "emailConfirmed": "Your email has been confirmed",
+        "signIn": "Sign In",
+        "congratulations": "Congratulations",
+        "linkExpiredDescription1": "Email verification link expired",
+        "linkExpiredDescription2": "Looks like the verification link has expired. Not to worry, we can send the link again",
+        "resendLink": "Resend verification link"
+      },
+      "errors": {
+        "error": "Error",
+        "someError": "Some error occurred",
+        "badLink": "Bad link"
+      }
+    },
     "passwordReset": {
       "form": {
         "passwordReset": "Password Reset",

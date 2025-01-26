@@ -9,7 +9,12 @@ import { useSearchParams } from 'next/navigation'
 import { EmailConfirmed } from './email-confirmed'
 import { LinkExpired } from './link-expired'
 
-export const RegistrationConformationPage = () => {
+/*global IntlMessages*/
+type Props = {
+  translatedForm: IntlMessages['auth']['ResendConfirm']
+}
+
+export const RegistrationConformationPage = ({ translatedForm }: Props) => {
   const searchParams = useSearchParams()
 
   const [confirmEmail, { isError, isLoading, isSuccess }] = useConfirmEmailMutation()
@@ -20,15 +25,15 @@ export const RegistrationConformationPage = () => {
     if (code) {
       confirmEmail({ confirmationCode: code })
     } else {
-      toast.error('Bad link')
+      toast.error(translatedForm.errors.badLink)
     }
   }, [])
 
   return (
     <>
       {isLoading && <Spinner fullScreen />}
-      {isSuccess && <EmailConfirmed />}
-      {isError && <LinkExpired />}
+      {isSuccess && <EmailConfirmed translatedForm={translatedForm} />}
+      {isError && <LinkExpired translatedForm={translatedForm} />}
     </>
   )
 }

@@ -22,8 +22,8 @@ export const passwordResetSchema = ({ ...scheme }: PasswordResetSchemaType) =>
         .string({
           required_error: scheme.required,
         })
-        .min(6, 'Minimum number of characters 6')
-        .max(20, 'Maximum number of characters 20')
+        .min(6, scheme.min)
+        .max(20, scheme.max)
         .refine(password => /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]/.test(password), scheme.regex),
     })
     .refine(data => data.password === data.confirmPassword, {

@@ -9,7 +9,12 @@ import { AlertDialog, Button, ProgressBar, Typography } from '@/shared/ui'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export const LinkExpired = () => {
+/*global IntlMessages*/
+type Props = {
+  translatedForm: IntlMessages['auth']['ResendConfirm']
+}
+
+export const LinkExpired = ({ translatedForm }: Props) => {
   const router = useRouter()
 
   const searchParams = useSearchParams()
@@ -31,14 +36,16 @@ export const LinkExpired = () => {
       } catch (error) {
         const fieldError = error as FieldErrorResponse
 
-        if (fieldError.status === 400) {
-          toast.error("Email isn't valid or already confirmed")
+        if (fieldError?.data.messages?.[0]?.message) {
+          toast.error(
+            `${translatedForm.errors.error} ${fieldError?.data.statusCode}: ${fieldError.data.messages?.[0]?.message}`
+          )
         } else {
-          toast.error('Some error occurred')
+          toast.error(translatedForm.errors.someError)
         }
       }
     } else {
-      toast.error('Bad link')
+      toast.error(translatedForm.errors.badLink)
     }
   }
 
@@ -46,13 +53,13 @@ export const LinkExpired = () => {
     <div className={'flex flex-col items-center'}>
       {isLoading && <ProgressBar />}
       <Typography className={'mb-5'} variant={'h1'}>
-        Email verification link expired
+        {translatedForm.form.linkExpiredDescription1}
       </Typography>
       <Typography className={'max-w-[300px] text-center mb-7'} variant={'regular16'}>
-        Looks like the verification link has expired. Not to worry, we can send the link again
+        {translatedForm.form.linkExpiredDescription2}
       </Typography>
       <Button className={'mt-6 mb-9'} onClick={onResendHandler} variant={'primary'}>
-        Resend verification link
+        {translatedForm.form.resendLink}
       </Button>
       <Image alt={'expired image'} height={352} src={'/images/expired.svg'} width={474} />
       <AlertDialog
@@ -61,10 +68,10 @@ export const LinkExpired = () => {
             OK
           </Button>
         }
-        description={`We have sent a link to confirm your email to ${email}`}
+        description={`${translatedForm.form.emailSentDescription} ${email}`}
         onOpenChange={setModalOpen}
         open={modalOpen}
-        title={'Email sent'}
+        title={translatedForm.form.emailSent}
       />
     </div>
   )
