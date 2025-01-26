@@ -33,6 +33,9 @@ const config: Config = {
           '100%': { transform: 'rotate(360deg)' },
         },
       },
+      spacing: {
+        header: '59px',
+      },
     },
   },
 }
