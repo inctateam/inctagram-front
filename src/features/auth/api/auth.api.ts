@@ -3,6 +3,7 @@ import {
   MeResponse,
   NewPasswordArgs,
   PasswordRecoveryArgs,
+  ResendConfirmationArgs,
   SignUpArgs,
 } from '@/features/auth/types'
 import { instagramApi } from '@/services'
@@ -50,6 +51,13 @@ export const authApi = instagramApi.injectEndpoints({
         }
       },
     }),
+    resendConfirmation: builder.mutation<void, ResendConfirmationArgs>({
+      query: body => ({
+        body,
+        method: 'POST',
+        url: '/v1/auth/registration-email-resending',
+      }),
+    }),
     signup: builder.mutation<void, SignUpArgs>({
       query: body => ({
         body,
@@ -67,5 +75,6 @@ export const {
   useMeQuery,
   useNewPasswordMutation,
   usePasswordRecoveryMutation,
+  useResendConfirmationMutation,
   useSignupMutation,
 } = authApi

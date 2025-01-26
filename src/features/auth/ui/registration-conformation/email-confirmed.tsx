@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { PATH } from '@/shared/constants'
 import { Button, Typography } from '@/shared/ui'
 import Image from 'next/image'

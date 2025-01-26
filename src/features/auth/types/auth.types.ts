@@ -16,6 +16,11 @@ export interface ConfirmEmailArgs {
   confirmationCode: string
 }
 
+export interface ResendConfirmationArgs {
+  baseUrl: string
+  email: string
+}
+
 export interface NewPasswordArgs {
   newPassword: string
   recoveryCode: string

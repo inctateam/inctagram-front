@@ -1,5 +1,6 @@
 'use client'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 import { useConfirmEmailMutation } from '@/features/auth/api'
 import { Spinner } from '@/shared/ui'
@@ -18,6 +19,8 @@ export const RegistrationConformationPage = () => {
 
     if (code) {
       confirmEmail({ confirmationCode: code })
+    } else {
+      toast.error('Bad link')
     }
   }, [])
 
