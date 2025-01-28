@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 
 import { useNewPasswordMutation } from '@/features/auth/api'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import { Button, Card, ControlledPasswordTextField, Typography } from '@/shared/ui'
+import { Button, Card, ControlledPasswordTextField, ProgressBar, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSearchParams } from 'next/navigation'
@@ -42,7 +42,7 @@ export const PasswordResetForm = ({ translatedForm }: Props) => {
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
 
-  const [submitNewPassword] = useNewPasswordMutation()
+  const [submitNewPassword, { isLoading }] = useNewPasswordMutation()
 
   const {
     control,
@@ -72,6 +72,7 @@ export const PasswordResetForm = ({ translatedForm }: Props) => {
 
   return (
     <>
+      {isLoading && <ProgressBar />}
       <Card className={'flex flex-col items-center gap-9'} variant={'auth'}>
         <Typography variant={'h1'}>{translatedForm.form.passwordReset}</Typography>
         <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>

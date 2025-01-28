@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { SignInForm } from '@/features/auth/ui'
 import { LoginFields } from '@/features/auth/ui/utils/login-shema'
 import { useLoginMutation } from '@/services/api/auth/auth.api'
+import { ProgressBar } from '@/shared/ui'
 import { MeTest } from '@/shared/ui/me-test'
 // import { useRouter } from 'next/navigation'
 
@@ -13,7 +14,7 @@ export type PropsTranslations = {
   translAuth: Record<string, string>
 }
 export const SignInPage = ({ ...rect }: PropsTranslations) => {
-  const [login] = useLoginMutation()
+  const [login, { isLoading }] = useLoginMutation()
   const [meTest, setMeTest] = useState<boolean>(false)
   // const router = useRouter()
 
@@ -34,5 +35,10 @@ export const SignInPage = ({ ...rect }: PropsTranslations) => {
     }
   }
 
-  return <>{meTest ? <MeTest /> : <SignInForm onSubmit={handleSubmit} {...rect} />}</>
+  return (
+    <>
+      {isLoading && <ProgressBar />}
+      {meTest ? <MeTest /> : <SignInForm onSubmit={handleSubmit} {...rect} />}
+    </>
+  )
 }

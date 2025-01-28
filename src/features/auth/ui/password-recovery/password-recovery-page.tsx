@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
 import { FieldErrorResponse, PasswordRecoveryArgs } from '@/features/auth/types'
-import { Spinner } from '@/shared/ui'
+import { ProgressBar, Spinner } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
@@ -17,7 +17,7 @@ export const PasswordRecoveryPage = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const [isExpired, setIsExpired] = useState<boolean | null>(null)
   const [userEmail, setUserEmail] = useState('')
-  const [submitForm] = usePasswordRecoveryMutation()
+  const [submitForm, { isLoading }] = usePasswordRecoveryMutation()
   const [checkRecoveryCode] = useCodeValidationCheckMutation()
 
   const resendEmail = (email: string) => {
@@ -71,17 +71,22 @@ export const PasswordRecoveryPage = () => {
   }
 
   if (isExpired === null) {
-    return <Spinner />
+    return <Spinner fullScreen />
   }
 
-  return isExpired ? (
-    <PasswordRecoveryFormExpired resendEmail={resendEmail} userEmail={userEmail} />
-  ) : (
-    <PasswordRecoveryForm
-      modalOpen={modalOpen}
-      onSubmit={onSubmitHandler}
-      setModalOpen={setModalOpen}
-      userEmail={userEmail}
-    />
+  return (
+    <>
+      {isLoading && <ProgressBar />}
+      {isExpired ? (
+        <PasswordRecoveryFormExpired resendEmail={resendEmail} userEmail={userEmail} />
+      ) : (
+        <PasswordRecoveryForm
+          modalOpen={modalOpen}
+          onSubmit={onSubmitHandler}
+          setModalOpen={setModalOpen}
+          userEmail={userEmail}
+        />
+      )}
+    </>
   )
 }

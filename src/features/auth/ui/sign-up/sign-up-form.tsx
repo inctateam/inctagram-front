@@ -16,6 +16,7 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  ProgressBar,
   TextLink,
   Typography,
 } from '@/shared/ui'
@@ -92,6 +93,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
 
   return (
     <>
+      {isLoading && <ProgressBar />}
       <Card className={'w-[378px]'} variant={'auth'}>
         <Typography className={'text-center'} variant={'h1'}>
           {translatedForm.title}
