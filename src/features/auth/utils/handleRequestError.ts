@@ -6,7 +6,7 @@ import { isFieldErrorResponse } from './isFieldErrorResponse'
 
 export const handleRequestError = <T>(
   error: unknown,
-  setError: (name: T, error: ErrorOption) => void,
+  setError?: (name: T, error: ErrorOption) => void,
   toastFields?: string[]
 ) => {
   if (isFetchError(error)) {
@@ -17,7 +17,9 @@ export const handleRequestError = <T>(
         if (toastFields && toastFields.includes(item.field)) {
           toast.error(item.message)
         } else {
-          setError(item.field as T, { message: item.message, type: 'validationError' })
+          if (setError) {
+            setError(item.field as T, { message: item.message, type: 'validationError' })
+          }
         }
       })
     } else {
