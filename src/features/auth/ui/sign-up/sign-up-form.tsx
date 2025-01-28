@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
 import { useSignupMutation } from '@/features/auth/api'
