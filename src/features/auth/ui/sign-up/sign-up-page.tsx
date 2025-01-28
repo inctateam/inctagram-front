@@ -9,13 +9,11 @@ export type SignUpPageProps = {
     errors: {
       agreesToTerms: string
       email: string
-      emailExists: string
       password: string
       passwordConfirmation: string
       passwordMaxLength: string
       passwordMinLength: string
       requiredField: string
-      username: string
       usernameMaxLength: string
       usernameMinLength: string
     }

@@ -11,13 +11,11 @@ const SignUp = () => {
     errors: {
       agreesToTerms: tErrors('agreesToTerms'),
       email: tErrors('email'),
-      emailExists: tErrors('emailExists'),
       password: tErrors('password'),
       passwordConfirmation: tErrors('passwordConfirmation'),
       passwordMaxLength: tErrors('passwordMaxLength'),
       passwordMinLength: tErrors('passwordMinLength'),
       requiredField: tErrors('requiredField'),
-      username: tErrors('username'),
       usernameMaxLength: tErrors('usernameMaxLength'),
       usernameMinLength: tErrors('usernameMinLength'),
     },
