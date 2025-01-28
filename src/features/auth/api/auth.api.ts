@@ -1,5 +1,10 @@
 import {
   ConfirmEmailArgs,
+  GithubLoginArgs,
+  GoogleLoginArgs,
+  GoogleLoginResponse,
+  LoginArgs,
+  LoginResponse,
   MeResponse,
   NewPasswordArgs,
   PasswordRecoveryArgs,
@@ -24,6 +29,28 @@ export const authApi = instagramApi.injectEndpoints({
         body: args,
         method: 'POST',
         url: `v1/auth/registration-confirmation`,
+      }),
+    }),
+    githubLogin: builder.query<void, GithubLoginArgs>({
+      query: ({ redirect_url }) => ({
+        method: 'GET',
+        url: `/v1/auth/github/login?redirect_url=${encodeURIComponent(redirect_url)}`,
+      }),
+    }),
+    googleLogin: builder.mutation<GoogleLoginResponse, GoogleLoginArgs>({
+      query: args => ({
+        body: args,
+        method: 'POST',
+        url: `v1/auth/google/login`,
+      }),
+    }),
+    login: builder.mutation<LoginResponse, LoginArgs>({
+      query: args => ({ body: args, method: 'POST', url: 'v1/auth/login' }),
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        method: 'POST',
+        url: 'v1/auth/logout',
       }),
     }),
     me: builder.query<MeResponse, void>({
@@ -72,6 +99,10 @@ export const authApi = instagramApi.injectEndpoints({
 export const {
   useCodeValidationCheckMutation,
   useConfirmEmailMutation,
+  useGithubLoginQuery,
+  useGoogleLoginMutation,
+  useLoginMutation,
+  useLogoutMutation,
   useMeQuery,
   useNewPasswordMutation,
   usePasswordRecoveryMutation,

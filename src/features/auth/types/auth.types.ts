@@ -39,6 +39,24 @@ export interface FieldErrorResponse {
   }
   status: number
 }
+export interface LoginArgs {
+  email: string
+  password: string
+}
+export interface LoginResponse {
+  accessToken: string
+}
+export interface GoogleLoginResponse {
+  accessToken: string
+  email: string
+}
+export interface GoogleLoginArgs {
+  code: string
+  redirectUri: string
+}
+export interface GithubLoginArgs {
+  redirect_url: string
+}
 
 // export type PasswordRecoveryResponse = {
 //   body?: {
