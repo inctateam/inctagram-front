@@ -41,6 +41,7 @@ export function SignInForm({
     control,
     formState: { errors },
     handleSubmit,
+    setError,
   } = useForm<LoginFields>({
     resolver: zodResolver(loginSchema),
   })
@@ -54,7 +55,7 @@ export function SignInForm({
         router.push('/')
       }
     } catch (error: unknown) {
-      handleRequestError(error)
+      handleRequestError(error, setError)
     }
   }
 
