@@ -27,7 +27,7 @@ export const RegistrationConformationPage = ({ translatedForm }: Props) => {
     } else {
       toast.error(translatedForm.errors.badLink)
     }
-  }, [])
+  }, [confirmEmail, searchParams, translatedForm.errors.badLink])
 
   return (
     <>
