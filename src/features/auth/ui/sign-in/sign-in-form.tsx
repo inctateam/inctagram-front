@@ -18,10 +18,18 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 
 type Props = {
+  handleGithubLogin: () => void
+  handleGoogleLogin: () => void
   onSubmit: (data: LoginFields) => void
 } & PropsTranslations
 
-export function SignInForm({ messagesErrors, onSubmit, translAuth }: Props) {
+export function SignInForm({
+  handleGithubLogin,
+  handleGoogleLogin,
+  messagesErrors,
+  onSubmit,
+  translAuth,
+}: Props) {
   const loginSchema = createLoginSchema(messagesErrors)
 
   const {
@@ -39,12 +47,10 @@ export function SignInForm({ messagesErrors, onSubmit, translAuth }: Props) {
       </Typography>
 
       <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
-        <IconButton asChild className={'text-4xl'}>
-          <a href={'https://google.com'} rel={'noreferrer'} target={'_blank'}>
-            <GoogleLogo />
-          </a>
+        <IconButton className={'text-4xl'} onClick={handleGoogleLogin}>
+          <GoogleLogo />
         </IconButton>
-        <IconButton className={'text-4xl'}>
+        <IconButton className={'text-4xl'} onClick={handleGithubLogin}>
           <GithubLogo />
         </IconButton>
       </div>
