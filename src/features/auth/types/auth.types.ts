@@ -52,7 +52,7 @@ export interface GoogleLoginResponse {
 }
 export interface GoogleLoginArgs {
   code: string
-  redirectUri: string
+  redirectUrl: string
 }
 export interface GithubLoginArgs {
   redirect_url: string
