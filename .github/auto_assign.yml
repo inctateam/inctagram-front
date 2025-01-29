@@ -8,11 +8,8 @@ reviewGroups:
     - Pumpkin-Pie93
     - apelsinom
     - olesya-sh-dev
-    - VadimSel
-  groupB:
-    - apastan
 
-numberOfReviewers: 2
+numberOfReviewers: 4
 useAssigneeGroups: false
 
 skipKeywords:
