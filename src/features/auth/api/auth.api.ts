@@ -1,6 +1,5 @@
 import {
   ConfirmEmailArgs,
-  GithubLoginArgs,
   GoogleLoginArgs,
   GoogleLoginResponse,
   LoginArgs,
@@ -29,12 +28,6 @@ export const authApi = instagramApi.injectEndpoints({
         body: args,
         method: 'POST',
         url: `v1/auth/registration-confirmation`,
-      }),
-    }),
-    githubLogin: builder.query<void, GithubLoginArgs>({
-      query: ({ redirect_url }) => ({
-        method: 'GET',
-        url: `/v1/auth/github/login?redirect_url=${encodeURIComponent(redirect_url)}`,
       }),
     }),
     googleLogin: builder.mutation<GoogleLoginResponse, GoogleLoginArgs>({
@@ -99,7 +92,6 @@ export const authApi = instagramApi.injectEndpoints({
 export const {
   useCodeValidationCheckMutation,
   useConfirmEmailMutation,
-  useGithubLoginQuery,
   useGoogleLoginMutation,
   useLoginMutation,
   useLogoutMutation,
