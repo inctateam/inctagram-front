@@ -8,3 +8,8 @@ export const PATH = {
   SIGN_UP: '/auth/sign-up', // register new user
   TERMS_OF_SERVICE: '/terms-of-service',
 } as const
+
+export const baseUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://inctagram-front-gamma.vercel.app/'

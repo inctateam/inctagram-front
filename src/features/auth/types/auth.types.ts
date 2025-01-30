@@ -6,7 +6,6 @@ export interface MeResponse {
 }
 
 export interface SignUpArgs {
-  baseUrl?: string
   email: string
   password: string
   userName: string
@@ -17,7 +16,6 @@ export interface ConfirmEmailArgs {
 }
 
 export interface ResendConfirmationArgs {
-  baseUrl: string
   email: string
 }
 
@@ -27,7 +25,6 @@ export interface NewPasswordArgs {
 }
 
 export interface PasswordRecoveryArgs {
-  baseUrl?: string
   email: string
   recaptcha: string
 }
