@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useResendConfirmationMutation } from '@/features/auth/api'
-import { FieldErrorResponse } from '@/features/auth/types'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PATH } from '@/shared/constants'
 import { AlertDialog, Button, ProgressBar, Typography } from '@/shared/ui'
 import Image from 'next/image'
@@ -28,21 +28,13 @@ export const LinkExpired = ({ translatedForm }: Props) => {
   const onResendHandler = async () => {
     if (email && code) {
       try {
-        await resendConfirmation({ baseUrl: 'https://localhost:3000/', email })
+        await resendConfirmation({ email })
           .unwrap()
           .then(() => {
             setModalOpen(true)
           })
-      } catch (error) {
-        const fieldError = error as FieldErrorResponse
-
-        if (fieldError?.data.messages?.[0]?.message) {
-          toast.error(
-            `${translatedForm.errors.error} ${fieldError?.data.statusCode}: ${fieldError.data.messages?.[0]?.message}`
-          )
-        } else {
-          toast.error(translatedForm.errors.someError)
-        }
+      } catch (error: unknown) {
+        handleRequestError(error, undefined, ['code', 'email'])
       }
     } else {
       toast.error(translatedForm.errors.badLink)

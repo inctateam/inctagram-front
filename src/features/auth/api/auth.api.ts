@@ -11,6 +11,7 @@ import {
   SignUpArgs,
 } from '@/features/auth/types'
 import { instagramApi } from '@/services'
+import { baseUrl } from '@/shared/constants'
 
 export const authApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
@@ -60,11 +61,9 @@ export const authApi = instagramApi.injectEndpoints({
       }),
     }),
     passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
-      query: data => {
-        const { email, recaptcha } = data
-
+      query: args => {
         return {
-          body: { email, recaptcha },
+          body: { ...args, baseUrl },
           credentials: 'include',
           method: 'POST',
           url: 'v1/auth/password-recovery',
@@ -72,15 +71,15 @@ export const authApi = instagramApi.injectEndpoints({
       },
     }),
     resendConfirmation: builder.mutation<void, ResendConfirmationArgs>({
-      query: body => ({
-        body,
+      query: args => ({
+        body: { ...args, baseUrl },
         method: 'POST',
         url: '/v1/auth/registration-email-resending',
       }),
     }),
     signup: builder.mutation<void, SignUpArgs>({
-      query: body => ({
-        body,
+      query: args => ({
+        body: { ...args, baseUrl },
         credentials: 'include',
         method: 'POST',
         url: '/v1/auth/registration',
