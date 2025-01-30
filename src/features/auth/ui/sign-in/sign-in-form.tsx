@@ -1,4 +1,5 @@
 'use client'
+
 import { useForm } from 'react-hook-form'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
@@ -67,14 +68,16 @@ export function SignInForm({
           {translAuth.signIn}
         </Typography>
 
-        <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
-          <IconButton className={'text-4xl'} onClick={handleGoogleLogin}>
-            <GoogleLogo />
-          </IconButton>
-          <IconButton className={'text-4xl'} onClick={handleGithubLogin}>
-            <GithubLogo />
-          </IconButton>
-        </div>
+      {/* Кнопки авторизации через Google и GitHub */}
+      <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
+        <IconButton className={'text-4xl'} onClick={handleGithubLogin}>
+          <GithubLogo />
+        </IconButton>
+
+        <IconButton className={'text-4xl'} onClick={handleGoogleLogin}>
+          <GoogleLogo />
+        </IconButton>
+      </div>
 
         <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
           <ControlledTextField
