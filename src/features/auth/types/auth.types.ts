@@ -28,14 +28,7 @@ export interface PasswordRecoveryArgs {
   email: string
   recaptcha: string
 }
-export interface FieldErrorResponse {
-  data: {
-    error?: string
-    messages?: { field?: string; message: string }[]
-    statusCode?: number
-  }
-  status: number
-}
+
 export interface LoginArgs {
   email: string
   password: string
