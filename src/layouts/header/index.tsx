@@ -30,7 +30,12 @@ export const Header = () => {
         {/* Remove later*/}
         <div className={'flex gap-5'}>
           <TextLink href={PATH.SIGN_UP}>{t('signUp')}</TextLink>
-          <TextLink href={PATH.CONFIRM_EMAIL + '?code=983274981-27390128039-8213098-3459083495'}>
+          <TextLink
+            href={
+              PATH.CONFIRM_EMAIL +
+              '?code=7a6c9af0-d798-404a-98d6-f893692ba9f8&email=some-email@gmail.com'
+            }
+          >
             {t('confirmEmail')}
           </TextLink>
 

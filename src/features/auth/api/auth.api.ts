@@ -1,6 +1,5 @@
 import {
   ConfirmEmailArgs,
-  GithubLoginArgs,
   GoogleLoginArgs,
   GoogleLoginResponse,
   LoginArgs,
@@ -12,6 +11,7 @@ import {
   SignUpArgs,
 } from '@/features/auth/types'
 import { instagramApi } from '@/services'
+import { baseUrl } from '@/shared/constants'
 
 export const authApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
@@ -29,12 +29,6 @@ export const authApi = instagramApi.injectEndpoints({
         body: args,
         method: 'POST',
         url: `v1/auth/registration-confirmation`,
-      }),
-    }),
-    githubLogin: builder.query<void, GithubLoginArgs>({
-      query: ({ redirect_url }) => ({
-        method: 'GET',
-        url: `/v1/auth/github/login?redirect_url=${encodeURIComponent(redirect_url)}`,
       }),
     }),
     googleLogin: builder.mutation<GoogleLoginResponse, GoogleLoginArgs>({
@@ -67,11 +61,9 @@ export const authApi = instagramApi.injectEndpoints({
       }),
     }),
     passwordRecovery: builder.mutation<void, PasswordRecoveryArgs>({
-      query: data => {
-        const { email, recaptcha } = data
-
+      query: args => {
         return {
-          body: { email, recaptcha },
+          body: { ...args, baseUrl },
           credentials: 'include',
           method: 'POST',
           url: 'v1/auth/password-recovery',
@@ -79,15 +71,15 @@ export const authApi = instagramApi.injectEndpoints({
       },
     }),
     resendConfirmation: builder.mutation<void, ResendConfirmationArgs>({
-      query: body => ({
-        body,
+      query: args => ({
+        body: { ...args, baseUrl },
         method: 'POST',
         url: '/v1/auth/registration-email-resending',
       }),
     }),
     signup: builder.mutation<void, SignUpArgs>({
-      query: body => ({
-        body,
+      query: args => ({
+        body: { ...args, baseUrl },
         credentials: 'include',
         method: 'POST',
         url: '/v1/auth/registration',
@@ -99,7 +91,6 @@ export const authApi = instagramApi.injectEndpoints({
 export const {
   useCodeValidationCheckMutation,
   useConfirmEmailMutation,
-  useGithubLoginQuery,
   useGoogleLoginMutation,
   useLoginMutation,
   useLogoutMutation,
