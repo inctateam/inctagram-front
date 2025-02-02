@@ -51,7 +51,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             width={size}
           />
         ) : (
-          <ImageOutline className={cn(iconSizeMap[size], 'text-dark-400')} />
+          <ImageOutline className={cn(iconSizeMap[size], 'text-light-100')} />
         )}
       </RadixAvatar.Root>
     )
