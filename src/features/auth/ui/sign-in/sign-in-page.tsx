@@ -30,8 +30,8 @@ export const SignInPage = ({ ...rect }: PropsTranslations) => {
   }
 
   // 🔹 КОНСТАНТЫ ДЛЯ АВТОРИЗАЦИИ GOOGLE
-  const CLIENT_ID = '535513477329-xxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com' // Client ID
-  const REDIRECT_URL = `${window.location.origin}/auth/sign-ip/google` // URL редиректа после входа
+  const CLIENT_ID = '272583913867-t74i019ufdvmarh05jlv8bcu1ak0a6o6.apps.googleusercontent.com' // Client ID
+  const REDIRECT_URL = `${window.location.origin}/auth/sign-in/google` // URL редиректа после входа
   const SCOPE = 'email profile' // Запрашиваемые данные
 
   const handleGoogleLogin = () => {
@@ -41,7 +41,10 @@ export const SignInPage = ({ ...rect }: PropsTranslations) => {
   }
 
   const handleGithubLogin = () => {
-    window.location.assign('https://inctagram.work/api/v1/auth/github/login') // 🔹 Перенаправляем на GitHub
+    const REDIRECT_URL = `${window.location.origin}/auth/sign-in/github`
+    const url = `https://inctagram.work/api/v1/auth/github/login?redirect_url=${encodeURIComponent(REDIRECT_URL)}`
+
+    window.location.assign(url)
   }
 
   return (
