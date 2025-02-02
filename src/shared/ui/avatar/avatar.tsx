@@ -35,7 +35,7 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <RadixAvatar.Root
         className={cn(
           `inline-flex items-center justify-center overflow-hidden rounded-full bg-dark-500 transition hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-accent-500 cursor-pointer`,
-          containerSizeMap[size], // Используем правильный размер для контейнера
+          containerSizeMap[size],
           className
         )}
         onClick={onClick}
