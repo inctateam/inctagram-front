@@ -1,11 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
 import { useSignupMutation } from '@/features/auth/api'
 import { EmailSentModal } from '@/features/auth/ui'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PATH } from '@/shared/constants'
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  ProgressBar,
   TextLink,
   Typography,
 } from '@/shared/ui'
@@ -29,6 +30,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
     control,
     formState: { errors },
     handleSubmit,
+    setError,
     watch,
   } = useForm<SignUpFields>({
     mode: 'onBlur',
@@ -76,22 +78,12 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
       .then(() => {
         setModalOpen(true)
       })
-      .catch(error => {
-        setModalOpen(false)
-        if (error.status === 409 && error.data.message === 'existed_email') {
-          toast.error(translatedForm.errors.emailExists)
-        } else if (error.status === 409 && error.data.message === 'existed_login') {
-          toast.error(translatedForm.errors.username)
-        } else {
-          toast.error('Something went wrong')
-
-          //return error
-        }
-      })
+      .catch(error => handleRequestError(error, setError))
   })
 
   return (
     <>
+      {isLoading && <ProgressBar />}
       <Card className={'w-[378px]'} variant={'auth'}>
         <Typography className={'text-center'} variant={'h1'}>
           {translatedForm.title}

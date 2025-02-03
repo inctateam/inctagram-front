@@ -1,5 +1,5 @@
 'use client'
-import { useForm } from 'react-hook-form'
+import { UseFormSetError, useForm } from 'react-hook-form'
 
 import { PasswordRecoveryArgs } from '@/features/auth/types'
 import { EmailSentModal } from '@/features/auth/ui'
@@ -10,18 +10,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { z } from 'zod'
 
-const emailScheme = z.object({
-  email: z
-    .string({ required_error: 'requiredEmail' })
-    .min(1, { message: 'requiredEmail' })
-    .email({ message: 'invalidEmail' }),
-})
+/*global IntlMessages*/
+type ForgotPasswordSchemaType = IntlMessages['auth']['ForgotPassword']['validationErrors']
 
-type PasswordRecoveryFormValues = z.infer<typeof emailScheme>
+const emailScheme = ({ ...scheme }: ForgotPasswordSchemaType) =>
+  z.object({
+    email: z
+      .string({ required_error: scheme.requiredEmail })
+      .min(1, { message: scheme.requiredEmail })
+      .email({ message: scheme.invalidEmail }),
+  })
+
+type PasswordRecoveryFormValues = z.infer<ReturnType<typeof emailScheme>>
 
 type PasswordRecoveryFormProps = {
   modalOpen: boolean
-  onSubmit: ({ email, recaptcha }: PasswordRecoveryArgs) => void
+  onSubmit: (
+    { email, recaptcha }: PasswordRecoveryArgs,
+    setError: UseFormSetError<PasswordRecoveryFormValues>
+  ) => void
   setModalOpen: (open: boolean) => void
   userEmail: string
 }
@@ -33,18 +40,27 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
 
   const { captchaToken, handleRecaptcha, recaptchaRef } = useRecaptcha()
 
+  const scheme = {
+    invalidEmail: tErrors('invalidEmail'),
+    requiredEmail: tErrors('requiredEmail'),
+  }
+
   const {
     control,
     formState: { errors, isValid },
     handleSubmit,
+    setError,
   } = useForm<PasswordRecoveryFormValues>({
     mode: 'onChange',
-    resolver: zodResolver(emailScheme),
+    resolver: zodResolver(emailScheme(scheme)),
   })
 
-  const onSubmitHandler = (data: PasswordRecoveryFormValues) => {
+  const onSubmitHandler = (
+    data: PasswordRecoveryFormValues,
+    setError: UseFormSetError<PasswordRecoveryFormValues>
+  ) => {
     if (captchaToken) {
-      onSubmit({ email: data.email, recaptcha: captchaToken })
+      onSubmit({ email: data.email, recaptcha: captchaToken }, setError)
     }
   }
 
@@ -52,15 +68,12 @@ const PasswordRecoveryForm = (props: PasswordRecoveryFormProps) => {
     <>
       <Card className={'flex flex-col items-center gap-9 w-[378px]'} variant={'auth'}>
         <Typography variant={'h1'}>{t('forgotPassword')}</Typography>
-        <form className={'w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
+        <form className={'w-full'} onSubmit={handleSubmit(data => onSubmitHandler(data, setError))}>
           <ControlledTextField
             control={control}
             defaultValue={userEmail}
             error={!!errors.email?.message}
-            helperText={
-              errors.email?.message &&
-              tErrors(errors.email.message as 'invalidEmail' | 'requiredEmail')
-            }
+            helperText={errors.email?.message}
             label={'Email'}
             name={'email'}
             placeholder={userEmail || 'example-email@gmail.com'}

@@ -1,23 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { UseFormSetError } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
-import { FieldErrorResponse, PasswordRecoveryArgs } from '@/features/auth/types'
-import { Spinner } from '@/shared/ui'
+import { PasswordRecoveryArgs } from '@/features/auth/types'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import { ProgressBar, Spinner } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import { PasswordRecoveryFormExpired } from './password-recovery-expired'
-import { PasswordRecoveryForm } from './password-recovery-form'
+import { PasswordRecoveryForm, PasswordRecoveryFormValues } from './password-recovery-form'
 
 export const PasswordRecoveryPage = () => {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
   const [isExpired, setIsExpired] = useState<boolean | null>(null)
   const [userEmail, setUserEmail] = useState('')
-  const [submitForm] = usePasswordRecoveryMutation()
+  const [submitForm, { isLoading }] = usePasswordRecoveryMutation()
   const [checkRecoveryCode] = useCodeValidationCheckMutation()
 
   const resendEmail = (email: string) => {
@@ -38,16 +40,19 @@ export const PasswordRecoveryPage = () => {
         .then(() => {
           router.push(`password-reset?code=${code}&email=${email}`)
         })
-        .catch(() => {
+        .catch((error: unknown) => {
           setIsExpired(true)
-          toast.error(tToast('expiredCode'))
+          handleRequestError(error, undefined)
         })
     } else {
       setIsExpired(false)
     }
   }, [checkRecoveryCode, router, searchParams, tToast])
 
-  const onSubmitHandler = async (data: PasswordRecoveryArgs) => {
+  const onSubmitHandler = async (
+    data: PasswordRecoveryArgs,
+    setError: UseFormSetError<PasswordRecoveryFormValues>
+  ) => {
     try {
       const resData = await submitForm({ ...data }).unwrap()
 
@@ -55,33 +60,30 @@ export const PasswordRecoveryPage = () => {
         setModalOpen(true)
         toast.success(tToast('success'))
       }
-    } catch (error) {
-      const apiError = error as FieldErrorResponse
-
-      if (apiError?.data.messages?.[0]?.message) {
-        toast.error(
-          `Error ${apiError?.data.statusCode}: ${apiError.data.messages?.[0]?.message ?? tToast('recaptchaError')}`
-        )
-      } else {
-        toast.error(tToast('unknownError'))
-      }
+    } catch (error: unknown) {
+      handleRequestError(error, setError, ['baseUrl', 'recaptcha'])
     } finally {
       setUserEmail(data.email)
     }
   }
 
   if (isExpired === null) {
-    return <Spinner />
+    return <Spinner fullScreen />
   }
 
-  return isExpired ? (
-    <PasswordRecoveryFormExpired resendEmail={resendEmail} userEmail={userEmail} />
-  ) : (
-    <PasswordRecoveryForm
-      modalOpen={modalOpen}
-      onSubmit={onSubmitHandler}
-      setModalOpen={setModalOpen}
-      userEmail={userEmail}
-    />
+  return (
+    <>
+      {isLoading && <ProgressBar />}
+      {isExpired ? (
+        <PasswordRecoveryFormExpired resendEmail={resendEmail} userEmail={userEmail} />
+      ) : (
+        <PasswordRecoveryForm
+          modalOpen={modalOpen}
+          onSubmit={onSubmitHandler}
+          setModalOpen={setModalOpen}
+          userEmail={userEmail}
+        />
+      )}
+    </>
   )
 }

@@ -14,7 +14,7 @@ const ConfirmEmail = () => {
     },
     form: {
       congratulations: tForm('congratulations'),
-      emailConfirmed: tForm('emailSent'),
+      emailConfirmed: tForm('emailConfirmed'),
       emailSent: tForm('emailSent'),
       emailSentDescription: tForm('emailSentDescription'),
       linkExpiredDescription1: tForm('linkExpiredDescription1'),

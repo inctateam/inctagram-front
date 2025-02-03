@@ -1,6 +1,6 @@
 export const ProgressBar = () => {
   return (
-    <div className={'fixed top-header overflow-hidden w-full h-[4px] bg-accent-100'}>
+    <div className={'fixed top-header left-0 overflow-hidden w-full h-[4px] bg-accent-100'}>
       <div className={'relative w-full h-full'}>
         <span
           className={
