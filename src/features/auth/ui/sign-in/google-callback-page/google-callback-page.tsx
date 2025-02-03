@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import { useGoogleLoginMutation } from '@/features/auth/api'
+import { baseUrl } from '@/shared/constants'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 export const GoogleCallbackPage = () => {
@@ -22,7 +23,7 @@ export const GoogleCallbackPage = () => {
 
     const handleGoogleAuth = async () => {
       try {
-        const response = await googleLogin({ code, redirectUrl: window.location.origin }).unwrap()
+        const response = await googleLogin({ code, redirectUrl: baseUrl }).unwrap()
 
         localStorage.setItem('access_token', response.accessToken)
         router.push('/')

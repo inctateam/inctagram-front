@@ -1,9 +1,9 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
-import { GithubLogo, GoogleLogo } from '@/assets/icons'
 import { useLoginMutation } from '@/features/auth/api'
 import { PropsTranslations } from '@/features/auth/ui'
+import { OAuth2 } from '@/features/auth/ui/o-auth-2'
 import { LoginFields, createLoginSchema } from '@/features/auth/ui/utils/login-shema'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PATH } from '@/shared/constants'
@@ -13,7 +13,6 @@ import {
   ControlledPasswordTextField,
   ControlledTextField,
   FormLabel,
-  IconButton,
   ProgressBar,
   TextLink,
   Typography,
@@ -21,17 +20,9 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 
-type Props = {
-  handleGithubLogin: () => void
-  handleGoogleLogin: () => void
-} & PropsTranslations
+type Props = {} & PropsTranslations
 
-export function SignInForm({
-  handleGithubLogin,
-  handleGoogleLogin,
-  messagesErrors,
-  translAuth,
-}: Props) {
+export function SignInForm({ messagesErrors, translAuth }: Props) {
   const [login, { isLoading }] = useLoginMutation()
   const router = useRouter()
 
@@ -68,15 +59,7 @@ export function SignInForm({
         </Typography>
 
         {/* Кнопки авторизации через Google и GitHub */}
-        <div className={'flex w-full justify-center space-x-[60px] mt-3 mb-6'}>
-          <IconButton className={'text-4xl'} onClick={handleGithubLogin}>
-            <GithubLogo />
-          </IconButton>
-
-          <IconButton className={'text-4xl'} onClick={handleGoogleLogin}>
-            <GoogleLogo />
-          </IconButton>
-        </div>
+        <OAuth2 />
 
         <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
           <ControlledTextField
