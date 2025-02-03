@@ -121,5 +121,15 @@
         "regex": "Password must contain only Latin letters, numbers, and special characters."
       }
     }
+  },
+  "Sidebar": {
+    "home": "Home",
+    "create": "Create",
+    "myProfile": "My Profile",
+    "messenger": "Messenger",
+    "search": "Search",
+    "favorites": "Favorites",
+    "logout": "Logout",
+    "statistics": "Statistics"
   }
 }

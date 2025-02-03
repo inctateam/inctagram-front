@@ -1,19 +1,20 @@
 import { ReactNode } from 'react'
 
+import { PATH } from '@/shared/constants'
 import { cn } from '@/shared/utils'
 
-import { SIDEBAR_ITEMS } from './types'
+import { TextLink } from '../text-link'
 
 interface SidebarItemProps {
-  href?: string
+  href?: (typeof PATH)[keyof typeof PATH]
   icon: ReactNode
   isActive?: boolean
   isDisabled?: boolean
-  item: SIDEBAR_ITEMS
+  item: string
   onClick?: () => void
 }
 export const SidebarItem = ({
-  href,
+  href = PATH.ROOT,
   icon,
   isActive = false,
   isDisabled = false,
@@ -24,17 +25,15 @@ export const SidebarItem = ({
   const disabledClass = isDisabled ? 'pointer-events-none text-dark-100' : ''
 
   return (
-    <a
-      className={cn(`flex items-center space-x-3
-         hover:text-accent-100
-         focus:outline focus:outline-accent-500
-
-         ${activeClass} ${disabledClass}, className`)}
+    <TextLink
+      className={cn(`flex justify-start gap-3 ${activeClass} ${disabledClass}, className`)}
+      color={'regular'}
       href={href}
       onClick={onClick}
+      underline={false}
     >
       {icon && <div className={'w-6 h-6'}>{icon}</div>}
       <span>{item}</span>
-    </a>
+    </TextLink>
   )
 }
