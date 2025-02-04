@@ -12,4 +12,4 @@ export const PATH = {
 export const baseUrl =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
-    : 'https://content-universe.store/'
+    : 'https://content-universe.store'

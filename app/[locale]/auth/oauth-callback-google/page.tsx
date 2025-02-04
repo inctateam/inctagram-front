@@ -1,7 +1,7 @@
 import { GoogleCallbackPage } from '@/features/auth/ui/sign-in/google-callback-page'
 
-const GoogleCallback = () => {
+const Page = () => {
   return <GoogleCallbackPage />
 }
 
-export default GoogleCallback
+export default Page
