@@ -1,8 +1,7 @@
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { TextLink } from '@/shared/ui'
+import { LocaleSwitcher, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
-import { LocaleSwitcher } from '@/widgets'
 import { useTranslations } from 'next-intl'
 
 export const Header = () => {
