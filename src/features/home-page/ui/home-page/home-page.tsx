@@ -2,8 +2,10 @@
 
 import { useMeQuery } from '@/features/auth/api'
 import { ProgressBar } from '@/shared/ui'
+import { Sidebar } from '@/shared/ui/sidebar'
 
 import { PublicPage } from '../public-page'
+import { UserProfile } from './user-profile'
 
 export const HomePage = () => {
   const { data, error, isLoading } = useMeQuery()
@@ -15,9 +17,9 @@ export const HomePage = () => {
   return (
     <>
       {isLoading && <ProgressBar />}
-      <div>
-        Олеся верстает и реализовавает эту компоненту с сайдбаром и профилем и постами
-        зарегистрированного пользователя. Я работаю в PublicPage без сайдбара.
+      <div className={'flex gap-6 justify-center max-h-[660px]'}>
+        <Sidebar />
+        <UserProfile />
       </div>
     </>
   )

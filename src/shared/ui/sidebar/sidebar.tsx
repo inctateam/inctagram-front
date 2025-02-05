@@ -25,7 +25,7 @@ export const Sidebar = () => {
 
   return (
     <div className={'flex flex-col pl-5 items-start h-[660px] w-[220px] border-r border-gray-700'}>
-      <div className={'flex flex-col mt-8 space-y-6'}>
+      <div className={'flex flex-col mt-[72px] space-y-6'}>
         <SidebarItem
           icon={<HomeOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.HOME}
