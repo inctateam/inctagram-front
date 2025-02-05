@@ -1,17 +1,15 @@
-import {
-  PublicationsFollowersArgs,
-  PublicationsFollowersResponse,
-} from '@/features/home-page/types'
+import { PublicPostsArgs, PublicPostsResponse } from '@/features/home-page/types'
 import { instagramApi } from '@/services'
 
 export const homePageApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
-    publicationsFollowers: builder.query<PublicationsFollowersResponse, PublicationsFollowersArgs>({
-      query: () => ({
-        url: 'v1/home/publications-followers',
+    publicPosts: builder.query<PublicPostsResponse, PublicPostsArgs>({
+      query: args => ({
+        params: args,
+        url: 'v1/public-posts/all/{endCursorPostId}',
       }),
     }),
   }),
 })
 
-export const { usePublicationsFollowersQuery } = homePageApi
+export const { usePublicPostsQuery } = homePageApi
