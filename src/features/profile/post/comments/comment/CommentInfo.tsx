@@ -1,0 +1,51 @@
+import { Answers } from '@/features/profile/post/comments/answers'
+import { Typography } from '@/shared/ui'
+
+type CommentInfoProps = {
+  answerCount?: number
+  answers?: string
+  createdAt: string
+  isLiked?: boolean
+  likeCount?: number
+  onClick: (showAnswer: boolean) => void
+  showAnswers?: boolean
+}
+const CommentInfo = ({
+  answerCount,
+  answers,
+  createdAt,
+  isLiked,
+  likeCount,
+  onClick,
+  showAnswers = true,
+}: CommentInfoProps) => {
+  return (
+    <div className={'flex flex-col ml-12'}>
+      <div className={'flex gap-3'}>
+        <Typography as={'p'} className={'text-light-900'} variant={'small'}>
+          {createdAt}
+        </Typography>
+        <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
+          Like: {likeCount}
+        </Typography>
+        <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
+          Answer
+        </Typography>
+      </div>
+      {answerCount > 0 && (
+        <div>
+          <Typography
+            as={'button'}
+            className={'flex pl-0 justify-start text-light-900 cursor-pointer hover:text-light-700'}
+            onClick={() => onClick(showAnswers)}
+            variant={'semiSmall'}
+          >
+            {showAnswers ? `--- Hide answers ${answerCount}` : `--- Show answers ${answerCount}`}
+          </Typography>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export { CommentInfo, type CommentInfoProps }
