@@ -6,6 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/shared/ui'
+import Image from 'next/image'
 
 type ImageCarouselProps = {
   images: string[]
@@ -18,7 +19,13 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
         {images.map((image, index) => (
           <CarouselItem key={index}>
             <div className={'flex aspect-square items-center justify-center'}>
-              <img alt={'img'} className={'w-full h-full object-cover'} src={image} />
+              <Image
+                alt={`img ${index}`}
+                className={'w-full h-full object-cover'}
+                height={500}
+                src={image}
+                width={500}
+              />
             </div>
           </CarouselItem>
         ))}
