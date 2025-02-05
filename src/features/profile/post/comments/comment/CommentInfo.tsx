@@ -1,4 +1,3 @@
-import { Answers } from '@/features/profile/post/comments/answers'
 import { Typography } from '@/shared/ui'
 
 type CommentInfoProps = {
@@ -12,9 +11,7 @@ type CommentInfoProps = {
 }
 const CommentInfo = ({
   answerCount,
-  answers,
   createdAt,
-  isLiked,
   likeCount,
   onClick,
   showAnswers = true,
@@ -32,15 +29,17 @@ const CommentInfo = ({
           Answer
         </Typography>
       </div>
-      {answerCount > 0 && (
+      {answerCount !== undefined && answerCount > 0 && (
         <div>
           <Typography
             as={'button'}
-            className={'flex pl-0 justify-start text-light-900 cursor-pointer hover:text-light-700'}
+            className={
+              'flex pl-0 mt-2 justify-start text-light-900 cursor-pointer hover:text-light-700'
+            }
             onClick={() => onClick(showAnswers)}
             variant={'semiSmall'}
           >
-            {showAnswers ? `--- Hide answers ${answerCount}` : `--- Show answers ${answerCount}`}
+            {showAnswers ? `— Hide answers (${answerCount})` : `— Show answers (${answerCount})`}
           </Typography>
         </div>
       )}
