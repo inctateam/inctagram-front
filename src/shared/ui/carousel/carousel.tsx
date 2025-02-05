@@ -24,6 +24,8 @@ type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0]
   scrollNext: () => void
   scrollPrev: () => void
+  scrollTo: (index: number) => void
+  selectedIndex: number
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -51,12 +53,14 @@ const Carousel = React.forwardRef<
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
 
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) {
       return
     }
 
+    setSelectedIndex(api.selectedScrollSnap())
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
   }, [])
@@ -68,6 +72,13 @@ const Carousel = React.forwardRef<
   const scrollNext = React.useCallback(() => {
     api?.scrollNext()
   }, [api])
+
+  const scrollTo = React.useCallback(
+    (index: number) => {
+      api?.scrollTo(index)
+    },
+    [api]
+  )
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -107,7 +118,7 @@ const Carousel = React.forwardRef<
   return (
     <CarouselContext.Provider
       value={{
-        api: api,
+        api,
         canScrollNext,
         canScrollPrev,
         carouselRef,
@@ -115,6 +126,8 @@ const Carousel = React.forwardRef<
         orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
         scrollNext,
         scrollPrev,
+        scrollTo,
+        selectedIndex,
       }}
     >
       <div
