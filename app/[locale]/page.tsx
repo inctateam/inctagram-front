@@ -1,5 +1,5 @@
+import { HomePage } from '@/features/home-page/ui/home-page'
 import { CenteredLayout } from '@/layouts'
-import { HomePage } from '@/widgets/home-page'
 
 export default function Home() {
   return (
