@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { useState } from 'react'
 
-import { Post, PostDialog } from '@/features/profile/post/PostDialog'
+import { PostDialog } from '@/features/profile/post/PostDialog'
 import { Button } from '@/shared/ui'
 
 const meta: Meta<typeof PostDialog> = {

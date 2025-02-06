@@ -1,20 +1,12 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
+import { CommentForm } from '@/features/profile/post/CommentForm'
 import { InteractionButtons } from '@/features/profile/post/InteractionButtons'
 import { LikesList } from '@/features/profile/post/LikesList '
 import { Comments } from '@/features/profile/post/comments/comments'
 import { MoakComments, MoakPost, likesListData } from '@/features/profile/post/moakObj'
 import { PostDescription } from '@/features/profile/post/postDescription'
-import {
-  Avatar,
-  Button,
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  Dropdown,
-  Textarea,
-  Typography,
-} from '@/shared/ui'
+import { Avatar, Dialog, DialogBody, DialogHeader, Dropdown, Typography } from '@/shared/ui'
 import Image from 'next/image'
 
 type PostDialogProps = {
@@ -55,6 +47,8 @@ export type Owner = {
 const PostDialog = (props: PostDialogProps) => {
   const { onOpenChange, open } = props
   const { avatarOwner, createdAt, description, images, userName, ...rest } = MoakPost
+  const isAuth = false
+  //add items for user profile settings
   const items = [
     {
       icon: <EditOutline />,
@@ -67,12 +61,12 @@ const PostDialog = (props: PostDialogProps) => {
   ]
 
   return (
-    <Dialog closePosition={'none'} onOpenChange={onOpenChange} open={open}>
+    <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
       <div className={'flex w-[972px] h-[564px]'}>
         <div className={'w-[490px] h-full bg-light-700 relative'}>
           <Image alt={'Post Image'} layout={'fill'} objectFit={'cover'} src={images[0].url} />
         </div>
-        <div className={'w-[490px]  pb-4'}>
+        <div className={'w-[490px]  pb-4 pt-3'}>
           <DialogHeader className={'flex justify-between'}>
             <div className={'flex justify-center items-center gap-3'}>
               <Avatar alt={'User Avatar'} size={9} src={avatarOwner} />
@@ -80,11 +74,12 @@ const PostDialog = (props: PostDialogProps) => {
                 {userName}
               </Typography>
             </div>
-            <Dropdown className={'bg-dark-500'} items={items} />
+            {isAuth && <Dropdown className={'bg-dark-500'} items={items} />}
           </DialogHeader>
+          {/*<div className={'w-full h-px bg-dark-100 my-4'} />*/}
           <DialogBody
             className={
-              'pt-4 pl-6 pr-6 pb-5 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'
+              'pt-4 pb-5 px-6 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'
             }
           >
             <PostDescription
@@ -95,22 +90,11 @@ const PostDialog = (props: PostDialogProps) => {
             />
             <Comments items={MoakComments.items} />
           </DialogBody>
-          <div className={'flex flex-col pt-3 px-6 pb-2 gap-5 border-b border-dark-100 '}>
+          <div className={'flex flex-col pt-3 pb-2 px-6 gap-2 border-b border-dark-100 '}>
             <InteractionButtons />
             <LikesList {...likesListData} />
           </div>
-          {/*<div className={'w-full border-[0.5px] border-dark-100'}></div>*/}
-          <div className={'flex justify-between items-center px-6 pt-4'}>
-            <Textarea
-              className={
-                'scrollbar-thin scrollbar-none [&::-webkit-scrollbar]:hidden max-h-10 border-none'
-              }
-              color={'light-900'}
-              minHeight={30}
-              placeholder={'Add a Comment...'}
-            />
-            <Button variant={'text'}>Publish</Button>
-          </div>
+          {isAuth && <CommentForm onSubmit={() => {}} />}
         </div>
       </div>
     </Dialog>

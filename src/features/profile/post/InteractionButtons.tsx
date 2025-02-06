@@ -9,15 +9,15 @@ const InteractionButtons = () => {
   return (
     <div className={'flex justify-between'}>
       <div className={'flex gap-6'}>
-        <IconButton size={'medium'}>
+        <IconButton onClick={() => alert('Like post')} size={'medium'}>
           <Heart color={'red'} />
         </IconButton>
-        <IconButton size={'medium'}>
+        <IconButton onClick={() => alert('Share post')} size={'medium'}>
           <PaperPlaneOutline />
         </IconButton>
       </div>
       <div>
-        <IconButton size={'medium'}>
+        <IconButton onClick={() => alert('Add to bookmarks')} size={'medium'}>
           <Bookmark />
         </IconButton>
       </div>

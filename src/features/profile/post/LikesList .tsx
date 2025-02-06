@@ -9,7 +9,7 @@ type LikesListProps = {
 }
 
 const LikesList = (props: LikesListProps) => {
-  const { avatarWhoLikes, createdAt, isLiked, likesCount, updatedAt } = props
+  const { avatarWhoLikes, createdAt, likesCount, updatedAt } = props
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -20,9 +20,17 @@ const LikesList = (props: LikesListProps) => {
   return (
     <div className={'flex flex-col gap-1'}>
       <div className={'flex gap-3'}>
-        <div className={'flex'}>
-          {avatarWhoLikes.map((avatar, index) => {
-            return <Avatar alt={'Avatar who likes'} key={index} size={6} src={avatar} />
+        <div className={'flex -space-x-2'}>
+          {avatarWhoLikes.slice(0, 3).map((avatar, index) => {
+            return (
+              <Avatar
+                alt={'Avatar who likes'}
+                // className={`absolute left-${index} z-${index}`}
+                key={index}
+                size={6}
+                src={avatar}
+              />
+            )
           })}
         </div>
         <Typography variant={'regular14'}>
@@ -32,7 +40,9 @@ const LikesList = (props: LikesListProps) => {
           </Typography>
         </Typography>
       </div>
-      <Typography className={'text-light-900'}>{formatDate(createdAt)}</Typography>
+      <Typography className={'text-light-900'} variant={'small'}>
+        {formatDate(createdAt)}
+      </Typography>
     </div>
   )
 }

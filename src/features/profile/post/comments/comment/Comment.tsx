@@ -2,11 +2,12 @@ import { useState } from 'react'
 
 import Heart from '@/assets/icons/components/filled-outlined-pairs/Heart'
 import HeartOutline from '@/assets/icons/components/filled-outlined-pairs/HeartOutline'
-import { Answers } from '@/features/profile/post/comments/answers'
 import { CommentBody } from '@/features/profile/post/comments/comment/CommentBody'
 import { CommentInfo } from '@/features/profile/post/comments/comment/CommentInfo'
 import { Avatars } from '@/features/profile/post/comments/comments'
 import { timeAgo } from '@/shared/utils'
+
+import { Answers } from '../../answers'
 
 export type CommentProps = {
   answerCount: number
