@@ -9,7 +9,7 @@ type LikesListProps = {
 }
 
 const LikesList = (props: LikesListProps) => {
-  const { avatarWhoLikes, createdAt, likesCount, updatedAt } = props
+  const { avatarWhoLikes, createdAt, likesCount } = props
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)

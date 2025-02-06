@@ -46,7 +46,7 @@ export type Owner = {
 
 const PostDialog = (props: PostDialogProps) => {
   const { onOpenChange, open } = props
-  const { avatarOwner, createdAt, description, images, userName, ...rest } = MoakPost
+  const { avatarOwner, createdAt, description, images, userName } = MoakPost
   const isAuth = false
   //add items for user profile settings
   const items = [
