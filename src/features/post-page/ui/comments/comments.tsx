@@ -1,4 +1,4 @@
-import { Answer, CommentItems } from '@/features/post-page/types'
+import { CommentItems } from '@/features/post-page/types'
 
 import { Comment } from './comment'
 
