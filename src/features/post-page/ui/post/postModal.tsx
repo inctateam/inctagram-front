@@ -1,26 +1,40 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import { PublicPostsItems } from '@/features/home-page/types'
+import { CommentItems } from '@/features/post-page/types'
 import { Comments } from '@/features/post-page/ui/comments/comments'
-import { CommentForm } from '@/features/post-page/ui/post/commentForm'
-import { InteractionButtons } from '@/features/post-page/ui/post/interactionButtons'
-import { LikesList } from '@/features/post-page/ui/post/likesList '
-import { MoakComments, likesListData } from '@/features/post-page/ui/post/testObj'
+import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
+import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
+import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
 import { Avatar, Dialog, DialogBody, DialogHeader, Dropdown, Typography } from '@/shared/ui'
 import Image from 'next/image'
 
 import { Description } from '../postDescription'
 
 type PostModalProps = {
+  comments: CommentItems[]
   onOpenChange: (open: boolean) => void
   open: boolean
-} & PublicPostsItems
+  post: PublicPostsItems
+}
 
 const PostModal = (props: PostModalProps) => {
-  const { avatarOwner, createdAt, description, images, onOpenChange, open, userName } = props
-  const isAuth = false
+  const { comments, onOpenChange, open, post } = props
+  const {
+    avatarOwner,
+    avatarWhoLikes,
+    createdAt,
+    description,
+    images,
+    isLiked,
+    likesCount,
+    userName,
+  } = post
+  const {} = comments
+  const isAuth = true
   //add items for user profile settings
-  const items = [
+  //add images slider and url[]
+  const dropDownitems = [
     {
       icon: <EditOutline />,
       label: 'Edit post',
@@ -45,7 +59,7 @@ const PostModal = (props: PostModalProps) => {
                 {userName}
               </Typography>
             </div>
-            {isAuth && <Dropdown className={'bg-dark-500'} items={items} />}
+            {isAuth && <Dropdown className={'bg-dark-500'} items={dropDownitems} />}
           </DialogHeader>
           {/*<div className={'w-full h-px bg-dark-100 my-4'} />*/}
           <DialogBody
@@ -59,13 +73,17 @@ const PostModal = (props: PostModalProps) => {
               description={description}
               userName={userName}
             />
-            <Comments items={MoakComments.items} />
+            <Comments comments={comments} />
           </DialogBody>
           <div className={'flex flex-col pt-3 pb-2 px-6 gap-2 border-b border-dark-100 '}>
-            <InteractionButtons />
-            <LikesList {...likesListData} />
+            <InteractionButtons isLiked={isLiked} />
+            <LikesList
+              avatarWhoLikes={avatarWhoLikes}
+              createdAt={createdAt}
+              likesCount={likesCount}
+            />
           </div>
-          {isAuth && <CommentForm onSubmit={() => {}} />}
+          {isAuth && <CommentForm onSubmit={() => alert('submit comment')} />}
         </div>
       </div>
     </Dialog>

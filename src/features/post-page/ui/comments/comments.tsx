@@ -1,40 +1,20 @@
+import { Answer, CommentItems } from '@/features/post-page/types'
+
 import { Comment } from './comment'
 
-type CommentsProps = {
-  items: {
-    answerCount: number
-    content: string
-    createdAt: string
-    from: {
-      avatars: Avatars[]
-      id: number
-      username: string
-    }
-    id: number
-    isLiked: boolean
-    likeCount: number
-    postId: number
-  }[]
+type CommentsItemsProps = {
+  comments: CommentItems[]
 }
-
-type Avatars = {
-  createdAt: string
-  fileSize: number
-  height: number
-  url: string
-  width: number
-}
-
-const Comments = (props: CommentsProps) => {
-  const { items } = props
+const Comments = (props: CommentsItemsProps) => {
+  const { comments } = props
 
   return (
     <div>
-      {items.map((item, index) => {
-        return <Comment {...item} key={index} />
+      {comments.map((comment, index) => {
+        return <Comment {...comment} key={index} />
       })}
     </div>
   )
 }
 
-export { type Avatars, Comments, type CommentsProps }
+export { Comments }

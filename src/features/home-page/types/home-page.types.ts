@@ -14,7 +14,7 @@ export interface PublicPostsOwner {
 
 export interface PublicPostsItems {
   avatarOwner: string
-  avatarWhoLikes: string
+  avatarWhoLikes: string[]
   createdAt: string
   description: string
   id: number

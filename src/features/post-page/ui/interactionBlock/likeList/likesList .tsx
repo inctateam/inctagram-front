@@ -1,11 +1,10 @@
 import { Avatar, Typography } from '@/shared/ui'
 import { format } from 'date-fns'
+
 type LikesListProps = {
-  avatarWhoLikes: Array<string>
+  avatarWhoLikes: string[]
   createdAt: string
-  isLiked: boolean
   likesCount: number
-  updatedAt: string
 }
 
 const LikesList = (props: LikesListProps) => {

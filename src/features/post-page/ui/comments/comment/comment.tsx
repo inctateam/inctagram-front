@@ -2,32 +2,19 @@ import { useState } from 'react'
 
 import Heart from '@/assets/icons/components/filled-outlined-pairs/Heart'
 import HeartOutline from '@/assets/icons/components/filled-outlined-pairs/HeartOutline'
+import { useCommentAnswersQuery } from '@/features/post-page/api'
+import { CommentItems } from '@/features/post-page/types'
 import { CommentBody } from '@/features/post-page/ui/comments/comment/commentBody'
 import { CommentInfo } from '@/features/post-page/ui/comments/comment/commentInfo'
-import { Avatars } from '@/features/post-page/ui/comments/comments'
 import { timeAgo } from '@/shared/utils'
 
 import { Answers } from '../../answers'
 
-export type CommentProps = {
-  answerCount: number
-  content: string
-  createdAt: string
-  from: {
-    avatars: Avatars[]
-    id: number
-    username: string
-  }
-  id: number
-  isLiked: boolean
-  likeCount: number
-  postId: number
-}
-
-const Comment = (props: CommentProps) => {
-  const { answerCount, content, createdAt, from, isLiked, likeCount } = props
+const Comment = (props: CommentItems) => {
+  const { answerCount, content, createdAt, from, id, isLiked, likeCount, postId } = props
   const { avatars, username } = from
   const [showAnswers, setShowAnswers] = useState(true)
+  const { data: answers, isLoading } = useCommentAnswersQuery({ commentId: id, postId })
 
   return (
     <div className={'flex flex-col w-fit'}>
@@ -45,32 +32,10 @@ const Comment = (props: CommentProps) => {
         </div>
         <div className={'flex pt-4'}>{isLiked ? <Heart color={'red'} /> : <HeartOutline />}</div>
       </div>
-
-      {showAnswers && <Answers />}
+      {showAnswers && isLoading && <div>loading</div>}
+      {showAnswers && answers && <Answers answers={answers?.items ?? []} />}
     </div>
   )
 }
 
 export { Comment }
-
-// export type CommentItems = {
-//   commentId: number
-//   content: string
-//   createdAt: string
-//   from: User
-//   id: number
-//   isLiked: boolean
-//   likeCount: number
-// }
-// export type User = {
-//   avatars: AvatarProps[]
-//   id: number
-//   username: string
-// }
-// export type AvatarProps = {
-//   createdAt: string
-//   fileSize: number
-//   height: number
-//   url: string
-//   width: number
-// }
