@@ -1,4 +1,4 @@
-import { Avatars } from '@/features/profile/post/comments/comments'
+import { Avatars } from '@/features/post-page/ui/comments/comments'
 import { Avatar, Typography } from '@/shared/ui'
 
 type CommentBodyProps = {

@@ -2,9 +2,9 @@ import { useState } from 'react'
 
 import Heart from '@/assets/icons/components/filled-outlined-pairs/Heart'
 import HeartOutline from '@/assets/icons/components/filled-outlined-pairs/HeartOutline'
-import { CommentBody } from '@/features/profile/post/comments/comment/CommentBody'
-import { CommentInfo } from '@/features/profile/post/comments/comment/CommentInfo'
-import { Avatars } from '@/features/profile/post/comments/comments'
+import { CommentBody } from '@/features/post-page/ui/comments/comment/commentBody'
+import { CommentInfo } from '@/features/post-page/ui/comments/comment/commentInfo'
+import { Avatars } from '@/features/post-page/ui/comments/comments'
 import { timeAgo } from '@/shared/utils'
 
 import { Answers } from '../../answers'

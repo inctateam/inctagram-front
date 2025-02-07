@@ -1,4 +1,4 @@
-import { Comment } from '@/features/profile/post/comments/comment'
+import { Comment } from './comment'
 
 type CommentsProps = {
   items: {

@@ -7,7 +7,7 @@ type PostDescriptionProps = {
   userName: string
 }
 
-const PostDescription = (props: PostDescriptionProps) => {
+const Description = (props: PostDescriptionProps) => {
   const { avatar, description, userName } = props
 
   return (
@@ -32,4 +32,4 @@ const PostDescription = (props: PostDescriptionProps) => {
   )
 }
 
-export { PostDescription }
+export { Description }

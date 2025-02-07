@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Comment } from '@/features/profile/post/comments/comment/Comment'
-import { MoakComments } from '@/features/profile/post/moakObj'
+import { Comment } from '@/features/post-page/ui/comments/comment/comment'
+import { MoakComments } from '@/features/post-page/ui/post/testObj'
 
 const meta: Meta<typeof Comment> = {
   component: Comment,

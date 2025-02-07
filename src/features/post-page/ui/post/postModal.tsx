@@ -1,52 +1,23 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
-import { CommentForm } from '@/features/profile/post/CommentForm'
-import { InteractionButtons } from '@/features/profile/post/InteractionButtons'
-import { LikesList } from '@/features/profile/post/LikesList '
-import { Comments } from '@/features/profile/post/comments/comments'
-import { MoakComments, MoakPost, likesListData } from '@/features/profile/post/moakObj'
-import { PostDescription } from '@/features/profile/post/postDescription'
+import { PublicPostsItems } from '@/features/home-page/types'
+import { Comments } from '@/features/post-page/ui/comments/comments'
+import { CommentForm } from '@/features/post-page/ui/post/commentForm'
+import { InteractionButtons } from '@/features/post-page/ui/post/interactionButtons'
+import { LikesList } from '@/features/post-page/ui/post/likesList '
+import { MoakComments, likesListData } from '@/features/post-page/ui/post/testObj'
 import { Avatar, Dialog, DialogBody, DialogHeader, Dropdown, Typography } from '@/shared/ui'
 import Image from 'next/image'
 
-type PostDialogProps = {
+import { Description } from '../postDescription'
+
+type PostModalProps = {
   onOpenChange: (open: boolean) => void
   open: boolean
-}
+} & PublicPostsItems
 
-export type Post = {
-  avatarOwner: string
-  avatarWhoLikes: boolean
-  createdAt: string
-  description: string
-  id: number
-  images: PostImage[]
-  isLiked: boolean
-  likesCount: number
-  location: string
-  owner: Owner
-  ownerId: number
-  updatedAt: string
-  userName: string
-}
-
-export type PostImage = {
-  createdAt: string
-  fileSize: number
-  height: number
-  uploadId: string
-  url: string
-  width: number
-}
-
-export type Owner = {
-  firstName: string
-  lastName: string
-}
-
-const PostDialog = (props: PostDialogProps) => {
-  const { onOpenChange, open } = props
-  const { avatarOwner, createdAt, description, images, userName } = MoakPost
+const PostModal = (props: PostModalProps) => {
+  const { avatarOwner, createdAt, description, images, onOpenChange, open, userName } = props
   const isAuth = false
   //add items for user profile settings
   const items = [
@@ -82,7 +53,7 @@ const PostDialog = (props: PostDialogProps) => {
               'pt-4 pb-5 px-6 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'
             }
           >
-            <PostDescription
+            <Description
               avatar={avatarOwner}
               createdAt={createdAt}
               description={description}
@@ -101,4 +72,4 @@ const PostDialog = (props: PostDialogProps) => {
   )
 }
 
-export { PostDialog }
+export { PostModal }
