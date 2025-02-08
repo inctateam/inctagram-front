@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 
 import Heart from '@/assets/icons/components/filled-outlined-pairs/Heart'
@@ -17,8 +18,8 @@ const Comment = (props: CommentItems) => {
   const { data: answers, isLoading } = useCommentAnswersQuery({ commentId: id, postId })
 
   return (
-    <div className={'flex flex-col w-fit'}>
-      <div className={'flex'}>
+    <div className={'flex flex-col w-full'}>
+      <div className={'flex justify-between'}>
         <div className={'flex flex-col'}>
           <CommentBody avatars={avatars} content={content} userName={username} />
           <CommentInfo
@@ -26,7 +27,8 @@ const Comment = (props: CommentItems) => {
             createdAt={timeAgo(createdAt)}
             isLiked={isLiked}
             likeCount={likeCount}
-            onClick={() => setShowAnswers(prev => !prev)}
+            // onClick={() => setShowAnswers(prev => !prev)}
+            onClick={() => setShowAnswers(!showAnswers)}
             showAnswers={showAnswers}
           />
         </div>

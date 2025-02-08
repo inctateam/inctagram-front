@@ -26,7 +26,7 @@ export interface CommentsResponse extends ResponseParams {
 }
 
 export interface CommentLikesItems {
-  avatars: Avatar[]
+  avatars: AvatarType[]
   createdAt: string
   id: number
   isFollowedBy: boolean
@@ -77,12 +77,12 @@ export interface ResponseParams {
 }
 
 export interface From {
-  avatars: Avatar[]
+  avatars: AvatarType[]
   id: number
   username: string
 }
 
-export interface Avatar {
+export interface AvatarType {
   createdAt?: string
   fileSize?: number
   height?: number

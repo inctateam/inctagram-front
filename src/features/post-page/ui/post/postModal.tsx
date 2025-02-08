@@ -34,7 +34,7 @@ const PostModal = (props: PostModalProps) => {
   const isAuth = true
   //add items for user profile settings
   //add images slider and url[]
-  const dropDownitems = [
+  const dropDownItems = [
     {
       icon: <EditOutline />,
       label: 'Edit post',
@@ -49,9 +49,9 @@ const PostModal = (props: PostModalProps) => {
     <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
       <div className={'flex w-[972px] h-[564px]'}>
         <div className={'w-[490px] h-full bg-light-700 relative'}>
-          <Image alt={'Post Image'} layout={'fill'} objectFit={'cover'} src={images[0].url} />
+          <Image alt={'Post Image'} layout={'fill'} objectFit={'cover'} src={images[0]?.url} />
         </div>
-        <div className={'w-[490px]  pb-4 pt-3'}>
+        <div className={'flex flex-col w-[490px]'}>
           <DialogHeader className={'flex justify-between'}>
             <div className={'flex justify-center items-center gap-3'}>
               <Avatar alt={'User Avatar'} size={9} src={avatarOwner} />
@@ -59,12 +59,16 @@ const PostModal = (props: PostModalProps) => {
                 {userName}
               </Typography>
             </div>
-            {isAuth && <Dropdown className={'bg-dark-500'} items={dropDownitems} />}
+            {isAuth && <Dropdown className={'bg-dark-500'} items={dropDownItems} />}
           </DialogHeader>
-          {/*<div className={'w-full h-px bg-dark-100 my-4'} />*/}
+          {/*<DialogBody*/}
+          {/*  className={*/}
+          {/*    'flex flex-1 pt-4 pb-5 px-6 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'*/}
+          {/*  }*/}
+          {/*>*/}
           <DialogBody
             className={
-              'pt-4 pb-5 px-6 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'
+              'flex flex-col flex-1 pt-4 pb-5 px-6 border-b border-dark-100 overflow-y-scroll [&::-webkit-scrollbar]:hidden scrollbar-thin scrollbar-none max-h-80'
             }
           >
             <Description

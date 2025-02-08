@@ -9,7 +9,7 @@ const Comments = (props: CommentsItemsProps) => {
   const { comments } = props
 
   return (
-    <div>
+    <div className={'flex flex-col h-full'}>
       {comments.map((comment, index) => {
         return <Comment {...comment} key={index} />
       })}

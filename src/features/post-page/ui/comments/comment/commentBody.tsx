@@ -1,8 +1,7 @@
-import { Avatars } from '@/features/post-page/ui/comments/comments'
+import { AvatarType } from '@/features/post-page/types'
 import { Avatar, Typography } from '@/shared/ui'
-
 type CommentBodyProps = {
-  avatars: Avatars[]
+  avatars: AvatarType[]
   content: string
   userName: string
 }
@@ -14,7 +13,7 @@ const CommentBody = ({ avatars, content, userName }: CommentBodyProps) => {
           alt={'User Avatar'}
           onClick={() => alert('redirect to user profile')}
           size={9}
-          src={avatars[0].url}
+          src={avatars[0]?.url}
         />
       </div>
       <div className={'flex flex-col ml-3 mr-6 gap-1 text-wrap'}>
