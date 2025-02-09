@@ -22,7 +22,7 @@ const CommentForm = ({ onSubmit }: CommentFormProps) => {
   }
 
   return (
-    <div className={'flex justify-between items-center px-6 pt-4'}>
+    <div className={'flex justify-between items-center pt-4'}>
       <Textarea
         autoResize={false}
         className={
