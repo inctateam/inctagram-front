@@ -62,3 +62,21 @@ export type Owner = {
   firstName: string
   lastName: string
 }
+
+export type GetPublicUserProfileResponse = {
+  aboutMe: string
+  avatars: {
+    createdAt: string
+    fileSize: number
+    height: number
+    url: string
+    width: number
+  }[]
+  id: number
+  userMetadata: {
+    followersCount: number
+    followingCount: number
+    publicationsCount: number
+  }
+  userName: string
+}

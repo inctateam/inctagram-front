@@ -2,10 +2,9 @@
 
 import { useMeQuery } from '@/features/auth/api'
 import { ProgressBar } from '@/shared/ui'
-import { Sidebar } from '@/shared/ui/sidebar'
 
 import { PublicPage } from '../public-page'
-import { UserProfile } from './user-profile'
+import { ProfilePage } from './user-profile/profile-page'
 
 export const HomePage = () => {
   const { data, error, isLoading } = useMeQuery()
@@ -17,10 +16,7 @@ export const HomePage = () => {
   return (
     <>
       {isLoading && <ProgressBar />}
-      <div className={'flex gap-6 justify-center max-h-[660px]'}>
-        <Sidebar />
-        <UserProfile />
-      </div>
+      <ProfilePage isAuth={!!data} userId={data?.userId} />
     </>
   )
 }
