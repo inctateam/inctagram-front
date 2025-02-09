@@ -11,8 +11,13 @@ import { timeAgo } from '@/shared/utils'
 
 import { Answers } from '../../answers'
 
-const Comment = (props: CommentItems) => {
-  const { answerCount, content, createdAt, from, id, isLiked, likeCount, postId } = props
+type CommentProps = {
+  comment: CommentItems
+  isAuth: boolean
+}
+const Comment = (props: CommentProps) => {
+  const { comment, isAuth } = props
+  const { answerCount, content, createdAt, from, id, isLiked, likeCount, postId } = comment
   const { avatars, username } = from
   const [showAnswers, setShowAnswers] = useState(true)
   const { data: answers, isLoading } = useCommentAnswersQuery({ commentId: id, postId })
@@ -25,6 +30,7 @@ const Comment = (props: CommentItems) => {
           <CommentInfo
             answerCount={answerCount}
             createdAt={timeAgo(createdAt)}
+            isAuth={isAuth}
             isLiked={isLiked}
             likeCount={likeCount}
             // onClick={() => setShowAnswers(prev => !prev)}
@@ -32,10 +38,12 @@ const Comment = (props: CommentItems) => {
             showAnswers={showAnswers}
           />
         </div>
-        <div className={'flex pt-4'}>{isLiked ? <Heart color={'red'} /> : <HeartOutline />}</div>
+        {isAuth && (
+          <div className={'flex pt-4'}>{isLiked ? <Heart color={'red'} /> : <HeartOutline />}</div>
+        )}
       </div>
       {showAnswers && isLoading && <div>loading</div>}
-      {showAnswers && answers && <Answers answers={answers?.items ?? []} />}
+      {showAnswers && answers && <Answers answers={answers?.items ?? []} isAuth={isAuth} />}
     </div>
   )
 }

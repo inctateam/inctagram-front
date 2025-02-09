@@ -1,9 +1,12 @@
+import { useState } from 'react'
+
 import { Typography } from '@/shared/ui'
 
 type CommentInfoProps = {
   answerCount?: number
   answers?: string
   createdAt: string
+  isAuth: boolean
   isLiked?: boolean
   likeCount?: number
   onClick: (showAnswer: boolean) => void
@@ -12,9 +15,10 @@ type CommentInfoProps = {
 const CommentInfo = ({
   answerCount,
   createdAt,
+  isAuth,
   likeCount,
   onClick,
-  showAnswers = true,
+  showAnswers,
 }: CommentInfoProps) => {
   return (
     <div className={'flex flex-col ml-12'}>
@@ -22,12 +26,16 @@ const CommentInfo = ({
         <Typography as={'p'} className={'text-light-900'} variant={'small'}>
           {createdAt}
         </Typography>
-        <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
-          Like: {likeCount}
-        </Typography>
-        <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
-          Answer
-        </Typography>
+        {isAuth && (
+          <>
+            <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
+              Like: {likeCount}
+            </Typography>
+            <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
+              Answer
+            </Typography>
+          </>
+        )}
       </div>
       {answerCount !== undefined && answerCount > 0 && (
         <div>
@@ -36,7 +44,7 @@ const CommentInfo = ({
             className={
               'flex pl-0 mt-2 justify-start text-light-900 cursor-pointer hover:text-light-700'
             }
-            onClick={() => onClick(showAnswers)}
+            onClick={() => onClick(!showAnswers)}
             variant={'semiSmall'}
           >
             {showAnswers ? `— Hide answers (${answerCount})` : `— Show answers (${answerCount})`}

@@ -31,7 +31,7 @@ const PostModal = (props: PostModalProps) => {
     userName,
   } = post
   const {} = comments
-  const isAuth = true
+  const isAuth = false
   //add items for user profile settings
   //add images slider and url[]
   const dropDownItems = [
@@ -77,10 +77,10 @@ const PostModal = (props: PostModalProps) => {
               description={description}
               userName={userName}
             />
-            <Comments comments={comments} />
+            <Comments comments={comments} isAuth={isAuth} />
           </DialogBody>
           <div className={'flex flex-col pt-3 pb-2 px-6 gap-2 border-b border-dark-100 '}>
-            <InteractionButtons isLiked={isLiked} />
+            {isAuth && <InteractionButtons isLiked={isLiked} />}
             <LikesList
               avatarWhoLikes={avatarWhoLikes}
               createdAt={createdAt}

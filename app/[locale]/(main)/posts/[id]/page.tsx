@@ -13,9 +13,14 @@ export default function Posts({ params: { id } }: { params: { id: string } }) {
   const { data: comments } = usePostCommentsQuery({ postId: Number(id) })
 
   return (
-    <div onClick={() => setOpen(!open)}>
-      <div className={'flex cursor-pointer border-2 border-dark-100'}>Post {id}</div>
-      <div className={'flex cursor-pointer border-2 border-dark-100'}>`Open: ${open}`</div>
+    <div>
+      <div
+        className={'flex cursor-pointer border-2 border-dark-100'}
+        onClick={() => setOpen(!open)}
+      >
+        Post {id}
+      </div>
+      <div className={'flex cursor-pointer border-2 border-dark-100'}>{`Open: ${open}`}</div>
       {open && post && (
         <PostModal
           comments={comments?.items || []}

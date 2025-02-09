@@ -18,7 +18,7 @@ const LikesList = (props: LikesListProps) => {
 
   return (
     <div className={'flex flex-col gap-1'}>
-      <div className={'flex gap-3'}>
+      <div className={'flex mr-3'}>
         <div className={'flex -space-x-2'}>
           {avatarWhoLikes.slice(0, 3).map((avatar, index) => {
             return (

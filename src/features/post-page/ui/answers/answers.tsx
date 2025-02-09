@@ -6,9 +6,10 @@ import { CommentInfo } from '@/features/post-page/ui/comments/comment/commentInf
 import { timeAgo } from '@/shared/utils'
 type AnswersProps = {
   answers: Answer[]
+  isAuth: boolean
 }
 const Answers = (props: AnswersProps) => {
-  const { answers } = props
+  const { answers, isAuth } = props
 
   return (
     <div className={'pl-12'}>
@@ -22,13 +23,16 @@ const Answers = (props: AnswersProps) => {
             />
             <CommentInfo
               createdAt={timeAgo(answer.createdAt)}
+              isAuth={isAuth}
               likeCount={answer.likeCount}
               onClick={() => alert('answer')}
             />
           </div>
-          <div className={'flex pt-4'}>
-            {answer.isLiked ? <Heart color={'red'} /> : <HeartOutline />}
-          </div>
+          {isAuth && (
+            <div className={'flex pt-4'}>
+              {answer.isLiked ? <Heart color={'red'} /> : <HeartOutline />}
+            </div>
+          )}
         </div>
       ))}
     </div>
