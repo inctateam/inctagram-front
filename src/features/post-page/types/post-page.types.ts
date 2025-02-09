@@ -1,11 +1,11 @@
 //posts
-import { PublicPostsItems } from '@/features/home-page/types'
+import { PublicPostItem } from '@/features/home-page/types'
 
 export interface UserPostsArgs extends QueryParams {
   userName: string
 }
 export interface UserPostResponse extends ResponseParams {
-  items: PublicPostsItems[]
+  items: PublicPostItem[]
 }
 //Comments
 export interface CommentItems {

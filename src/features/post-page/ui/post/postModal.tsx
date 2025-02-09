@@ -1,6 +1,6 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
-import { PublicPostsItems } from '@/features/home-page/types'
+import { PublicPostItem } from '@/features/home-page/types'
 import { CommentItems } from '@/features/post-page/types'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
@@ -15,7 +15,7 @@ type PostModalProps = {
   comments: CommentItems[]
   onOpenChange: (open: boolean) => void
   open: boolean
-  post: PublicPostsItems
+  post: PublicPostItem
 }
 
 const PostModal = (props: PostModalProps) => {

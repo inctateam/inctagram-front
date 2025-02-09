@@ -1,4 +1,4 @@
-import { PublicPostsItems } from '@/features/home-page/types'
+import { PublicPostItem } from '@/features/home-page/types'
 import {
   AnswerLikesArgs,
   AnswersResponse,
@@ -32,7 +32,7 @@ export const postPageApi = instagramApi.injectEndpoints({
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
       }),
     }),
-    post: builder.query<PublicPostsItems, { postId: number }>({
+    post: builder.query<PublicPostItem, { postId: number }>({
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/id/${postId}`,

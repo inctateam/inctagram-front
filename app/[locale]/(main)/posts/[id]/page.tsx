@@ -1,7 +1,7 @@
-// export default function Posts({ params: { id } }: { params: { id: string } }) {
-//   return <div>Post {id}</div>
-// }
-'use client'
+export default function Posts({ params: { id } }: { params: { id: string } }) {
+  return <div>Post {id}</div>
+}
+/*'use client'
 import { useState } from 'react'
 
 import { usePostCommentsQuery, usePostQuery } from '@/features/post-page/api'
@@ -32,3 +32,4 @@ export default function Posts({ params: { id } }: { params: { id: string } }) {
     </div>
   )
 }
+*/

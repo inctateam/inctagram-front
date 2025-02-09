@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { Typography } from '@/shared/ui'
 
 type CommentInfoProps = {
