@@ -12,7 +12,7 @@ export interface PublicPostsOwner {
   lastName: string
 }
 
-export interface PublicPostsItems {
+export interface PublicPostItem {
   avatarOwner: string
   avatarWhoLikes: string[]
   createdAt: string
@@ -29,7 +29,7 @@ export interface PublicPostsItems {
 }
 
 export interface PublicPostsResponse {
-  items: PublicPostsItems[]
+  items: PublicPostItem[]
   pageSize: number
   totalCount: number
   totalUsers: number

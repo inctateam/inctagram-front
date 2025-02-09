@@ -1,7 +1,8 @@
 'use client'
-import error404 from '@/assets/icons/svg/error404.svg'
 import { TextLink, Typography } from '@/shared/ui'
 import Image from 'next/image'
+
+import error404 from '../../public/images/error404.svg'
 
 export default function NotFound() {
   return (

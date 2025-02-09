@@ -6,7 +6,7 @@ import { useCarousel } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
 export const CarouselDots = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }) => {
+  ({ className, ...props }, ref) => {
     const { api, scrollTo, selectedIndex } = useCarousel()
 
     return (
@@ -16,6 +16,7 @@ export const CarouselDots = React.forwardRef<HTMLDivElement, React.HTMLAttribute
             'z-50 flex items-center justify-center gap-3 bg-dark-500/20 p-2',
             className
           )}
+          ref={ref}
           {...props}
         >
           {api
