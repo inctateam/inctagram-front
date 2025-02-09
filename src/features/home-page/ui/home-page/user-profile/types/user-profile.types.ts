@@ -74,9 +74,9 @@ export type GetPublicUserProfileResponse = {
   }[]
   id: number
   userMetadata: {
-    followersCount: number
-    followingCount: number
-    publicationsCount: number
+    followers: number
+    following: number
+    publications: number
   }
   userName: string
 }

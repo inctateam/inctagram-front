@@ -13,6 +13,7 @@ interface UserProfileProps {
 export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
   const { data: publicProfile } = useGetPublicUserProfileQuery(userId.toString())
 
+  console.log(publicProfile)
   const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
 
   return (
@@ -32,20 +33,16 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
           </div>
           <div className={'flex gap-24 mt-5 mb-6'}>
             <div className={'flex flex-col items-start'}>
-              <Typography variant={'regular14'}>
-                {publicProfile?.userMetadata.followingCount}
-              </Typography>
+              <Typography variant={'regular14'}>{publicProfile?.userMetadata.following}</Typography>
               <Typography variant={'regular14'}>Following</Typography>
             </div>
             <div className={'flex flex-col items-start'}>
-              <Typography variant={'regular14'}>
-                {publicProfile?.userMetadata.followersCount}
-              </Typography>
+              <Typography variant={'regular14'}>{publicProfile?.userMetadata.followers}</Typography>
               <Typography variant={'regular14'}>Followers</Typography>
             </div>
             <div className={'flex flex-col items-start'}>
               <Typography variant={'regular14'}>
-                {publicProfile?.userMetadata.publicationsCount}
+                {publicProfile?.userMetadata.publications}
               </Typography>
               <Typography variant={'regular14'}>Publications</Typography>
             </div>
@@ -57,7 +54,7 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
       <ScrollArea className={'max-h-[660px] overflow-y-auto'}>
         <div className={'w-full flex flex-wrap gap-2'}>
           {Array.isArray(posts?.items) && posts.items.length > 0
-            ? posts.items.slice(0, 8).map(post => (
+            ? posts.items.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
                   <Link href={`/posts/${post.id}`}>
                     <Card className={'flex items-center justify-center w-full h-full'}>
