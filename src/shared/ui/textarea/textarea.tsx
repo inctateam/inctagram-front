@@ -14,6 +14,7 @@ type TextareaOwnProps = {
   hideRequiredIndicator?: true
   id?: string
   label?: string
+  minHeight?: number
   required?: boolean
   requiredIndicator?: ReactNode
 }
@@ -31,6 +32,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
     hideRequiredIndicator,
     id: propTextareaId,
     label,
+    minHeight = 84,
     onChange,
     required,
     requiredIndicator,
@@ -56,7 +58,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => 
 
   const styles = {
     textarea: cn(
-      'min-h-[84px]',
+      `min-h-[${minHeight}px]`,
       autoResize && 'overflow-hidden resize-none',
       getInputBaseStyles(error),
       className

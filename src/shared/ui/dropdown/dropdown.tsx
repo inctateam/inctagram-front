@@ -15,10 +15,11 @@ type DropdownMenuItemProps = {
 }
 
 type Props = {
+  className?: string
   items: DropdownMenuItemProps[]
 } & ComponentPropsWithoutRef<typeof DropdownMenu>
 
-export const Dropdown = ({ items }: Props) => {
+export const Dropdown = ({ className, items }: Props) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -31,7 +32,7 @@ export const Dropdown = ({ items }: Props) => {
           )}
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={'end'}>
+      <DropdownMenuContent align={'end'} className={className}>
         {items.map((item, i) => (
           <DropdownMenuItem key={i}>
             <Button
