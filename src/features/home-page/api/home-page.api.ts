@@ -6,7 +6,7 @@ export const homePageApi = instagramApi.injectEndpoints({
     publicPosts: builder.query<PublicPostsResponse, PublicPostsArgs>({
       query: args => ({
         params: args,
-        url: 'v1/public-posts/all/{endCursorPostId}',
+        url: 'v1/public-posts/all',
       }),
     }),
   }),
