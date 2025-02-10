@@ -40,3 +40,5 @@ export function ImageCarousel({ images, onClick }: ImageCarouselProps) {
     </Carousel>
   )
 }
+
+ImageCarousel.displayName = 'ImageCarousel'

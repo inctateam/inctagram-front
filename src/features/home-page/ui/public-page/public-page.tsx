@@ -48,7 +48,7 @@ export const PublicPage = () => {
         </div>
         <ul className={'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3'}>
           {data.items.map((item: PublicPostItem) => (
-            <li key={item.id}>
+            <div key={item.id}>
               <Post item={item} onClick={() => setOpenPostId(item.id)} />
               {openPostId === item.id && (
                 <PostModal
@@ -58,7 +58,7 @@ export const PublicPage = () => {
                   postId={item.id}
                 />
               )}
-            </li>
+            </div>
           ))}
         </ul>
       </div>
