@@ -16,6 +16,8 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
   console.log(publicProfile)
   const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
 
+  console.log(posts)
+
   return (
     <div className={'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden'}>
       <div className={'flex mx-auto gap-9 w-full'}>
@@ -57,9 +59,14 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
             ? posts.items.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
                   <Link href={`/posts/${post.id}`}>
-                    <Card className={'flex items-center justify-center w-full h-full'}>
-                      Post {post.id}
-                    </Card>
+                    <Card
+                      className={'flex items-center justify-center w-full h-full'}
+                      style={{
+                        backgroundImage: `url(${post.images[0].url})`,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                      }}
+                    />
                   </Link>
                 </div>
               ))
