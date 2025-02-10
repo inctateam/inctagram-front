@@ -1,40 +1,42 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import { PublicPostItem } from '@/features/home-page/types'
-import { CommentItems } from '@/features/post-page/types'
+import { usePostCommentsQuery } from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
-import { Avatar, Dialog, DialogBody, DialogHeader, Dropdown, Typography } from '@/shared/ui'
-import Image from 'next/image'
+import {
+  Avatar,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  Dropdown,
+  ImageCarousel,
+  Typography,
+} from '@/shared/ui'
 
 import { Description } from '../postDescription'
 
 type PostModalProps = {
-  comments: CommentItems[]
   onOpenChange: (open: boolean) => void
   open: boolean
   post: PublicPostItem
+  postId: number
 }
 
 const PostModal = (props: PostModalProps) => {
-  const { comments, onOpenChange, open, post } = props
-  const {
-    avatarOwner,
-    avatarWhoLikes,
-    createdAt,
-    description,
-    images,
-    isLiked,
-    likesCount,
-    userName,
-  } = post
-  const {} = comments
+  const { onOpenChange, open, post, postId } = props
+  const { avatarOwner, avatarWhoLikes, createdAt, description, isLiked, likesCount, userName } =
+    post
+  const imageUrls = post?.images.map(image => image.url)
+
+  const { data: comments } = usePostCommentsQuery({ postId })
   const isAuth = false
   const maxHeight = isAuth ? 20 : 27
   //add items for user profile settings
   //add images slider and url[]
+  //closeButton doesn't work
   const dropDownItems = [
     {
       icon: <EditOutline />,
@@ -48,9 +50,10 @@ const PostModal = (props: PostModalProps) => {
 
   return (
     <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
-      <div className={'flex w-[61rem] h-[35rem]'}>
+      <div className={'flex w-[61rem] h-[35rem] z-[999]'}>
         <div className={'w-1/2 h-full bg-light-700 relative'}>
-          <Image alt={'Post Image'} layout={'fill'} objectFit={'cover'} src={images[0]?.url} />
+          {/*<Image alt={'Post Image'} layout={'fill'} objectFit={'cover'} src={images[0]?.url} />*/}
+          <ImageCarousel images={imageUrls} />
         </div>
         <div className={'flex flex-1 h-full flex-col w-[490px]'}>
           <DialogHeader className={'flex justify-between'}>
@@ -72,7 +75,7 @@ const PostModal = (props: PostModalProps) => {
                 description={description}
                 userName={userName}
               />
-              <Comments comments={comments} isAuth={isAuth} />
+              <Comments comments={comments?.items || []} isAuth={isAuth} />
             </div>
             <div
               className={'flex flex-col gap-2 bg-dark-500 border-t border-dark-100 px-6 pt-3 pb-2'}
