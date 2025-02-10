@@ -4,7 +4,7 @@ import { CenteredLayout } from '@/layouts'
 export default function Home() {
   return (
     <CenteredLayout>
-      <div className={'w-full max-w-[972px] mx-auto'}>
+      <div className={'w-full'}>
         <HomePage />
       </div>
     </CenteredLayout>

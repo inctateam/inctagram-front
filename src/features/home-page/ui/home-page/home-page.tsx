@@ -4,6 +4,7 @@ import { useMeQuery } from '@/features/auth/api'
 import { ProgressBar } from '@/shared/ui'
 
 import { PublicPage } from '../public-page'
+import { ProfilePage } from '../user-profile/profile-page'
 
 export const HomePage = () => {
   const { data, error, isLoading } = useMeQuery()
@@ -15,10 +16,7 @@ export const HomePage = () => {
   return (
     <>
       {isLoading && <ProgressBar />}
-      <div>
-        Олеся верстает и реализовывает эту компоненту с сайдбаром и профилем и постами
-        зарегистрированного пользователя. Я работаю в PublicPage без сайдбара.
-      </div>
+      <ProfilePage isAuth={!!data} userId={data.userId} />
     </>
   )
 }
