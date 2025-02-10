@@ -1,4 +1,7 @@
 'use client'
+import React from 'react'
+import { createPortal } from 'react-dom'
+
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
@@ -7,33 +10,22 @@ import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
-import {
-  Avatar,
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  Dropdown,
-  ImageCarousel,
-  Typography,
-} from '@/shared/ui'
+import { Avatar, Dialog, DialogBody, DialogHeader, Dropdown, Typography } from '@/shared/ui'
 
 import { Description } from '../postDescription'
 
 type PostModalProps = {
+  children: React.ReactNode
   onOpenChange: (open: boolean) => void
   open: boolean
   post: PublicPostItem
-  postId: number
 }
 
 const PostModal = (props: PostModalProps) => {
-  const { onOpenChange, open, post, postId } = props
-  const { avatarOwner, avatarWhoLikes, createdAt, description, isLiked, likesCount, userName } =
+  const { children, onOpenChange, open, post } = props
+  const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
     post
-  const imageUrls = post?.images.map(image => image.url)
-
-  // const { data: comments } = usePostCommentsQuery({ postId })
-  const { data: publicComments } = usePublicPostCommentsQuery({ postId })
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const isAuth = false
   const maxHeight = isAuth ? 20 : 27
   //add items for user profile settings
@@ -48,12 +40,11 @@ const PostModal = (props: PostModalProps) => {
     },
   ]
 
-  return (
+  // Возвращаем портал с модальным окном
+  return createPortal(
     <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
-      <div className={'flex w-[61rem] h-[35rem] z-[999]'}>
-        <div className={'flex w-1/2 h-full bg-light-700 relative'}>
-          <ImageCarousel images={imageUrls} />
-        </div>
+      <div className={'flex w-[61rem] h-[35rem]'}>
+        <div className={'flex w-1/2 h-full bg-light-700 relative'}>{children}</div>
         <div className={'flex flex-1 h-full flex-col w-1/2'}>
           <DialogHeader className={'flex justify-between'}>
             <div className={'flex justify-center items-center gap-3'}>
@@ -94,7 +85,8 @@ const PostModal = (props: PostModalProps) => {
           </DialogBody>
         </div>
       </div>
-    </Dialog>
+    </Dialog>,
+    document.body // Здесь мы указываем, что хотим отрисовать в body
   )
 }
 

@@ -6,6 +6,7 @@ import { usePublicPostsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
 import { PostModal } from '@/features/post-page/ui/post/postModal'
 import { ProgressBar, Typography } from '@/shared/ui'
+import { ImageContent } from '@/shared/ui/image-content'
 import { Post } from '@/shared/ui/post'
 
 export const PublicPage = () => {
@@ -55,8 +56,9 @@ export const PublicPage = () => {
                   onOpenChange={() => setOpenPostId(null)}
                   open={openPostId === item.id}
                   post={item}
-                  postId={item.id}
-                />
+                >
+                  <ImageContent itemImages={item.images} />
+                </PostModal>
               )}
             </div>
           ))}
