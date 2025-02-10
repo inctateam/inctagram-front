@@ -1,5 +1,6 @@
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
+import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
 import { usePostCommentsQuery } from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
@@ -32,6 +33,7 @@ const PostModal = (props: PostModalProps) => {
   const imageUrls = post?.images.map(image => image.url)
 
   const { data: comments } = usePostCommentsQuery({ postId })
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId })
   const isAuth = false
   const maxHeight = isAuth ? 20 : 27
   //add items for user profile settings
@@ -75,7 +77,10 @@ const PostModal = (props: PostModalProps) => {
                 description={description}
                 userName={userName}
               />
-              <Comments comments={comments?.items || []} isAuth={isAuth} />
+              <Comments
+                comments={isAuth ? comments?.items || [] : publicComments?.items || []}
+                isAuth={isAuth}
+              />
             </div>
             <div
               className={'flex flex-col gap-2 bg-dark-500 border-t border-dark-100 px-6 pt-3 pb-2'}
