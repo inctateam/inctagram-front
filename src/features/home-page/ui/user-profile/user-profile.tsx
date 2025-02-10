@@ -13,10 +13,7 @@ interface UserProfileProps {
 export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
   const { data: publicProfile } = useGetPublicUserProfileQuery(userId.toString())
 
-  console.log(publicProfile)
   const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
-
-  console.log(posts)
 
   return (
     <div className={'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden'}>
