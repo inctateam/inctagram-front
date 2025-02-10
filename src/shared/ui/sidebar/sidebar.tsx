@@ -11,22 +11,31 @@ import {
   SearchOutline,
   TrendingUpOutline,
 } from '@/assets/icons'
+import { PATH } from '@/shared/constants'
 import { useTranslations } from 'next-intl'
 
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
 
-export const Sidebar = () => {
+interface Props {
+  userId: number
+}
+export const Sidebar = ({ userId }: Props) => {
   const [activeItem, setActiveItem] = useState<string>('Home')
+
+  console.log(activeItem)
+
   const t = useTranslations('Sidebar')
   const handleItemClick = (item: string) => {
     setActiveItem(item)
+    console.log(item)
   }
 
   return (
     <div className={'flex flex-col pl-5 items-start h-[660px] w-[220px] border-r border-gray-700'}>
       <div className={'flex flex-col mt-[72px] space-y-6'}>
         <SidebarItem
+          href={'/'}
           icon={<HomeOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.HOME}
           item={t('home')}
@@ -39,13 +48,15 @@ export const Sidebar = () => {
           item={t('create')}
           onClick={() => handleItemClick(SIDEBAR_ITEMS.CREATE)}
         />
+
         <SidebarItem
-          href={'/'}
+          href={PATH.PROFILE.replace(':id', userId.toString()) as typeof PATH.PROFILE}
           icon={<Person />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
           onClick={() => handleItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
         />
+
         <SidebarItem
           href={'/'}
           icon={<MessageCircle />}
@@ -53,6 +64,7 @@ export const Sidebar = () => {
           item={t('messenger')}
           onClick={() => handleItemClick(SIDEBAR_ITEMS.MESSANGER)}
         />
+
         <SidebarItem
           href={'/'}
           icon={<SearchOutline />}

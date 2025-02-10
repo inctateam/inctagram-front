@@ -1,9 +1,15 @@
 'use client'
 
+import { useState } from 'react'
+
+import { useUserPostsQuery } from '@/features/post-page/api'
+import { UserPostsArgs } from '@/features/post-page/types'
+import { PostModal } from '@/features/post-page/ui/post'
 import { Avatar, Button, Card, ScrollArea, Typography } from '@/shared/ui'
 import Link from 'next/link'
 
-import { useGetPostsByUserNameQuery, useGetPublicUserProfileQuery } from './api/user-profile.api'
+import { PublicPostItem } from '../../types'
+import { useGetPublicUserProfileQuery } from './api/user-profile.api'
 
 interface UserProfileProps {
   isAuth: boolean
@@ -13,7 +19,15 @@ interface UserProfileProps {
 export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
   const { data: publicProfile } = useGetPublicUserProfileQuery(userId.toString())
 
-  const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
+  //const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
+  const { data: posts } = useUserPostsQuery({ userName: publicProfile?.userName } as UserPostsArgs)
+  const [openPostModal, setOpenPostModal] = useState(false)
+  const [selectedPost, setSelectedPost] = useState<PublicPostItem | null>(null)
+
+  const handlePostClick = (post: PublicPostItem) => {
+    setSelectedPost(post)
+    setOpenPostModal(true)
+  }
 
   return (
     <div className={'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden'}>
@@ -55,7 +69,7 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
           {Array.isArray(posts?.items) && posts.items.length > 0
             ? posts.items.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                  <Link href={`/posts/${post.id}`}>
+                  <Link href={'#'} onClick={() => handlePostClick(post)}>
                     <Card
                       className={'flex items-center justify-center w-full h-full'}
                       style={{
@@ -75,6 +89,14 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
                 </div>
               ))}
         </div>
+        {selectedPost && (
+          <PostModal
+            comments={[]} // Передайте комментарии, если они есть
+            onOpenChange={setOpenPostModal}
+            open={openPostModal}
+            post={selectedPost}
+          />
+        )}
       </ScrollArea>
     </div>
   )
