@@ -1,13 +1,16 @@
 'use client'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { usePublicPostsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
+import { PostModal } from '@/features/post-page/ui/post/postModal'
 import { ProgressBar, Typography } from '@/shared/ui'
 import { Post } from '@/shared/ui/post'
 
 export const PublicPage = () => {
   const { data, error, isLoading } = usePublicPostsQuery({ pageSize: 4 })
+  const [openPostId, setOpenPostId] = useState<null | number>(null)
 
   if (error) {
     return toast.error('Unauthorized')
@@ -45,7 +48,17 @@ export const PublicPage = () => {
         </div>
         <ul className={'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3'}>
           {data.items.map((item: PublicPostItem) => (
-            <Post item={item} key={item.id} />
+            <div key={item.id}>
+              <Post item={item} onClick={() => setOpenPostId(item.id)} />
+              {openPostId === item.id && (
+                <PostModal
+                  onOpenChange={() => setOpenPostId(null)}
+                  open={openPostId === item.id}
+                  post={item}
+                  postId={item.id}
+                />
+              )}
+            </div>
           ))}
         </ul>
       </div>

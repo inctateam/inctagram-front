@@ -8,12 +8,13 @@ import { formatDistanceToNow } from 'date-fns'
 
 type Props = {
   item: PublicPostItem
+  onClick?: (open: boolean) => void
 }
 
 const itemDescription =
   'lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem100 lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet.'
 
-export const Post = ({ item }: Props) => {
+export const Post = ({ item, onClick }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const timeAgo = formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })
 
@@ -28,9 +29,9 @@ export const Post = ({ item }: Props) => {
 
   return (
     <li className={'relative'}>
-      <ImageCarousel images={item.images.map(image => image.url)} />
+      <ImageCarousel images={item.images.map(image => image.url)} onClick={onClick} />
       <div
-        className={`pt-2 flex flex-col gap-2 bg-dark-900 transition-all duration-300 ease-in-out absolute bottom-0 left-0 right-0 transform z-[99]
+        className={`pt-2 flex flex-col gap-2 bg-dark-900 transition-all duration-300 ease-in-out absolute bottom-0 left-0 right-0 transform z-1
       ${isExpanded ? 'bottom-[-160px] max-h-none translate-y-0' : 'max-h-[160px] overflow-hidden translate-y-full'}`}
       >
         <div className={'flex items-center gap-3'}>
