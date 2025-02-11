@@ -1,5 +1,6 @@
 'use client'
 
+import imageDefault from '@/assets/icons/png/image-defolt.png'
 import { Avatar, Button, Card, ScrollArea, Typography } from '@/shared/ui'
 import Link from 'next/link'
 
@@ -59,7 +60,7 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
                     <Card
                       className={'flex items-center justify-center w-full h-full'}
                       style={{
-                        backgroundImage: `url(${post.images[0].url})`,
+                        backgroundImage: `url(${post?.images[0]?.url ?? imageDefault})`,
                         backgroundPosition: 'center',
                         backgroundSize: 'cover',
                       }}
