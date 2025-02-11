@@ -1,5 +1,3 @@
-import { CSSProperties } from 'react'
-
 import imageDefault from '@/assets/icons/png/image-defolt.png'
 import { PublicPostsImages } from '@/features/home-page/types'
 import { ImageCarousel } from '@/shared/ui'
