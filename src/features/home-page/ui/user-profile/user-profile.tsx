@@ -91,10 +91,10 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
         </div>
         {selectedPost && (
           <PostModal
-            comments={[]} // Передайте комментарии, если они есть
             onOpenChange={setOpenPostModal}
             open={openPostModal}
             post={selectedPost}
+            postId={selectedPost.id}
           />
         )}
       </ScrollArea>

@@ -21,7 +21,7 @@ interface Props {
   userId: number
 }
 export const Sidebar = ({ userId }: Props) => {
-  const [activeItem, setActiveItem] = useState<string>('Home')
+  const [activeItem, setActiveItem] = useState<string>('')
 
   console.log(activeItem)
 
