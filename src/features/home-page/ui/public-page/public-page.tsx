@@ -57,7 +57,7 @@ export const PublicPage = () => {
                   open={openPostId === item.id}
                   post={item}
                 >
-                  <ImageContent itemImages={item.images} />
+                  <ImageContent className={'object-cover'} itemImages={item.images} />
                 </PostModal>
               )}
             </div>

@@ -1,14 +1,18 @@
+import { CSSProperties } from 'react'
+
 import imageDefault from '@/assets/icons/png/image-defolt.png'
 import { PublicPostsImages } from '@/features/home-page/types'
 import { ImageCarousel } from '@/shared/ui'
+import { cn } from '@/shared/utils'
 import Image from 'next/image'
 
 type Props = {
+  className?: string
   itemImages: PublicPostsImages[]
   onClick?: () => void
 }
 
-export const ImageContent = ({ itemImages, onClick }: Props) => {
+export const ImageContent = ({ className = '', itemImages, onClick }: Props) => {
   if (itemImages.length === 0) {
     // Если нет картинок, показываем дефолтную картинку
     return <Image alt={'Post image'} onClick={onClick} src={imageDefault} />
@@ -17,7 +21,7 @@ export const ImageContent = ({ itemImages, onClick }: Props) => {
     return (
       <Image
         alt={'Post image'}
-        className={'h-full w-full'}
+        className={cn('h-full w-full', className)}
         height={400}
         onClick={onClick}
         src={itemImages[0].url}

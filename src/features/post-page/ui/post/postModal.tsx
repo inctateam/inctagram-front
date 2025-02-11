@@ -58,19 +58,28 @@ const PostModal = (props: PostModalProps) => {
   // Возвращаем портал с модальным окном
   return createPortal(
     <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
-      <div className={'flex w-[61rem] h-[35rem] bg-dark-300'}>
-        <div className={'flex w-1/2 h-full relative'}>{children}</div>
-        <div className={'flex flex-1 flex-col w-1/2 justify-between'}>
+      <div
+        className={
+          'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
+        }
+      >
+        <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>{children}</div>
+        <div className={'flex flex-1 flex-col w-1/2 justify-between max-sm:w-full'}>
           <DialogHeader className={'flex justify-between'}>
             <div className={'flex justify-center items-center gap-3'}>
-              <Avatar alt={'User Avatar'} size={9} src={avatarOwner} />
+              <Avatar
+                alt={'User Avatar'}
+                className={'block max-sm:hidden'}
+                size={9}
+                src={avatarOwner}
+              />
               <Typography as={'h3'} variant={'h3'}>
                 {userName}
               </Typography>
             </div>
             {me?.userId && <Dropdown className={'bg-dark-500'} items={dropDownItems} />}
           </DialogHeader>
-          <DialogBody className={'flex flex-col h-[31rem]'}>
+          <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
             <div
               className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
             >
