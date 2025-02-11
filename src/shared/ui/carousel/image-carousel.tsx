@@ -10,7 +10,7 @@ import Image from 'next/image'
 
 type ImageCarouselProps = {
   images: string[]
-  onClick?: (open: boolean) => void
+  onClick?: () => void
 }
 
 export function ImageCarousel({ images, onClick }: ImageCarouselProps) {
@@ -19,18 +19,15 @@ export function ImageCarousel({ images, onClick }: ImageCarouselProps) {
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>
-            <div
-              className={'flex aspect-square items-center justify-center'}
-              onClick={() => onClick?.(true)}
-            >
-              <Image
-                alt={`img ${index}`}
-                className={'w-full h-full object-cover'}
-                height={500}
-                src={image}
-                width={500}
-              />
-            </div>
+            <Image
+              alt={`img ${index}`}
+              className={'w-full min-h-32 h-full object-cover'}
+              height={400}
+              onClick={onClick}
+              priority
+              src={image}
+              width={400}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
