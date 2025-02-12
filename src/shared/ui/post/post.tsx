@@ -18,35 +18,38 @@ const itemDescription =
 export const Post = ({ item, onClick }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const timeAgo = formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })
-  const numberOfLetters = 108
+  const minNumberOfLetters = 88
+  const maxNumberOfLetters = 250
 
   const descriptionToShow =
-    isExpanded || itemDescription.length <= numberOfLetters
+    isExpanded || itemDescription.length <= minNumberOfLetters
       ? itemDescription
-      : itemDescription.substring(0, numberOfLetters) + '...'
+      : itemDescription.substring(0, minNumberOfLetters) + '...'
 
-  const handleToggle = () => {
-    setIsExpanded(prev => !prev)
-  }
+  const descriptionToHid =
+    !isExpanded || itemDescription.length <= maxNumberOfLetters
+      ? itemDescription
+      : itemDescription.substring(0, maxNumberOfLetters) + '..'
 
   return (
-    <li className={'relative'}>
-      <div className={'cursor-pointer'}>
+    <li className={'flex flex-col h-[390px]'}>
+      <div className={'min-h-[120px] relative overflow-hidden cursor-pointer'}>
         <ImageContent itemImages={item.images} onClick={onClick} />
       </div>
-      <div
-        className={`pt-2 flex flex-col gap-2 bg-dark-900 transition-all duration-300 ease-in-out absolute bottom-0 left-0 right-0 transform z-1
-      ${isExpanded ? 'bottom-[-160px] max-h-none translate-y-0' : 'max-h-[160px] overflow-hidden translate-y-full'}`}
-      >
+      <div className={'pt-2 flex flex-col gap-1 bg-dark-700'}>
         <div className={'flex items-center gap-3'}>
           <Avatar alt={'avatar'} size={12} src={item.avatarOwner} />
           <h2 className={'text-[16px]'}>{item.userName}</h2>
         </div>
         <p className={'text-[12px] text-light-900'}>{timeAgo}</p>
         <Typography variant={'regular14'}>
-          {descriptionToShow}
-          {itemDescription.length > numberOfLetters && (
-            <button className={'text-blue-500 ml-2'} onClick={handleToggle} type={'button'}>
+          {isExpanded ? descriptionToHid : descriptionToShow}
+          {itemDescription.length > minNumberOfLetters && (
+            <button
+              className={'text-blue-500 ml-2'}
+              onClick={() => setIsExpanded(prev => !prev)}
+              type={'button'}
+            >
               <u>{isExpanded ? 'Hide' : 'Show more'}</u>
             </button>
           )}
