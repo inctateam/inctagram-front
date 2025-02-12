@@ -24,7 +24,7 @@ export const PublicPage = () => {
   return (
     <>
       {isLoading && <ProgressBar />}
-      <div className={'w-full'}>
+      <div className={'max-w-[972px] mx-auto'}>
         <div
           className={
             'flex items-center justify-between w-full h-20 border border-dark-300 bg-dark-500 mb-9'
