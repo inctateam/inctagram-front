@@ -14,10 +14,7 @@ export const ProfilePage = ({ children, isAuth, userId }: ProfilePageProps) => {
   return (
     <div className={'flex gap-6 justify-space-between max-h-[660px]'}>
       {isAuth && <Sidebar userId={userId!} />}
-      <div className={'flex justify-center'}>
-        {children || <div>Home Profile</div>}
-        {/* <UserProfile isAuth={isAuth} userId={userId!} /> */}
-      </div>
+      <div className={'flex justify-center'}>{children}</div>
     </div>
   )
 }

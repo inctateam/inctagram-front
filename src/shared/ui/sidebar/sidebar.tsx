@@ -11,7 +11,9 @@ import {
   SearchOutline,
   TrendingUpOutline,
 } from '@/assets/icons'
+import { useLogoutMutation } from '@/features/auth/api'
 import { PATH } from '@/shared/constants'
+import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import { SidebarItem } from './sidebar-item'
@@ -23,12 +25,25 @@ interface Props {
 export const Sidebar = ({ userId }: Props) => {
   const [activeItem, setActiveItem] = useState<string>('')
 
+  const [logout] = useLogoutMutation()
+  const router = useRouter()
+
   console.log(activeItem)
 
   const t = useTranslations('Sidebar')
   const handleItemClick = (item: string) => {
     setActiveItem(item)
     console.log(item)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap()
+      localStorage.removeItem('access_token')
+      router.push(PATH.SIGN_IN)
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   return (
@@ -95,7 +110,7 @@ export const Sidebar = ({ userId }: Props) => {
           icon={<LogOutOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.LOGOUT}
           item={t('logout')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.LOGOUT)}
+          onClick={handleLogout}
         />
       </div>
     </div>

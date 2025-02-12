@@ -90,12 +90,10 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
               ))}
         </div>
         {selectedPost && (
-          <PostModal
-            onOpenChange={setOpenPostModal}
-            open={openPostModal}
-            post={selectedPost}
-            postId={selectedPost.id}
-          />
+          <PostModal onOpenChange={setOpenPostModal} open={openPostModal} post={selectedPost}>
+            {<></>}
+            {/* //children обязательный, хз что тут писать */}
+          </PostModal>
         )}
       </ScrollArea>
     </div>
