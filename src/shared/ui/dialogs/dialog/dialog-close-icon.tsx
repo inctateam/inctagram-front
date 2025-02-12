@@ -24,7 +24,7 @@ export const closeVariants = cva(
 
 const DefaultCloseButton = () => {
   return (
-    <IconButton aria-label={'Close'}>
+    <IconButton aria-label={'Close'} className={'hover:bg-dark-100/70'}>
       <CloseOutline />
     </IconButton>
   )
