@@ -1,6 +1,7 @@
 {
   "Header": {
     "signIn": "Sign In",
+    "logIn": "Log in",
     "signUp": "Sign Up",
     "confirmEmail": "Confirm Email",
     "passwordRecovery": "Forgot Password",

@@ -1,6 +1,7 @@
 {
   "Header": {
     "signIn": "Войти",
+    "logIn": "Авторизоваться",
     "signUp": "Регистрация",
     "confirmEmail": "Подтверждение email",
     "passwordRecovery": "Забыл пароль",
