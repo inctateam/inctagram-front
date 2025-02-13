@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 
-import { useMeQuery } from '@/features/auth/api'
+//import { useMeQuery } from '@/features/auth/api'
 import { PostModal } from '@/features/post-page/ui/post'
-import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+import { Avatar, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
