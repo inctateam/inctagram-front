@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 
 import { Sidebar } from '@/shared/ui/sidebar'
 import { SIDEBAR_ITEMS } from '@/shared/ui/sidebar/types'
