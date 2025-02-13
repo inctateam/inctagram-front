@@ -1,0 +1,66 @@
+import { ChangeEvent, ComponentPropsWithoutRef, useRef, useState } from 'react'
+
+import { useUploadImageForPostMutation } from '@/features/post-page/api'
+import { Image } from '@/features/post-page/types'
+import { Dialog } from '@/shared/ui'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+
+import { AddFilesDialogContent } from './addFilesDialogContent'
+import { CroppingDialogContent } from './croppingDialogContent'
+
+type CreatePostDialogProps = ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
+
+export const CreatePostDialog = ({ ...props }: CreatePostDialogProps) => {
+  const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
+  const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
+
+  const [uploadPhoto, { data }] = useUploadImageForPostMutation()
+
+  if (photoToUpload) {
+    uploadPhoto({ file: photoToUpload })
+      .unwrap()
+      .then(() => {
+        setStage('2')
+      })
+    setPhotoToUpload(null)
+  }
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleFileSelect = () => {
+    fileInputRef?.current?.click()
+  }
+
+  const onFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.files) {
+      setPhotoToUpload(e.currentTarget.files[0])
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  return (
+    <>
+      <input
+        accept={'.jpg, .jpeg, .png'}
+        className={'hidden'}
+        onChange={onFileUpload}
+        ref={fileInputRef}
+        type={'file'}
+      />
+      <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
+        {stage === '1' && (
+          <AddFilesDialogContent handleFileSelect={handleFileSelect} handleOpenDraft={() => {}} />
+        )}
+        {stage === '2' && (
+          <CroppingDialogContent
+            handleBack={() => setStage('1')}
+            handleNext={() => {}}
+            images={data?.images ?? ([] as Image[])}
+          />
+        )}
+      </Dialog>
+    </>
+  )
+}
