@@ -2,13 +2,14 @@ import { ChangeEvent, ComponentPropsWithoutRef, useRef, useState } from 'react'
 
 import { useUploadImageForPostMutation } from '@/features/post-page/api'
 import { Image } from '@/features/post-page/types'
+import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
 import { Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 
 import { AddFilesDialogContent } from './addFilesDialogContent'
 import { CroppingDialogContent } from './croppingDialogContent'
 
-type CreatePostDialogProps = ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
+type CreatePostDialogProps = {} & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 
 export const CreatePostDialog = ({ ...props }: CreatePostDialogProps) => {
   const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
@@ -56,6 +57,13 @@ export const CreatePostDialog = ({ ...props }: CreatePostDialogProps) => {
         {stage === '2' && (
           <CroppingDialogContent
             handleBack={() => setStage('1')}
+            handleNext={() => setStage('4')}
+            images={data?.images ?? ([] as Image[])}
+          />
+        )}
+        {stage === '4' && (
+          <PublishDialogContent
+            handleBack={() => setStage('2')}
             handleNext={() => {}}
             images={data?.images ?? ([] as Image[])}
           />
