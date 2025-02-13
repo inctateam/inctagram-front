@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 
-//import { useMeQuery } from '@/features/auth/api'
+import { useMeQuery } from '@/features/auth/api'
 import { PostModal } from '@/features/post-page/ui/post'
-import { Avatar, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
@@ -19,7 +19,7 @@ interface UserProfileProps {
 }
 
 export const PublicUserProfile = ({ userId }: UserProfileProps) => {
-  //const { data: isAuth } = useMeQuery()//для незарегистрированного не нужно
+  const { data: isAuth } = useMeQuery()
 
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
     userId.toString()
@@ -52,11 +52,11 @@ export const PublicUserProfile = ({ userId }: UserProfileProps) => {
         <div className={'flex flex-col'}>
           <div className={'flex w-full justify-between'}>
             <Typography variant={'h1'}>{publicProfile?.userName}</Typography>
-            {/* {isAuth ? (
+            {isAuth ? (
               <Button size={'medium'} variant={'secondary'}>
                 Profile Settings
               </Button>
-            ) : null} */}
+            ) : null}
           </div>
           <div className={'flex gap-24 mt-5 mb-6'}>
             <div className={'flex flex-col items-start'}>
