@@ -18,22 +18,44 @@ import { useTranslations } from 'next-intl'
 
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
-
 interface Props {
+  onItemClick: (item: SIDEBAR_ITEMS) => void
   userId: number
 }
-export const Sidebar = ({ userId }: Props) => {
-  const [activeItem, setActiveItem] = useState<string>('')
+export const Sidebar = ({ onItemClick, userId }: Props) => {
+  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
 
   const [logout] = useLogoutMutation()
   const router = useRouter()
 
-  console.log(activeItem)
-
   const t = useTranslations('Sidebar')
-  const handleItemClick = (item: string) => {
+  const handleItemClick = (item: SIDEBAR_ITEMS) => {
     setActiveItem(item)
-    console.log(item)
+    switch (item) {
+      case SIDEBAR_ITEMS.HOME:
+        onItemClick(SIDEBAR_ITEMS.HOME)
+        break
+      case SIDEBAR_ITEMS.CREATE:
+        onItemClick(SIDEBAR_ITEMS.CREATE)
+        break
+      case SIDEBAR_ITEMS.MY_PROFILE:
+        onItemClick(SIDEBAR_ITEMS.MY_PROFILE)
+        break
+      case SIDEBAR_ITEMS.MESSENGER:
+        onItemClick(SIDEBAR_ITEMS.MESSENGER)
+        break
+      case SIDEBAR_ITEMS.SEARCH:
+        onItemClick(SIDEBAR_ITEMS.SEARCH)
+        break
+      case SIDEBAR_ITEMS.STATISTICS:
+        onItemClick(SIDEBAR_ITEMS.STATISTICS)
+        break
+      case SIDEBAR_ITEMS.FAVORITES:
+        onItemClick(SIDEBAR_ITEMS.FAVORITES)
+        break
+      default:
+        break
+    }
   }
 
   const handleLogout = async () => {
@@ -75,9 +97,9 @@ export const Sidebar = ({ userId }: Props) => {
         <SidebarItem
           href={'/'}
           icon={<MessageCircle />}
-          isActive={activeItem === SIDEBAR_ITEMS.MESSANGER}
+          isActive={activeItem === SIDEBAR_ITEMS.MESSENGER}
           item={t('messenger')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.MESSANGER)}
+          onClick={() => handleItemClick(SIDEBAR_ITEMS.MESSENGER)}
         />
 
         <SidebarItem

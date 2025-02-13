@@ -1,5 +1,4 @@
-import { UserProfile } from '@/features/home-page/ui/user-profile'
-import { ProfilePage } from '@/features/home-page/ui/user-profile/profile-page'
+import { PublicUserProfile } from '@/features/home-page/ui/user-profile'
 
 interface ProfileProps {
   params: { id: string }
@@ -8,11 +7,7 @@ interface ProfileProps {
 const Profile = ({ params }: ProfileProps) => {
   const { id } = params
 
-  return (
-    <ProfilePage isAuth userId={Number(id)}>
-      <UserProfile isAuth userId={Number(id)} />
-    </ProfilePage>
-  )
+  return <PublicUserProfile userId={Number(id)} />
 }
 
 export default Profile

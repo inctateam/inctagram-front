@@ -2,35 +2,49 @@
 
 import { useState } from 'react'
 
-import { useUserPostsQuery } from '@/features/post-page/api'
-import { UserPostsArgs } from '@/features/post-page/types'
+import { useMeQuery } from '@/features/auth/api'
 import { PostModal } from '@/features/post-page/ui/post'
-import { Avatar, Button, Card, ScrollArea, Typography } from '@/shared/ui'
+import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
-import { PublicPostItem } from '../../types'
-import { useGetPublicUserProfileQuery } from './api/user-profile.api'
+import {
+  useGetPublicPostsByUserIdQuery,
+  useGetPublicUserProfileQuery,
+} from './api/user-profile.api'
+import { Post } from './types/user-profile.types'
 
 interface UserProfileProps {
-  isAuth: boolean
   userId: number
 }
 
-export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
-  const { data: publicProfile } = useGetPublicUserProfileQuery(userId.toString())
+export const PublicUserProfile = ({ userId }: UserProfileProps) => {
+  //const { data: isAuth } = useMeQuery()//для незарегистрированного не нужно
 
-  //const { data: posts } = useGetPostsByUserNameQuery(publicProfile?.userName || '')
-  const { data: posts } = useUserPostsQuery({ userName: publicProfile?.userName } as UserPostsArgs)
+  const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
+    userId.toString()
+  )
+
+  const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
+
   const [openPostModal, setOpenPostModal] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<PublicPostItem | null>(null)
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
 
-  const handlePostClick = (post: PublicPostItem) => {
+  const handlePostClick = (post: Post) => {
     setSelectedPost(post)
     setOpenPostModal(true)
   }
 
+  if (profileLoading || postsLoading) {
+    return <ProgressBar />
+  }
+
   return (
-    <div className={'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden'}>
+    <div
+      className={
+        'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden mx-auto'
+      }
+    >
       <div className={'flex mx-auto gap-9 w-full'}>
         <div className={'w-[204px'}>
           <Avatar alt={'avatar'} size={48} src={publicProfile?.avatars[0]?.url} />
@@ -38,11 +52,11 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
         <div className={'flex flex-col'}>
           <div className={'flex w-full justify-between'}>
             <Typography variant={'h1'}>{publicProfile?.userName}</Typography>
-            {isAuth ? (
+            {/* {isAuth ? (
               <Button size={'medium'} variant={'secondary'}>
                 Profile Settings
               </Button>
-            ) : null}
+            ) : null} */}
           </div>
           <div className={'flex gap-24 mt-5 mb-6'}>
             <div className={'flex flex-col items-start'}>
@@ -81,18 +95,11 @@ export const UserProfile = ({ isAuth, userId }: UserProfileProps) => {
                   </Link>
                 </div>
               ))
-            : Array.from({ length: 8 }).map((_, index) => (
-                <div className={'w-[calc(25%-6px)] aspect-square'} key={index}>
-                  <Card className={'flex items-center justify-center w-full h-full'}>
-                    Empty Post {index + 1}
-                  </Card>
-                </div>
-              ))}
+            : null}
         </div>
         {selectedPost && (
           <PostModal onOpenChange={setOpenPostModal} open={openPostModal} post={selectedPost}>
-            {<></>}
-            {/* //children обязательный, хз что тут писать */}
+            <ImageContent itemImages={selectedPost.images} />
           </PostModal>
         )}
       </ScrollArea>
