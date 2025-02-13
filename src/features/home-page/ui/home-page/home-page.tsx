@@ -16,7 +16,7 @@ export const HomePage = () => {
   return (
     <>
       {isLoading && <ProgressBar />}
-      <ProfilePage isAuth={!!data} userId={data.userId} />
+      <ProfilePage userId={data.userId} />
     </>
   )
 }
