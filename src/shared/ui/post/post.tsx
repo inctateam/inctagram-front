@@ -36,7 +36,10 @@ export const Post = ({ item, onClick }: Props) => {
       <div className={'min-h-[120px] relative overflow-hidden cursor-pointer'}>
         <ImageContent itemImages={item.images} onClick={onClick} />
       </div>
-      <div className={'pt-2 flex flex-col gap-1 bg-dark-700'}>
+      <div
+        className={`pt-2 flex flex-col gap-1 bg-dark-700 /*overflow-hidden*/ transition-all duration-1000 ease-in-out
+        ${isExpanded ? 'max-h-[270px]' : 'max-h-[120px]'}`}
+      >
         <div className={'flex items-center gap-3'}>
           <Avatar alt={'avatar'} size={12} src={item.avatarOwner} />
           <h2 className={'text-[16px]'}>{item.userName}</h2>
