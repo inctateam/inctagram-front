@@ -16,6 +16,7 @@ export const ImageContent = ({ itemImages, onClick }: Props) => {
         alt={'Post image'}
         className={'h-full w-full object-cover'}
         onClick={onClick}
+        priority
         src={imageDefault}
       />
     )
@@ -27,6 +28,7 @@ export const ImageContent = ({ itemImages, onClick }: Props) => {
         className={'h-full w-full object-cover'}
         height={400}
         onClick={onClick}
+        priority
         src={itemImages[0].url}
         width={400}
       />

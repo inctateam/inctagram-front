@@ -1,3 +1,6 @@
+'use client'
+
+import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
 import { Button, LocaleSwitcher, TextLink } from '@/shared/ui'
@@ -10,6 +13,7 @@ type Props = {
 
 export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
+  const { data } = useMeQuery()
 
   return (
     <div
@@ -31,7 +35,7 @@ export const Header = ({ auth }: Props) => {
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
           <LocaleSwitcher />
-          {!auth && (
+          {!auth && !data && (
             <>
               <Button asChild className={'w-fit font-semibold'} variant={'text'}>
                 <TextLink href={PATH.SIGN_IN} underline={false}>
