@@ -11,7 +11,6 @@ import {
   UserPostsArgs,
 } from '@/features/post-page/types/post-page.types'
 import { instagramApi } from '@/services'
-import { BaseQueryArg } from '@reduxjs/toolkit/query'
 
 // PublicPostsItems проверить тип на соответствие приватному посту
 export const postPageApi = instagramApi.injectEndpoints({
@@ -34,7 +33,7 @@ export const postPageApi = instagramApi.injectEndpoints({
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
       }),
     }),
-    createPost: builder.mutation<any, { description: string; uploadIds: string[] }>({
+    createPost: builder.mutation<PublicPostItem, { description: string; uploadIds: string[] }>({
       query: ({ description, uploadIds }) => {
         return {
           body: {
