@@ -17,6 +17,7 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
   const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [images, setImages] = useState<Image[]>([])
+  const [error, setError] = useState('')
 
   const [uploadPhoto] = useUploadImageForPostMutation()
 
@@ -36,9 +37,22 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
     fileInputRef?.current?.click()
   }
 
-  const onFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    setError('')
+
+    const validFormats = ['image/jpeg', 'image/png']
+    const maxSizeInB = 20000000
+
     if (e.currentTarget.files) {
-      setPhotoToUpload(e.currentTarget.files[0])
+      if (e.currentTarget.files[0].size < maxSizeInB) {
+        if (validFormats.includes(e.currentTarget.files[0].type)) {
+          setPhotoToUpload(e.currentTarget.files[0])
+        } else {
+          setError('The photo must have JPEG or PNG format')
+        }
+      } else {
+        setError('The photo must be less than 20 Mb')
+      }
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -50,13 +64,17 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
       <input
         accept={'.jpg, .jpeg, .png'}
         className={'hidden'}
-        onChange={onFileUpload}
+        onChange={onFileSelected}
         ref={fileInputRef}
         type={'file'}
       />
       <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
         {stage === '1' && (
-          <AddFilesDialogContent handleFileSelect={handleFileSelect} handleOpenDraft={() => {}} />
+          <AddFilesDialogContent
+            error={error}
+            handleFileSelect={handleFileSelect}
+            handleOpenDraft={() => {}}
+          />
         )}
         {stage === '2' && (
           <CroppingDialogContent
