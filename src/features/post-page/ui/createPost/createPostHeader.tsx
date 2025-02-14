@@ -3,7 +3,7 @@ import { Button, DialogHeader, IconButton, Typography } from '@/shared/ui'
 
 type CreatePostHeaderProps = {
   handleBack: () => void
-  handleNext: () => void
+  handleNext?: () => void
   publish?: boolean
   title: string
 }
@@ -21,7 +21,7 @@ export const CreatePostHeader = ({
       </IconButton>
       <Typography variant={'h1'}>{title}</Typography>
       {!publish && (
-        <Button className={'absolute right-6'} onClick={() => handleNext()} variant={'text'}>
+        <Button className={'absolute right-6'} onClick={() => handleNext?.()} variant={'text'}>
           Next
         </Button>
       )}
@@ -29,7 +29,6 @@ export const CreatePostHeader = ({
         <Button
           className={'absolute right-6'}
           form={'publish-form'}
-          onClick={() => handleNext()}
           type={'submit'}
           variant={'text'}
         >

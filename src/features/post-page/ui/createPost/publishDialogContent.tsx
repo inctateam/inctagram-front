@@ -7,7 +7,6 @@ import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostH
 import { Avatar, ControlledTextarea, DialogBody, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 
 export const publishPostSchema = z.object({
@@ -22,14 +21,14 @@ type FormValues = z.infer<typeof publishPostSchema>
 
 type CroppingDialogContentProps = {
   handleBack: () => void
-  handleNext: () => void
   images: Image[]
+  onPostPublished: () => void
 }
 
 export const PublishDialogContent = ({
   handleBack,
-  handleNext,
   images,
+  onPostPublished,
 }: CroppingDialogContentProps) => {
   const [createPost] = useCreatePostMutation()
 
@@ -40,8 +39,6 @@ export const PublishDialogContent = ({
     setError,
   } = useForm<FormValues>({ resolver: zodResolver(publishPostSchema) })
 
-  const router = useRouter()
-
   const uploadIds = images.map(image => image.uploadId)
 
   const onSubmitHandler = async ({ description }: FormValues) => {
@@ -51,7 +48,7 @@ export const PublishDialogContent = ({
     })
       .unwrap()
       .then(() => {
-        router.push('/test')
+        onPostPublished()
       })
       .catch((error: unknown) => {
         handleRequestError(error, setError, ['childrenMetadata'])
@@ -60,14 +57,9 @@ export const PublishDialogContent = ({
 
   return (
     <div className={'w-[972px] h-[564px] flex flex-col'}>
-      <CreatePostHeader
-        handleBack={handleBack}
-        handleNext={handleNext}
-        publish
-        title={'Publication'}
-      />
+      <CreatePostHeader handleBack={handleBack} publish title={'Publication'} />
       <DialogBody className={'flex flex-grow'}>
-        <div className={'w-1/2 h-full'}>
+        <div className={'w-1/2 h-full flex'}>
           <ImageContent itemImages={images}></ImageContent>
         </div>
         <div className={'w-1/2 h-full flex flex-col pt-6 px-6 pb-10'}>

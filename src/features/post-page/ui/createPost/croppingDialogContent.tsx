@@ -17,7 +17,7 @@ export const CroppingDialogContent = ({
   return (
     <div className={'w-[492px] h-[564px] flex flex-col'}>
       <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
-      <DialogBody className={'flex flex-col items-center flex-grow'}>
+      <DialogBody className={'flex h-full'}>
         <ImageContent itemImages={images}></ImageContent>
       </DialogBody>
     </div>
