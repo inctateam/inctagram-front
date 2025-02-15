@@ -2,7 +2,12 @@ import { ComponentPropsWithoutRef, useState } from 'react'
 
 import { useUploadImageForPostMutation } from '@/features/post-page/api'
 import { Image } from '@/features/post-page/types'
+import {
+  createPostSliceActions,
+  createPostSliceSelectors,
+} from '@/features/post-page/ui/createPost/createPostSlice'
 import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
+import { useAppDispatch, useAppSelector } from '@/services'
 import { Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 
@@ -16,6 +21,10 @@ type CreatePostDialogProps = {
 export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialogProps) => {
   const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
 
+  const dispatch = useAppDispatch()
+
+  const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
+
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
 
   const [uploadPhoto] = useUploadImageForPostMutation()
@@ -27,16 +36,25 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
       .unwrap()
       .then(res => {
         setImages([...images, res.images[0]])
+        dispatch(createPostSliceActions.addImage({ image: res.images[0] }))
         setStage('2')
       })
     setPhotoToUpload(null)
+  }
+
+  const handleOpenDraft = () => {
+    setImages(imagesState)
+    setStage('2')
   }
 
   return (
     <>
       <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
         {stage === '1' && (
-          <AddFilesDialogContent handleOpenDraft={() => {}} setPhotoToUpload={setPhotoToUpload} />
+          <AddFilesDialogContent
+            handleOpenDraft={handleOpenDraft}
+            setPhotoToUpload={setPhotoToUpload}
+          />
         )}
         {stage === '2' && (
           <CroppingDialogContent
