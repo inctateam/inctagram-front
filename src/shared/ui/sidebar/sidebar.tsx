@@ -19,9 +19,9 @@ import { SIDEBAR_ITEMS } from './types'
 interface Props {
   activeItem: SIDEBAR_ITEMS
   onItemClick: (item: SIDEBAR_ITEMS) => void
-  userId?: number
+  userId: number
 }
-export const Sidebar = ({ activeItem, onItemClick }: Props) => {
+export const Sidebar = ({ activeItem, onItemClick, userId }: Props) => {
   const [logout] = useLogoutMutation()
   const router = useRouter()
 
@@ -56,8 +56,7 @@ export const Sidebar = ({ activeItem, onItemClick }: Props) => {
         />
 
         <SidebarItem
-          //href={PATH.PROFILE.replace(':id', String(userId))}
-          href={`/`}
+          href={PATH.PROFILE.replace(':id', String(userId))}
           icon={<Person />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
