@@ -1,13 +1,13 @@
-import { PublicUserProfile } from '@/features/home-page/ui/user-profile'
+import { ProfilePage } from '@/features/home-page/ui/user-profile/profile-page'
 
 interface ProfileProps {
   params: { id: string }
 }
 
-const Profile = ({ params }: ProfileProps) => {
+const Profile = async ({ params }: ProfileProps) => {
   const { id } = params
 
-  return <PublicUserProfile userId={Number(id)} />
+  return <ProfilePage userId={Number(id)} />
 }
 
 export default Profile
