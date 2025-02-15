@@ -1,4 +1,4 @@
-import { ChangeEvent, ComponentPropsWithoutRef, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 
 import { useUploadImageForPostMutation } from '@/features/post-page/api'
 import { Image } from '@/features/post-page/types'
@@ -15,11 +15,12 @@ type CreatePostDialogProps = {
 
 export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialogProps) => {
   const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
+
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
-  const [images, setImages] = useState<Image[]>([])
-  const [error, setError] = useState('')
 
   const [uploadPhoto] = useUploadImageForPostMutation()
+
+  const [images, setImages] = useState<Image[]>([])
 
   if (photoToUpload) {
     uploadPhoto({ file: photoToUpload })
@@ -31,50 +32,11 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
     setPhotoToUpload(null)
   }
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  const handleFileSelect = () => {
-    fileInputRef?.current?.click()
-  }
-
-  const onFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    setError('')
-
-    const validFormats = ['image/jpeg', 'image/png']
-    const maxSizeInB = 20000000
-
-    if (e.currentTarget.files) {
-      if (e.currentTarget.files[0].size < maxSizeInB) {
-        if (validFormats.includes(e.currentTarget.files[0].type)) {
-          setPhotoToUpload(e.currentTarget.files[0])
-        } else {
-          setError('The photo must have JPEG or PNG format')
-        }
-      } else {
-        setError('The photo must be less than 20 Mb')
-      }
-    }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
-
   return (
     <>
-      <input
-        accept={'.jpg, .jpeg, .png'}
-        className={'hidden'}
-        onChange={onFileSelected}
-        ref={fileInputRef}
-        type={'file'}
-      />
       <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
         {stage === '1' && (
-          <AddFilesDialogContent
-            error={error}
-            handleFileSelect={handleFileSelect}
-            handleOpenDraft={() => {}}
-          />
+          <AddFilesDialogContent handleOpenDraft={() => {}} setPhotoToUpload={setPhotoToUpload} />
         )}
         {stage === '2' && (
           <CroppingDialogContent
@@ -87,7 +49,10 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
           <PublishDialogContent
             handleBack={() => setStage('2')}
             images={images ?? ([] as Image[])}
-            onPostPublished={onPostPublished}
+            onPostPublished={() => {
+              setStage('1')
+              onPostPublished()
+            }}
           />
         )}
       </Dialog>

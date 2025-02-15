@@ -78,7 +78,7 @@ export const PublishDialogContent = ({
           <form id={'publish-form'} onSubmit={handleSubmit(onSubmitHandler)}>
             <ControlledTextarea
               autoResize={false}
-              className={'h-[120px] resize-none'}
+              className={'h-[120px] resize-none bg-dark-500'}
               control={control}
               error={!!errors.description}
               helperText={errors.description?.message}
