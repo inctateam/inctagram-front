@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { PostModal } from '@/features/post-page/ui/post'
 import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
@@ -15,10 +16,11 @@ import {
 import { Post } from './types/user-profile.types'
 
 interface UserProfileProps {
+  paidStatus?: boolean
   userId: number
 }
 
-export const PublicUserProfile = ({ userId }: UserProfileProps) => {
+export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProps) => {
   const { data: isAuth } = useMeQuery()
 
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
@@ -51,8 +53,11 @@ export const PublicUserProfile = ({ userId }: UserProfileProps) => {
         </div>
         <div className={'flex flex-col'}>
           <div className={'flex w-full justify-between'}>
-            <Typography variant={'h1'}>{publicProfile?.userName}</Typography>
-            {isAuth ? (
+            <div className={'flex items-center gap-3'}>
+              <Typography variant={'h1'}>{publicProfile?.userName}</Typography>
+              {paidStatus && <PaidStatus className={'w-6 h-6'} />}
+            </div>
+            {isAuth && publicProfile?.id == isAuth.userId ? (
               <Button size={'medium'} variant={'secondary'}>
                 Profile Settings
               </Button>

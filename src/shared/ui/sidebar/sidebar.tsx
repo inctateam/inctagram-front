@@ -1,6 +1,4 @@
 'use client'
-import { useState } from 'react'
-
 import {
   BookmarkOutline,
   HomeOutline,
@@ -19,44 +17,15 @@ import { useTranslations } from 'next-intl'
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
 interface Props {
+  activeItem: SIDEBAR_ITEMS
   onItemClick: (item: SIDEBAR_ITEMS) => void
-  userId: number
+  userId?: number
 }
-export const Sidebar = ({ onItemClick, userId }: Props) => {
-  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
-
+export const Sidebar = ({ activeItem, onItemClick }: Props) => {
   const [logout] = useLogoutMutation()
   const router = useRouter()
 
   const t = useTranslations('Sidebar')
-  const handleItemClick = (item: SIDEBAR_ITEMS) => {
-    setActiveItem(item)
-    switch (item) {
-      case SIDEBAR_ITEMS.HOME:
-        onItemClick(SIDEBAR_ITEMS.HOME)
-        break
-      case SIDEBAR_ITEMS.CREATE:
-        onItemClick(SIDEBAR_ITEMS.CREATE)
-        break
-      case SIDEBAR_ITEMS.MY_PROFILE:
-        onItemClick(SIDEBAR_ITEMS.MY_PROFILE)
-        break
-      case SIDEBAR_ITEMS.MESSENGER:
-        onItemClick(SIDEBAR_ITEMS.MESSENGER)
-        break
-      case SIDEBAR_ITEMS.SEARCH:
-        onItemClick(SIDEBAR_ITEMS.SEARCH)
-        break
-      case SIDEBAR_ITEMS.STATISTICS:
-        onItemClick(SIDEBAR_ITEMS.STATISTICS)
-        break
-      case SIDEBAR_ITEMS.FAVORITES:
-        onItemClick(SIDEBAR_ITEMS.FAVORITES)
-        break
-      default:
-        break
-    }
-  }
 
   const handleLogout = async () => {
     try {
@@ -76,22 +45,23 @@ export const Sidebar = ({ onItemClick, userId }: Props) => {
           icon={<HomeOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.HOME}
           item={t('home')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.HOME)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.HOME)}
         />
         <SidebarItem
           href={'/'}
           icon={<PlusSquareOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.CREATE}
           item={t('create')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.CREATE)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.CREATE)}
         />
 
         <SidebarItem
-          href={PATH.PROFILE.replace(':id', userId.toString()) as typeof PATH.PROFILE}
+          //href={PATH.PROFILE.replace(':id', String(userId))}
+          href={`/`}
           icon={<Person />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
         />
 
         <SidebarItem
@@ -99,7 +69,7 @@ export const Sidebar = ({ onItemClick, userId }: Props) => {
           icon={<MessageCircle />}
           isActive={activeItem === SIDEBAR_ITEMS.MESSENGER}
           item={t('messenger')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.MESSENGER)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.MESSENGER)}
         />
 
         <SidebarItem
@@ -107,7 +77,7 @@ export const Sidebar = ({ onItemClick, userId }: Props) => {
           icon={<SearchOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.SEARCH}
           item={t('search')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.SEARCH)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.SEARCH)}
         />
       </div>
       <div className={'flex flex-col mt-16 space-y-6'}>
@@ -116,14 +86,14 @@ export const Sidebar = ({ onItemClick, userId }: Props) => {
           icon={<TrendingUpOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.STATISTICS}
           item={t('statistics')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.STATISTICS)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.STATISTICS)}
         />
         <SidebarItem
           href={'/'}
           icon={<BookmarkOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.FAVORITES}
           item={t('favorites')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.FAVORITES)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.FAVORITES)}
         />
       </div>
       <div className={'mt-auto mb-8'}>

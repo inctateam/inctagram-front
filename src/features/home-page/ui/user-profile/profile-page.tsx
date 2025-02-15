@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 
 import { Sidebar } from '@/shared/ui/sidebar'
@@ -10,15 +11,15 @@ interface ProfilePageProps {
   userId: number
 }
 export const ProfilePage = ({ userId }: ProfilePageProps) => {
-  const [activeItem, setActiveItem] = useState(SIDEBAR_ITEMS.HOME)
+  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.MY_PROFILE)
 
-  const handleSidebarClick = (Item: SIDEBAR_ITEMS) => {
-    setActiveItem(Item)
+  const handleItemClick = (item: SIDEBAR_ITEMS) => {
+    setActiveItem(item)
   }
 
   return (
     <div className={'flex gap-6 justify-space-between max-h-[660px]'}>
-      <Sidebar onItemClick={handleSidebarClick} userId={userId} />
+      <Sidebar activeItem={activeItem} onItemClick={handleItemClick} userId={userId} />
       <div className={'flex justify-center'}>
         {activeItem === SIDEBAR_ITEMS.HOME && <div>Home page</div>}
         {activeItem === SIDEBAR_ITEMS.MY_PROFILE && <PublicUserProfile userId={userId} />}
