@@ -1,7 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
-import { useLoginMutation } from '@/features/auth/api'
+import { useLoginMutation, useMeQuery } from '@/features/auth/api'
 import { PropsTranslations } from '@/features/auth/ui'
 import { OAuth2 } from '@/features/auth/ui/o-auth-2'
 import { LoginFields, createLoginSchema } from '@/features/auth/ui/utils/login-shema'
@@ -26,6 +26,8 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
   const [login, { isLoading }] = useLoginMutation()
   const router = useRouter()
 
+  const { data: getMeData } = useMeQuery()
+
   const loginSchema = createLoginSchema(messagesErrors)
 
   const {
@@ -43,7 +45,9 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
 
       if (response) {
         localStorage.setItem('access_token', response.accessToken)
-        router.push('/')
+        if (getMeData) {
+          router.replace(PATH.PROFILE.replace(':id', String(getMeData.userId)))
+        }
       }
     } catch (error: unknown) {
       handleRequestError(error, setError)
