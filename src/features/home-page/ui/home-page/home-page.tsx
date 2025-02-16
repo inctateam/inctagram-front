@@ -12,11 +12,9 @@ export const HomePage = () => {
   if (error || !data) {
     return <PublicPage />
   }
+  if (isLoading) {
+    return <ProgressBar />
+  }
 
-  return (
-    <>
-      {isLoading && <ProgressBar />}
-      <ProfilePage userId={data.userId} />
-    </>
-  )
+  return <ProfilePage userId={data.userId} />
 }

@@ -6,11 +6,11 @@ import Image from 'next/image'
 type Props = {
   itemImages: PublicPostsImages[]
   onClick?: () => void
+  selectedIndexCallBack?: (index: number) => void
 }
 
-export const ImageContent = ({ itemImages, onClick }: Props) => {
+export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Props) => {
   if (itemImages.length === 0) {
-    // Если нет картинок, показываем дефолтную картинку
     return (
       <Image
         alt={'Post image'}
@@ -21,7 +21,7 @@ export const ImageContent = ({ itemImages, onClick }: Props) => {
       />
     )
   } else if (itemImages.length === 1) {
-    // Если одна картинка, показываем её
+    // Показываем одно изображение, если 1 картинка
     return (
       <Image
         alt={'Post image'}
@@ -29,12 +29,18 @@ export const ImageContent = ({ itemImages, onClick }: Props) => {
         height={400}
         onClick={onClick}
         priority
-        src={itemImages[0].url}
+        src={itemImages[0]?.url ?? imageDefault} // Показываем выбранное изображение
         width={400}
       />
     )
   } else {
-    // Если больше одной картинки, показываем ImageCarousel
-    return <ImageCarousel images={itemImages.map(image => image.url)} onClick={onClick} />
+    // Показываем карусель
+    return (
+      <ImageCarousel
+        images={itemImages.map(image => image.url)}
+        onClick={onClick}
+        selectedIndexCallBack={selectedIndexCallBack} // Передаем функцию обновления selectedIndex
+      />
+    )
   }
 }
