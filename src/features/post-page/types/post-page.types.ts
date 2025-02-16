@@ -4,9 +4,11 @@ import { PublicPostItem } from '@/features/home-page/types'
 export interface UserPostsArgs extends QueryParams {
   userName: string
 }
+
 export interface UserPostResponse extends ResponseParams {
   items: PublicPostItem[]
 }
+
 //Comments
 export interface CommentItems {
   answerCount: number
@@ -18,9 +20,11 @@ export interface CommentItems {
   likeCount: number
   postId: number
 }
+
 export interface GetPostCommentsArgs extends QueryParams {
   postId: number
 }
+
 export interface CommentsResponse extends ResponseParams {
   items: CommentItems[]
 }
@@ -34,6 +38,7 @@ export interface CommentLikesItems {
   userId: number
   userName: string
 }
+
 export interface CommentLikesResponse extends ResponseParams {
   items: CommentLikesItems[]
 }
@@ -42,9 +47,11 @@ export interface CommentLikesResponse extends ResponseParams {
 export interface GetCommentAnswersArgs extends GetPostCommentsArgs {
   commentId: number
 }
+
 export interface AnswersResponse extends ResponseParams {
   items: Answer[]
 }
+
 export interface Answer {
   commentId: number
   content: string
@@ -88,4 +95,17 @@ export interface AvatarType {
   height?: number
   url?: string
   width?: number
+}
+
+export interface Image {
+  createdAt: string
+  fileSize: number
+  height: number
+  uploadId: string
+  url: string
+  width: number
+}
+
+export interface UploadFileResponse {
+  images: Image[]
 }

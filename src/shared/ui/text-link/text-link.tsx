@@ -31,6 +31,7 @@ const textLinkVariants = cva(
         regular: 'text-light-100',
       },
       size: {
+        large: 'text-base',
         medium: 'text-sm',
         small: 'text-xs',
       },
