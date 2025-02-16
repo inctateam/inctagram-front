@@ -3,7 +3,7 @@ export enum SIDEBAR_ITEMS {
   FAVORITES = 'Favorites',
   HOME = 'Home',
   LOGOUT = 'Logout',
-  MESSANGER = 'Messenger',
+  MESSENGER = 'Messenger',
   MY_PROFILE = 'My Profile',
   SEARCH = 'Search',
   STATISTICS = 'Statistics',

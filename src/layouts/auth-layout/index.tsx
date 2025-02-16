@@ -10,7 +10,7 @@ type Props = {
 export const AuthLayout = ({ children }: Props) => {
   return (
     <div className={'h-screen flex flex-col'}>
-      <Header />
+      <Header auth />
       <LayoutContainer className={cn('flex items-start justify-center flex-grow', 'sm:pt-9 pt-4')}>
         <main>{children}</main>
       </LayoutContainer>

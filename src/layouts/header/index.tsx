@@ -1,11 +1,19 @@
+'use client'
+
+import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { LocaleSwitcher, TextLink } from '@/shared/ui'
+import { Button, LocaleSwitcher, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
 
-export const Header = () => {
+type Props = {
+  auth?: boolean
+}
+
+export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
+  const { data } = useMeQuery()
 
   return (
     <div
@@ -25,32 +33,23 @@ export const Header = () => {
         >
           Inctagram
         </TextLink>
-
-        {/* Remove later*/}
-        <div className={'flex gap-5'}>
-          <TextLink href={PATH.SIGN_UP}>{t('signUp')}</TextLink>
-          <TextLink
-            href={
-              PATH.CONFIRM_EMAIL +
-              '?code=7a6c9af0-d798-404a-98d6-f893692ba9f8&email=some-email@gmail.com'
-            }
-          >
-            {t('confirmEmail')}
-          </TextLink>
-
-          <TextLink href={PATH.SIGN_IN}>{t('signIn')}</TextLink>
-
-          <TextLink href={PATH.PASSWORD_RECOVERY}>{t('passwordRecovery')}</TextLink>
-          <TextLink href={PATH.PASSWORD_RESET + '?code=2348230-842084-23093482039-23492390'}>
-            {t('resetPassword')}
-          </TextLink>
-
-          <TextLink href={PATH.TERMS_OF_SERVICE}>{t('terms')}</TextLink>
-          <TextLink href={PATH.PRIVACY_POLICY}>{t('privacyPolicy')}</TextLink>
+        <div className={'flex items-center justify-center gap-7'}>
+          <LocaleSwitcher />
+          {!auth && !data && (
+            <>
+              <Button asChild className={'w-fit font-semibold'} variant={'text'}>
+                <TextLink href={PATH.SIGN_IN} underline={false}>
+                  {t('logIn')}
+                </TextLink>
+              </Button>
+              <Button asChild className={'w-fit font-semibold'} variant={'primary'}>
+                <TextLink href={PATH.SIGN_UP} underline={false}>
+                  {t('signUp')}
+                </TextLink>
+              </Button>
+            </>
+          )}
         </div>
-        {/* Remove later*/}
-
-        <LocaleSwitcher />
       </LayoutContainer>
     </div>
   )

@@ -6,26 +6,41 @@ import Image from 'next/image'
 type Props = {
   itemImages: PublicPostsImages[]
   onClick?: () => void
+  selectedIndexCallBack?: (index: number) => void
 }
 
-export const ImageContent = ({ itemImages, onClick }: Props) => {
+export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Props) => {
   if (itemImages.length === 0) {
-    // Если нет картинок, показываем дефолтную картинку
-    return <Image alt={'Post image'} onClick={onClick} src={imageDefault} />
-  } else if (itemImages.length === 1) {
-    // Если одна картинка, показываем её
     return (
       <Image
         alt={'Post image'}
-        className={'h-full w-full'}
+        className={'h-full w-full object-cover'}
+        onClick={onClick}
+        priority
+        src={imageDefault}
+      />
+    )
+  } else if (itemImages.length === 1) {
+    // Показываем одно изображение, если 1 картинка
+    return (
+      <Image
+        alt={'Post image'}
+        className={'h-full w-full object-cover'}
         height={400}
         onClick={onClick}
-        src={itemImages[0].url}
+        priority
+        src={itemImages[0]?.url ?? imageDefault} // Показываем выбранное изображение
         width={400}
       />
     )
   } else {
-    // Если больше одной картинки, показываем ImageCarousel
-    return <ImageCarousel images={itemImages.map(image => image.url)} onClick={onClick} />
+    // Показываем карусель
+    return (
+      <ImageCarousel
+        images={itemImages.map(image => image.url)}
+        onClick={onClick}
+        selectedIndexCallBack={selectedIndexCallBack} // Передаем функцию обновления selectedIndex
+      />
+    )
   }
 }
