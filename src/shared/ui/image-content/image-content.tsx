@@ -1,10 +1,9 @@
 import imageDefault from '@/assets/icons/png/image-defolt.png'
-import { PublicPostsImages } from '@/features/home-page/types'
 import { ImageCarousel } from '@/shared/ui'
 import Image from 'next/image'
 
 type Props = {
-  itemImages: PublicPostsImages[]
+  itemImages: string[]
   onClick?: () => void
   selectedIndexCallBack?: (index: number) => void
 }
@@ -29,7 +28,7 @@ export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Pro
         height={400}
         onClick={onClick}
         priority
-        src={itemImages[0]?.url ?? imageDefault} // Показываем выбранное изображение
+        src={itemImages[0] ?? imageDefault} // Показываем выбранное изображение
         width={400}
       />
     )
@@ -37,7 +36,7 @@ export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Pro
     // Показываем карусель
     return (
       <ImageCarousel
-        images={itemImages.map(image => image.url)}
+        images={itemImages}
         onClick={onClick}
         selectedIndexCallBack={selectedIndexCallBack} // Передаем функцию обновления selectedIndex
       />

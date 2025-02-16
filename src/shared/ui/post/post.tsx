@@ -51,7 +51,7 @@ export const Post = ({ item, onClick }: Props) => {
         }`}
       >
         <ImageContent
-          itemImages={itemImages}
+          itemImages={itemImages.map(image => image.url)}
           onClick={onClick}
           selectedIndexCallBack={setSelectedIndex}
         />

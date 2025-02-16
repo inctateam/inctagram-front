@@ -104,7 +104,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         </div>
         {selectedPost && (
           <PostModal onOpenChange={setOpenPostModal} open={openPostModal} post={selectedPost}>
-            <ImageContent itemImages={selectedPost.images} />
+            <ImageContent itemImages={selectedPost.images.map(image => image.url)} />
           </PostModal>
         )}
       </ScrollArea>
