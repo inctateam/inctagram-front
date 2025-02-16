@@ -1,6 +1,5 @@
 //posts
 import { PublicPostItem } from '@/features/home-page/types'
-import { string } from 'zod'
 
 export interface UserPostsArgs extends QueryParams {
   userName: string
