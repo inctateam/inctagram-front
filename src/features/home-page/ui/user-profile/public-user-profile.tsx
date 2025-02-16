@@ -1,19 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { PostModal } from '@/features/post-page/ui/post'
 import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
 import {
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
 } from './api/user-profile.api'
-import { Post } from './types/user-profile.types'
 
 interface UserProfileProps {
   paidStatus?: boolean
@@ -28,14 +23,6 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   )
 
   const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
-
-  const [openPostModal, setOpenPostModal] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-
-  const handlePostClick = (post: Post) => {
-    setSelectedPost(post)
-    setOpenPostModal(true)
-  }
 
   if (profileLoading || postsLoading) {
     return <ProgressBar />
@@ -88,11 +75,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
           {Array.isArray(posts?.items) && posts.items.length > 0
             ? posts.items.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                  <Link href={'#'} onClick={() => handlePostClick(post)}>
+                  <Link href={`/posts/${post.id}`}>
                     <Card
                       className={'flex items-center justify-center w-full h-full'}
                       style={{
-                        backgroundImage: `url(${post.images[0].url})`,
+                        backgroundImage: `url(${post.images[0]})`,
                         backgroundPosition: 'center',
                         backgroundSize: 'cover',
                       }}
@@ -102,11 +89,6 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
               ))
             : null}
         </div>
-        {selectedPost && (
-          <PostModal onOpenChange={setOpenPostModal} open={openPostModal} post={selectedPost}>
-            <ImageContent itemImages={selectedPost.images.map(image => image.url)} />
-          </PostModal>
-        )}
       </ScrollArea>
     </div>
   )
