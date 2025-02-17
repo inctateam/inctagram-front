@@ -1,4 +1,6 @@
 'use client'
+import { useState } from 'react'
+
 import {
   BookmarkOutline,
   HomeOutline,
@@ -9,20 +11,23 @@ import {
   SearchOutline,
   TrendingUpOutline,
 } from '@/assets/icons'
-import { useLogoutMutation } from '@/features/auth/api'
+import { useLogoutMutation, useMeQuery } from '@/features/auth/api'
 import { PATH } from '@/shared/constants'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
-interface Props {
-  activeItem: SIDEBAR_ITEMS
-  onItemClick: (item: SIDEBAR_ITEMS) => void
-  userId: number
-}
-export const Sidebar = ({ activeItem, onItemClick, userId }: Props) => {
+
+// interface Props {
+//   activeItem: SIDEBAR_ITEMS
+//   onItemClick: (item: SIDEBAR_ITEMS) => void
+//   userId: number
+// }
+
+export const Sidebar = () => {
   const [logout] = useLogoutMutation()
+  const { data: getMeData } = useMeQuery()
   const router = useRouter()
 
   const t = useTranslations('Sidebar')
@@ -35,6 +40,12 @@ export const Sidebar = ({ activeItem, onItemClick, userId }: Props) => {
     } catch (error) {
       console.error('Logout failed:', error)
     }
+  }
+
+  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.MY_PROFILE)
+
+  const onItemClick = (item: SIDEBAR_ITEMS) => {
+    setActiveItem(item)
   }
 
   return (
@@ -56,7 +67,7 @@ export const Sidebar = ({ activeItem, onItemClick, userId }: Props) => {
         />
 
         <SidebarItem
-          href={PATH.PROFILE.replace(':id', String(userId))}
+          href={PATH.PROFILE.replace(':id', String(getMeData?.userId))}
           icon={<Person />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
