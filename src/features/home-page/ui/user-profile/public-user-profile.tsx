@@ -3,6 +3,7 @@
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
 import {
@@ -76,14 +77,9 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
             ? posts.items.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
                   <Link href={`/posts/${post.id}`}>
-                    <Card
-                      className={'flex items-center justify-center w-full h-full'}
-                      style={{
-                        backgroundImage: `url(${post.images[0]})`,
-                        backgroundPosition: 'center',
-                        backgroundSize: 'cover',
-                      }}
-                    />
+                    <Card className={'flex items-center justify-center w-full h-full'}>
+                      <ImageContent itemImages={post.images.map(image => image['url'])} />
+                    </Card>
                   </Link>
                 </div>
               ))
