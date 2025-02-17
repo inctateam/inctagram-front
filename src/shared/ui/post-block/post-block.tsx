@@ -24,7 +24,7 @@ export const PostBlock = ({ data }: Props) => {
               open={openPostId === item.id}
               post={item}
             >
-              <ImageContent itemImages={item.images} />
+              <ImageContent itemImages={item.images.map(image => image.url)} />
             </PostModal>
           )}
         </div>

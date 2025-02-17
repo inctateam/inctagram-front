@@ -1,11 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { PostModal } from '@/features/post-page/ui/post'
-import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+import { Avatar, Button, Card, ProgressBar, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
@@ -13,7 +10,6 @@ import {
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
 } from './api/user-profile.api'
-import { Post } from './types/user-profile.types'
 
 interface UserProfileProps {
   paidStatus?: boolean
@@ -29,24 +25,12 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
 
   const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
 
-  const [openPostModal, setOpenPostModal] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-
-  const handlePostClick = (post: Post) => {
-    setSelectedPost(post)
-    setOpenPostModal(true)
-  }
-
   if (profileLoading || postsLoading) {
     return <ProgressBar />
   }
 
   return (
-    <div
-      className={
-        'flex flex-col mt-9 max-w-[932px] max-h-[660px] gap-[53px] overflow-hidden mx-auto'
-      }
-    >
+    <div className={'flex flex-col mt-9 max-w-[932px] gap-[53px] mx-auto'}>
       <div className={'flex mx-auto gap-9 w-full'}>
         <div className={'w-[204px'}>
           <Avatar alt={'avatar'} size={48} src={publicProfile?.avatars[0]?.url} />
@@ -83,31 +67,21 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
           <Typography variant={'regular14'}>{publicProfile?.aboutMe}</Typography>
         </div>
       </div>
-      <ScrollArea className={'max-h-[660px] overflow-y-auto'}>
-        <div className={'w-full flex flex-wrap gap-2'}>
-          {Array.isArray(posts?.items) && posts.items.length > 0
-            ? posts.items.map(post => (
-                <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                  <Link href={'#'} onClick={() => handlePostClick(post)}>
-                    <Card
-                      className={'flex items-center justify-center w-full h-full'}
-                      style={{
-                        backgroundImage: `url(${post.images[0].url})`,
-                        backgroundPosition: 'center',
-                        backgroundSize: 'cover',
-                      }}
-                    />
-                  </Link>
-                </div>
-              ))
-            : null}
-        </div>
-        {selectedPost && (
-          <PostModal onOpenChange={setOpenPostModal} open={openPostModal} post={selectedPost}>
-            <ImageContent itemImages={selectedPost.images} />
-          </PostModal>
-        )}
-      </ScrollArea>
+      {/* <ScrollArea className={'max-h-[660px] overflow-y-auto'}> */}
+      <div className={'w-full flex flex-wrap gap-2'}>
+        {Array.isArray(posts?.items) && posts.items.length > 0
+          ? posts.items.map(post => (
+              <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
+                <Link href={`/posts/${post.id}`}>
+                  <Card className={'flex items-center justify-center w-full h-full'}>
+                    <ImageContent itemImages={post.images.map(image => image['url'])} />
+                  </Card>
+                </Link>
+              </div>
+            ))
+          : null}
+      </div>
+      {/* </ScrollArea> */}
     </div>
   )
 }

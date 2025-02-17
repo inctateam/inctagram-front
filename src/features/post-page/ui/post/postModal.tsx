@@ -21,7 +21,7 @@ import { Description } from '../postDescription'
 type PostModalProps = {
   children: React.ReactNode
   onOpenChange: (open: boolean) => void
-  open: boolean
+  open?: boolean
   post: PublicPostItem
 }
 
