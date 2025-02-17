@@ -1,1 +1,1 @@
-export * from './profile-settings-page'
+export * from './profile-settings'

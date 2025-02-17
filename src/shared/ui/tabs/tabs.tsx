@@ -4,7 +4,7 @@ import { cn } from '@/shared/utils'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 import { VariantProps, cva } from 'class-variance-authority'
 
-export const tabsVariants = cva([`w-[85px] h-9 text-base font-600 border-b-2`], {
+export const tabsVariants = cva([`w-full h-9 text-base font-600 border-b-2`], {
   variants: {
     variant: {
       primary: [
@@ -26,22 +26,31 @@ export const tabsVariants = cva([`w-[85px] h-9 text-base font-600 border-b-2`], 
 })
 
 type TabsProps = {
-  children: ReactNode
+  // children: ReactNode
   className?: string
   disabled?: boolean
   isActive?: boolean
   isFocused?: boolean
-  tabs?: TabItem[]
+  tabs: TabItem[]
   value: string
   variant?: 'primary' | 'secondary' | null
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
-
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
   (
-    { children, className, disabled, isActive, isFocused, value, variant = 'primary', ...props },
+    {
+      // children,
+      className,
+      disabled,
+      isActive,
+      isFocused,
+      tabs,
+      value,
+      variant = 'primary',
+      ...props
+    },
     ref
   ) => {
-    const tabs = [{ content: children, disabled, isActive, isFocused, label: value, value }]
+    // const tabs = [{ content: children, disabled, isActive, isFocused, label: value, value }]
 
     return (
       <TabsRoot defaultValue={value} ref={ref}>
@@ -52,9 +61,14 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
           isFocused={isFocused}
           tabs={tabs}
           variant={variant ?? 'primary'}
+          // variant={isActive ? 'primary' : 'secondary'}
           {...props}
         />
-        <TabsContent value={value}>{children}</TabsContent>
+        {tabs.map(t => (
+          <TabsContent key={t.value} value={t.value}>
+            {t.content}
+          </TabsContent>
+        ))}
       </TabsRoot>
     )
   }
@@ -143,8 +157,8 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
 type TabsContentProps = ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 
 const TabsContent = forwardRef<ElementRef<typeof TabsPrimitive.Content>, TabsContentProps>(
-  ({ children, className, ...props }, ref) => (
-    <TabsPrimitive.Content className={className} ref={ref} {...props}>
+  ({ children, className, value, ...props }, ref) => (
+    <TabsPrimitive.Content className={className} ref={ref} value={value} {...props}>
       {children}
     </TabsPrimitive.Content>
   )
