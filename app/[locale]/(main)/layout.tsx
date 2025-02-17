@@ -1,8 +1,7 @@
-'use client'
 import React from 'react'
 
-import { Header, LayoutContainer } from '@/layouts'
-import { cn } from '@/shared/utils'
+import { CenteredLayout } from '@/layouts'
+import { Sidebar } from '@/shared/ui/sidebar'
 
 export default function HomeLayout({
   children,
@@ -13,13 +12,13 @@ export default function HomeLayout({
 }>) {
   return (
     <>
-      <Header />
-      <LayoutContainer className={cn('sm:pt-6 pt-4')}>
-        <main>
+      <CenteredLayout>
+        <div className={'flex gap-6 justify-space-between w-full'}>
+          <Sidebar />
           {children}
           {modal}
-        </main>
-      </LayoutContainer>
+        </div>
+      </CenteredLayout>
     </>
   )
 }
