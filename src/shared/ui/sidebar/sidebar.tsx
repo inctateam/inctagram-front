@@ -49,9 +49,7 @@ export const Sidebar = () => {
   }
 
   return (
-    <div
-      className={'flex flex-col pl-5 items-start min-h-screen w-[220px] border-r border-gray-700 '}
-    >
+    <div className={'flex flex-col pl-5 items-start w-[220px] border-r border-gray-700 '}>
       <div className={'flex flex-col mt-[72px] space-y-6 '}>
         <SidebarItem
           href={'/'}
