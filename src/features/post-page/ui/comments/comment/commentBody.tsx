@@ -11,6 +11,7 @@ const CommentBody = ({ avatars, content, userName }: CommentBodyProps) => {
       <div className={'flex justify-center items-start'}>
         <Avatar
           alt={'User Avatar'}
+          className={'block sm:hidden'}
           onClick={() => alert('redirect to user profile')}
           size={9}
           src={avatars[0]?.url}

@@ -2,10 +2,14 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
 
+import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
+import PersonAdd from '@/assets/icons/components/filled-outlined-pairs/PersonAdd'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
+import { useMeQuery } from '@/features/auth/api'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
+import { usePostCommentsQuery } from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
@@ -26,10 +30,10 @@ const PostModal = (props: PostModalProps) => {
   const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
     post
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
-  const isAuth = false
-  const maxHeight = isAuth ? 20 : 27
-  //add items for user profile settings
-  const dropDownItems = [
+  const { data: privateComments } = usePostCommentsQuery({ postId: id })
+  const { data: me } = useMeQuery()
+  const comments = me?.userId ? privateComments : publicComments
+  const myDropDown = [
     {
       icon: <EditOutline />,
       label: 'Edit post',
@@ -39,25 +43,45 @@ const PostModal = (props: PostModalProps) => {
       label: 'Delete post',
     },
   ]
+  const friendDropDown = [
+    {
+      icon: <PersonAdd />,
+      label: 'Follow',
+    },
+    {
+      icon: <CopyOutline />,
+      label: 'Copy Link',
+    },
+  ]
+  const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
 
   // Возвращаем портал с модальным окном
   return createPortal(
     <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
-      <div className={'flex w-[61rem] h-[35rem]'}>
-        <div className={'flex w-1/2 h-full bg-light-700 relative'}>{children}</div>
-        <div className={'flex flex-1 h-full flex-col w-1/2'}>
+      <div
+        className={
+          'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
+        }
+      >
+        <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>{children}</div>
+        <div className={'flex flex-1 flex-col w-1/2 justify-between max-sm:w-full'}>
           <DialogHeader className={'flex justify-between'}>
             <div className={'flex justify-center items-center gap-3'}>
-              <Avatar alt={'User Avatar'} size={9} src={avatarOwner} />
+              <Avatar
+                alt={'User Avatar'}
+                className={'block max-sm:hidden'}
+                size={9}
+                src={avatarOwner}
+              />
               <Typography as={'h3'} variant={'h3'}>
                 {userName}
               </Typography>
             </div>
-            {isAuth && <Dropdown className={'bg-dark-500'} items={dropDownItems} />}
+            {me?.userId && <Dropdown className={'bg-dark-500'} items={dropDownItems} />}
           </DialogHeader>
-          <DialogBody className={'flex flex-col h-full'}>
+          <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
             <div
-              className={`flex flex-col max-h-[${maxHeight}rem] overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
+              className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
             >
               <Description
                 avatar={avatarOwner}
@@ -65,22 +89,18 @@ const PostModal = (props: PostModalProps) => {
                 description={description}
                 userName={userName}
               />
-              <Comments
-                // comments={isAuth ? comments?.items || [] : publicComments?.items || []}
-                comments={publicComments?.items || []}
-                isAuth={isAuth}
-              />
+              <Comments comments={comments?.items || []} isAuth={!!me?.userId} />
             </div>
             <div
-              className={'flex flex-col gap-2 bg-dark-500 border-t border-dark-100 px-6 pt-3 pb-2'}
+              className={'flex flex-col gap-2 bg-dark-300 border-t border-dark-100 px-6 pt-3 pb-2'}
             >
-              {isAuth && <InteractionButtons isLiked={isLiked} />}
+              {me?.userId && <InteractionButtons isLiked={isLiked} />}
               <LikesList
                 avatarWhoLikes={avatarWhoLikes}
                 createdAt={createdAt}
                 likesCount={likesCount}
               />
-              {isAuth && <CommentForm onSubmit={() => alert('submit comment')} />}
+              {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
             </div>
           </DialogBody>
         </div>

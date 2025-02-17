@@ -19,7 +19,7 @@ const Comment = (props: CommentProps) => {
   const { comment, isAuth } = props
   const { answerCount, content, createdAt, from, id, isLiked, likeCount, postId } = comment
   const { avatars, username } = from
-  const [showAnswers, setShowAnswers] = useState(true)
+  const [showAnswers, setShowAnswers] = useState(false)
   const { data: answers, isLoading } = useCommentAnswersQuery({ commentId: id, postId })
 
   return (
