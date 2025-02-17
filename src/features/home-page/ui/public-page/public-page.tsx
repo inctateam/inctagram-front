@@ -10,11 +10,7 @@ import Image from 'next/image'
 import noData from '../../../../../public/images/no-data.svg'
 
 export const PublicPage = () => {
-  const {
-    data: dataPosts,
-    error: errorPosts,
-    isLoading: isLoadingPosts,
-  } = usePublicPostsQuery({ endCursorPostId: 2, pageSize: 4, sortDirection: 'asc' })
+  const { data: dataPosts, error: errorPosts, isLoading: isLoadingPosts } = usePublicPostsQuery({})
   const {
     data: dataUsers,
     error: errorUsers,
@@ -34,7 +30,7 @@ export const PublicPage = () => {
 
   if (!dataPosts || !dataUsers) {
     return (
-      <div className={'flex justify-center items-center'}>
+      <div className={'max-w-[972px] mx-auto flex justify-center items-center'}>
         <Image alt={'No data'} src={noData} />
       </div>
     )
