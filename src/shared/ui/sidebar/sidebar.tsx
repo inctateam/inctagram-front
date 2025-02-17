@@ -42,15 +42,17 @@ export const Sidebar = () => {
     }
   }
 
-  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.MY_PROFILE)
+  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
 
   const onItemClick = (item: SIDEBAR_ITEMS) => {
     setActiveItem(item)
   }
 
   return (
-    <div className={'flex flex-col pl-5 items-start h-[660px] w-[220px] border-r border-gray-700'}>
-      <div className={'flex flex-col mt-[72px] space-y-6'}>
+    <div
+      className={'flex flex-col pl-5 items-start min-h-screen w-[220px] border-r border-gray-700 '}
+    >
+      <div className={'flex flex-col mt-[72px] space-y-6 '}>
         <SidebarItem
           href={'/'}
           icon={<HomeOutline />}
@@ -106,7 +108,7 @@ export const Sidebar = () => {
           onClick={() => onItemClick(SIDEBAR_ITEMS.FAVORITES)}
         />
       </div>
-      <div className={'mt-auto mb-8'}>
+      <div className={'mt-44'}>
         <SidebarItem
           href={'/'}
           icon={<LogOutOutline />}
