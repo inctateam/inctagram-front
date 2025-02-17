@@ -8,6 +8,7 @@ import { PostModal } from '@/features/post-page/ui/post'
 import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import {
   useGetPublicPostsByUserIdQuery,
@@ -26,7 +27,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
     userId.toString()
   )
-
+  const router = useRouter()
   const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
 
   const [openPostModal, setOpenPostModal] = useState(false)
@@ -58,7 +59,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
               {paidStatus && <PaidStatus className={'w-6 h-6'} />}
             </div>
             {isAuth && publicProfile?.id == isAuth.userId ? (
-              <Button size={'medium'} variant={'secondary'}>
+              <Button
+                onClick={() => router.push(`/profile/${userId}/settings`)}
+                size={'medium'}
+                variant={'secondary'}
+              >
                 Profile Settings
               </Button>
             ) : null}
