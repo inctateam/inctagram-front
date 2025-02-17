@@ -13,8 +13,10 @@ type Props = {
 
 const MIN_LETTERS = 86
 const MAX_LETTERS = 250
+/*
 const itemDescription =
   'lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet.'
+*/
 
 export const Post = ({ item, onClick }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -35,14 +37,14 @@ export const Post = ({ item, onClick }: Props) => {
     }
   }
   const shortDescription =
-    itemDescription.length <= MIN_LETTERS
-      ? itemDescription
-      : `${itemDescription.substring(0, MIN_LETTERS)}...`
+    item.description.length <= MIN_LETTERS
+      ? item.description
+      : `${item.description.substring(0, MIN_LETTERS)}...`
 
   const longDescription =
-    itemDescription.length <= MAX_LETTERS
-      ? itemDescription
-      : `${itemDescription.substring(0, MAX_LETTERS)}...`
+    item.description.length <= MAX_LETTERS
+      ? item.description
+      : `${item.description.substring(0, MAX_LETTERS)}...`
 
   return (
     <li className={'flex flex-col h-[390px] overflow-hidden'}>
@@ -68,7 +70,7 @@ export const Post = ({ item, onClick }: Props) => {
 
         <Typography variant={'regular14'}>
           {isExpanded ? longDescription : shortDescription}
-          {itemDescription.length > MIN_LETTERS && (
+          {item.description.length > MIN_LETTERS && (
             <button
               className={'text-blue-500 ml-2'}
               onClick={handleChangeItemDescription}
