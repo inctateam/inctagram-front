@@ -1,5 +1,3 @@
-import { PublicPage } from '../public-page'
-
 export const HomePage = () => {
-  return <PublicPage />
+  return <div>Home Page</div>
 }

@@ -16,7 +16,7 @@ export default function Post({ params: { id } }: { params: { id: string } }) {
 
   return (
     <PostModal onOpenChange={() => router.back()} open post={data!}>
-      <ImageContent itemImages={data!.images.map(image => image.url)} />
+      <ImageContent itemImages={data?.images.map(image => image.url) ?? []} />
     </PostModal>
   )
 }
