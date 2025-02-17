@@ -11,11 +11,12 @@ import Image from 'next/image'
 type ImageCarouselProps = {
   images: string[]
   onClick?: () => void
+  selectedIndexCallBack?: (index: number) => void
 }
 
-export function ImageCarousel({ images, onClick }: ImageCarouselProps) {
+export function ImageCarousel({ images, onClick, selectedIndexCallBack }: ImageCarouselProps) {
   return (
-    <Carousel opts={{ loop: true }}>
+    <Carousel opts={{ loop: true }} selectedIndexCallBack={selectedIndexCallBack}>
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>

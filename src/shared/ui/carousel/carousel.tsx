@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { useEffect } from 'react'
 
 import { cn } from '@/shared/utils'
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
@@ -14,6 +15,7 @@ type CarouselProps = {
   opts?: CarouselOptions
   orientation?: 'horizontal' | 'vertical'
   plugins?: CarouselPlugin
+  selectedIndexCallBack?: (index: number) => void
   setApi?: (api: CarouselApi) => void
 }
 
@@ -43,106 +45,126 @@ export function useCarousel() {
 const Carousel = React.forwardRef<
   HTMLDivElement,
   CarouselProps & React.HTMLAttributes<HTMLDivElement>
->(({ children, className, opts, orientation = 'horizontal', plugins, setApi, ...props }, ref) => {
-  const [carouselRef, api] = useEmblaCarousel(
+>(
+  (
     {
-      ...opts,
-      axis: orientation === 'horizontal' ? 'x' : 'y',
+      children,
+      className,
+      opts,
+      orientation = 'horizontal',
+      plugins,
+      selectedIndexCallBack,
+      setApi,
+      ...props
     },
-    plugins
-  )
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
-  const [selectedIndex, setSelectedIndex] = React.useState(0)
+    ref
+  ) => {
+    const [carouselRef, api] = useEmblaCarousel(
+      {
+        ...opts,
+        axis: orientation === 'horizontal' ? 'x' : 'y',
+      },
+      plugins
+    )
+    const [canScrollPrev, setCanScrollPrev] = React.useState(false)
+    const [canScrollNext, setCanScrollNext] = React.useState(false)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) {
-      return
-    }
-
-    setSelectedIndex(api.selectedScrollSnap())
-    setCanScrollPrev(api.canScrollPrev())
-    setCanScrollNext(api.canScrollNext())
-  }, [])
-
-  const scrollPrev = React.useCallback(() => {
-    api?.scrollPrev()
-  }, [api])
-
-  const scrollNext = React.useCallback(() => {
-    api?.scrollNext()
-  }, [api])
-
-  const scrollTo = React.useCallback(
-    (index: number) => {
-      api?.scrollTo(index)
-    },
-    [api]
-  )
-
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault()
-        scrollPrev()
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault()
-        scrollNext()
+    useEffect(() => {
+      if (selectedIndexCallBack) {
+        // Проверяем, передана ли функция
+        selectedIndexCallBack(selectedIndex)
       }
-    },
-    [scrollPrev, scrollNext]
-  )
+    }, [selectedIndex, selectedIndexCallBack])
 
-  React.useEffect(() => {
-    if (!api || !setApi) {
-      return
-    }
+    const onSelect = React.useCallback((api: CarouselApi) => {
+      if (!api) {
+        return
+      }
+      setSelectedIndex(api.selectedScrollSnap())
+      setCanScrollPrev(api.canScrollPrev())
+      setCanScrollNext(api.canScrollNext())
+    }, [])
 
-    setApi(api)
-  }, [api, setApi])
+    const scrollPrev = React.useCallback(() => {
+      api?.scrollPrev()
+    }, [api])
 
-  React.useEffect(() => {
-    if (!api) {
-      return
-    }
+    const scrollNext = React.useCallback(() => {
+      api?.scrollNext()
+    }, [api])
 
-    onSelect(api)
-    api.on('reInit', onSelect)
-    api.on('select', onSelect)
+    const scrollTo = React.useCallback(
+      (index: number) => {
+        api?.scrollTo(index)
+      },
+      [api]
+    )
 
-    return () => {
-      api?.off('select', onSelect)
-    }
-  }, [api, onSelect])
+    const handleKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault()
+          scrollPrev()
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault()
+          scrollNext()
+        }
+      },
+      [scrollPrev, scrollNext]
+    )
 
-  return (
-    <CarouselContext.Provider
-      value={{
-        api,
-        canScrollNext,
-        canScrollPrev,
-        carouselRef,
-        opts,
-        orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
-        scrollNext,
-        scrollPrev,
-        scrollTo,
-        selectedIndex,
-      }}
-    >
-      <div
-        aria-roledescription={'carousel'}
-        className={cn('relative', className)}
-        onKeyDownCapture={handleKeyDown}
-        ref={ref}
-        role={'region'}
-        {...props}
+    React.useEffect(() => {
+      if (!api || !setApi) {
+        return
+      }
+
+      setApi(api)
+    }, [api, setApi])
+
+    React.useEffect(() => {
+      if (!api) {
+        return
+      }
+
+      onSelect(api)
+      api.on('reInit', onSelect)
+      api.on('select', onSelect)
+
+      return () => {
+        api?.off('select', onSelect)
+      }
+    }, [api, onSelect])
+
+    return (
+      <CarouselContext.Provider
+        value={{
+          api,
+          canScrollNext,
+          canScrollPrev,
+          carouselRef,
+          opts,
+          orientation: orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
+          scrollNext,
+          scrollPrev,
+          scrollTo,
+          selectedIndex,
+        }}
       >
-        {children}
-      </div>
-    </CarouselContext.Provider>
-  )
-})
+        <div
+          aria-roledescription={'carousel'}
+          className={cn('relative', className)}
+          onKeyDownCapture={handleKeyDown}
+          ref={ref}
+          role={'region'}
+          {...props}
+        >
+          {children}
+        </div>
+      </CarouselContext.Provider>
+    )
+  }
+)
 
 Carousel.displayName = 'Carousel'
 

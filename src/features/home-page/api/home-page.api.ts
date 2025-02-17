@@ -5,6 +5,7 @@ import {
   PublicPostItem,
   PublicPostsArgs,
   PublicPostsResponse,
+  TotalCountRegisteredUsersResponse,
 } from '@/features/home-page/types'
 import { instagramApi } from '@/services'
 
@@ -17,9 +18,9 @@ export const homePageApi = instagramApi.injectEndpoints({
       }),
     }),
     publicPosts: builder.query<PublicPostsResponse, PublicPostsArgs>({
-      query: args => ({
-        params: args,
-        url: 'v1/public-posts/all',
+      query: ({ endCursorPostId, ...params }) => ({
+        params,
+        url: `v1/public-posts/all/${endCursorPostId}`,
       }),
     }),
     publicPostsById: builder.query<PublicPostItem, { postId: number }>({
@@ -33,6 +34,11 @@ export const homePageApi = instagramApi.injectEndpoints({
         url: `v1/public-posts/user/${userId}/${endCursorPostId}`,
       }),
     }),
+    totalCountRegisteredUsers: builder.query<TotalCountRegisteredUsersResponse, void>({
+      query: () => ({
+        url: 'v1/public-user',
+      }),
+    }),
   }),
 })
 
@@ -41,4 +47,5 @@ export const {
   usePublicPostsByIdQuery,
   usePublicPostsByUserIdQuery,
   usePublicPostsQuery,
+  useTotalCountRegisteredUsersQuery,
 } = homePageApi

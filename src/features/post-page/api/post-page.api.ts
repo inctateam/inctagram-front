@@ -6,6 +6,7 @@ import {
   CommentsResponse,
   GetCommentAnswersArgs,
   GetPostCommentsArgs,
+  UploadFileResponse,
   UserPostResponse,
   UserPostsArgs,
 } from '@/features/post-page/types/post-page.types'
@@ -32,6 +33,22 @@ export const postPageApi = instagramApi.injectEndpoints({
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
       }),
     }),
+    createPost: builder.mutation<PublicPostItem, { description: string; uploadIds: string[] }>({
+      query: ({ description, uploadIds }) => {
+        return {
+          body: {
+            childrenMetadata: uploadIds.map(id => {
+              return {
+                uploadId: id,
+              }
+            }),
+            description,
+          },
+          method: 'POST',
+          url: 'v1/posts',
+        }
+      },
+    }),
     post: builder.query<PublicPostItem, { postId: number }>({
       query: ({ postId, ...params }) => ({
         params,
@@ -50,6 +67,19 @@ export const postPageApi = instagramApi.injectEndpoints({
         url: `v1/posts/${postId}/likes`,
       }),
     }),
+    uploadImageForPost: builder.mutation<UploadFileResponse, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData()
+
+        formData.append('file', file)
+
+        return {
+          body: formData,
+          method: 'POST',
+          url: 'v1/posts/image',
+        }
+      },
+    }),
     userPosts: builder.query<UserPostResponse, UserPostsArgs>({
       query: ({ userName, ...params }) => ({
         params,
@@ -63,8 +93,10 @@ export const {
   useAnswerLikesQuery,
   useCommentAnswersQuery,
   useCommentLikesQuery,
+  useCreatePostMutation,
   usePostCommentsQuery,
   usePostLikesQuery,
   usePostQuery,
+  useUploadImageForPostMutation,
   useUserPostsQuery,
 } = postPageApi

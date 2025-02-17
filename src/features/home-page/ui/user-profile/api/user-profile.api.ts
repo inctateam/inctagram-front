@@ -2,6 +2,7 @@ import { instagramApi } from '@/services'
 
 import {
   GetPostsByUserNameResponse,
+  GetPublicPostsByUserNameResponse,
   GetPublicUserProfileResponse,
   GetUserByUserNameResponse,
   GetUserProfileResponse,
@@ -27,6 +28,12 @@ export const userProfileApi = instagramApi.injectEndpoints({
         url: `v1/users/${userName}`,
       }),
     }),
+    getPublicPostsByUserId: builder.query<GetPublicPostsByUserNameResponse, string>({
+      query: userId => ({
+        method: 'GET',
+        url: `v1/public-posts/user/${userId}`,
+      }),
+    }),
     getPublicUserProfile: builder.query<GetPublicUserProfileResponse, string>({
       query: profileId => ({
         method: 'GET',
@@ -39,5 +46,6 @@ export const {
   useGetPostsByUserNameQuery,
   useGetProfileByUserNameQuery,
   useGetProfileQuery,
+  useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
 } = userProfileApi

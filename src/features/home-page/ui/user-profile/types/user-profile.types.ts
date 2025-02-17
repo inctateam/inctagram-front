@@ -34,28 +34,28 @@ export type GetPostsByUserNameResponse = {
 }
 
 export type Post = {
-  avatarOwner: string
-  avatarWhoLikes: boolean
-  createdAt: string
+  avatarOwner: string //
+  avatarWhoLikes: string[] //boolean?
+  createdAt: string //
   description: string
-  id: number
-  images: Image[]
-  isLiked: boolean
-  likesCount: number
-  location: string
-  owner: Owner
-  ownerId: number
-  updatedAt: string
-  userName: string
+  id: number //
+  images: Image[] //
+  isLiked: boolean //
+  likesCount: number //
+  location: string //
+  owner: Owner //
+  ownerId: number //
+  updatedAt: string //
+  userName: string //
 }
 
 export type Image = {
-  createdAt: string
-  fileSize: number
-  height: number
-  uploadId: string
-  url: string
-  width: number
+  createdAt: string //
+  fileSize: number //
+  height: number //
+  uploadId: string //
+  url: string //
+  width: number //
 }
 
 export type Owner = {
@@ -79,4 +79,11 @@ export type GetPublicUserProfileResponse = {
     publications: number
   }
   userName: string
+}
+
+export type GetPublicPostsByUserNameResponse = {
+  items: Post[]
+  pageSize: number
+  totalCount: number
+  totalUsers: number
 }

@@ -1,12 +1,13 @@
 import { useDispatch, useSelector, useStore } from 'react-redux'
 
+import { createPostSlice } from '@/features/post-page/ui/createPost/createPostSlice'
 import { instagramApi } from '@/services'
 import { combineSlices, configureStore } from '@reduxjs/toolkit'
 
 export const makeStore = () => {
   return configureStore({
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(instagramApi.middleware),
-    reducer: combineSlices(instagramApi),
+    reducer: combineSlices(instagramApi, createPostSlice),
   })
 }
 

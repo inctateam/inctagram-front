@@ -80,3 +80,6 @@ export interface PublicPostsArgs {
   sortBy?: string
   sortDirection?: 'asc' | 'desc'
 }
+export interface TotalCountRegisteredUsersResponse {
+  totalCount: number
+}
