@@ -1,4 +1,12 @@
-import { Avatar, Button, ScrollArea, Select, TextField, Textarea } from '@/shared/ui'
+import {
+  Avatar,
+  Button,
+  DatePickerSingle,
+  ScrollArea,
+  Select,
+  TextField,
+  Textarea,
+} from '@/shared/ui'
 
 const GeneralInformation = () => {
   return (
@@ -20,7 +28,8 @@ const GeneralInformation = () => {
           />
           <TextField label={'First name'} required type={'text'} />
           <TextField label={'Last name'} required type={'text'} />
-          <TextField label={'Date of birth'} type={'date'} />
+          <DatePickerSingle label={'Date of birth'} />
+          {/*<TextField label={'Date of birth'} type={'date'} />*/}
           <div className={'flex gap-6'}>
             <div className={'flex flex-col w-1/2'}>
               <Select label={'Select your country'} />

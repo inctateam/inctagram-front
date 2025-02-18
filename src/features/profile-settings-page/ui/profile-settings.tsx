@@ -1,9 +1,9 @@
 'use client'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
-import { Tabs, Typography } from '@/shared/ui'
+import { TabItem, Tabs, Typography } from '@/shared/ui'
 
 const ProfileSettings = () => {
-  const tabs = [
+  const tabs: TabItem[] = [
     {
       content: <GeneralInformation />,
       disabled: false,

@@ -34,7 +34,7 @@ type TabsProps = {
   isFocused?: boolean
   tabs: TabItem[]
   value: string
-  variant?: 'primary' | 'secondary' | null
+  // variant?: 'primary' | 'secondary' | null
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
   (
@@ -78,14 +78,14 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
 
 const TabsRoot = TabsPrimitive.Root
 
-type TabItem = {
+export type TabItem = {
   content: ReactNode
   disabled?: boolean
   isActive?: boolean
   isFocused?: boolean
   label: string
   value: string
-  variant?: 'primary' | 'secondary' | null
+  variant?: 'primary' | 'secondary'
 }
 
 type TabsListProps = {
