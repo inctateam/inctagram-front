@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { PublicPostItem } from '@/features/home-page/types'
+import { PostModal } from '@/features/post-page/ui/post'
 import { Avatar, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { formatDistanceToNow } from 'date-fns'
@@ -8,18 +9,17 @@ import Link from 'next/link'
 
 type Props = {
   item: PublicPostItem
-  onClick?: () => void
 }
-
 const MIN_LETTERS = 86
 const MAX_LETTERS = 250
+
 /*
 const itemDescription =
   'lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet.'
 */
-
-export const Post = ({ item, onClick }: Props) => {
+export const Post = ({ item }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [openPostId, setOpenPostId] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0) // Храним текущий индекс изображения
   const [itemImages, setItemImages] = useState(item.images) // Храним изображения
 
@@ -36,6 +36,27 @@ export const Post = ({ item, onClick }: Props) => {
       setItemImages(item.images)
     }
   }
+  const handleOpenPostModal = () => {
+    /*    if (!isExpanded) {
+      // Если разворачиваем описание — выбираем только текущее изображение
+      setItemImages([item.images[selectedIndex]])
+    } else {
+      // Если скрываем описание — возвращаем весь массив
+      setItemImages(item.images)
+    }*/
+    setOpenPostId(prev => !prev)
+  }
+  const handleClosePostModal = () => {
+    /*    if (!isExpanded) {
+      // Если разворачиваем описание — выбираем только текущее изображение
+      setItemImages([item.images[selectedIndex]])
+    } else {
+      // Если скрываем описание — возвращаем весь массив
+      setItemImages(item.images)
+    }*/
+    setOpenPostId(prev => !prev)
+  }
+
   const shortDescription =
     item.description.length <= MIN_LETTERS
       ? item.description
@@ -51,7 +72,7 @@ export const Post = ({ item, onClick }: Props) => {
       <div className={'min-h-[120px] cursor-pointer'}>
         <ImageContent
           itemImages={itemImages.map(image => image.url)}
-          onClick={onClick}
+          onClick={handleOpenPostModal}
           selectedIndexCallBack={setSelectedIndex}
         />
       </div>
@@ -81,6 +102,11 @@ export const Post = ({ item, onClick }: Props) => {
           )}
         </Typography>
       </div>
+      {openPostId && (
+        <PostModal onOpenChange={handleClosePostModal} open={openPostId} post={item}>
+          <ImageContent itemImages={item.images.map(image => image.url)} />
+        </PostModal>
+      )}
     </li>
   )
 }
