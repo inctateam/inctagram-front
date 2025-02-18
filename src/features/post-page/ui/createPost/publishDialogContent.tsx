@@ -60,7 +60,7 @@ export const PublishDialogContent = ({
       <CreatePostHeader handleBack={handleBack} publish title={'Publication'} />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
-          <ImageContent itemImages={images}></ImageContent>
+          <ImageContent itemImages={images.map(image => image.url)}></ImageContent>
         </div>
         <div className={'w-1/2 h-full flex flex-col pt-6 px-6 pb-10'}>
           <div className={'flex items-center gap-3 pb-6'}>

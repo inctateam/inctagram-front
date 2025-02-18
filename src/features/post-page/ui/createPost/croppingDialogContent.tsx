@@ -18,7 +18,7 @@ export const CroppingDialogContent = ({
     <div className={'w-[492px] h-[564px] flex flex-col'}>
       <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
       <DialogBody className={'flex h-full'}>
-        <ImageContent itemImages={images}></ImageContent>
+        <ImageContent itemImages={images.map(image => image.url)}></ImageContent>
       </DialogBody>
     </div>
   )
