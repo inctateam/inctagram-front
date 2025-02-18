@@ -21,7 +21,7 @@ export const CarouselDots = React.forwardRef<HTMLDivElement, React.HTMLAttribute
             .map((_, index) => (
               <span
                 className={cn(
-                  'h-2 w-2 rounded-full cursor-pointer',
+                  'h-2 w-2 rounded-full cursor-pointer select-none',
                   index === selectedIndex ? 'bg-accent-500 ' : 'bg-light-100'
                 )}
                 key={index}

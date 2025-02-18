@@ -2,9 +2,8 @@
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { Avatar, Button, Card, ProgressBar, Typography } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
-import Link from 'next/link'
+import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
+import { Avatar, Button, ProgressBar, Typography } from '@/shared/ui'
 
 import {
   useGetPublicPostsByUserIdQuery,
@@ -72,11 +71,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         {Array.isArray(posts?.items) && posts.items.length > 0
           ? posts.items.map(post => (
               <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                <Link href={`/posts/${post.id}`}>
-                  <Card className={'flex items-center justify-center w-full h-full'}>
-                    <ImageContent itemImages={post.images.map(image => image['url'])} />
-                  </Card>
-                </Link>
+                <PostUserProfile post={post} />
               </div>
             ))
           : null}

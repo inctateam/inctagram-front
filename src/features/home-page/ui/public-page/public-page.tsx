@@ -1,4 +1,3 @@
-'use client'
 import { toast } from 'react-toastify'
 
 import { usePublicPostsQuery, useTotalCountRegisteredUsersQuery } from '@/features/home-page/api'
