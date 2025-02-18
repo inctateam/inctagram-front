@@ -1,4 +1,4 @@
-import { Avatar, Button, Select, TextField, Textarea } from '@/shared/ui'
+import { Avatar, Button, ScrollArea, Select, TextField, Textarea } from '@/shared/ui'
 
 const GeneralInformation = () => {
   return (
@@ -29,7 +29,13 @@ const GeneralInformation = () => {
               <Select label={'Select your city'} />
             </div>
           </div>
-          <Textarea label={'About me'} />
+          <ScrollArea>
+            <Textarea
+              className={'[&::-webkit-scrollbar]:hidden'}
+              label={'About me'}
+              maxLength={345}
+            />
+          </ScrollArea>
         </div>
       </div>
       <div className={'flex flex-row-reverse'}>

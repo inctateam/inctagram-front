@@ -26,9 +26,10 @@ export const tabsVariants = cva([`w-full h-9 text-base font-600 border-b-2`], {
 })
 
 type TabsProps = {
-  // children: ReactNode
   className?: string
   disabled?: boolean
+  // children: ReactNode
+  full?: boolean
   isActive?: boolean
   isFocused?: boolean
   tabs: TabItem[]
@@ -41,11 +42,12 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
       // children,
       className,
       disabled,
+      full,
       isActive,
       isFocused,
       tabs,
       value,
-      variant = 'primary',
+      // variant = 'primary',
       ...props
     },
     ref
@@ -53,14 +55,14 @@ const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
     // const tabs = [{ content: children, disabled, isActive, isFocused, label: value, value }]
 
     return (
-      <TabsRoot defaultValue={value} ref={ref}>
+      <TabsRoot className={`${full && 'w-full'}`} defaultValue={value} ref={ref}>
         <TabsList
           className={className}
           disabled={disabled}
           isActive={isActive}
           isFocused={isFocused}
           tabs={tabs}
-          variant={variant ?? 'primary'}
+          // variant={variant ?? 'primary'}
           // variant={isActive ? 'primary' : 'secondary'}
           {...props}
         />
@@ -83,6 +85,7 @@ type TabItem = {
   isFocused?: boolean
   label: string
   value: string
+  variant?: 'primary' | 'secondary' | null
 }
 
 type TabsListProps = {
@@ -91,11 +94,11 @@ type TabsListProps = {
   isActive?: boolean
   isFocused?: boolean
   tabs: TabItem[]
-  variant?: 'primary' | 'secondary'
+  // variant?: 'primary' | 'secondary'
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 
 const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
-  ({ className, tabs, variant = 'primary', ...props }, ref) => (
+  ({ className, tabs, ...props }, ref) => (
     <TabsPrimitive.List className={className} ref={ref} {...props}>
       {tabs.map(tab => (
         <TabsTrigger
@@ -104,7 +107,7 @@ const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps
           isFocused={tab.isFocused}
           key={tab.value}
           value={tab.value}
-          variant={variant}
+          variant={tab.variant}
         >
           {tab.label}
         </TabsTrigger>

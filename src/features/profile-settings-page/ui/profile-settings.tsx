@@ -11,6 +11,7 @@ const ProfileSettings = () => {
       isFocused: false,
       label: 'General information',
       value: 'General information',
+      variant: 'primary',
     },
     {
       content: <Typography>Devices</Typography>,
@@ -19,6 +20,7 @@ const ProfileSettings = () => {
       isFocused: false,
       label: 'Devices',
       value: 'Devices',
+      variant: 'secondary',
     },
     {
       content: <Typography>Account Management</Typography>,
@@ -27,6 +29,7 @@ const ProfileSettings = () => {
       isFocused: false,
       label: 'Account Management',
       value: 'Account Management',
+      variant: 'secondary',
     },
     {
       content: <Typography>My payments</Typography>,
@@ -35,10 +38,13 @@ const ProfileSettings = () => {
       isFocused: false,
       label: 'My payments',
       value: 'My payments',
+      variant: 'secondary',
     },
   ]
 
-  return <Tabs className={'flex justify-between'} tabs={tabs} value={'General information'} />
+  return <Tabs className={'flex justify-between'} full tabs={tabs} value={'General information'} />
 }
+
+ProfileSettings.displayName = ProfileSettings
 
 export { ProfileSettings }
