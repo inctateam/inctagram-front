@@ -16,19 +16,21 @@ const InfiniteScroll = <T extends Element = HTMLElement>({
     const intersectedElement = ref.current
 
     if (!root || !intersectedElement) {
-        console.log('Root or intersectedElement is null'); // Логирование
+      console.log('Root or intersectedElement is null') // Логирование
+
       return
     }
 
     const intersectionObserver = new IntersectionObserver(
       entries => {
-        console.log('IntersectionObserver entries:', entries); // Логирование
+        console.log('IntersectionObserver entries:', entries) // Логирование
         if (entries.length === 0) {
           return
         }
 
         const entry = entries[0]
-        console.log('Entry isIntersecting:', entry.isIntersecting); // Логирование
+
+        console.log('Entry isIntersecting:', entry.isIntersecting) // Логирование
         if (onVisibilityChange) {
           onVisibilityChange(entry.isIntersecting)
         }
