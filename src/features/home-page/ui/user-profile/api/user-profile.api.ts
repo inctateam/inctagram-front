@@ -28,13 +28,30 @@ export const userProfileApi = instagramApi.injectEndpoints({
         url: `v1/users/${userName}`,
       }),
     }),
-    getPublicPostsByUserId: builder.query<GetPublicPostsByUserNameResponse, string>({
-      query: userId => ({
-        method: 'GET',
-        url: `v1/public-posts/user/${userId}`,
+    getPublicPostsByUserId: builder.query<
+      GetPublicPostsByUserNameResponse,
+      {
+        endCursorPostId?: null | number
+        pageSize?: number
+        userId: number
+      }
+    >({
+      forceRefetch: params => Boolean(params.currentArg?.endCursorPostId),
+      merge: (currentCache, newItems) => ({
+        ...currentCache,
+        items: [...currentCache.items, ...newItems.items],
       }),
+      query: ({ endCursorPostId, pageSize, userId }) => ({
+        method: 'GET',
+        params: { pageSize },
+        url: `v1/public-posts/user/${userId}/${endCursorPostId || ''}`,
+      }),
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        return `${endpointName}-${queryArgs.userId}`
+      },
+      transformResponse: (response: GetPublicPostsByUserNameResponse) => response,
     }),
-    getPublicUserProfile: builder.query<GetPublicUserProfileResponse, string>({
+    getPublicUserProfile: builder.query<GetPublicUserProfileResponse, number>({
       query: profileId => ({
         method: 'GET',
         url: `v1/public-user/profile/${profileId}`,
@@ -48,4 +65,5 @@ export const {
   useGetProfileQuery,
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
+  useLazyGetPublicPostsByUserIdQuery,
 } = userProfileApi
