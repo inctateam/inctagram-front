@@ -28,13 +28,17 @@ export const userProfileApi = instagramApi.injectEndpoints({
         url: `v1/users/${userName}`,
       }),
     }),
-    getPublicPostsByUserId: builder.query<GetPublicPostsByUserNameResponse, string>({
-      query: userId => ({
+    getPublicPostsByUserId: builder.query<
+      GetPublicPostsByUserNameResponse,
+      { endCursorPostId?: number; pageSize?: number; userId: number }
+    >({
+      query: ({ endCursorPostId, pageSize, userId }) => ({
         method: 'GET',
+        params: { endCursorPostId, pageSize },
         url: `v1/public-posts/user/${userId}`,
       }),
     }),
-    getPublicUserProfile: builder.query<GetPublicUserProfileResponse, string>({
+    getPublicUserProfile: builder.query<GetPublicUserProfileResponse, number>({
       query: profileId => ({
         method: 'GET',
         url: `v1/public-user/profile/${profileId}`,

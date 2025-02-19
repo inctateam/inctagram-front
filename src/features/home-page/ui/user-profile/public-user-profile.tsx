@@ -1,8 +1,10 @@
 'use client'
 
+import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { Avatar, Button, Card, ProgressBar, Typography } from '@/shared/ui'
+import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Link from 'next/link'
 
@@ -10,6 +12,7 @@ import {
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
 } from './api/user-profile.api'
+import InfiniteScroll from './infinite-scroll'
 
 interface UserProfileProps {
   paidStatus?: boolean
@@ -18,12 +21,25 @@ interface UserProfileProps {
 
 export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProps) => {
   const { data: isAuth } = useMeQuery()
+  const ref = useRef<HTMLDivElement>(null)
+  const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(userId)
 
-  const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
-    userId.toString()
-  )
+  const [pageSize, setPageSize] = useState(8)
+  const [endCursorPostId, setEndCursorPostId] = useState<number | undefined>(undefined)
+  const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery({
+    endCursorPostId,
+    pageSize,
+    userId,
+  })
 
-  const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
+  const loadMorePosts = (isVisible: boolean) => {
+    console.log(isVisible)
+    if (isVisible && posts && posts.items.length > 0) {
+      const lastPost = posts.items[posts.items.length - 1]
+      setPageSize(prevPageSize => prevPageSize + 8)
+      setEndCursorPostId(lastPost.id)
+    }
+  }
 
   if (profileLoading || postsLoading) {
     return <ProgressBar />
@@ -67,21 +83,22 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
           <Typography variant={'regular14'}>{publicProfile?.aboutMe}</Typography>
         </div>
       </div>
-      {/* <ScrollArea className={'max-h-[660px] overflow-y-auto'}> */}
-      <div className={'w-full flex flex-wrap gap-2'}>
-        {Array.isArray(posts?.items) && posts.items.length > 0
-          ? posts.items.map(post => (
-              <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                <Link href={`/posts/${post.id}`}>
-                  <Card className={'flex items-center justify-center w-full h-full'}>
-                    <ImageContent itemImages={post.images.map(image => image['url'])} />
-                  </Card>
-                </Link>
-              </div>
-            ))
-          : null}
-      </div>
-      {/* </ScrollArea> */}
+      <ScrollArea className={'max-h-[320px] overflow-y-auto'} >
+        <div className={'w-full flex flex-wrap gap-2'}>
+          {Array.isArray(posts?.items) && posts.items.length > 0
+            ? posts.items.map(post => (
+                <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
+                  <Link href={`/posts/${post.id}`}>
+                    <Card className={'flex items-center justify-center w-full h-full'}>
+                      <ImageContent itemImages={post.images.map(image => image['url'])} />
+                    </Card>
+                  </Link>
+                </div>
+              ))
+            : null}
+        </div>
+        <InfiniteScroll onVisibilityChange={loadMorePosts} rootRef={ref} />
+      </ScrollArea>
     </div>
   )
 }

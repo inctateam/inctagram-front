@@ -11,7 +11,8 @@ type Props = {
 
 export const CenteredLayout = ({ auth = false, children }: Props) => {
   return (
-    <div className={'h-screen overflow-hidden'}>
+    <div>
+      {/* // <div className={'h-screen overflow-hidden'}> */}
       <Header auth={auth} />
       <ScrollArea>
         <LayoutContainer className={cn('sm:pt-6 pt-4')}>
