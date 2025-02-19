@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
@@ -25,13 +25,14 @@ type PostModalProps = {
   post: PublicPostItem
 }
 
-const PostModal = (props: PostModalProps) => {
+const PostModal = React.memo((props: PostModalProps) => {
   const { children, onOpenChange, open, post } = props
   const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
     post
-  const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
-  const { data: privateComments } = usePostCommentsQuery({ postId: id })
-  const { data: me } = useMeQuery()
+  const { data: me, error: meError } = useMeQuery()
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId: id }, { skip: !!me })
+  const { data: privateComments } = usePostCommentsQuery({ postId: id }, { skip: !!meError })
+
   const comments = me?.userId ? privateComments : publicComments
   const myDropDown = [
     {
@@ -54,6 +55,12 @@ const PostModal = (props: PostModalProps) => {
     },
   ]
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
+
+  console.log('Post Modal')
+
+  useEffect(() => {
+    console.log('Post Modal Mounted or Updated')
+  }, [open, post])
 
   // Возвращаем портал с модальным окном
   return createPortal(
@@ -108,7 +115,7 @@ const PostModal = (props: PostModalProps) => {
     </Dialog>,
     document.body // Здесь мы указываем, что хотим отрисовать в body
   )
-}
+})
 
 PostModal.displayName = 'PostModal'
 
