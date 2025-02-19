@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
@@ -25,7 +25,7 @@ type PostModalProps = {
   post: PublicPostItem
 }
 
-const PostModal = React.memo((props: PostModalProps) => {
+const PostModal = (props: PostModalProps) => {
   const { children, onOpenChange, open, post } = props
   const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
     post
@@ -55,6 +55,25 @@ const PostModal = React.memo((props: PostModalProps) => {
     },
   ]
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
+  const currentUrl = useRef(window.location.href)
+
+  if (open) {
+    // Используем window.history.pushState для изменения URL без перезагрузки страницы
+    window.history.pushState({}, '', `/post/${id}`)
+  }
+
+  const handleClosePostModal = () => {
+    // Для возврата на прежний URL
+    window.history.replaceState({}, '', currentUrl.current)
+    /*    if (!isExpanded) {
+      // Если разворачиваем описание — выбираем только текущее изображение
+      setItemImages([item.images[selectedIndex]])
+    } else {
+      // Если скрываем описание — возвращаем весь массив
+      setItemImages(item.images)
+    }*/
+    onOpenChange(true)
+  }
 
   console.log('Post Modal')
 
@@ -64,7 +83,7 @@ const PostModal = React.memo((props: PostModalProps) => {
 
   // Возвращаем портал с модальным окном
   return createPortal(
-    <Dialog closePosition={'outside'} onOpenChange={onOpenChange} open={open}>
+    <Dialog closePosition={'outside'} onOpenChange={handleClosePostModal} open={open}>
       <div
         className={
           'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
@@ -115,7 +134,7 @@ const PostModal = React.memo((props: PostModalProps) => {
     </Dialog>,
     document.body // Здесь мы указываем, что хотим отрисовать в body
   )
-})
+}
 
 PostModal.displayName = 'PostModal'
 

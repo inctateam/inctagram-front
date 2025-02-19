@@ -2,10 +2,8 @@
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { Avatar, Button, Card, ProgressBar, Typography } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
+import { Avatar, Button, ProgressBar, Typography } from '@/shared/ui'
 
 import {
   useGetPublicPostsByUserIdQuery,
@@ -23,7 +21,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(
     userId.toString()
   )
-  const router = useRouter()
+
   const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery(userId.toString())
 
   if (profileLoading || postsLoading) {
@@ -43,11 +41,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
               {paidStatus && <PaidStatus className={'w-6 h-6'} />}
             </div>
             {isAuth && publicProfile?.id == isAuth.userId ? (
-              <Button
-                onClick={() => router.push(`/profile/${userId}/settings`)}
-                size={'medium'}
-                variant={'secondary'}
-              >
+              <Button size={'medium'} variant={'secondary'}>
                 Profile Settings
               </Button>
             ) : null}
@@ -77,11 +71,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         {Array.isArray(posts?.items) && posts.items.length > 0
           ? posts.items.map(post => (
               <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                <Link href={`/posts/${post.id}`}>
-                  <Card className={'flex items-center justify-center w-full h-full'}>
-                    <ImageContent itemImages={post.images.map(image => image['url'])} />
-                  </Card>
-                </Link>
+                <PostUserProfile post={post} />
               </div>
             ))
           : null}
