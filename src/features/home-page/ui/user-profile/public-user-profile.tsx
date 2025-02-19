@@ -4,9 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
-import { Avatar, Button, Card, ProgressBar, ScrollArea, Typography } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
-import Link from 'next/link'
+import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
+import { Avatar, Button, ProgressBar, Typography } from '@/shared/ui'
 
 import {
   useGetPublicPostsByUserIdQuery,
@@ -83,22 +82,17 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
           <Typography variant={'regular14'}>{publicProfile?.aboutMe}</Typography>
         </div>
       </div>
-      <ScrollArea className={'max-h-[320px] overflow-y-auto'} >
-        <div className={'w-full flex flex-wrap gap-2'}>
-          {Array.isArray(posts?.items) && posts.items.length > 0
-            ? posts.items.map(post => (
-                <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                  <Link href={`/posts/${post.id}`}>
-                    <Card className={'flex items-center justify-center w-full h-full'}>
-                      <ImageContent itemImages={post.images.map(image => image['url'])} />
-                    </Card>
-                  </Link>
-                </div>
-              ))
-            : null}
-        </div>
-        <InfiniteScroll onVisibilityChange={loadMorePosts} rootRef={ref} />
-      </ScrollArea>
+      {/* <ScrollArea className={'max-h-[660px] overflow-y-auto'}> */}
+      <div className={'w-full flex flex-wrap gap-2'}>
+        {Array.isArray(posts?.items) && posts.items.length > 0
+          ? posts.items.map(post => (
+              <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
+                <PostUserProfile post={post} />
+              </div>
+            ))
+          : null}
+      </div>
+      {/* </ScrollArea> */}
     </div>
   )
 }
