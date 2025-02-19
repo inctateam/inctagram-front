@@ -26,8 +26,17 @@ type PostModalProps = {
 
 const PostModal = (props: PostModalProps) => {
   const { children, onOpenChange, open, post } = props
-  const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
-    post
+  const {
+    avatarOwner,
+    avatarWhoLikes,
+    createdAt,
+    description,
+    id,
+    isLiked,
+    likesCount,
+    ownerId,
+    userName,
+  } = post
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
   const { data: me } = useMeQuery()
@@ -57,7 +66,7 @@ const PostModal = (props: PostModalProps) => {
 
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
-    window.history.pushState({}, '', `/post/${id}`)
+    window.history.pushState({}, '', `/profile/${ownerId}/${id}`)
   }
 
   const handleClosePostModal = () => {
