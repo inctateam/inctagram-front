@@ -1,4 +1,3 @@
-'use client'
 import React, { useRef } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -27,12 +26,20 @@ type PostModalProps = {
 
 const PostModal = (props: PostModalProps) => {
   const { children, onOpenChange, open, post } = props
-  const { avatarOwner, avatarWhoLikes, createdAt, description, id, isLiked, likesCount, userName } =
-    post
-  const { data: me, error: meError } = useMeQuery()
-  const { data: publicComments } = usePublicPostCommentsQuery({ postId: id }, { skip: !!me })
-  const { data: privateComments } = usePostCommentsQuery({ postId: id }, { skip: !!meError })
-
+  const {
+    avatarOwner,
+    avatarWhoLikes,
+    createdAt,
+    description,
+    id,
+    isLiked,
+    likesCount,
+    ownerId,
+    userName,
+  } = post
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
+  const { data: privateComments } = usePostCommentsQuery({ postId: id })
+  const { data: me } = useMeQuery()
   const comments = me?.userId ? privateComments : publicComments
   const myDropDown = [
     {
@@ -59,7 +66,7 @@ const PostModal = (props: PostModalProps) => {
 
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
-    window.history.pushState({}, '', `/post/${id}`)
+    window.history.pushState({}, '', `/profile/${ownerId}/${id}`)
   }
 
   const handleClosePostModal = () => {
