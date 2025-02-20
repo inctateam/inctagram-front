@@ -6,43 +6,34 @@ const ProfileSettings = () => {
   const tabs: TabItem[] = [
     {
       content: <GeneralInformation />,
-      disabled: false,
-      isActive: true,
-      isFocused: false,
       label: 'General information',
       value: 'General information',
-      variant: 'primary',
     },
     {
       content: <Typography>Devices</Typography>,
-      disabled: false,
-      isActive: false,
-      isFocused: false,
       label: 'Devices',
       value: 'Devices',
-      variant: 'secondary',
     },
     {
       content: <Typography>Account Management</Typography>,
-      disabled: false,
-      isActive: false,
-      isFocused: false,
       label: 'Account Management',
       value: 'Account Management',
-      variant: 'secondary',
     },
     {
       content: <Typography>My payments</Typography>,
-      disabled: false,
-      isActive: false,
-      isFocused: false,
       label: 'My payments',
       value: 'My payments',
-      variant: 'secondary',
     },
   ]
 
-  return <Tabs className={'flex justify-between'} full tabs={tabs} value={'General information'} />
+  return (
+    <Tabs
+      className={'flex justify-between'}
+      defaultValue={'General information'}
+      full
+      tabs={tabs}
+    />
+  )
 }
 
 ProfileSettings.displayName = ProfileSettings

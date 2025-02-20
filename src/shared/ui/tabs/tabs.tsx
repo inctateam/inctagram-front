@@ -1,71 +1,19 @@
 import { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
-import { cn } from '@/shared/utils'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
-import { VariantProps, cva } from 'class-variance-authority'
-
-export const tabsVariants = cva([`w-full h-9 text-base font-600 border-b-2`], {
-  variants: {
-    variant: {
-      primary: [
-        `text-accent-500 border-accent-500`,
-        `hover:bg-accent-900 hover:opacity-15`,
-        `focus:outline focus:outline-accent-500 focus:opacity-15`,
-        `active:bg-accent-100 active:opacity-15`,
-        `disabled:text-primary-900 disabled:cursor-none`,
-      ],
-      secondary: [
-        `text-dark-100 border-dark-100`,
-        `hover:bg-primary-900 hover:opacity-15`,
-        `focus:outline focus:outline-accent-500 focus:opacity-15`,
-        `active:bg-primary-100 hover:opacity-15`,
-        `disabled:text-dark-300 disabled:cursor-none disabled:border-dark-300`,
-      ],
-    },
-  },
-})
 
 type TabsProps = {
   className?: string
-  disabled?: boolean
-  // children: ReactNode
+  defaultValue: string
   full?: boolean
-  isActive?: boolean
-  isFocused?: boolean
   tabs: TabItem[]
-  value: string
-  // variant?: 'primary' | 'secondary' | null
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
-const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-  (
-    {
-      // children,
-      className,
-      disabled,
-      full,
-      isActive,
-      isFocused,
-      tabs,
-      value,
-      // variant = 'primary',
-      ...props
-    },
-    ref
-  ) => {
-    // const tabs = [{ content: children, disabled, isActive, isFocused, label: value, value }]
 
+const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
+  ({ className, defaultValue, full, tabs, ...props }, ref) => {
     return (
-      <TabsRoot className={`${full && 'w-full'}`} defaultValue={value} ref={ref}>
-        <TabsList
-          className={className}
-          disabled={disabled}
-          isActive={isActive}
-          isFocused={isFocused}
-          tabs={tabs}
-          // variant={variant ?? 'primary'}
-          // variant={isActive ? 'primary' : 'secondary'}
-          {...props}
-        />
+      <TabsRoot className={`${full && 'w-full'}`} defaultValue={defaultValue} ref={ref}>
+        <TabsList className={className} tabs={tabs} {...props} />
         {tabs.map(t => (
           <TabsContent key={t.value} value={t.value}>
             {t.content}
@@ -80,35 +28,20 @@ const TabsRoot = TabsPrimitive.Root
 
 export type TabItem = {
   content: ReactNode
-  disabled?: boolean
-  isActive?: boolean
-  isFocused?: boolean
   label: string
   value: string
-  variant?: 'primary' | 'secondary'
 }
 
 type TabsListProps = {
   className?: string
-  disabled?: boolean
-  isActive?: boolean
-  isFocused?: boolean
   tabs: TabItem[]
-  // variant?: 'primary' | 'secondary'
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 
 const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
   ({ className, tabs, ...props }, ref) => (
     <TabsPrimitive.List className={className} ref={ref} {...props}>
       {tabs.map(tab => (
-        <TabsTrigger
-          disabled={tab.disabled}
-          isActive={tab.isActive}
-          isFocused={tab.isFocused}
-          key={tab.value}
-          value={tab.value}
-          variant={tab.variant}
-        >
+        <TabsTrigger key={tab.value} value={tab.value}>
           {tab.label}
         </TabsTrigger>
       ))}
@@ -117,35 +50,20 @@ const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps
 )
 
 TabsList.displayName = TabsPrimitive.List.displayName
-type TabsTriggerProps = {
-  disabled?: boolean
-  isActive?: boolean
-  isFocused?: boolean
-  value: string
-  variant?: VariantProps<typeof tabsVariants>['variant']
-} & ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+type TabsTriggerProps = ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 
 const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, TabsTriggerProps>(
-  (
-    {
-      className,
-      disabled = false,
-      isActive = false,
-      isFocused = false,
-      value,
-      variant = 'primary',
-      ...props
-    },
-    ref
-  ) => (
+  ({ value, ...props }, ref) => (
     <TabsPrimitive.Trigger
-      className={cn(
-        tabsVariants({ variant }),
-        disabled && `text-accent-900 border-accent-900 cursor-none pointer-events-none`,
-        isFocused && `outline outline-2 outline-accent-500 pointer-events-none`,
-        isActive && `bg-accent-100`,
-        className
-      )}
+      className={`w-full h-9 text-base font-600 border-b-2 
+      text-dark-100 data-[state=active]:text-accent-500 
+      border-dark-100 data-[state=active]:border-accent-500 
+      hover:bg-accent-900 hover:bg-opacity-15 data-[state=active]:hover:bg-accent-900 data-[state=active]:hover:bg-opacity-15
+      active:bg-accent-100 active:bg-opacity-15 data-[state=active]:active:bg-accent-100 data-[state=active]:active:bg-opacity-15
+      disabled:text-dark-300 disabled:cursor-none disabled:border-dark-300
+      data-[state=active]:disabled:text-accent-900 data-[state=active]:disabled:cursor-none
+      focus-visible:outline focus-visible:outline-accent-500
+      `}
       ref={ref}
       value={value}
       {...props}
