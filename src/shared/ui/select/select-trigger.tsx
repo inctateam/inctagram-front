@@ -16,7 +16,7 @@ export const SelectTrigger = forwardRef<
 >(({ className, placeholder, ...props }, ref) => (
   <SelectPrimitive.Trigger
     className={cn(
-      `group bg-transparent flex justify-between items-center px-3 w-[180px] h-9
+      `group bg-transparent flex justify-between items-center px-3 h-9
       text-light-100 border border-dark-100 border-solid rounded-t-sm`,
       `hover:text-light-900`,
       `focus-visible:text-light-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500`,
