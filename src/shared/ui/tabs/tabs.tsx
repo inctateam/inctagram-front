@@ -1,19 +1,19 @@
 import { ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 
+import { cn } from '@/shared/utils'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
 type TabsProps = {
   className?: string
   defaultValue: string
-  full?: boolean
   tabs: TabItem[]
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
 
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-  ({ className, defaultValue, full, tabs, ...props }, ref) => {
+  ({ className, defaultValue, tabs, ...props }, ref) => {
     return (
-      <TabsRoot className={`${full && 'w-full'}`} defaultValue={defaultValue} ref={ref}>
-        <TabsList className={className} tabs={tabs} {...props} />
+      <TabsRoot className={'w-full'} defaultValue={defaultValue} ref={ref}>
+        <TabsList className={cn('flex justify-between', className)} tabs={tabs} {...props} />
         {tabs.map(t => (
           <TabsContent key={t.value} value={t.value}>
             {t.content}
@@ -56,14 +56,14 @@ const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, TabsTri
   ({ value, ...props }, ref) => (
     <TabsPrimitive.Trigger
       className={`w-full h-9 text-base font-600 border-b-2 
-      text-dark-100 data-[state=active]:text-accent-500 
-      border-dark-100 data-[state=active]:border-accent-500 
-      hover:bg-accent-900 hover:bg-opacity-15 data-[state=active]:hover:bg-accent-900 data-[state=active]:hover:bg-opacity-15
-      active:bg-accent-100 active:bg-opacity-15 data-[state=active]:active:bg-accent-100 data-[state=active]:active:bg-opacity-15
-      disabled:text-dark-300 disabled:cursor-none disabled:border-dark-300
-      data-[state=active]:disabled:text-accent-900 data-[state=active]:disabled:cursor-none
-      focus-visible:outline focus-visible:outline-accent-500
-      `}
+  text-dark-100 data-[state=active]:text-accent-500 
+  border-dark-100 data-[state=active]:border-accent-500 
+  hover:bg-accent-900/15 data-[state=active]:hover:bg-accent-900/15
+  active:bg-accent-100/15 data-[state=active]:active:bg-accent-100/15
+  disabled:text-dark-300 disabled:cursor-none disabled:border-dark-300
+  data-[state=active]:disabled:text-accent-900
+  focus-visible:outline focus-visible:outline-accent-500
+`}
       ref={ref}
       value={value}
       {...props}

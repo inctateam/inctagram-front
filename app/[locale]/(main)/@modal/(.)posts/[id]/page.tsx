@@ -2,11 +2,9 @@ import { usePostQuery } from '@/features/post-page/api'
 import { PostModal } from '@/features/post-page/ui/post'
 import { ProgressBar } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
-// import { useRouter } from 'next/navigation'
 
 export default function Post({ params: { id } }: { params: { id: string } }) {
   const postId = Number(id)
-  // const router = useRouter()
 
   const { data: post, error, isLoading } = usePostQuery({ postId })
 

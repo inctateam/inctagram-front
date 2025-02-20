@@ -26,14 +26,7 @@ const ProfileSettings = () => {
     },
   ]
 
-  return (
-    <Tabs
-      className={'flex justify-between'}
-      defaultValue={'General information'}
-      full
-      tabs={tabs}
-    />
-  )
+  return <Tabs defaultValue={'General information'} tabs={tabs} />
 }
 
 ProfileSettings.displayName = ProfileSettings

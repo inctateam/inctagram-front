@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'
+'use client'
+import React, { useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
@@ -73,12 +74,6 @@ const PostModal = (props: PostModalProps) => {
     }*/
     onOpenChange(true)
   }
-
-  console.log('Post Modal')
-
-  useEffect(() => {
-    console.log('Post Modal Mounted or Updated')
-  }, [open, post])
 
   // Возвращаем портал с модальным окном
   return createPortal(
