@@ -5,9 +5,9 @@ import { useCallback, useEffect, useRef } from 'react'
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
+import { PATH } from '@/shared/constants'
 import { Avatar, Button, ProgressBar, Typography } from '@/shared/ui'
 import { ScrollArea } from '@/shared/ui/scrollbar'
-import { useRouter } from 'next/navigation'
 
 import {
   useGetPublicPostsByUserIdQuery,
@@ -23,7 +23,6 @@ const POSTS_PER_PAGE = 8
 const LAZY_POSTS_PER_PAGE = 9
 
 export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProps) => {
-  const router = useRouter()
   const { data: isAuth } = useMeQuery()
 
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(userId)
@@ -96,12 +95,10 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
                 {paidStatus && <PaidStatus className={'w-6 h-6'} />}
               </div>
               {isAuth && publicProfile?.id == isAuth.userId ? (
-                <Button
-                  onClick={() => router.push(`profile/${userId}/settings`)}
-                  size={'medium'}
-                  variant={'secondary'}
-                >
-                  Profile Settings
+                <Button asChild size={'medium'} variant={'secondary'}>
+                  <a href={PATH.PROFILE_SETTINGS.replace(':id', userId.toString())}>
+                    Profile Settings
+                  </a>
                 </Button>
               ) : null}
             </div>
