@@ -1,14 +1,12 @@
-'use client'
-
 import { usePostQuery } from '@/features/post-page/api'
 import { PostModal } from '@/features/post-page/ui/post'
 import { ProgressBar } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 
 export default function Post({ params: { id } }: { params: { id: string } }) {
   const postId = Number(id)
-  const router = useRouter()
+  // const router = useRouter()
 
   const { data: post, error, isLoading } = usePostQuery({ postId })
 
@@ -24,7 +22,8 @@ export default function Post({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <PostModal onOpenChange={() => router.back()} open post={post}>
+    // <PostModal onOpenChange={() => router.back()} open post={post}>
+    <PostModal onOpenChange={open => !open} open post={post}>
       <ImageContent itemImages={post?.images.map(image => image.url) ?? []} />
     </PostModal>
   )
