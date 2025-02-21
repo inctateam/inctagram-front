@@ -2,14 +2,14 @@ import { Image } from '@/features/post-page/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  images: [] as Image[],
+  images: [] as string[],
 }
 
 export const createPostSlice = createSlice({
   initialState: initialState,
   name: 'createPost',
   reducers: {
-    addImage: (state, action: PayloadAction<{ image: Image }>) => {
+    addImage: (state, action: PayloadAction<{ image: string }>) => {
       state.images.push(action.payload.image)
     },
   },

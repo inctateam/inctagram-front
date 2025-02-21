@@ -27,23 +27,26 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
 
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
 
-  const [uploadPhoto] = useUploadImageForPostMutation()
-
-  const [images, setImages] = useState<Image[]>([])
-
   if (photoToUpload) {
-    uploadPhoto({ file: photoToUpload })
-      .unwrap()
-      .then(res => {
-        setImages([...images, res.images[0]])
-        dispatch(createPostSliceActions.addImage({ image: res.images[0] }))
-        setStage('2')
-      })
+    const newImage = URL.createObjectURL(photoToUpload)
+
+    dispatch(createPostSliceActions.addImage({ image: newImage }))
     setPhotoToUpload(null)
+    setStage('2')
   }
 
+  // if (photoToUpload) {
+  //   uploadPhoto({ file: photoToUpload })
+  //     .unwrap()
+  //     .then(res => {
+  //       setImages([...images, res.images[0]])
+  //       dispatch(createPostSliceActions.addImage({ image: res.images[0] }))
+  //       setStage('2')
+  //     })
+  //   setPhotoToUpload(null)
+  // }
+
   const handleOpenDraft = () => {
-    setImages(imagesState)
     setStage('2')
   }
 
@@ -60,13 +63,12 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
           <CroppingDialogContent
             handleBack={() => setStage('1')}
             handleNext={() => setStage('4')}
-            images={images ?? ([] as Image[])}
           />
         )}
         {stage === '4' && (
           <PublishDialogContent
             handleBack={() => setStage('2')}
-            images={images ?? ([] as Image[])}
+            images={imagesState ?? ([] as string[])}
             onPostPublished={() => {
               setStage('1')
               onPostPublished()

@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import { useCreatePostMutation } from '@/features/post-page/api'
-import { Image } from '@/features/post-page/types'
+import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import { Avatar, ControlledTextarea, DialogBody, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
@@ -21,7 +20,7 @@ type FormValues = z.infer<typeof publishPostSchema>
 
 type CroppingDialogContentProps = {
   handleBack: () => void
-  images: Image[]
+  images: string[]
   onPostPublished: () => void
 }
 
@@ -31,6 +30,7 @@ export const PublishDialogContent = ({
   onPostPublished,
 }: CroppingDialogContentProps) => {
   const [createPost] = useCreatePostMutation()
+  const [uploadPhoto] = useUploadImageForPostMutation()
 
   const {
     control,
@@ -39,9 +39,23 @@ export const PublishDialogContent = ({
     setError,
   } = useForm<FormValues>({ resolver: zodResolver(publishPostSchema) })
 
-  const uploadIds = images.map(image => image.uploadId)
-
   const onSubmitHandler = async ({ description }: FormValues) => {
+    const uploadIds = [] as string[]
+
+    for (let i = 0; i < images.length; i++) {
+      const res = await fetch(images[i])
+      const blob = await res.blob()
+      const file = new File([blob], `postImage${i + 1}.png`, { type: 'image/png' })
+
+      URL.revokeObjectURL(images[i])
+
+      await uploadPhoto({ file })
+        .unwrap()
+        .then(res => {
+          uploadIds.push(res.images[0].url)
+        })
+    }
+
     createPost({
       description,
       uploadIds,
@@ -60,7 +74,7 @@ export const PublishDialogContent = ({
       <CreatePostHeader handleBack={handleBack} publish title={'Publication'} />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
-          <ImageContent itemImages={images.map(image => image.url)}></ImageContent>
+          <ImageContent itemImages={images}></ImageContent>
         </div>
         <div className={'w-1/2 h-full flex flex-col pt-6 px-6 pb-10'}>
           <div className={'flex items-center gap-3 pb-6'}>
