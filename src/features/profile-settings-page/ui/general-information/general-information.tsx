@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
@@ -9,6 +10,8 @@ import {
   Textarea,
 } from '@/shared/ui'
 
+import AddProfilePhotoDialog from './addProfilePhotoDialog'
+
 const GeneralInformation = () => {
   const { control, handleSubmit } = useForm()
 
@@ -16,13 +19,16 @@ const GeneralInformation = () => {
     alert('Submit')
   }
 
+  const [open, setOpen] = useState<boolean>(false)
+
   return (
     // <div className={'flex gap-10 '}>
     <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmit)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
         <div className={'flex flex-col gap-6'}>
           <Avatar alt={'User avatar'} size={48} />
-          <Button className={'text-[0.9rem]'} variant={'outline'}>
+          <AddProfilePhotoDialog onOpenChange={setOpen} open={open} />
+          <Button className={'text-[0.9rem]'} onClick={() => setOpen(true)} variant={'outline'}>
             Add a Profile Photo
           </Button>
         </div>
