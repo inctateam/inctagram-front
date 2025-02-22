@@ -1,16 +1,16 @@
 import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { Button, Dialog, DialogHeaderTitle, ImageUploader } from '@/shared/ui'
+import Image from 'next/image'
 import { useRef, useState } from 'react'
 
 type Props = {
   onOpenChange: (open: boolean) => void
   open?: boolean
-  onPhotoUploaded: (file: File) => void // Теперь передаем файл, а не URL
+  onPhotoUploaded: (file: File) => void 
 }
 const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) => {
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [previewSrc, setPreviewSrc] = useState<string | null>(null)
-  //const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const onCloseAddProfilePhoto = () => {
     onOpenChange(false)
@@ -32,20 +32,6 @@ const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) =
     }
   }
 
-  // const handleSendPhoto = () => {
-  //   if (photoToUpload) {
-  //     uploadProfileAvatar({ file: photoToUpload })
-  //       .unwrap()
-  //       .then((response) => {
-  //         onPhotoUploaded(response.avatars[0].url) // Вызываем колбэк для обновления аватара
-  //         onCloseAddProfilePhoto()
-  //       })
-  //       .catch(() => {
-  //         // Обработка ошибки
-  //       })
-  //   }
-  // }
-
   return (
     <div className={'w-full'}>
       <Dialog
@@ -63,15 +49,11 @@ const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) =
         )}
 
         {previewSrc && (
-         <div className="relative w-[332px] h-[340px] mt-7 mx-auto">
-            <img
+          <div className="relative w-[332px] h-[340px] mt-7 mx-auto">
+            <Image src={previewSrc} className={'w-[332px] h-[340px] object-cover opacity-50'} alt={'avatar'} />
+            <Image
               src={previewSrc}
-              className={'w-[332px] h-[340px] object-cover opacity-50'}
-            />
-            <img
-              src={previewSrc}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[332px] h-[340px] object-cover rounded-full z-10"
-            />
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[332px] h-[340px] object-cover rounded-full z-10" alt={'rounded avatar'}            />
           </div>
         )}
         {photoToUpload && (

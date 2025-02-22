@@ -23,6 +23,7 @@ const GeneralInformation = () => {
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false) // Состояние для диалога удаления
+
   const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
   const onSubmit = async () => {
     alert('Submit')
