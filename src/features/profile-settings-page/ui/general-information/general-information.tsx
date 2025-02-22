@@ -11,19 +11,31 @@ import {
 } from '@/shared/ui'
 
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
+import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 
 const GeneralInformation = () => {
-  const { control, handleSubmit } = useForm()
+  const { control, handleSubmit, setValue } = useForm()
   const [open, setOpen] = useState<boolean>(false)
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
-
-  const onSubmit = () => {
+  const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
+  const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
+  const onSubmit = async () => {
     alert('Submit')
+    if (photoToUpload) {
+      try {
+        const response = await uploadProfileAvatar({ file: photoToUpload }).unwrap()
+        setAvatarSrc(response.avatars[0].url) // Обновляем аватар после успешной загрузки
+        setValue('avatar', response.avatars[0].url)
+        window.history.back()
+      } catch (error) {
+        console.error('Failed to upload avatar:', error)
+      }
+    }
   }
 
-  const handlePhotoUploaded = (newAvatarUrl: string) => {
-    setOpen(false)
-    setAvatarSrc(newAvatarUrl)
+  const handlePhotoUploaded = (file: File) => {
+    setPhotoToUpload(file) // Сохраняем файл для отправки на сервер
+    setAvatarSrc(URL.createObjectURL(file)) // Показываем превью аватара
   }
 
   return (
@@ -81,7 +93,9 @@ const GeneralInformation = () => {
         </div>
       </div>
       <div className={'flex flex-row-reverse'}>
-        <Button variant={'outline'}>Save Changes</Button>
+        <Button type="submit" variant={'outline'}>
+          Save Changes
+        </Button>
       </div>
     </form>
   )

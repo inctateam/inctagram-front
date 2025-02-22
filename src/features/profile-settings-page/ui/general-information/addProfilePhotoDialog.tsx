@@ -5,12 +5,12 @@ import { useRef, useState } from 'react'
 type Props = {
   onOpenChange: (open: boolean) => void
   open?: boolean
-  onPhotoUploaded: (newAvatarUrl: string) => void // Добавляем колбэк для обновления аватара
+  onPhotoUploaded: (file: File) => void // Теперь передаем файл, а не URL
 }
 const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) => {
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [previewSrc, setPreviewSrc] = useState<string | null>(null)
-  const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
+  //const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const onCloseAddProfilePhoto = () => {
     onOpenChange(false)
@@ -27,17 +27,24 @@ const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) =
   }
   const handleSendPhoto = () => {
     if (photoToUpload) {
-      uploadProfileAvatar({ file: photoToUpload })
-        .unwrap()
-        .then((response) => {
-          onPhotoUploaded(response.avatars[0].url) // Вызываем колбэк для обновления аватара
-          onCloseAddProfilePhoto()
-        })
-        .catch(() => {
-          // Обработка ошибки
-        })
+      onPhotoUploaded(photoToUpload) // Передаем файл, а не URL
+      onCloseAddProfilePhoto()
     }
   }
+
+  // const handleSendPhoto = () => {
+  //   if (photoToUpload) {
+  //     uploadProfileAvatar({ file: photoToUpload })
+  //       .unwrap()
+  //       .then((response) => {
+  //         onPhotoUploaded(response.avatars[0].url) // Вызываем колбэк для обновления аватара
+  //         onCloseAddProfilePhoto()
+  //       })
+  //       .catch(() => {
+  //         // Обработка ошибки
+  //       })
+  //   }
+  // }
 
   return (
     <div className={'w-full'}>
