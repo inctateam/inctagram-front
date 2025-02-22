@@ -133,5 +133,25 @@
     "favorites": "Избранное",
     "messenger": "Мессенджер",
     "logout": "Выход"
+  },
+  "ProfileSettings": {
+    "GeneralInformation": {
+      "userName": "Имя пользователя",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "dateOfBirth": "Дата рождения",
+      "selectYourCountry": "Выберите вашу страну",
+      "selectYourCity": "Выберите ваш город",
+      "aboutMe": "Обо мне",
+      "saveChanges": "Сохранить изменения",
+      "formErrors": {
+        "requiredField": "Обязательное поле",
+        "aboutMeMaxLength": "Текст должен быть короче"
+      }
+    },
+    "generalInformation": "Общая информация",
+    "devices": "Устройства",
+    "accountManagement": "Управление аккаунтом",
+    "myPayments": "Мои платежи"
   }
 }

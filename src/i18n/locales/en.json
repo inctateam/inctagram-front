@@ -132,5 +132,25 @@
     "favorites": "Favorites",
     "messenger": "Messenger",
     "logout": "Logout"
+  },
+  "ProfileSettings": {
+    "GeneralInformation": {
+      "userName": "User name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of birth",
+      "selectYourCountry": "Select your country",
+      "selectYourCity": "Select your city",
+      "aboutMe": "About Me",
+      "saveChanges": "Save Changes",
+      "formErrors": {
+        "requiredField": "Field is required",
+        "aboutMeMaxLength": "Text must be shorter"
+      }
+    },
+    "generalInformation": "General information",
+    "devices": "Devices",
+    "accountManagement": "Account Management",
+    "myPayments": "My payments"
   }
 }
