@@ -12,6 +12,7 @@ import {
 
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
 import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import { CloseOutline } from '@/assets/icons'
 
 const GeneralInformation = () => {
   const { control, handleSubmit, setValue } = useForm()
@@ -27,9 +28,11 @@ const GeneralInformation = () => {
         setAvatarSrc(response.avatars[0].url) // Обновляем аватар после успешной загрузки
         setValue('avatar', response.avatars[0].url)
         window.history.back()
+        
       } catch (error) {
         console.error('Failed to upload avatar:', error)
       }
+      
     }
   }
 
@@ -43,7 +46,17 @@ const GeneralInformation = () => {
     <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmit)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
         <div className={'flex flex-col gap-6'}>
-          <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
+          <div className="relative">
+            <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
+            {avatarSrc && (
+              <div className="absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2">
+                <CloseOutline
+                  className="w-6 h-6 rounded-full bg-red-500 cursor-pointer"
+                  onClick={() => setAvatarSrc(undefined)}
+                />
+              </div>
+            )}
+          </div>
           <AddProfilePhotoDialog
             onOpenChange={setOpen}
             open={open}
