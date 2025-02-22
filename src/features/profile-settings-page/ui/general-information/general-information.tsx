@@ -21,10 +21,9 @@ const GeneralInformation = () => {
     alert('Submit')
   }
 
-  const handlePhotoUploaded = () => {
+  const handlePhotoUploaded = (newAvatarUrl: string) => {
     setOpen(false)
-    // Здесь можно добавить логику для обновления аватара, например, запрос на получение нового аватара с сервера
-    setAvatarSrc("") // Временно сбросим аватар, чтобы обновить его
+    setAvatarSrc(newAvatarUrl)
   }
 
   return (

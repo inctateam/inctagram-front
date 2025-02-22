@@ -1,12 +1,11 @@
 import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { Button, Dialog, DialogHeaderTitle, ImageUploader } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
 import { useRef, useState } from 'react'
 
 type Props = {
   onOpenChange: (open: boolean) => void
   open?: boolean
-  onPhotoUploaded: () => void // Добавляем колбэк для обновления аватара
+  onPhotoUploaded: (newAvatarUrl: string) => void // Добавляем колбэк для обновления аватара
 }
 const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) => {
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
@@ -30,8 +29,8 @@ const AddProfilePhotoDialog = ({ onOpenChange, open, onPhotoUploaded }: Props) =
     if (photoToUpload) {
       uploadProfileAvatar({ file: photoToUpload })
         .unwrap()
-        .then(() => {
-          onPhotoUploaded() // Вызываем колбэк для обновления аватара
+        .then((response) => {
+          onPhotoUploaded(response.avatars[0].url) // Вызываем колбэк для обновления аватара
           onCloseAddProfilePhoto()
         })
         .catch(() => {
