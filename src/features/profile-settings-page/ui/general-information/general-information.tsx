@@ -14,20 +14,30 @@ import AddProfilePhotoDialog from './addProfilePhotoDialog'
 
 const GeneralInformation = () => {
   const { control, handleSubmit } = useForm()
+  const [open, setOpen] = useState<boolean>(false)
+  const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
 
   const onSubmit = () => {
     alert('Submit')
   }
 
-  const [open, setOpen] = useState<boolean>(false)
+  const handlePhotoUploaded = () => {
+    setOpen(false)
+    // Здесь можно добавить логику для обновления аватара, например, запрос на получение нового аватара с сервера
+    setAvatarSrc("") // Временно сбросим аватар, чтобы обновить его
+  }
 
   return (
     // <div className={'flex gap-10 '}>
     <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmit)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
         <div className={'flex flex-col gap-6'}>
-          <Avatar alt={'User avatar'} size={48} />
-          <AddProfilePhotoDialog onOpenChange={setOpen} open={open} />
+          <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
+          <AddProfilePhotoDialog
+            onOpenChange={setOpen}
+            open={open}
+            onPhotoUploaded={handlePhotoUploaded}
+          />
           <Button className={'text-[0.9rem]'} onClick={() => setOpen(true)} variant={'outline'}>
             Add a Profile Photo
           </Button>

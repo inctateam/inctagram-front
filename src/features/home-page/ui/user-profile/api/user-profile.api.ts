@@ -6,6 +6,7 @@ import {
   GetPublicUserProfileResponse,
   GetUserByUserNameResponse,
   GetUserProfileResponse,
+  UploadProfileAvatarResponse,
 } from '../types/user-profile.types'
 
 export const userProfileApi = instagramApi.injectEndpoints({
@@ -57,6 +58,17 @@ export const userProfileApi = instagramApi.injectEndpoints({
         url: `v1/public-user/profile/${profileId}`,
       }),
     }),
+    uploadProfileAvatar: builder.mutation<UploadProfileAvatarResponse, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        return {
+          body: formData,
+          method: 'POST',
+          url: 'v1/users/profile/avatar',
+        }
+      },
+    }),
   }),
 })
 export const {
@@ -66,4 +78,5 @@ export const {
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
   useLazyGetPublicPostsByUserIdQuery,
+  useUploadProfileAvatarMutation,
 } = userProfileApi

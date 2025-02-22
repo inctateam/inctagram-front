@@ -1,3 +1,4 @@
+import { AvatarType } from '@/features/post-page/types';
 export type GetUserProfileResponse = {
   aboutMe: string
   avatars: {
@@ -86,4 +87,16 @@ export type GetPublicPostsByUserNameResponse = {
   pageSize: number
   totalCount: number
   totalUsers: number
+}
+
+export type UploadProfileAvatarResponse = {
+  avatars: Avatar[]
+}
+
+export type Avatar = {
+  createdAt: string
+  fileSize: number
+  height: number
+  url: string
+  width: number
 }
