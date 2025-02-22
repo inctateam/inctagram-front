@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
+  AlertDialog,
   Avatar,
   Button,
+  CancelButton,
+  ConfirmButton,
   ControlledTextField,
   DatePickerSingle,
   Select,
@@ -19,6 +22,7 @@ const GeneralInformation = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false) // Состояние для диалога удаления
   const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
   const onSubmit = async () => {
     alert('Submit')
@@ -28,17 +32,22 @@ const GeneralInformation = () => {
         setAvatarSrc(response.avatars[0].url) // Обновляем аватар после успешной загрузки
         setValue('avatar', response.avatars[0].url)
         window.history.back()
-        
       } catch (error) {
         console.error('Failed to upload avatar:', error)
       }
-      
     }
   }
 
   const handlePhotoUploaded = (file: File) => {
     setPhotoToUpload(file) // Сохраняем файл для отправки на сервер
     setAvatarSrc(URL.createObjectURL(file)) // Показываем превью аватара
+  }
+
+  const handleDeletePhoto = () => {
+    setAvatarSrc(undefined) // Удаляем фото
+    setPhotoToUpload(null) // Сбрасываем файл
+    setValue('avatar', '') // Сбрасываем значение поля формы
+    setIsDeleteDialogOpen(false) // Закрываем диалог
   }
 
   return (
@@ -52,7 +61,7 @@ const GeneralInformation = () => {
               <div className="absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2">
                 <CloseOutline
                   className="w-6 h-6 rounded-full bg-red-500 cursor-pointer"
-                  onClick={() => setAvatarSrc(undefined)}
+                  onClick={() => setIsDeleteDialogOpen(true)}
                 />
               </div>
             )}
@@ -110,6 +119,15 @@ const GeneralInformation = () => {
           Save Changes
         </Button>
       </div>
+      {/* Диалог подтверждения удаления фото аватара*/}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        title="Delete Photo"
+        description="Are you sure you want to delete the photo?"
+        confirmButton={<ConfirmButton onClick={handleDeletePhoto}>Yes</ConfirmButton>}
+        cancelButton={<CancelButton onClick={() => setIsDeleteDialogOpen(false)}>No</CancelButton>}
+      />
     </form>
   )
 }
