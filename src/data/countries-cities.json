@@ -1,0 +1,196 @@
+{
+  "countries": [
+    {
+      "code": "RU",
+      "name_ru": "Россия",
+      "name_en": "Russia",
+      "cities": [
+        { "name_ru": "Москва", "name_en": "Moscow" },
+        { "name_ru": "Санкт-Петербург", "name_en": "Saint Petersburg" },
+        { "name_ru": "Новосибирск", "name_en": "Novosibirsk" },
+        { "name_ru": "Екатеринбург", "name_en": "Yekaterinburg" }
+      ]
+    },
+    {
+      "code": "US",
+      "name_ru": "США",
+      "name_en": "USA",
+      "cities": [
+        { "name_ru": "Нью-Йорк", "name_en": "New York" },
+        { "name_ru": "Лос-Анджелес", "name_en": "Los Angeles" },
+        { "name_ru": "Чикаго", "name_en": "Chicago" },
+        { "name_ru": "Хьюстон", "name_en": "Houston" }
+      ]
+    },
+    {
+      "code": "FR",
+      "name_ru": "Франция",
+      "name_en": "France",
+      "cities": [
+        { "name_ru": "Париж", "name_en": "Paris" },
+        { "name_ru": "Марсель", "name_en": "Marseille" },
+        { "name_ru": "Лион", "name_en": "Lyon" },
+        { "name_ru": "Тулуза", "name_en": "Toulouse" }
+      ]
+    },
+    {
+      "code": "DE",
+      "name_ru": "Германия",
+      "name_en": "Germany",
+      "cities": [
+        { "name_ru": "Берлин", "name_en": "Berlin" },
+        { "name_ru": "Мюнхен", "name_en": "Munich" },
+        { "name_ru": "Гамбург", "name_en": "Hamburg" },
+        { "name_ru": "Кельн", "name_en": "Cologne" }
+      ]
+    },
+    {
+      "code": "GB",
+      "name_ru": "Великобритания",
+      "name_en": "United Kingdom",
+      "cities": [
+        { "name_ru": "Лондон", "name_en": "London" },
+        { "name_ru": "Манчестер", "name_en": "Manchester" },
+        { "name_ru": "Бирмингем", "name_en": "Birmingham" },
+        { "name_ru": "Ливерпуль", "name_en": "Liverpool" }
+      ]
+    },
+    {
+      "code": "IT",
+      "name_ru": "Италия",
+      "name_en": "Italy",
+      "cities": [
+        { "name_ru": "Рим", "name_en": "Rome" },
+        { "name_ru": "Милан", "name_en": "Milan" },
+        { "name_ru": "Венеция", "name_en": "Venice" },
+        { "name_ru": "Неаполь", "name_en": "Naples" }
+      ]
+    },
+    {
+      "code": "ES",
+      "name_ru": "Испания",
+      "name_en": "Spain",
+      "cities": [
+        { "name_ru": "Мадрид", "name_en": "Madrid" },
+        { "name_ru": "Барселона", "name_en": "Barcelona" },
+        { "name_ru": "Валенсия", "name_en": "Valencia" },
+        { "name_ru": "Севилья", "name_en": "Seville" }
+      ]
+    },
+    {
+      "code": "JP",
+      "name_ru": "Япония",
+      "name_en": "Japan",
+      "cities": [
+        { "name_ru": "Токио", "name_en": "Tokyo" },
+        { "name_ru": "Осака", "name_en": "Osaka" },
+        { "name_ru": "Киото", "name_en": "Kyoto" },
+        { "name_ru": "Хиросима", "name_en": "Hiroshima" }
+      ]
+    },
+    {
+      "code": "CN",
+      "name_ru": "Китай",
+      "name_en": "China",
+      "cities": [
+        { "name_ru": "Пекин", "name_en": "Beijing" },
+        { "name_ru": "Шанхай", "name_en": "Shanghai" },
+        { "name_ru": "Гуанчжоу", "name_en": "Guangzhou" },
+        { "name_ru": "Шэньчжэнь", "name_en": "Shenzhen" }
+      ]
+    },
+    {
+      "code": "IN",
+      "name_ru": "Индия",
+      "name_en": "India",
+      "cities": [
+        { "name_ru": "Нью-Дели", "name_en": "New Delhi" },
+        { "name_ru": "Мумбаи", "name_en": "Mumbai" },
+        { "name_ru": "Калькутта", "name_en": "Kolkata" },
+        { "name_ru": "Бангалор", "name_en": "Bangalore" }
+      ]
+    },
+    {
+      "code": "BR",
+      "name_ru": "Бразилия",
+      "name_en": "Brazil",
+      "cities": [
+        { "name_ru": "Сан-Паулу", "name_en": "São Paulo" },
+        { "name_ru": "Рио-де-Жанейро", "name_en": "Rio de Janeiro" },
+        { "name_ru": "Бразилиа", "name_en": "Brasília" },
+        { "name_ru": "Сальвадор", "name_en": "Salvador" }
+      ]
+    },
+    {
+      "code": "CA",
+      "name_ru": "Канада",
+      "name_en": "Canada",
+      "cities": [
+        { "name_ru": "Торонто", "name_en": "Toronto" },
+        { "name_ru": "Ванкувер", "name_en": "Vancouver" },
+        { "name_ru": "Монреаль", "name_en": "Montreal" },
+        { "name_ru": "Калгари", "name_en": "Calgary" }
+      ]
+    },
+    {
+      "code": "AU",
+      "name_ru": "Австралия",
+      "name_en": "Australia",
+      "cities": [
+        { "name_ru": "Сидней", "name_en": "Sydney" },
+        { "name_ru": "Мельбурн", "name_en": "Melbourne" },
+        { "name_ru": "Брисбен", "name_en": "Brisbane" },
+        { "name_ru": "Перт", "name_en": "Perth" }
+      ]
+    },
+    {
+      "code": "MX",
+      "name_ru": "Мексика",
+      "name_en": "Mexico",
+      "cities": [
+        { "name_ru": "Мехико", "name_en": "Mexico City" },
+        { "name_ru": "Гвадалахара", "name_en": "Guadalajara" },
+        { "name_ru": "Монтэррей", "name_en": "Monterrey" },
+        { "name_ru": "Канкун", "name_en": "Cancun" }
+      ]
+    },
+    {
+      "code": "ZA",
+      "name_ru": "Южноафриканская Республика",
+      "name_en": "South Africa",
+      "cities": [
+        { "name_ru": "Йоханнесбург", "name_en": "Johannesburg" },
+        { "name_ru": "Кейптаун", "name_en": "Cape Town" },
+        { "name_ru": "Дурбан", "name_en": "Durban" },
+        { "name_ru": "Претория", "name_en": "Pretoria" }
+      ]
+    },
+    {
+      "code": "NG",
+      "name_ru": "Нигерия",
+      "name_en": "Nigeria",
+      "cities": [
+        { "name_ru": "Лагос", "name_en": "Lagos" },
+        { "name_ru": "Абуджа", "name_en": "Abuja" },
+        { "name_ru": "Кано", "name_en": "Kano" },
+        { "name_ru": "Ибадан", "name_en": "Ibadan" }
+      ]
+    },
+    {
+      "code": "KR",
+      "name_ru": "Южная Корея",
+      "name_en": "South Korea",
+      "cities": [
+        { "name_ru": "Сеул", "name_en": "Seoul" },
+        { "name_ru": "Пусан", "name_en": "Busan" },
+        { "name_ru": "Инчхон", "name_en": "Incheon" },
+        { "name_ru": "Тэгу", "name_en": "Daegu" }
+      ]
+    },
+    {
+      "code": "AR",
+      "name_ru": "Аргентина",
+      "name_en": "Argentina",
+      "cities": [
+        { "name_ru": "Буэнос-Айрес", "name_en": "Buenos Aires" },
+        { "name_ru": "Кордова",

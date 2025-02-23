@@ -1,7 +1,15 @@
 'use client'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
-import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+import data from '@/data/countries-cities.json'
+import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
+import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
+import {
+  GeneralInformationFormValues,
+  GeneralInformationSchema,
+} from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
 import {
   Avatar,
   Button,
@@ -12,34 +20,44 @@ import {
 } from '@/shared/ui'
 import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/controlled-select'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTranslations } from 'next-intl'
-import { z } from 'zod'
+import { useLocale, useTranslations } from 'next-intl'
+// Типизация данных
+type City = {
+  name_en: string
+  name_ru: string
+}
+
+type Country = {
+  cities: City[] // Массив городов для каждой страны
+  code: string
+  name_en: string
+  name_ru: string
+}
+
+type Data = {
+  countries: Country[]
+}
+
+type CountryOption = { label: string; value: string }
+type CityOption = { label: string; value: string }
 
 type GeneralInformationProps = {
   profileInfo: GetMyProfileResponse
 }
 /*global IntlMessages*/
-type GeneralInformationSchemaType =
+export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
-const GeneralInformationSchema = ({ ...scheme }: GeneralInformationSchemaType) =>
-  z.object({
-    aboutMe: z.string().max(345, { message: scheme.aboutMeMaxLength }).optional(),
-    city: z.string().optional(),
-    country: z.string().optional(),
-    dateOfBirth: z.date().optional(),
-    firstName: z.string().min(2, { message: scheme.requiredField }),
-    lastName: z.string().min(2, { message: scheme.requiredField }),
-    region: z.string().optional(),
-    userName: z.string().min(2, { message: scheme.requiredField }),
-  })
-
-type GeneralInformationFormValues = z.infer<ReturnType<typeof GeneralInformationSchema>>
 const GeneralInformation = (props: GeneralInformationProps) => {
   const { profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
+  const [updateProfile] = useUpdateProfileMutation()
 
+  // Состояния для городов
+  const [cities, setCities] = useState<CityOption[]>([]) // Состояние для городов
+
+  const locale = useLocale() as 'en' | 'ru'
   const t = useTranslations('ProfileSettings.GeneralInformation')
   const tErrors = useTranslations('ProfileSettings.GeneralInformation.formErrors')
   const scheme = {
@@ -50,6 +68,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     control,
     formState: { errors, isValid },
     handleSubmit,
+    watch,
   } = useForm<GeneralInformationFormValues>({
     defaultValues: {
       city,
@@ -62,9 +81,54 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
 
-  const onSubmitHandler = (data: GeneralInformationFormValues) => {
-    debugger
-    console.log(data)
+  const countryOptions: CountryOption[] = data.countries.map(country => ({
+    label: locale === 'ru' ? country.name_ru : country.name_en,
+    value: country.code, // Используем код страны как значение
+  }))
+
+  // Функция для загрузки городов для выбранной страны
+  const loadCitiesForCountry = (selectedCountryCode: string) => {
+    const selectedCountry = data.countries.find(country => country.code === selectedCountryCode)
+
+    if (selectedCountry && selectedCountry.cities) {
+      const citiesFormatted = selectedCountry.cities.map(city => ({
+        label: locale === 'ru' ? city.name_ru : city.name_en,
+        value: locale === 'ru' ? city.name_ru : city.name_en,
+      }))
+
+      setCities(citiesFormatted)
+    } else {
+      setCities([]) // Если городов нет для выбранной страны
+    }
+  }
+  const selectedCountry = watch('country') // Получаем код страны
+
+  useEffect(() => {
+    if (selectedCountry) {
+      loadCitiesForCountry(selectedCountry) // Загружаем города по коду страны
+    }
+  }, [selectedCountry])
+  const onSubmitHandler = async (data: GeneralInformationFormValues) => {
+    const formattedData: UpdateMyProfile = {
+      aboutMe: data.aboutMe ?? null,
+      city: data.city ?? null,
+      country: data.country ?? null,
+      dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().split('T')[0] : null, // Преобразуем в строку
+      firstName: data.firstName,
+      lastName: data.lastName,
+      region: data.region ?? null,
+      userName: data.userName,
+    }
+
+    try {
+      const res = await updateProfile(formattedData).unwrap()
+
+      toast.success('Profile updated successfully!')
+      console.log('res: ', res)
+    } catch (e) {
+      console.log('Error updating profile:', e)
+      toast.error('Error updating profile')
+    }
   }
 
   if (!profileInfo) {
@@ -72,11 +136,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   }
 
   return (
-    <form
-      className={'flex flex-col w-full mt-6 gap-6'}
-      onSubmit={handleSubmit(onSubmitHandler)}
-      // onSubmit={handleSubmit(data => onSubmitHandler(data))}
-    >
+    <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmitHandler)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
         <div className={'flex flex-col gap-6'}>
           <Avatar alt={'User avatar'} size={48} src={avatars[0].url} />
@@ -110,12 +170,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             name={'lastName'}
             required
           />
-          {/*<ControlledTextField*/}
-          {/*  control={control}*/}
-          {/*  label={t('dateOfBirth')}*/}
-          {/*  name={'dateOfBirth'}*/}
-          {/*  type={'date'}*/}
-          {/*/>*/}
           <DatePickerSingle
             date={new Date(dateOfBirth)}
             label={t('dateOfBirth')}
@@ -125,25 +179,19 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             <div className={'flex flex-col w-1/2'}>
               <ControlledSelect
                 control={control}
-                defaultValue={city}
+                defaultValue={city ?? t('selectYourCountry')}
                 label={t('selectYourCountry')}
                 name={'country'}
-                options={[
-                  { label: 'Belarus', value: 'Belarus' },
-                  { label: 'France', value: 'France' },
-                ]}
+                options={countryOptions}
               />
             </div>
             <div className={'flex flex-col w-1/2'}>
               <ControlledSelect
                 control={control}
-                defaultValue={city}
+                defaultValue={city ?? t('selectYourCity')}
                 label={t('selectYourCity')}
                 name={'city'}
-                options={[
-                  { label: 'Minsk', value: 'Minsk' },
-                  { label: 'Grodno', value: 'Grodno' },
-                ]}
+                options={cities}
               />
             </div>
           </div>

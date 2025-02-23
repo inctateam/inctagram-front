@@ -20,4 +20,4 @@ export const profileSettingsApi = instagramApi.injectEndpoints({
   }),
 })
 
-export const { useGetMyProfileQuery } = profileSettingsApi
+export const { useGetMyProfileQuery, useUpdateProfileMutation } = profileSettingsApi

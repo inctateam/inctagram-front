@@ -1,5 +1,5 @@
 import { Avatar } from '@/features/home-page/types'
-
+import { Nullable } from '@/shared/types'
 export interface GetMyProfileResponse {
   aboutMe: string
   avatars: Avatar[]
@@ -15,12 +15,12 @@ export interface GetMyProfileResponse {
 }
 
 export interface UpdateMyProfile {
-  aboutMe: string
-  city: string
-  country: string
-  dateOfBirth: string
+  aboutMe: Nullable<string>
+  city: Nullable<string>
+  country: Nullable<string>
+  dateOfBirth: Nullable<string>
   firstName: string
   lastName: string
-  region: string
+  region: Nullable<string>
   userName: string
 }
