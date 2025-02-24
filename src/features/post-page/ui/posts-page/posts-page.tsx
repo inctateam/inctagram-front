@@ -11,8 +11,11 @@ import PersonRemove from '@/assets/icons/components/filled-outlined-pairs/Person
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import PaperPlaneOutline from '@/assets/icons/components/outlined/PaperPlaneOutline'
 import { useMeQuery } from '@/features/auth/api'
-import { usePublicPostsByIdQuery, usePublicPostsByUserIdQuery } from '@/features/home-page/api'
-import { useLazyGetPublicPostsByUserIdQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import { usePublicPostsByIdQuery } from '@/features/home-page/api'
+import {
+  useGetPublicPostsByUserIdQuery,
+  useLazyGetPublicPostsByUserIdQuery,
+} from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { Avatar, Button, Dropdown, ProgressBar, Spinner, Textarea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { PostBlock } from '@/shared/ui/post-block'
@@ -41,7 +44,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
     data: posts,
     error: errorPosts,
     isLoading: isLoadingPosts,
-  } = usePublicPostsByUserIdQuery({
+  } = useGetPublicPostsByUserIdQuery({
     pageSize: POSTS_PER_PAGE,
     userId,
   })
@@ -134,8 +137,8 @@ export const PostsPage = ({ postId, userId }: Props) => {
   const dropDownItems = me?.userId === post?.ownerId ? dropAdd : dropRemove
 
   return (
-    <ScrollArea viewportRef={viewportRef}>
-      <div className={'max-w-[972px] mx-auto mb-6 flex flex-col justify-center items-center'}>
+    <ScrollArea className={'h-[91vh]'} viewportRef={viewportRef}>
+      <div className={'max-w-[972px] mx-auto mb-6 flex flex-col items-center'}>
         <div className={'max-w-[490px] mb-9 border-b border-dark-100'}>
           <div className={'flex justify-between items-center'}>
             <div className={'flex justify-start items-center gap-2'}>
