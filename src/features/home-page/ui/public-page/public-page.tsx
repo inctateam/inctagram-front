@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 
 import { usePublicPostsQuery, useTotalCountRegisteredUsersQuery } from '@/features/home-page/api'
-import { ProgressBar } from '@/shared/ui'
+import { ProgressBar, ScrollArea } from '@/shared/ui'
 import { PostBlock } from '@/shared/ui/post-block'
 import { TotalUsersBlock } from '@/shared/ui/total-users-block'
 import Image from 'next/image'
@@ -37,9 +37,11 @@ export const PublicPage = () => {
   const totalUsers = String(dataUsers?.totalCount).padStart(6, '0').split('').map(Number)
 
   return (
-    <div className={'max-w-[972px] mx-auto'}>
-      <TotalUsersBlock totalUsers={totalUsers} />
-      <PostBlock data={dataPosts} />
-    </div>
+    <ScrollArea className={'max-w-[972px] mx-auto h-[91vh]'}>
+      <div className={'mr-2'}>
+        <TotalUsersBlock totalUsers={totalUsers} />
+        <PostBlock data={dataPosts} />
+      </div>
+    </ScrollArea>
   )
 }
