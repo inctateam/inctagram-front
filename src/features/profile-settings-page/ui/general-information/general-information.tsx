@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { CloseOutline } from '@/assets/icons'
+import {
+  useGetPublicUserProfileQuery,
+  useUploadProfileAvatarMutation,
+} from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import {
   AlertDialog,
   Avatar,
@@ -12,27 +17,26 @@ import {
   Select,
   Textarea,
 } from '@/shared/ui'
+import { useSearchParams } from 'next/navigation'
 
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
-import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
-import { CloseOutline } from '@/assets/icons'
-
 const GeneralInformation = () => {
-  const { control, handleSubmit, setValue } = useForm()
+  const searchParams = useSearchParams()
+  const userId = searchParams.get('userId') // Получаем userId из query параметров
+  const { control, handleSubmit } = useForm()
   const [open, setOpen] = useState<boolean>(false)
   const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false) // Состояние для диалога удаления
 
   const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
+  const { refetch } = useGetPublicUserProfileQuery(Number(userId))
   const onSubmit = async () => {
     alert('Submit')
     if (photoToUpload) {
       try {
-        const response = await uploadProfileAvatar({ file: photoToUpload }).unwrap()
-        setAvatarSrc(response.avatars[0].url) // Обновляем аватар после успешной загрузки
-        setValue('avatar', response.avatars[0].url)
-        window.history.back()
+        await uploadProfileAvatar({ file: photoToUpload }).unwrap()
+        refetch()
       } catch (error) {
         console.error('Failed to upload avatar:', error)
       }
@@ -47,7 +51,6 @@ const GeneralInformation = () => {
   const handleDeletePhoto = () => {
     setAvatarSrc(undefined) // Удаляем фото
     setPhotoToUpload(null) // Сбрасываем файл
-    setValue('avatar', '') // Сбрасываем значение поля формы
     setIsDeleteDialogOpen(false) // Закрываем диалог
   }
 
@@ -56,12 +59,12 @@ const GeneralInformation = () => {
     <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmit)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
         <div className={'flex flex-col gap-6'}>
-          <div className="relative">
+          <div className={'relative'}>
             <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
             {avatarSrc && (
-              <div className="absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2">
+              <div className={'absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2'}>
                 <CloseOutline
-                  className="w-6 h-6 rounded-full bg-red-500 cursor-pointer"
+                  className={'w-6 h-6 rounded-full bg-red-500 cursor-pointer'}
                   onClick={() => setIsDeleteDialogOpen(true)}
                 />
               </div>
@@ -69,8 +72,8 @@ const GeneralInformation = () => {
           </div>
           <AddProfilePhotoDialog
             onOpenChange={setOpen}
-            open={open}
             onPhotoUploaded={handlePhotoUploaded}
+            open={open}
           />
           <Button className={'text-[0.9rem]'} onClick={() => setOpen(true)} variant={'outline'}>
             Add a Profile Photo
@@ -116,18 +119,18 @@ const GeneralInformation = () => {
         </div>
       </div>
       <div className={'flex flex-row-reverse'}>
-        <Button type="submit" variant={'outline'}>
+        <Button type={'submit'} variant={'outline'}>
           Save Changes
         </Button>
       </div>
       {/* Диалог подтверждения удаления фото аватара*/}
       <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        title="Delete Photo"
-        description="Are you sure you want to delete the photo?"
-        confirmButton={<ConfirmButton onClick={handleDeletePhoto}>Yes</ConfirmButton>}
         cancelButton={<CancelButton onClick={() => setIsDeleteDialogOpen(false)}>No</CancelButton>}
+        confirmButton={<ConfirmButton onClick={handleDeletePhoto}>Yes</ConfirmButton>}
+        description={'Are you sure you want to delete the photo?'}
+        onOpenChange={setIsDeleteDialogOpen}
+        open={isDeleteDialogOpen}
+        title={'Delete Photo'}
       />
     </form>
   )

@@ -61,7 +61,9 @@ export const userProfileApi = instagramApi.injectEndpoints({
     uploadProfileAvatar: builder.mutation<UploadProfileAvatarResponse, { file: File }>({
       query: ({ file }) => {
         const formData = new FormData()
+
         formData.append('file', file)
+
         return {
           body: formData,
           method: 'POST',
