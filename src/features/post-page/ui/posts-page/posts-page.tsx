@@ -137,8 +137,8 @@ export const PostsPage = ({ postId, userId }: Props) => {
   const dropDownItems = me?.userId === post?.ownerId ? dropAdd : dropRemove
 
   return (
-    <ScrollArea className={'h-[91vh]'} viewportRef={viewportRef}>
-      <div className={'max-w-[972px] mx-auto mb-6 flex flex-col items-center'}>
+    <ScrollArea className={'h-[91vh] max-w-[972px] mx-auto'} viewportRef={viewportRef}>
+      <div className={'mb-6 flex flex-col items-center mr-2'}>
         <div className={'max-w-[490px] mb-9 border-b border-dark-100'}>
           <div className={'flex justify-between items-center'}>
             <div className={'flex justify-start items-center gap-2'}>

@@ -38,8 +38,10 @@ export const PublicPage = () => {
 
   return (
     <ScrollArea className={'max-w-[972px] mx-auto h-[91vh]'}>
-      <TotalUsersBlock totalUsers={totalUsers} />
-      <PostBlock data={dataPosts} />
+      <div className={'mr-2'}>
+        <TotalUsersBlock totalUsers={totalUsers} />
+        <PostBlock data={dataPosts} />
+      </div>
     </ScrollArea>
   )
 }
