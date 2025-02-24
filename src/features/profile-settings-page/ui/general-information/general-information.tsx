@@ -3,13 +3,17 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import data from '@/data/countries-cities.json'
+import countriesData from '@/data/countries-cities.json'
 import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
 import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
 import {
   GeneralInformationFormValues,
   GeneralInformationSchema,
 } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
+import {
+  CountriesData,
+  loadCitiesForCountry,
+} from '@/features/profile-settings-page/ui/utils/loadCitiesForCountry'
 import {
   Avatar,
   Button,
@@ -21,25 +25,9 @@ import {
 import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/controlled-select'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'next-intl'
-// Типизация данных
-type City = {
-  name_en: string
-  name_ru: string
-}
 
-type Country = {
-  cities: City[] // Массив городов для каждой страны
-  code: string
-  name_en: string
-  name_ru: string
-}
-
-type Data = {
-  countries: Country[]
-}
-
-type CountryOption = { label: string; value: string }
 type CityOption = { label: string; value: string }
+type CountryOption = { label: string; value: string }
 
 type GeneralInformationProps = {
   profileInfo: GetMyProfileResponse
@@ -54,8 +42,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     profileInfo
   const [updateProfile] = useUpdateProfileMutation()
 
-  // Состояния для городов
-  const [cities, setCities] = useState<CityOption[]>([]) // Состояние для городов
+  const [cities, setCities] = useState<CityOption[]>([])
+  const [defaultCountry, setDefaultCountry] = useState<null | string>(country ?? null)
 
   const locale = useLocale() as 'en' | 'ru'
   const t = useTranslations('ProfileSettings.GeneralInformation')
@@ -81,33 +69,23 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
 
-  const countryOptions: CountryOption[] = data.countries.map(country => ({
-    label: locale === 'ru' ? country.name_ru : country.name_en,
-    value: country.code, // Используем код страны как значение
+  const data: CountriesData = countriesData
+
+  const countryOptions: CountryOption[] = Object.keys(data).map(countryKey => ({
+    label: locale === 'ru' ? data[countryKey].ru : data[countryKey].en,
+    value: countryKey, // Код страны как value
   }))
 
-  // Функция для загрузки городов для выбранной страны
-  const loadCitiesForCountry = (selectedCountryCode: string) => {
-    const selectedCountry = data.countries.find(country => country.code === selectedCountryCode)
-
-    if (selectedCountry && selectedCountry.cities) {
-      const citiesFormatted = selectedCountry.cities.map(city => ({
-        label: locale === 'ru' ? city.name_ru : city.name_en,
-        value: locale === 'ru' ? city.name_ru : city.name_en,
-      }))
-
-      setCities(citiesFormatted)
-    } else {
-      setCities([]) // Если городов нет для выбранной страны
-    }
-  }
   const selectedCountry = watch('country') // Получаем код страны
 
   useEffect(() => {
-    if (selectedCountry) {
-      loadCitiesForCountry(selectedCountry) // Загружаем города по коду страны
+    const countryKey = selectedCountry || defaultCountry
+
+    if (countryKey) {
+      loadCitiesForCountry(countryKey, locale, data, setCities)
     }
-  }, [selectedCountry])
+  }, [selectedCountry, defaultCountry])
+
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
     const formattedData: UpdateMyProfile = {
       aboutMe: data.aboutMe ?? null,
