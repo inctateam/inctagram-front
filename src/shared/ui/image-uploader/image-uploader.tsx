@@ -34,7 +34,7 @@ export const ImageUploader = ({ fileInputRef, setPhotoToUpload }: ImageUploaderP
   }
 
   return (
-    <div>
+    <div className={'flex flex-col items-center'}>
       <input
         accept={'.jpg, .jpeg, .png'}
         className={'hidden'}
@@ -44,12 +44,18 @@ export const ImageUploader = ({ fileInputRef, setPhotoToUpload }: ImageUploaderP
       />
       {error && (
         <div
-          className={'w-full flex justify-center bg-danger-900 border border-danger-500 py-2 px-6'}
+          className={
+            'w-full flex justify-center bg-danger-900 border border-danger-500 py-2 px-6 my-6'
+          }
         >
           <Typography variant={'bold14'}>{error}</Typography>
         </div>
       )}
-      <div className={'w-[222px] h-[228px] flex justify-center items-center bg-dark-500'}>
+      <div
+        className={`w-[222px] h-[228px] flex justify-center items-center bg-dark-500 ${
+          error ? '' : 'mt-[72px]'
+        }`}
+      >
         <ImageOutline height={36} width={36} />
       </div>
     </div>

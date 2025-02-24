@@ -42,8 +42,9 @@ const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, open }: Props) =
         <DialogHeaderTitle>Add a Profile Photo</DialogHeaderTitle>
 
         {!photoToUpload && (
-          <div className={'flex flex-col justify-center items-center gap-14 mt-20'}>
+          <div className={'flex flex-col justify-center items-center gap-14'}>
             <ImageUploader fileInputRef={fileInputRef} setPhotoToUpload={handleFileChange} />
+
             <Button onClick={handleFileSelect}>Select from Computer</Button>
           </div>
         )}
