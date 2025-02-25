@@ -45,7 +45,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   const [countries, setCountries] = useState<FormatedCountry[]>([])
   const [cities, setCities] = useState<string[]>([])
   const [selectCountry, setSelectCountry] = useState<FormatedCountry | null>(null)
-  const [selectCity, setSelectCity] = useState<FormatedCountry | null>(null)
+  const [selectCity, setSelectCity] = useState<null | string>(null)
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<null | string>(null)
@@ -193,6 +193,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                 defaultValue={city ?? t('selectYourCity')}
                 label={t('selectYourCity')}
                 name={'city'}
+                onValueChange={selectedValue => setSelectCity(selectedValue)}
                 options={cities.map(city => ({
                   label: city,
                   value: city,
