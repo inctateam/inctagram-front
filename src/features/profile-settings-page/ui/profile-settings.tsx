@@ -1,10 +1,15 @@
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
 import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
+import {
+  FormatedCountry,
+  fetchCountries,
+} from '@/features/profile-settings-page/ui/servises/fetchCountries'
 import { GeneralInformationFormValues } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
-import { TabItem, Tabs, Typography } from '@/shared/ui'
+import { Spinner, TabItem, Tabs, Typography } from '@/shared/ui'
 import { useTranslations } from 'next-intl'
 type ProfileSettingsProps = {
   profileInfo: GetMyProfileResponse
@@ -13,9 +18,25 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
   const { profileInfo } = props
   const t = useTranslations('ProfileSettings')
   const [updateProfile] = useUpdateProfileMutation()
+  const [countries, setCountries] = useState<FormatedCountry[]>([])
 
+  useEffect(() => {
+    console.log('Fetching cities...')
+
+    const getCountries = async () => {
+      try {
+        const fetchedCountries = await fetchCountries()
+
+        console.log('Fetched cities:', fetchedCountries)
+        setCountries(fetchedCountries)
+      } catch (error) {
+        throw new Error('Error loading countries')
+      }
+    }
+
+    getCountries()
+  }, [])
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
-    console.log('GeneralInformationData:__', data)
     const formattedData: UpdateMyProfile = {
       aboutMe: data.aboutMe ?? null,
       city: data.city ?? null,
@@ -39,7 +60,13 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
   }
   const tabs: TabItem[] = [
     {
-      content: <GeneralInformation onSubmitHandler={onSubmitHandler} profileInfo={profileInfo} />,
+      content: (
+        <GeneralInformation
+          countries={countries}
+          onSubmitHandler={onSubmitHandler}
+          profileInfo={profileInfo}
+        />
+      ),
       label: 'General information',
       value: t('generalInformation'),
     },
@@ -59,6 +86,10 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       value: t('myPayments'),
     },
   ]
+
+  if (!countries.length) {
+    return <Spinner />
+  }
 
   return <Tabs defaultValue={'General information'} tabs={tabs} />
 }

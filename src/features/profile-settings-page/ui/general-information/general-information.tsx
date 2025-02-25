@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react'
+'use client'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+
+import { log } from 'node:util'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
 import {
+  FormatedCity,
   FormatedCountry,
   fetchCities,
   fetchCountries,
@@ -25,6 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'next-intl'
 
 type GeneralInformationProps = {
+  countries: FormatedCountry[]
   onSubmitHandler: (data: GeneralInformationFormValues) => void
   profileInfo: GetMyProfileResponse
 }
@@ -33,21 +38,14 @@ export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-  const { onSubmitHandler, profileInfo } = props
+  const { countries, onSubmitHandler, profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
 
   const t = useTranslations('ProfileSettings.GeneralInformation')
   const tErrors = useTranslations('ProfileSettings.GeneralInformation.formErrors')
-  const locale = useLocale() as 'en' | 'ru'
 
-  // Стейт для хранения данных стран и городов
-  const [countries, setCountries] = useState<FormatedCountry[]>([])
-  const [cities, setCities] = useState<string[]>([])
-  const [selectCountry, setSelectCountry] = useState<FormatedCountry | null>(null)
-  const [selectCity, setSelectCity] = useState<null | string>(null)
-
-  const [loading, setLoading] = useState(true)
+  const [cities, setCities] = useState<FormatedCity[] | null>(null)
   const [error, setError] = useState<null | string>(null)
 
   const scheme = {
@@ -62,6 +60,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     control,
     formState: { errors, isValid },
     handleSubmit,
+    watch,
   } = useForm<GeneralInformationFormValues>({
     defaultValues: {
       city,
@@ -74,48 +73,36 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
 
-  // Загрузка данных о странах
+  const selectCountry = watch('country') // Следим за страной
+
+  // Загружаем города при изменении выбранной страны
   useEffect(() => {
-    const getCountries = async () => {
-      setLoading(true)
+    console.log('Загружаем города', cities)
+    // setCities([
+    //   { id: '11111', label: '111', value: '111' },
+    //   { id: '222222', label: '222', value: '222' },
+    // ])
+    const getCities = async () => {
+      if (!selectCountry) {
+        return
+      }
+      const currentCountry = countries.find(c => c.value === selectCountry)
+
       try {
-        const countries = await fetchCountries(locale) // передаем locale
+        if (currentCountry) {
+          const fetchedCities = await fetchCities(currentCountry?.countryCode)
 
-        setCountries(countries)
-      } catch (error) {
-        handleRequestError(error)
-        setError('Error loading countries')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    getCountries()
-  }, [locale])
-  // Загрузка городов при изменении выбранной страны
-  useEffect(() => {
-    if (selectCountry?.countryCode) {
-      const getCities = async () => {
-        setLoading(true)
-        try {
-          const cities = await fetchCities(selectCountry) // передаем selectCountry
-
-          if (cities) {
-            setCities(cities)
-          }
-        } catch (error) {
-          handleRequestError(error)
-          setError('Error loading cities')
-        } finally {
-          setLoading(false)
+          setCities(fetchedCities) // обновляем города только один раз
         }
+      } catch (error) {
+        setError('Error loading cities')
       }
-
-      getCities()
     }
+
+    getCities() // Загружаем города при изменении выбранной страны
   }, [selectCountry])
 
-  if (!profileInfo || loading) {
+  if (!profileInfo) {
     return <Spinner />
   }
 
@@ -170,19 +157,13 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={country ?? t('selectYourCountry')}
+                defaultValue={country ?? ''}
                 label={t('selectYourCountry')}
                 name={'country'}
-                onValueChange={selectValue => {
-                  const selected = countries.find(country => country.name === selectValue)
-
-                  if (selected) {
-                    setSelectCountry(selected)
-                  }
-                }}
                 options={countries.map(country => ({
-                  label: country.name,
-                  value: country.name,
+                  id: country.id,
+                  label: country.label,
+                  value: country.value,
                 }))}
               />
             </div>
@@ -190,14 +171,10 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={city ?? t('selectYourCity')}
+                defaultValue={city ?? ''}
                 label={t('selectYourCity')}
                 name={'city'}
-                onValueChange={selectedValue => setSelectCity(selectedValue)}
-                options={cities.map(city => ({
-                  label: city,
-                  value: city,
-                }))}
+                options={cities ?? []}
               />
             </div>
           </div>

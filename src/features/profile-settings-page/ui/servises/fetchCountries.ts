@@ -1,5 +1,6 @@
+import { useCallback } from 'react'
+
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import { useLocale } from 'next-intl'
 
 const API_KEY = process.env.NEXT_PUBLIC_OXILOR_API_KEY as string
 
@@ -49,14 +50,24 @@ export type Country = {
   timezone: string
   type: 'country' // Тип всегда 'country' в этом случае
 }
-export type FormatedCountry = Pick<Country, 'countryCode' | 'id' | 'name'>
+export type FormatedCountry = {
+  countryCode: string
+  id: string
+  label: string
+  value: string
+}
+export type FormatedCity = {
+  countryCode?: string
+  id: string
+  label: string
+  value: string
+}
 
-export const fetchCountries = async (locale: string) => {
+export const fetchCountries = async () => {
+  console.log('fetchCountries')
   try {
-    const response = await fetch(`https://data-api.oxilor.com/rest/countries`, {
+    const response = await fetch(`https://data-api.oxilor.com/rest/countries?lng=en`, {
       headers: {
-        Accept: 'application/json',
-        'Accept-Language': `${locale}`,
         Authorization: `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
       },
@@ -65,7 +76,8 @@ export const fetchCountries = async (locale: string) => {
     const countries: FormatedCountry[] = data.map(country => ({
       countryCode: country.countryCode,
       id: country.id,
-      name: country.name,
+      label: country.name,
+      value: country.name,
     }))
 
     return countries
@@ -74,15 +86,16 @@ export const fetchCountries = async (locale: string) => {
     throw new Error('Error loading countries')
   }
 }
-export const fetchCities = async (selectCountry: FormatedCountry) => {
-  if (!selectCountry?.countryCode) {
-    return
+export const fetchCities = async (selectCountry: string) => {
+  if (!selectCountry) {
+    return [] // Возвращаем пустой массив, если страна не выбрана
   }
   try {
     const response = await fetch(
-      `https://data-api.oxilor.com/rest/regions?countryCode=${selectCountry.countryCode}`,
+      `https://data-api.oxilor.com/rest/regions?countryCode=${selectCountry}`,
       {
         headers: {
+          'Accept-Language': 'en',
           Authorization: `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
         },
@@ -91,7 +104,17 @@ export const fetchCities = async (selectCountry: FormatedCountry) => {
 
     const data: CitiesResponse = await response.json()
 
-    const cities = data.edges.map(edge => edge.node.name)
+    console.log('CitiesResponse', data)
+    const cities: FormatedCity[] = data.edges
+      .map(edge => ({
+        countryCode: edge.node.countryCode,
+        id: edge.node.id,
+        label: edge.node.name,
+        value: edge.node.name,
+      }))
+      .filter(
+        (city, index, self) => index === self.findIndex(c => c.label === city.label) // Убираем дубликаты по имени
+      )
 
     return cities
   } catch (error: unknown) {
