@@ -17,9 +17,11 @@ const GeneralInformation = () => {
     if (photoToUpload) {
       try {
         await uploadProfileAvatar({ file: photoToUpload }).unwrap()
+        setPhotoToUpload(null) // Сбрасываем состояние после успешной загрузки
         //window.history.back()//возврат на профайл
       } catch (error) {
         console.error('Failed to upload avatar:', error)
+        alert('Ошибка при загрузке аватара. Попробуйте еще раз.') // Уведомление об ошибке
       }
     }
   }
