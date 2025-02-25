@@ -3,9 +3,10 @@ import { FieldValues, UseControllerProps, useController } from 'react-hook-form'
 
 import { Select, SelectItem, SelectProps } from '@/shared/ui'
 
-export type ControlledSelectProps<TFieldValues extends FieldValues> = {
+export type ControlledSelectProps<TFieldValues extends FieldValues, T = unknown> = {
+  className?: string
   label?: ReactNode
-  options: { label: string; value: string }[]
+  options: Array<{ label: string; value: string } & T>
 } & Omit<SelectProps, 'onChange' | 'value'> &
   UseControllerProps<TFieldValues>
 

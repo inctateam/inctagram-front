@@ -1,19 +1,17 @@
-'use client'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
-import countriesData from '@/data/countries-cities.json'
-import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
-import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+import {
+  FormatedCountry,
+  fetchCities,
+  fetchCountries,
+} from '@/features/profile-settings-page/ui/servises/fetchCountries'
 import {
   GeneralInformationFormValues,
   GeneralInformationSchema,
 } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
-import {
-  CountriesData,
-  loadCitiesForCountry,
-} from '@/features/profile-settings-page/ui/utils/loadCitiesForCountry'
 import {
   Avatar,
   Button,
@@ -26,10 +24,8 @@ import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/contr
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useLocale, useTranslations } from 'next-intl'
 
-type CityOption = { label: string; value: string }
-type CountryOption = { label: string; value: string }
-
 type GeneralInformationProps = {
+  onSubmitHandler: (data: GeneralInformationFormValues) => void
   profileInfo: GetMyProfileResponse
 }
 /*global IntlMessages*/
@@ -37,26 +33,35 @@ export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-  const { profileInfo } = props
+  const { onSubmitHandler, profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
-  const [updateProfile] = useUpdateProfileMutation()
 
-  const [cities, setCities] = useState<CityOption[]>([])
-  const [defaultCountry, setDefaultCountry] = useState<null | string>(country ?? null)
-
-  const locale = useLocale() as 'en' | 'ru'
   const t = useTranslations('ProfileSettings.GeneralInformation')
   const tErrors = useTranslations('ProfileSettings.GeneralInformation.formErrors')
+  const locale = useLocale() as 'en' | 'ru'
+
+  // Стейт для хранения данных стран и городов
+  const [countries, setCountries] = useState<FormatedCountry[]>([])
+  const [cities, setCities] = useState<string[]>([])
+  const [selectCountry, setSelectCountry] = useState<FormatedCountry | null>(null)
+  const [selectCity, setSelectCity] = useState<FormatedCountry | null>(null)
+
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<null | string>(null)
+
   const scheme = {
     aboutMeMaxLength: tErrors('aboutMeMaxLength'),
+    minMaxFirstName: tErrors('minMaxFirstName'),
+    minMaxLastName: tErrors('minMaxLastName'),
+    minMaxUserName: tErrors('minMaxUserName'),
     requiredField: tErrors('requiredField'),
   }
+
   const {
     control,
     formState: { errors, isValid },
     handleSubmit,
-    watch,
   } = useForm<GeneralInformationFormValues>({
     defaultValues: {
       city,
@@ -69,48 +74,55 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
 
-  const data: CountriesData = countriesData
-
-  const countryOptions: CountryOption[] = Object.keys(data).map(countryKey => ({
-    label: locale === 'ru' ? data[countryKey].ru : data[countryKey].en,
-    value: countryKey, // Код страны как value
-  }))
-
-  const selectedCountry = watch('country') // Получаем код страны
-
+  // Загрузка данных о странах
   useEffect(() => {
-    const countryKey = selectedCountry || defaultCountry
+    const getCountries = async () => {
+      setLoading(true)
+      try {
+        const countries = await fetchCountries(locale) // передаем locale
 
-    if (countryKey) {
-      loadCitiesForCountry(countryKey, locale, data, setCities)
-    }
-  }, [selectedCountry, defaultCountry])
-
-  const onSubmitHandler = async (data: GeneralInformationFormValues) => {
-    const formattedData: UpdateMyProfile = {
-      aboutMe: data.aboutMe ?? null,
-      city: data.city ?? null,
-      country: data.country ?? null,
-      dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().split('T')[0] : null, // Преобразуем в строку
-      firstName: data.firstName,
-      lastName: data.lastName,
-      region: data.region ?? null,
-      userName: data.userName,
+        setCountries(countries)
+      } catch (error) {
+        handleRequestError(error)
+        setError('Error loading countries')
+      } finally {
+        setLoading(false)
+      }
     }
 
-    try {
-      const res = await updateProfile(formattedData).unwrap()
+    getCountries()
+  }, [locale])
+  // Загрузка городов при изменении выбранной страны
+  useEffect(() => {
+    if (selectCountry?.countryCode) {
+      const getCities = async () => {
+        setLoading(true)
+        try {
+          const cities = await fetchCities(selectCountry) // передаем selectCountry
 
-      toast.success('Profile updated successfully!')
-      console.log('res: ', res)
-    } catch (e) {
-      console.log('Error updating profile:', e)
-      toast.error('Error updating profile')
+          if (cities) {
+            setCities(cities)
+          }
+        } catch (error) {
+          handleRequestError(error)
+          setError('Error loading cities')
+        } finally {
+          setLoading(false)
+        }
+      }
+
+      getCities()
     }
+  }, [selectCountry])
+
+  if (!profileInfo || loading) {
+    return <Spinner />
   }
 
-  if (!profileInfo) {
-    return <Spinner />
+  if (error) {
+    console.log(error)
+
+    return <div>{error}</div>
   }
 
   return (
@@ -156,20 +168,35 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           <div className={'flex gap-6'}>
             <div className={'flex flex-col w-1/2'}>
               <ControlledSelect
+                className={'h-44'}
                 control={control}
-                defaultValue={city ?? t('selectYourCountry')}
+                defaultValue={country ?? t('selectYourCountry')}
                 label={t('selectYourCountry')}
                 name={'country'}
-                options={countryOptions}
+                onValueChange={selectValue => {
+                  const selected = countries.find(country => country.name === selectValue)
+
+                  if (selected) {
+                    setSelectCountry(selected)
+                  }
+                }}
+                options={countries.map(country => ({
+                  label: country.name,
+                  value: country.name,
+                }))}
               />
             </div>
             <div className={'flex flex-col w-1/2'}>
               <ControlledSelect
+                className={'h-44'}
                 control={control}
                 defaultValue={city ?? t('selectYourCity')}
                 label={t('selectYourCity')}
                 name={'city'}
-                options={cities}
+                options={cities.map(city => ({
+                  label: city,
+                  value: city,
+                }))}
               />
             </div>
           </div>

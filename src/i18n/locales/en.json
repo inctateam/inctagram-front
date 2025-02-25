@@ -144,6 +144,9 @@
       "aboutMe": "About Me",
       "saveChanges": "Save Changes",
       "formErrors": {
+        "minMaxUserName": "UserName must be in 6 to 30 characters",
+        "minMaxFirstName": "First Name must be in 1 to 50 characters",
+        "minMaxLastName": "Last Name must be in 1 to 50 characters",
         "requiredField": "Field is required",
         "aboutMeMaxLength": "Text must be shorter"
       }

@@ -63,6 +63,7 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
 
         <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
           <ControlledTextField
+            autoComplete={'email'}
             control={control}
             error={!!errors.email?.message}
             helperText={errors.email?.message}
@@ -71,6 +72,7 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
             placeholder={translAuth.email}
           />
           <ControlledPasswordTextField
+            autoComplete={'current-password'}
             control={control}
             error={!!errors.password?.message}
             helperText={errors.password?.message}

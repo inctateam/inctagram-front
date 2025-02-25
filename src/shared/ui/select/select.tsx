@@ -7,6 +7,7 @@ import { SelectRoot, SelectRootProps } from './select-root'
 import { SelectTrigger } from './select-trigger'
 
 type SelectOwnProps = {
+  className?: string
   label?: ReactNode
   placeholder?: ReactNode
   selectContentProps?: SelectContentProps
@@ -14,13 +15,13 @@ type SelectOwnProps = {
 
 export type SelectProps = SelectOwnProps & SelectRootProps
 
-export const Select = ({ children, label, placeholder, ...restProps }: SelectProps) => {
+export const Select = ({ children, className, label, placeholder, ...restProps }: SelectProps) => {
   return (
     <>
       {label && <FormLabel>{label}</FormLabel>}
       <SelectRoot {...restProps}>
         <SelectTrigger placeholder={placeholder} />
-        <SelectContent>{children}</SelectContent>
+        <SelectContent className={className}>{children}</SelectContent>
       </SelectRoot>
     </>
   )
