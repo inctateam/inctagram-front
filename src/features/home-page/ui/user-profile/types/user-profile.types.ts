@@ -1,4 +1,3 @@
-import { AvatarType } from '@/features/post-page/types';
 export type GetUserProfileResponse = {
   aboutMe: string
   avatars: {
