@@ -21,13 +21,12 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
   const [countries, setCountries] = useState<FormatedCountry[]>([])
 
   useEffect(() => {
-    console.log('Fetching cities...')
+    console.log('Загрузка стран...')
 
     const getCountries = async () => {
       try {
         const fetchedCountries = await fetchCountries()
 
-        console.log('Fetched cities:', fetchedCountries)
         setCountries(fetchedCountries)
       } catch (error) {
         throw new Error('Error loading countries')
@@ -52,10 +51,8 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       const res = await updateProfile(formattedData).unwrap()
 
       toast.success('Profile updated successfully!')
-      console.log('res: ', res)
-    } catch (e) {
-      console.log('Error updating profile:', e)
-      toast.error('Error updating profile')
+    } catch (e: unknown) {
+      throw new Error('Error updating profile:')
     }
   }
   const tabs: TabItem[] = [

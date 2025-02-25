@@ -64,7 +64,6 @@ export type FormatedCity = {
 }
 
 export const fetchCountries = async () => {
-  console.log('fetchCountries')
   try {
     const response = await fetch(`https://data-api.oxilor.com/rest/countries?lng=en`, {
       headers: {
@@ -88,7 +87,7 @@ export const fetchCountries = async () => {
 }
 export const fetchCities = async (selectCountry: string) => {
   if (!selectCountry) {
-    return [] // Возвращаем пустой массив, если страна не выбрана
+    return []
   }
   try {
     const response = await fetch(
@@ -101,10 +100,7 @@ export const fetchCities = async (selectCountry: string) => {
         },
       }
     )
-
     const data: CitiesResponse = await response.json()
-
-    console.log('CitiesResponse', data)
     const cities: FormatedCity[] = data.edges
       .map(edge => ({
         countryCode: edge.node.countryCode,

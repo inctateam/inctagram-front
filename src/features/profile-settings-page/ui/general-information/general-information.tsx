@@ -1,16 +1,12 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { log } from 'node:util'
-
-import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
 import {
   FormatedCity,
   FormatedCountry,
   fetchCities,
-  fetchCountries,
 } from '@/features/profile-settings-page/ui/servises/fetchCountries'
 import {
   GeneralInformationFormValues,
@@ -26,7 +22,7 @@ import {
 } from '@/shared/ui'
 import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/controlled-select'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
 type GeneralInformationProps = {
   countries: FormatedCountry[]
@@ -78,10 +74,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   // Загружаем города при изменении выбранной страны
   useEffect(() => {
     console.log('Загружаем города', cities)
-    // setCities([
-    //   { id: '11111', label: '111', value: '111' },
-    //   { id: '222222', label: '222', value: '222' },
-    // ])
     const getCities = async () => {
       if (!selectCountry) {
         return
@@ -92,14 +84,14 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         if (currentCountry) {
           const fetchedCities = await fetchCities(currentCountry?.countryCode)
 
-          setCities(fetchedCities) // обновляем города только один раз
+          setCities(fetchedCities)
         }
       } catch (error) {
         setError('Error loading cities')
       }
     }
 
-    getCities() // Загружаем города при изменении выбранной страны
+    getCities()
   }, [selectCountry])
 
   if (!profileInfo) {
@@ -157,7 +149,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={country ?? ''}
+                defaultValue={country ?? countries[0].value}
                 label={t('selectYourCountry')}
                 name={'country'}
                 options={countries.map(country => ({
@@ -171,7 +163,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={city ?? ''}
+                defaultValue={city}
                 label={t('selectYourCity')}
                 name={'city'}
                 options={cities ?? []}
