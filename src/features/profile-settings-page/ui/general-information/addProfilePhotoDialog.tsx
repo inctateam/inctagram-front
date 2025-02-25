@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 
-import { Button, Dialog, DialogHeaderTitle, ImageUploader } from '@/shared/ui'
+import { AvatarUploader, Button, Dialog, DialogHeaderTitle } from '@/shared/ui'
 import Image from 'next/image'
 
 type Props = {
@@ -43,7 +43,7 @@ const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, open }: Props) =
 
         {!photoToUpload && (
           <div className={'flex flex-col justify-center items-center gap-14'}>
-            <ImageUploader fileInputRef={fileInputRef} setPhotoToUpload={handleFileChange} />
+            <AvatarUploader fileInputRef={fileInputRef} setPhotoToUpload={handleFileChange} />
 
             <Button onClick={handleFileSelect}>Select from Computer</Button>
           </div>
