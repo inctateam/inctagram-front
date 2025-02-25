@@ -87,3 +87,15 @@ export type GetPublicPostsByUserNameResponse = {
   totalCount: number
   totalUsers: number
 }
+
+export type UploadProfileAvatarResponse = {
+  avatars: Avatar[]
+}
+
+export type Avatar = {
+  createdAt: string
+  fileSize: number
+  height: number
+  url: string
+  width: number
+}

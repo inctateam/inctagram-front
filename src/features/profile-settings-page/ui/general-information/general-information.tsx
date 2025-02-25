@@ -1,31 +1,36 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import {
-  Avatar,
-  Button,
-  ControlledTextField,
-  DatePickerSingle,
-  Select,
-  Textarea,
-} from '@/shared/ui'
+import { useUploadProfileAvatarMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import { Button, ControlledTextField, DatePickerSingle, Select, Textarea } from '@/shared/ui'
+
+import AddAvatarSection from './addAvatarSection'
 
 const GeneralInformation = () => {
   const { control, handleSubmit } = useForm()
 
-  const onSubmit = () => {
+  const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
+
+  const [uploadProfileAvatar] = useUploadProfileAvatarMutation()
+  const onSubmit = async () => {
     alert('Submit')
+    if (photoToUpload) {
+      try {
+        await uploadProfileAvatar({ file: photoToUpload }).unwrap()
+        setPhotoToUpload(null) // Сбрасываем состояние после успешной загрузки
+        //window.history.back()//возврат на профайл
+      } catch (error) {
+        console.error('Failed to upload avatar:', error)
+        alert('Ошибка при загрузке аватара. Попробуйте еще раз.') // Уведомление об ошибке
+      }
+    }
   }
 
   return (
     // <div className={'flex gap-10 '}>
     <form className={'flex flex-col w-full mt-6 gap-6'} onSubmit={handleSubmit(onSubmit)}>
       <div className={'flex gap-10 border-b border-dark-300 pb-6'}>
-        <div className={'flex flex-col gap-6'}>
-          <Avatar alt={'User avatar'} size={48} />
-          <Button className={'text-[0.9rem]'} variant={'outline'}>
-            Add a Profile Photo
-          </Button>
-        </div>
+        <AddAvatarSection setPhotoToUpload={setPhotoToUpload} />
         <div className={'flex flex-col w-full gap-6'}>
           <ControlledTextField
             control={control}
@@ -66,7 +71,9 @@ const GeneralInformation = () => {
         </div>
       </div>
       <div className={'flex flex-row-reverse'}>
-        <Button variant={'outline'}>Save Changes</Button>
+        <Button type={'submit'} variant={'outline'}>
+          Save Changes
+        </Button>
       </div>
     </form>
   )
