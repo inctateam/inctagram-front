@@ -11,6 +11,12 @@ import {
 
 export const userProfileApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    deleteProfileAvatar: builder.mutation<void, void>({
+      query: () => ({
+        method: 'DELETE',
+        url: 'v1/users/profile/avatar',
+      }),
+    }),
     getPostsByUserName: builder.query<GetPostsByUserNameResponse, string>({
       query: userName => ({
         method: 'GET',
