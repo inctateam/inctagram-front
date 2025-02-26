@@ -80,6 +80,7 @@ export const userProfileApi = instagramApi.injectEndpoints({
   }),
 })
 export const {
+  useDeleteProfileAvatarMutation,
   useGetPostsByUserNameQuery,
   useGetProfileByUserNameQuery,
   useGetProfileQuery,

@@ -6,9 +6,10 @@ import Image from 'next/image'
 type Props = {
   onOpenChange: (open: boolean) => void
   onPhotoUploaded: (file: File) => void
+  onSendPhoto: () => void
   open?: boolean
 }
-const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, open }: Props) => {
+const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, onSendPhoto, open }: Props) => {
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [previewSrc, setPreviewSrc] = useState<null | string>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -24,12 +25,7 @@ const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, open }: Props) =
   const handleFileChange = (file: File) => {
     setPhotoToUpload(file)
     setPreviewSrc(URL.createObjectURL(file))
-  }
-  const handleSendPhoto = () => {
-    if (photoToUpload) {
-      onPhotoUploaded(photoToUpload)
-      onCloseAddProfilePhoto()
-    }
+    onPhotoUploaded(file)
   }
 
   return (
@@ -70,7 +66,7 @@ const AddProfilePhotoDialog = ({ onOpenChange, onPhotoUploaded, open }: Props) =
           </div>
         )}
         {photoToUpload && (
-          <Button className={'mt-10 ml-[382px]'} onClick={handleSendPhoto}>
+          <Button className={'mt-10 ml-[382px]'} onClick={onSendPhoto}>
             Send
           </Button>
         )}
