@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
 import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
@@ -29,6 +30,7 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
 
         setCountries(fetchedCountries)
       } catch (error) {
+        handleRequestError(error)
         throw new Error('Error loading countries')
       }
     }
@@ -48,10 +50,11 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
     }
 
     try {
-      const res = await updateProfile(formattedData).unwrap()
+      await updateProfile(formattedData).unwrap()
 
       toast.success('Profile updated successfully!')
-    } catch (e: unknown) {
+    } catch (error: unknown) {
+      handleRequestError(error)
       throw new Error('Error updating profile:')
     }
   }

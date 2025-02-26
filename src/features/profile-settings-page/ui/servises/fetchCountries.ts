@@ -1,5 +1,3 @@
-import { useCallback } from 'react'
-
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 
 const API_KEY = process.env.NEXT_PUBLIC_OXILOR_API_KEY as string
