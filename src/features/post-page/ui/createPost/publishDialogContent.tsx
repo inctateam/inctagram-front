@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
+import { createPostSliceSelectors } from '@/features/post-page/ui/createPost/createPostSlice'
+import { useAppSelector } from '@/services'
 import { Avatar, ControlledTextarea, DialogBody, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,17 +22,20 @@ type FormValues = z.infer<typeof publishPostSchema>
 
 type CroppingDialogContentProps = {
   handleBack: () => void
-  images: string[]
+  //images: string[]
   onPostPublished: () => void
 }
 
 export const PublishDialogContent = ({
   handleBack,
-  images,
   onPostPublished,
 }: CroppingDialogContentProps) => {
   const [createPost] = useCreatePostMutation()
   const [uploadPhoto] = useUploadImageForPostMutation()
+
+  const images = useAppSelector(createPostSliceSelectors.selectCroppedImages)
+
+  console.log(images)
 
   const {
     control,
@@ -52,7 +57,7 @@ export const PublishDialogContent = ({
       await uploadPhoto({ file })
         .unwrap()
         .then(res => {
-          uploadIds.push(res.images[0].url)
+          uploadIds.push(res.images[0].uploadId)
         })
     }
 

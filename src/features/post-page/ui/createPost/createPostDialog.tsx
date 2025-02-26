@@ -23,8 +23,6 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
 
   const dispatch = useAppDispatch()
 
-  const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
-
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
 
   if (photoToUpload) {
@@ -68,7 +66,6 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
         {stage === '4' && (
           <PublishDialogContent
             handleBack={() => setStage('2')}
-            images={imagesState ?? ([] as string[])}
             onPostPublished={() => {
               setStage('1')
               onPostPublished()
