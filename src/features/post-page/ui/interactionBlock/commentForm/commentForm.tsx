@@ -24,7 +24,7 @@ const CommentForm = ({ onSubmit }: CommentFormProps) => {
   return (
     <div className={'flex justify-between items-center py-1'}>
       <Textarea
-        autoResize={false}
+        autoResize
         className={
           'px-0 scrollbar-thin scrollbar-none [&::-webkit-scrollbar]:hidden h-12 max-h-10 border-none'
         }

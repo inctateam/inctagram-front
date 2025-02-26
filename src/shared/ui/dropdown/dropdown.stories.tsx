@@ -40,6 +40,7 @@ const items = [
 export const DefaultDropdown: Story = {
   args: {
     items: items,
+    onClick: () => {},
   },
   render: args => (
     // Центрирование

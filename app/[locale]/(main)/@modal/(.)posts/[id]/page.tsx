@@ -1,6 +1,6 @@
 'use client'
 import { usePostQuery } from '@/features/post-page/api'
-import { PostModal } from '@/features/post-page/ui/post'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { ProgressBar } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 

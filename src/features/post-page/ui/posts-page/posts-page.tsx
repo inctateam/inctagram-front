@@ -135,6 +135,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
   ]
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
   const dropDownItems = me?.userId === post?.ownerId ? dropAdd : dropRemove
+  const handleActionPostsPage = () => {}
 
   return (
     <ScrollArea className={'h-[91vh] max-w-[972px] mx-auto'} viewportRef={viewportRef}>
@@ -151,7 +152,13 @@ export const PostsPage = ({ postId, userId }: Props) => {
               <div className={'h-1 w-1 rounded-full bg-light-100'}></div>
               <p className={'text-[12px] text-light-900'}>{timeAgo}</p>
             </div>
-            {me?.userId && <Dropdown className={'bg-dark-500'} items={dropDownItems} />}
+            {me?.userId && (
+              <Dropdown
+                className={'bg-dark-500'}
+                items={dropDownItems}
+                onClick={handleActionPostsPage}
+              />
+            )}
           </div>
           <div className={'my-3'}>
             <ImageContent itemImages={post.images.map(image => image.url)} />
