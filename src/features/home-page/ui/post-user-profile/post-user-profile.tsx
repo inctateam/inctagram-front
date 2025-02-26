@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { Post } from '@/features/home-page/ui/user-profile/types/user-profile.types'
-import { PostModal } from '@/features/post-page/ui/post'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { ImageContent } from '@/shared/ui/image-content'
 
 type Props = {

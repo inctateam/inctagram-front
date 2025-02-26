@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { PublicPostItem } from '@/features/home-page/types'
-import { PostModal } from '@/features/post-page/ui/post'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Avatar, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { formatDistanceToNow } from 'date-fns'
