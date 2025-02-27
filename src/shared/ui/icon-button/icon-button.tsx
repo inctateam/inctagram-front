@@ -51,6 +51,7 @@ const iconButtonVariants = cva(
       color: {
         carousel:
           'text-light-100 bg-dark-500/20 hover:bg-dark-500/40 active:bg-dark-500/60 disabled:text-light-900 disabled:bg-transparent transition',
+        cropper: 'rounded-none bg-dark-500 opacity-80 hover:opacity-100',
         default: 'text-light-100',
         primary: 'text-accent-500',
       },
