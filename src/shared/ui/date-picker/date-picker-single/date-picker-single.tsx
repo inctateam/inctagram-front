@@ -1,5 +1,5 @@
-import { MouseEvent, forwardRef, useState } from 'react'
-import { ActiveModifiers, DayPickerSingleProps, SelectSingleEventHandler } from 'react-day-picker'
+import { forwardRef, useState } from 'react'
+import { DayPicker, OnSelectHandler, PropsSingle } from 'react-day-picker'
 
 import { Calendar } from '@/shared/ui'
 import { format } from 'date-fns'
@@ -7,9 +7,9 @@ import { format } from 'date-fns'
 import { DatePickerPopover, DatePickerPopoverProps } from '../date-picker-popover'
 
 type DatePickerSingleProps = {
-  date?: DayPickerSingleProps['selected']
-  onDateSelect?: SelectSingleEventHandler
-  otherDatePickerProps?: Omit<DayPickerSingleProps, 'mode' | 'onSelect' | 'selected'>
+  date?: PropsSingle['selected']
+  onDateSelect?: PropsSingle['onSelect']
+  otherDatePickerProps?: Omit<PropsSingle, 'mode' | 'onSelect' | 'selected'>
 } & Omit<DatePickerPopoverProps, 'value'>
 
 export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSingleProps>(
@@ -20,11 +20,11 @@ export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSinglePro
 
     const finalDate = isControlled ? date : uncontrolledDate
 
-    const handleDaySelect: SelectSingleEventHandler = (
-      date: Date | undefined,
-      selectedDay: Date,
-      activeModifiers: ActiveModifiers,
-      e: MouseEvent
+    const handleDaySelect: OnSelectHandler<Date | undefined> = (
+      date,
+      selectedDay,
+      activeModifiers,
+      e
     ) => {
       onDateSelect?.(date, selectedDay, activeModifiers, e)
       setUncontrolledDate(date)
@@ -39,7 +39,8 @@ export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSinglePro
     return (
       <DatePickerPopover value={formattedDate} {...popoverTextFieldProps} ref={ref}>
         <Calendar
-          initialFocus
+          captionLayout={'dropdown'}
+          hideNavigation
           mode={'single'}
           onSelect={handleDaySelect}
           selected={finalDate}
