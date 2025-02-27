@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 
-import { EditOutline } from '@/assets/icons'
+import { Edit, EditOutline } from '@/assets/icons'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -23,6 +23,9 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
 
   console.log(imagesState)
 
+  const [currentImage, setCurrentImage] = useState<number>(0)
+
+  console.log('currentImage', currentImage)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [edit, setEdit] = useState(false)
@@ -34,9 +37,9 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
 
   const onSetEdit = async () => {
     if (edit && croppedAreaPixels) {
-      const link = await getCroppedImage(imagesState[0], croppedAreaPixels)
+      const link = await getCroppedImage(imagesState[currentImage], croppedAreaPixels)
 
-      dispatch(createPostSliceActions.setImages({ images: [link] }))
+      dispatch(createPostSliceActions.setImage({ image: link, index: currentImage }))
     }
     setEdit(!edit)
   }
@@ -45,21 +48,24 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
     <div className={'w-[492px] h-[564px] flex flex-col'}>
       <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
       <DialogBody className={'h-full'}>
-        <div className={'h-full relative'}>
-          {!edit && <ImageContent itemImages={imagesState} />}
+        <div className={'h-full relative flex-grow flex justify-center'}>
+          {!edit && (
+            <ImageContent itemImages={imagesState} selectedIndexCallBack={setCurrentImage} />
+          )}
           {edit && (
             <Cropper
               aspect={1}
+              classes={{ containerClassName: 'bg-[#606060]' }}
               crop={crop}
-              image={imagesState[0]}
+              image={imagesState[currentImage]}
               onCropChange={setCrop}
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
               zoom={zoom}
             />
           )}
-          <IconButton className={'absolute bottom-0 left-0'} onClick={onSetEdit}>
-            <EditOutline />
+          <IconButton className={'absolute bottom-3 left-3'} color={'cropper'} onClick={onSetEdit}>
+            {edit ? <Edit className={'text-accent-500'} /> : <EditOutline />}
           </IconButton>
         </div>
       </DialogBody>

@@ -15,6 +15,9 @@ export const createPostSlice = createSlice({
     setCroppedImages: (state, action: PayloadAction<{ images: string[] }>) => {
       state.croppedImages = [...action.payload.images]
     },
+    setImage: (state, action: PayloadAction<{ image: string; index: number }>) => {
+      state.images[action.payload.index] = action.payload.image
+    },
     setImages: (state, action: PayloadAction<{ images: string[] }>) => {
       state.images = [...action.payload.images]
     },
