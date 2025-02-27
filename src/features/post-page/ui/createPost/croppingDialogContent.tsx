@@ -1,16 +1,15 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 
-import { Image } from '@/features/post-page/types'
+import { EditOutline } from '@/assets/icons'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
-  createPostSlice,
   createPostSliceActions,
   createPostSliceSelectors,
 } from '@/features/post-page/ui/createPost/createPostSlice'
 import { getCroppedImage } from '@/features/post-page/ui/createPost/getCroppedImage'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody } from '@/shared/ui'
+import { DialogBody, IconButton } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 
 type CroppingDialogContentProps = {
@@ -26,17 +25,20 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
 
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
-  //const [link, setLink] = useState('')
-
-  //console.log(link)
+  const [edit, setEdit] = useState(false)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
-    //console.log(croppedArea, croppedAreaPixels)
-    const link = await getCroppedImage(imagesState[0], croppedAreaPixels)
+    setCroppedAreaPixels(croppedAreaPixels)
+  }
 
-    console.log('link', link)
-    //setLink(link)
-    dispatch(createPostSliceActions.setCroppedImages({ images: [link] }))
+  const onSetEdit = async () => {
+    if (edit && croppedAreaPixels) {
+      const link = await getCroppedImage(imagesState[0], croppedAreaPixels)
+
+      dispatch(createPostSliceActions.setImages({ images: [link] }))
+    }
+    setEdit(!edit)
   }
 
   return (
@@ -44,16 +46,21 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
       <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
       <DialogBody className={'h-full'}>
         <div className={'h-full relative'}>
-          {/*<ImageContent itemImages={imagesState}></ImageContent>*/}
-          <Cropper
-            aspect={1 / 1}
-            crop={crop}
-            image={imagesState[0]}
-            onCropChange={setCrop}
-            onCropComplete={onCropComplete}
-            onZoomChange={setZoom}
-            zoom={zoom}
-          />
+          {!edit && <ImageContent itemImages={imagesState} />}
+          {edit && (
+            <Cropper
+              aspect={1}
+              crop={crop}
+              image={imagesState[0]}
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              zoom={zoom}
+            />
+          )}
+          <IconButton className={'absolute bottom-0 left-0'} onClick={onSetEdit}>
+            <EditOutline />
+          </IconButton>
         </div>
       </DialogBody>
     </div>

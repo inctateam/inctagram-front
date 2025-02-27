@@ -1,13 +1,8 @@
 import { ComponentPropsWithoutRef, useState } from 'react'
 
-import { useUploadImageForPostMutation } from '@/features/post-page/api'
-import { Image } from '@/features/post-page/types'
-import {
-  createPostSliceActions,
-  createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
+import { createPostSliceActions } from '@/features/post-page/ui/createPost/createPostSlice'
 import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
-import { useAppDispatch, useAppSelector } from '@/services'
+import { useAppDispatch } from '@/services'
 import { Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 

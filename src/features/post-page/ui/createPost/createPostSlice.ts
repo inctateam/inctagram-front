@@ -1,4 +1,3 @@
-import { Image } from '@/features/post-page/types'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
@@ -17,7 +16,7 @@ export const createPostSlice = createSlice({
       state.croppedImages = [...action.payload.images]
     },
     setImages: (state, action: PayloadAction<{ images: string[] }>) => {
-      state.images = { ...action.payload.images }
+      state.images = [...action.payload.images]
     },
   },
   selectors: {

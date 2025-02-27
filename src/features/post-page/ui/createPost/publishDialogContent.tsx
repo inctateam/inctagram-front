@@ -33,7 +33,7 @@ export const PublishDialogContent = ({
   const [createPost] = useCreatePostMutation()
   const [uploadPhoto] = useUploadImageForPostMutation()
 
-  const images = useAppSelector(createPostSliceSelectors.selectCroppedImages)
+  const images = useAppSelector(createPostSliceSelectors.selectImages)
 
   console.log(images)
 
