@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 
-import { Edit, EditOutline } from '@/assets/icons'
+import { Edit, EditOutline, Maximize, MaximizeOutline } from '@/assets/icons'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -11,6 +11,7 @@ import { getCroppedImage } from '@/features/post-page/ui/createPost/getCroppedIm
 import { useAppDispatch, useAppSelector } from '@/services'
 import { DialogBody, IconButton } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
+import { Slider } from '@/shared/ui/slider/slider'
 
 type CroppingDialogContentProps = {
   handleBack: () => void
@@ -29,6 +30,7 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [edit, setEdit] = useState(false)
+  const [showZoom, setShowZoom] = useState(false)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
@@ -64,9 +66,23 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
               zoom={zoom}
             />
           )}
-          <IconButton className={'absolute bottom-3 left-3'} color={'cropper'} onClick={onSetEdit}>
-            {edit ? <Edit className={'text-accent-500'} /> : <EditOutline />}
-          </IconButton>
+          <div className={'absolute bottom-3 left-3'}>
+            <IconButton className={'mr-6'} color={'cropper'} onClick={onSetEdit}>
+              {edit ? <Edit className={'text-accent-500'} /> : <EditOutline />}
+            </IconButton>
+            <IconButton color={'cropper'} onClick={() => setShowZoom(!showZoom)}>
+              {showZoom ? <Maximize className={'text-accent-500'} /> : <MaximizeOutline />}
+            </IconButton>
+          </div>
+          {showZoom && (
+            <div
+              className={
+                'absolute left-[72px] bottom-[49px] bg-dark-500 opacity-80 h-9 w-32 flex items-center justify-center'
+              }
+            >
+              <Slider setZoom={setZoom} zoom={zoom} />
+            </div>
+          )}
         </div>
       </DialogBody>
     </div>
