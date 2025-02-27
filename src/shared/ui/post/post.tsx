@@ -2,10 +2,10 @@ import { useState } from 'react'
 
 import { PublicPostItem } from '@/features/home-page/types'
 import { PostModal } from '@/features/post-page/ui/post/post-modal'
-import { Avatar, Typography } from '@/shared/ui'
+import { Typography } from '@/shared/ui'
+import { AvatarBlock } from '@/shared/ui/avatar-block'
 import { ImageContent } from '@/shared/ui/image-content'
 import { formatDistanceToNow } from 'date-fns'
-import Link from 'next/link'
 
 type Props = {
   item: PublicPostItem
@@ -79,13 +79,11 @@ export const Post = ({ item }: Props) => {
       </div>
 
       <div className={`pt-2 flex flex-col gap-1 bg-dark-700 ${isExpanded ? 'h-auto' : 'h-auto'}`}>
-        <Link
-          className={'flex items-center gap-3 cursor-pointer'}
-          href={`/profile/${item.ownerId}`}
-        >
-          <Avatar alt={'avatar'} size={12} src={item.avatarOwner} />
-          <h2 className={'text-[16px]'}>{item.userName}</h2>
-        </Link>
+        <AvatarBlock
+          avatarOwner={item.avatarOwner}
+          ownerId={item.ownerId}
+          userName={item.userName}
+        />
         <p className={'text-[12px] text-light-900'}>{timeAgo}</p>
         <Typography variant={'regular14'}>
           {isExpanded ? longDescription : shortDescription}

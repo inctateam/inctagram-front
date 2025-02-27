@@ -1,7 +1,6 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import { ReactNode, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useForm } from 'react-hook-form'
 
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
@@ -15,25 +14,16 @@ import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
-import {
-  Avatar,
-  Button,
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  Dropdown,
-  Textarea,
-  Typography,
-} from '@/shared/ui'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { EditPost } from '@/features/post-page/ui/post/edit-post'
+import { Dialog, DialogBody, DialogHeader, Dropdown } from '@/shared/ui'
+import { AvatarBlock } from '@/shared/ui/avatar-block'
 
 import { Description } from '../../postDescription'
 
 type PostModalProps = {
-  children: React.ReactNode
+  children: ReactNode
   onOpenChange: (open: boolean) => void
-  open?: boolean
+  open: boolean
   post: PublicPostItem
 }
 const myDropDown = [
@@ -56,12 +46,6 @@ const friendDropDown = [
     label: 'Copy Link',
   },
 ]
-const createEditDescriptionSchema = z.object({
-  description: z.string().max(500, 'Description must not exceed 500 characters'),
-})
-
-type EditDescriptionSchema = z.infer<typeof createEditDescriptionSchema>
-
 const PostModal = (props: PostModalProps) => {
   const { children, onOpenChange, open, post } = props
   const {
@@ -82,13 +66,6 @@ const PostModal = (props: PostModalProps) => {
   const comments = me?.userId ? privateComments : publicComments
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
-  // Хуки для работы с формой
-  const { handleSubmit, register } = useForm<EditDescriptionSchema>({
-    defaultValues: {
-      description: description, // Устанавливаем начальное значение
-    },
-    resolver: zodResolver(createEditDescriptionSchema),
-  })
 
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
@@ -107,9 +84,6 @@ const PostModal = (props: PostModalProps) => {
     }*/
     onOpenChange(true)
   }
-  const handleCloseEditPost = () => {
-    setIsEditPost(false)
-  }
   const handleActionDropdown = (label: string) => {
     // Логика для редактирования или удаления поста
     if (label === 'Edit post') {
@@ -117,10 +91,6 @@ const PostModal = (props: PostModalProps) => {
     } else if (label === 'Delete post') {
       console.log('Delete post')
     }
-  }
-  const onSubmit = (description: EditDescriptionSchema) => {
-    console.log(description) // Полученные данные из формы
-    setIsEditPost(false) // Закрываем модалку редактирования
   }
 
   // Возвращаем портал с модальным окном
@@ -138,17 +108,7 @@ const PostModal = (props: PostModalProps) => {
             </div>
             <div className={'flex flex-1 flex-col w-1/2 justify-between max-sm:w-full'}>
               <DialogHeader className={'flex justify-between'}>
-                <div className={'flex justify-center items-center gap-3'}>
-                  <Avatar
-                    alt={'User Avatar'}
-                    className={'block max-sm:hidden'}
-                    size={9}
-                    src={avatarOwner}
-                  />
-                  <Typography as={'h3'} variant={'h3'}>
-                    {userName}
-                  </Typography>
-                </div>
+                <AvatarBlock avatarOwner={avatarOwner} ownerId={ownerId} userName={userName} />
                 {me?.userId && (
                   <Dropdown
                     className={'bg-dark-500'}
@@ -188,56 +148,17 @@ const PostModal = (props: PostModalProps) => {
         </Dialog>
       )}
       {isEditPost && (
-        <Dialog closePosition={'inside'} onOpenChange={handleCloseEditPost} open={open}>
-          <div className={'border border-dark-100'}>
-            <div className={'flex items-center pl-6 h-[60px] border-b border-dark-100'}>
-              <Typography variant={'h1'}>Edit Post</Typography>
-            </div>
-            <div
-              className={
-                'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem] z-[9999]'
-              }
-            >
-              <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>
-                {children}
-              </div>
-              <form
-                className={'m-6 flex flex-col flex-1 w-1/2 max-sm:w-full'}
-                onSubmit={handleSubmit(onSubmit)} // Отправка формы
-              >
-                <div className={'flex flex-col items-start'}>
-                  <div className={'mb-6 flex justify-center items-center gap-3'}>
-                    <Avatar
-                      alt={'User Avatar'}
-                      className={'block max-sm:hidden'}
-                      size={9}
-                      src={avatarOwner}
-                    />
-                    <Typography as={'h3'} variant={'h3'}>
-                      {userName}
-                    </Typography>
-                  </div>
-                  <Textarea
-                    autoResize
-                    className={'bg-dark-500'}
-                    label={'Add publication descriptions'}
-                    minHeight={100}
-                    {...register('description')} // Подключаем к react-hook-form
-                    defaultValue={post.description} // Устанавливаем начальное значение
-                  />
-                </div>
-                <div className={'h-full flex flex-col items-end justify-between'}>
-                  <Typography className={'text-light-900 text-[12px]'}>
-                    {post.description.length}/500
-                  </Typography>
-                  <Button type={'submit'} variant={'primary'}>
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </Dialog>
+        <EditPost
+          avatarOwner={avatarOwner}
+          description={description}
+          id={id}
+          onOpenChange={() => setIsEditPost(false)}
+          open={open}
+          ownerId={ownerId}
+          userName={userName}
+        >
+          {children}
+        </EditPost>
       )}
     </>,
     document.body // Здесь мы указываем, что хотим отрисовать в body

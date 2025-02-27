@@ -1,1 +1,1 @@
-// export * from './edit-post'
+export * from './edit-post'
