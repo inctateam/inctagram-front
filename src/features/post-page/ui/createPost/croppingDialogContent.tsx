@@ -1,7 +1,16 @@
-import { useState } from 'react'
+import { RefObject, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
+import { toast } from 'react-toastify'
 
-import { Edit, EditOutline, Maximize, MaximizeOutline } from '@/assets/icons'
+import {
+  Edit,
+  EditOutline,
+  Image,
+  ImageOutline,
+  Maximize,
+  MaximizeOutline,
+  PlusCircleOutline,
+} from '@/assets/icons'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -9,29 +18,41 @@ import {
 } from '@/features/post-page/ui/createPost/createPostSlice'
 import { getCroppedImage } from '@/features/post-page/ui/createPost/getCroppedImage'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody, IconButton } from '@/shared/ui'
+import { DialogBody, IconButton, ImageUploader } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { Slider } from '@/shared/ui/slider/slider'
 
 type CroppingDialogContentProps = {
+  fileInputRef: RefObject<HTMLInputElement>
   handleBack: () => void
+  handleFileSelect: () => void
   handleNext: () => void
+  setPhotoToUpload: (file: File) => void
 }
 
-export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialogContentProps) => {
+export const CroppingDialogContent = ({
+  fileInputRef,
+  handleBack,
+  handleFileSelect,
+  handleNext,
+  setPhotoToUpload,
+}: CroppingDialogContentProps) => {
   const dispatch = useAppDispatch()
   const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
 
-  console.log(imagesState)
-
   const [currentImage, setCurrentImage] = useState<number>(0)
-
-  console.log('currentImage', currentImage)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [edit, setEdit] = useState(false)
   const [showZoom, setShowZoom] = useState(false)
+  const [showImages, setShowImages] = useState(false)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
+  const [error, setError] = useState('')
+
+  if (error) {
+    toast.error(error)
+    setError('')
+  }
 
   const onCropComplete = async (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels)
@@ -81,6 +102,30 @@ export const CroppingDialogContent = ({ handleBack, handleNext }: CroppingDialog
               }
             >
               <Slider setZoom={setZoom} zoom={zoom} />
+            </div>
+          )}
+          <IconButton
+            className={'absolute bottom-3 right-3'}
+            color={'cropper'}
+            onClick={() => setShowImages(!showImages)}
+          >
+            {showImages ? <Image className={'text-accent-500'} /> : <ImageOutline />}
+          </IconButton>
+          {showImages && (
+            <div className={'absolute right-3 bottom-[49px] bg-dark-500 opacity-80'}>
+              <ImageUploader
+                fileInputRef={fileInputRef}
+                setError={setError}
+                setPhotoToUpload={setPhotoToUpload}
+              >
+                <IconButton size={'medium'}>
+                  <PlusCircleOutline
+                    onClick={() => {
+                      handleFileSelect()
+                    }}
+                  />
+                </IconButton>
+              </ImageUploader>
             </div>
           )}
         </div>

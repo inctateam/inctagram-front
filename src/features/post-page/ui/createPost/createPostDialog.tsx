@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useRef, useState } from 'react'
 
 import { createPostSliceActions } from '@/features/post-page/ui/createPost/createPostSlice'
 import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
@@ -43,19 +43,31 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
     setStage('2')
   }
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleFileSelect = () => {
+    console.log('11111')
+    fileInputRef?.current?.click()
+  }
+
   return (
     <>
       <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
         {stage === '1' && (
           <AddFilesDialogContent
+            fileInputRef={fileInputRef}
+            handleFileSelect={handleFileSelect}
             handleOpenDraft={handleOpenDraft}
             setPhotoToUpload={setPhotoToUpload}
           />
         )}
         {stage === '2' && (
           <CroppingDialogContent
+            fileInputRef={fileInputRef}
             handleBack={() => setStage('1')}
+            handleFileSelect={handleFileSelect}
             handleNext={() => setStage('4')}
+            setPhotoToUpload={setPhotoToUpload}
           />
         )}
         {stage === '4' && (
