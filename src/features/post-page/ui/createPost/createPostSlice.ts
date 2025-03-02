@@ -12,6 +12,9 @@ export const createPostSlice = createSlice({
     addImage: (state, action: PayloadAction<{ image: string }>) => {
       state.images.push(action.payload.image)
     },
+    deleteImage: (state, action: PayloadAction<{ index: number }>) => {
+      state.images.splice(action.payload.index, 1)
+    },
     setCroppedImages: (state, action: PayloadAction<{ images: string[] }>) => {
       state.croppedImages = [...action.payload.images]
     },

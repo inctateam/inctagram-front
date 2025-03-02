@@ -3,6 +3,7 @@ import Cropper, { Area } from 'react-easy-crop'
 import { toast } from 'react-toastify'
 
 import {
+  CloseOutline,
   Edit,
   EditOutline,
   Image,
@@ -112,7 +113,26 @@ export const CroppingDialogContent = ({
             {showImages ? <Image className={'text-accent-500'} /> : <ImageOutline />}
           </IconButton>
           {showImages && (
-            <div className={'absolute right-3 bottom-[49px] bg-dark-500 opacity-80'}>
+            <div
+              className={
+                'absolute right-3 bottom-[49px] bg-dark-500 opacity-80 flex gap-3 p-3 flex-wrap'
+              }
+            >
+              {imagesState.map((image, index) => (
+                <div className={'relative'} key={index}>
+                  <img alt={''} className={'w-20 h-20 object-contain'} src={image} />
+                  <IconButton
+                    className={'absolute top-1 right-1'}
+                    color={'cropper'}
+                    onClick={() => {
+                      dispatch(createPostSliceActions.deleteImage({ index }))
+                    }}
+                    size={'xs'}
+                  >
+                    <CloseOutline />
+                  </IconButton>
+                </div>
+              ))}
               <ImageUploader
                 fileInputRef={fileInputRef}
                 setError={setError}
