@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import {
   BookmarkOutline,
@@ -12,6 +13,7 @@ import {
   TrendingUpOutline,
 } from '@/assets/icons'
 import { useLogoutMutation, useMeQuery } from '@/features/auth/api'
+import { CreatePostDialog } from '@/features/post-page/ui/createPost/createPostDialog'
 import { PATH } from '@/shared/constants'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -43,13 +45,27 @@ export const Sidebar = () => {
   }
 
   const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
+  const [isCreatingPost, setIsCreatingPost] = useState<boolean>(false)
 
   const onItemClick = (item: SIDEBAR_ITEMS) => {
     setActiveItem(item)
   }
 
+  const onPostPublished = () => {
+    setIsCreatingPost(false)
+    toast.success('Post has been published successfully')
+    if (getMeData?.userId) {
+      router.push(PATH.PROFILE.replace(':id', getMeData?.userId?.toString()))
+    }
+  }
+
   return (
     <div className={'flex flex-col pl-5 items-start w-[220px] border-r border-gray-700 '}>
+      <CreatePostDialog
+        onOpenChange={setIsCreatingPost}
+        onPostPublished={onPostPublished}
+        open={isCreatingPost}
+      />
       <div className={'flex flex-col mt-[72px] space-y-6 '}>
         <SidebarItem
           href={'/'}
@@ -63,7 +79,8 @@ export const Sidebar = () => {
           icon={<PlusSquareOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.CREATE}
           item={t('create')}
-          onClick={() => onItemClick(SIDEBAR_ITEMS.CREATE)}
+          //onClick={() => onItemClick(SIDEBAR_ITEMS.CREATE)} доделать на закрытие модалки
+          onClick={() => setIsCreatingPost(true)}
         />
 
         <SidebarItem
