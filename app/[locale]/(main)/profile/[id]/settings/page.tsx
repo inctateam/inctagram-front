@@ -20,7 +20,7 @@ const ProfileSettigsPage = ({ params }: { params: { id: string } }) => {
     return <Spinner />
   }
   if (!userId) {
-    redirect('/')
+    redirect('/auth/sign-in')
   }
   if (userId) {
     if (paramsUserId !== userId) {

@@ -11,6 +11,7 @@ import {
 } from '@/features/profile-settings-page/ui/servises/fetchCountries'
 import { GeneralInformationFormValues } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
 import { Spinner, TabItem, Tabs, Typography } from '@/shared/ui'
+import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
 type ProfileSettingsProps = {
   profileInfo: GetMyProfileResponse
@@ -42,7 +43,7 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       aboutMe: data.aboutMe ?? null,
       city: data.city ?? null,
       country: data.country ?? null,
-      dateOfBirth: data.dateOfBirth ? data.dateOfBirth.toISOString().split('T')[0] : null, // Преобразуем в строку
+      dateOfBirth: data.dateOfBirth ? format(data.dateOfBirth, 'yyyy-MM-dd') : null,
       firstName: data.firstName,
       lastName: data.lastName,
       region: data.region ?? null,

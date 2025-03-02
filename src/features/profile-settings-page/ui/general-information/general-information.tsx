@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
@@ -16,6 +16,7 @@ import {
 import {
   Avatar,
   Button,
+  ControlledDatePickerSingle,
   ControlledTextField,
   ControlledTextarea,
   DatePickerSingle,
@@ -24,6 +25,7 @@ import {
 } from '@/shared/ui'
 import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/controlled-select'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
 
 type GeneralInformationProps = {
@@ -53,11 +55,11 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     minMaxUserName: tErrors('minMaxUserName'),
     requiredField: tErrors('requiredField'),
   }
-
   const {
     control,
     formState: { errors, isValid },
     handleSubmit,
+    setValue,
     watch,
   } = useForm<GeneralInformationFormValues>({
     defaultValues: {
@@ -71,9 +73,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
 
-  const selectCountry = watch('country') // Следим за страной
+  const selectCountry = watch('country')
 
-  // Загружаем города при изменении выбранной страны
   useEffect(() => {
     console.log('Загружаем города', cities)
     const getCities = async () => {
@@ -141,7 +142,10 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           name={'lastName'}
           required
         />
-        <DatePickerSingle label={t('dateOfBirth')} name={'dateOfBirth'} />
+        <DatePickerSingle
+          defaultValue={dateOfBirth}
+          onDateSelect={date => setValue('dateOfBirth', date)}
+        />
         <div className={'flex gap-6'}>
           <div className={'flex flex-col w-1/2'}>
             <ControlledSelect

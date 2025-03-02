@@ -1,7 +1,8 @@
 import { forwardRef, useState } from 'react'
-import { DayPicker, OnSelectHandler, PropsSingle } from 'react-day-picker'
+import { OnSelectHandler, PropsSingle } from 'react-day-picker'
 
 import { Calendar } from '@/shared/ui'
+import { formatDateToString } from '@/shared/utils/formatingDate/formatStringDate'
 import { format } from 'date-fns'
 
 import { DatePickerPopover, DatePickerPopoverProps } from '../date-picker-popover'
@@ -13,7 +14,7 @@ type DatePickerSingleProps = {
 } & Omit<DatePickerPopoverProps, 'value'>
 
 export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSingleProps>(
-  ({ date, onDateSelect, otherDatePickerProps, ...popoverTextFieldProps }, ref) => {
+  ({ date, defaultValue, onDateSelect, otherDatePickerProps, ...popoverTextFieldProps }, ref) => {
     const isControlled = date
 
     const [uncontrolledDate, setUncontrolledDate] = useState<Date>()
@@ -30,7 +31,9 @@ export const DatePickerSingle = forwardRef<HTMLInputElement, DatePickerSinglePro
       setUncontrolledDate(date)
     }
 
-    let formattedDate = 'Pick a date'
+    let formattedDate = defaultValue
+      ? formatDateToString(String(defaultValue), 'dd/LL/y')
+      : 'Pick a date'
 
     if (finalDate) {
       formattedDate = format(finalDate, 'dd/LL/y')
