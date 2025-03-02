@@ -28,7 +28,10 @@ import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/contr
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
+import { useGetProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import { Button, ControlledTextField, DatePickerSingle, Select, Textarea } from '@/shared/ui'
 
+import AddAvatarSection from './addAvatarSection'
 type GeneralInformationProps = {
   profileInfo: GetMyProfileResponse
 }
@@ -37,11 +40,15 @@ export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 const GeneralInformation = (props: GeneralInformationProps) => {
+  // const { control, handleSubmit } = useForm()
+  // const { data: profileData } = useGetProfileQuery()
+  // const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
   const { profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
 
   const [selectedCountry, setSelectedCountry] = useState<FormatedCountry | undefined>()
+
 
   const [updateProfile] = useUpdateProfileMutation()
   const { data: countries, isLoading: isLoadingCountries } = useGetCountriesQuery()
@@ -92,6 +99,14 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     setSelectedCountry(foundCountry)
   }, [selectCountry, countries])
 
+  // useEffect(() => {
+	// if (profileData?.avatars[0]) {
+	//   setAvatarSrc(profileData?.avatars[0].url)
+	// }
+  // }, [profileData])
+  // const onSubmit = async () => {
+	// alert('Submit')
+  // }
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
     const formattedData: UpdateMyProfile = {
       aboutMe: data.aboutMe ?? null,
@@ -127,10 +142,11 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     <form className={'flex flex-col py-6 w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
       <div className={'flex gap-6 mb-4'}>
         <div className={'flex flex-col gap-6'}>
-          <Avatar alt={'User avatar'} size={48} src={avatars[0].url} />
-          <Button className={'text-[0.9rem]'} type={'button'} variant={'outline'}>
-            Add a Profile Photo
-          </Button>
+		  <AddAvatarSection avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
+		  {/*<Avatar alt={'User avatar'} size={48} src={avatars[0].url} />*/}
+          {/*<Button className={'text-[0.9rem]'} type={'button'} variant={'outline'}>*/}
+          {/*  Add a Profile Photo*/}
+          {/*</Button>*/}
         </div>
         <div className={'flex flex-col w-full gap-6'}>
           <ControlledTextField

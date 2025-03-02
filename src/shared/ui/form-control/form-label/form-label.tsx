@@ -32,7 +32,7 @@ const FormLabel = (props: FormLabelProps) => {
     <Label
       className={cn(
         typographyVariants({ variant: 'regular14' }),
-        'text-light-900 cursor-pointer',
+        'text-light-900',
         disabled && 'text-dark-100',
         className
       )}

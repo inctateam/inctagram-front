@@ -6,10 +6,17 @@ import {
   GetPublicUserProfileResponse,
   GetUserByUserNameResponse,
   GetUserProfileResponse,
+  UploadProfileAvatarResponse,
 } from '../types/user-profile.types'
 
 export const userProfileApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    deleteProfileAvatar: builder.mutation<void, void>({
+      query: () => ({
+        method: 'DELETE',
+        url: 'v1/users/profile/avatar',
+      }),
+    }),
     getPostsByUserName: builder.query<GetPostsByUserNameResponse, string>({
       query: userName => ({
         method: 'GET',
@@ -57,13 +64,28 @@ export const userProfileApi = instagramApi.injectEndpoints({
         url: `v1/public-user/profile/${profileId}`,
       }),
     }),
+    uploadProfileAvatar: builder.mutation<UploadProfileAvatarResponse, { file: File }>({
+      query: ({ file }) => {
+        const formData = new FormData()
+
+        formData.append('file', file)
+
+        return {
+          body: formData,
+          method: 'POST',
+          url: 'v1/users/profile/avatar',
+        }
+      },
+    }),
   }),
 })
 export const {
+  useDeleteProfileAvatarMutation,
   useGetPostsByUserNameQuery,
   useGetProfileByUserNameQuery,
   useGetProfileQuery,
   useGetPublicPostsByUserIdQuery,
   useGetPublicUserProfileQuery,
   useLazyGetPublicPostsByUserIdQuery,
+  useUploadProfileAvatarMutation,
 } = userProfileApi
