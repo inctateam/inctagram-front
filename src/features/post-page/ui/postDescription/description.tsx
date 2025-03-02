@@ -1,4 +1,5 @@
 import { Avatar, Typography } from '@/shared/ui'
+import { formatDistanceToNow } from 'date-fns'
 
 type PostDescriptionProps = {
   avatar?: string
@@ -8,7 +9,9 @@ type PostDescriptionProps = {
 }
 
 const Description = (props: PostDescriptionProps) => {
-  const { avatar, description, userName } = props
+  const { avatar, createdAt, description, userName } = props
+
+  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true })
 
   return (
     <div className={'flex gap-3'}>
@@ -24,7 +27,7 @@ const Description = (props: PostDescriptionProps) => {
         </Typography>
         <div>
           <Typography as={'p'} className={'text-light-900'} variant={'small'}>
-            2 hours ago
+            {timeAgo}
           </Typography>
         </div>
       </div>

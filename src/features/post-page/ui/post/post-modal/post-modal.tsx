@@ -60,6 +60,7 @@ const PostModal = (props: PostModalProps) => {
     userName,
   } = post
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
+  const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
   const { data: me } = useMeQuery()
@@ -93,6 +94,11 @@ const PostModal = (props: PostModalProps) => {
     }
   }
 
+  // Функция для обновления описания
+  const handleDescriptionUpdate = (newDescription: string) => {
+    setCurrentDescription(newDescription) // Обновляем описание в состоянии
+  }
+
   // Возвращаем портал с модальным окном
   return createPortal(
     <>
@@ -124,7 +130,7 @@ const PostModal = (props: PostModalProps) => {
                   <Description
                     avatar={avatarOwner}
                     createdAt={createdAt}
-                    description={description}
+                    description={currentDescription}
                     userName={userName}
                   />
                   <Comments comments={comments?.items || []} isAuth={!!me?.userId} />
@@ -152,7 +158,8 @@ const PostModal = (props: PostModalProps) => {
           avatarOwner={avatarOwner}
           description={description}
           id={id}
-          onOpenChange={() => setIsEditPost(false)}
+          onDescriptionUpdate={handleDescriptionUpdate} // Передаем функцию обновления описания
+          onOpenChangeEdit={() => setIsEditPost(false)}
           open={open}
           ownerId={ownerId}
           userName={userName}
