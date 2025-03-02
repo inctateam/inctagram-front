@@ -138,7 +138,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       setCheckFullYears(null)
     }
     setValue('dateOfBirth', date)
-    console.log(isOlderThan13 ? 'Возраст 13 лет или больше' : 'Меньше 13 лет')
   }
 
   if (isLoadingCountries || isLoadingCities) {
