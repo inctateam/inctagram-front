@@ -1,14 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
+import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
 import {
-  FormatedCity,
-  FormatedCountry,
-  fetchCities,
-} from '@/features/profile-settings-page/ui/servises/fetchCountries'
+  useGetCitiesQuery,
+  useGetCountriesQuery,
+} from '@/features/profile-settings-page/ui/servises/countriesAndCities.api'
+import { FormatedCountry } from '@/features/profile-settings-page/ui/servises/types'
 import {
   GeneralInformationFormValues,
   GeneralInformationSchema,
@@ -16,12 +18,11 @@ import {
 import {
   Avatar,
   Button,
-  ControlledDatePickerSingle,
   ControlledTextField,
   ControlledTextarea,
   DatePickerSingle,
+  ProgressBar,
   Separator,
-  Spinner,
 } from '@/shared/ui'
 import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/controlled-select'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -29,8 +30,6 @@ import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
 
 type GeneralInformationProps = {
-  countries: FormatedCountry[]
-  onSubmitHandler: (data: GeneralInformationFormValues) => void
   profileInfo: GetMyProfileResponse
 }
 /*global IntlMessages*/
@@ -38,15 +37,23 @@ export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-  const { countries, onSubmitHandler, profileInfo } = props
+  const { profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
 
+  const [selectedCountry, setSelectedCountry] = useState<FormatedCountry | undefined>()
+
+  const [updateProfile] = useUpdateProfileMutation()
+  const { data: countries, isLoading: isLoadingCountries } = useGetCountriesQuery()
+  const { data: cities, isLoading: isLoadingCities } = useGetCitiesQuery(
+    selectedCountry?.countryCode || '',
+    {
+      skip: !selectedCountry?.countryCode,
+    }
+  )
+
   const t = useTranslations('ProfileSettings.GeneralInformation')
   const tErrors = useTranslations('ProfileSettings.GeneralInformation.formErrors')
-
-  const [cities, setCities] = useState<FormatedCity[] | null>(null)
-  const [error, setError] = useState<null | string>(null)
 
   const scheme = {
     aboutMeMaxLength: tErrors('aboutMeMaxLength'),
@@ -55,6 +62,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     minMaxUserName: tErrors('minMaxUserName'),
     requiredField: tErrors('requiredField'),
   }
+
   const {
     control,
     formState: { errors, isValid },
@@ -76,34 +84,42 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   const selectCountry = watch('country')
 
   useEffect(() => {
-    console.log('Загружаем города', cities)
-    const getCities = async () => {
-      if (!selectCountry) {
-        return
-      }
-      const currentCountry = countries.find(c => c.value === selectCountry)
+    if (!countries || !selectCountry) {
+      return
+    }
+    const foundCountry = countries.find(c => c.value === selectCountry)
 
-      try {
-        if (currentCountry) {
-          const fetchedCities = await fetchCities(currentCountry?.countryCode)
+    setSelectedCountry(foundCountry)
+  }, [selectCountry, countries])
 
-          setCities(fetchedCities)
-        }
-      } catch (error) {
-        handleRequestError(error)
-        setError('Error loading cities')
-      }
+  const onSubmitHandler = async (data: GeneralInformationFormValues) => {
+    const formattedData: UpdateMyProfile = {
+      aboutMe: data.aboutMe ?? null,
+      city: data.city ?? null,
+      country: data.country ?? null,
+      dateOfBirth: data.dateOfBirth ? format(data.dateOfBirth, 'yyyy-MM-dd') : null,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      region: data.region ?? null,
+      userName: data.userName,
     }
 
-    getCities()
-  }, [selectCountry])
+    try {
+      await updateProfile(formattedData).unwrap()
 
-  if (!profileInfo) {
-    return <Spinner />
+      toast.success('Profile updated successfully!')
+    } catch (error: unknown) {
+      handleRequestError(error)
+      throw new Error('Error updating profile:')
+    }
   }
 
-  if (error) {
-    return <div>{error}</div>
+  if (isLoadingCountries || isLoadingCities) {
+    return <ProgressBar />
+  }
+
+  if (!countries) {
+    return <div>Error</div>
   }
 
   return (
