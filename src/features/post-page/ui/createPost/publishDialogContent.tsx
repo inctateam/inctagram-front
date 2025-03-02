@@ -22,7 +22,6 @@ type FormValues = z.infer<typeof publishPostSchema>
 
 type CroppingDialogContentProps = {
   handleBack: () => void
-  //images: string[]
   onPostPublished: () => void
 }
 
@@ -34,8 +33,6 @@ export const PublishDialogContent = ({
   const [uploadPhoto] = useUploadImageForPostMutation()
 
   const images = useAppSelector(createPostSliceSelectors.selectImages)
-
-  console.log(images)
 
   const {
     control,
@@ -96,13 +93,11 @@ export const PublishDialogContent = ({
           </div>
           <form id={'publish-form'} onSubmit={handleSubmit(onSubmitHandler)}>
             <ControlledTextarea
-              autoResize={false}
-              className={'h-[120px] resize-none bg-dark-500'}
+              className={'h-[200px] resize-none bg-dark-500'}
               control={control}
               error={!!errors.description}
               helperText={errors.description?.message}
               label={'Введите описание для вашей публикации'}
-              minHeight={120}
               name={'description'}
             />
           </form>
