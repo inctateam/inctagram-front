@@ -15,8 +15,9 @@ import {
   GeneralInformationFormValues,
   GeneralInformationSchema,
 } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
+import { PATH } from '@/shared/constants'
+import { Nullable } from '@/shared/types'
 import {
-  Avatar,
   Button,
   ControlledTextField,
   ControlledTextarea,
@@ -28,10 +29,9 @@ import { ControlledSelect } from '@/shared/ui/controlled/controlled-select/contr
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useTranslations } from 'next-intl'
-import { useGetProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
-import { Button, ControlledTextField, DatePickerSingle, Select, Textarea } from '@/shared/ui'
 
 import AddAvatarSection from './addAvatarSection'
+
 type GeneralInformationProps = {
   profileInfo: GetMyProfileResponse
 }
@@ -40,16 +40,12 @@ export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-  // const { control, handleSubmit } = useForm()
-  // const { data: profileData } = useGetProfileQuery()
-  // const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
   const { profileInfo } = props
   const { aboutMe, avatars, city, country, dateOfBirth, firstName, lastName, userName } =
     profileInfo
 
   const [selectedCountry, setSelectedCountry] = useState<FormatedCountry | undefined>()
-
-
+  const [checkFullYears, setCheckFullYears] = useState<Nullable<string>>(null)
   const [updateProfile] = useUpdateProfileMutation()
   const { data: countries, isLoading: isLoadingCountries } = useGetCountriesQuery()
   const { data: cities, isLoading: isLoadingCities } = useGetCitiesQuery(
@@ -60,10 +56,12 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   )
 
   const t = useTranslations('ProfileSettings.GeneralInformation')
+  const tPrivacyPolicy = useTranslations('auth.SignUp')
   const tErrors = useTranslations('ProfileSettings.GeneralInformation.formErrors')
 
   const scheme = {
     aboutMeMaxLength: tErrors('aboutMeMaxLength'),
+    dateOfBirth: tErrors('dateOfBirth'),
     minMaxFirstName: tErrors('minMaxFirstName'),
     minMaxLastName: tErrors('minMaxLastName'),
     minMaxUserName: tErrors('minMaxUserName'),
@@ -99,14 +97,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     setSelectedCountry(foundCountry)
   }, [selectCountry, countries])
 
-  // useEffect(() => {
-	// if (profileData?.avatars[0]) {
-	//   setAvatarSrc(profileData?.avatars[0].url)
-	// }
-  // }, [profileData])
-  // const onSubmit = async () => {
-	// alert('Submit')
-  // }
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
     const formattedData: UpdateMyProfile = {
       aboutMe: data.aboutMe ?? null,
@@ -129,6 +119,28 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     }
   }
 
+  const onDateChange = (date: Date | undefined) => {
+    debugger
+    if (!date) {
+      return
+    }
+
+    const today = new Date()
+    const thirteenYearsAgo = new Date()
+
+    thirteenYearsAgo.setFullYear(today.getFullYear() - 13)
+
+    const isOlderThan13 = date <= thirteenYearsAgo
+
+    if (!isOlderThan13) {
+      setCheckFullYears(tErrors('dateOfBirth'))
+    } else {
+      setCheckFullYears(null)
+    }
+    setValue('dateOfBirth', date)
+    console.log(isOlderThan13 ? 'Возраст 13 лет или больше' : 'Меньше 13 лет')
+  }
+
   if (isLoadingCountries || isLoadingCities) {
     return <ProgressBar />
   }
@@ -138,15 +150,10 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   }
 
   return (
-    // <div className={'flex gap-6 mt-9'}>
     <form className={'flex flex-col py-6 w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
       <div className={'flex gap-6 mb-4'}>
         <div className={'flex flex-col gap-6'}>
-		  <AddAvatarSection avatarSrc={avatarSrc} setAvatarSrc={setAvatarSrc} />
-		  {/*<Avatar alt={'User avatar'} size={48} src={avatars[0].url} />*/}
-          {/*<Button className={'text-[0.9rem]'} type={'button'} variant={'outline'}>*/}
-          {/*  Add a Profile Photo*/}
-          {/*</Button>*/}
+          <AddAvatarSection avatars={avatars} />
         </div>
         <div className={'flex flex-col w-full gap-6'}>
           <ControlledTextField
@@ -174,10 +181,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             name={'lastName'}
             required
           />
-          <DatePickerSingle
-            defaultValue={dateOfBirth}
-            onDateSelect={date => setValue('dateOfBirth', date)}
-          />
+          <div>
+            <DatePickerSingle
+              defaultValue={dateOfBirth}
+              error={!!checkFullYears}
+              onDateSelect={date => onDateChange(date)}
+            />
+            {checkFullYears && (
+              <span className={'text-danger-500 text-xs'}>
+                {checkFullYears}{' '}
+                <a className={'underline'} href={PATH.PRIVACY_POLICY}>
+                  {tPrivacyPolicy('privacyPolicy')}
+                </a>
+              </span>
+            )}
+          </div>
           <div className={'flex gap-6'}>
             <div className={'flex flex-col w-1/2'}>
               <ControlledSelect
@@ -215,12 +233,11 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       </div>
       <Separator />
       <div className={'flex flex-row-reverse mt-4'}>
-        <Button disabled={!isValid} type={'submit'} variant={'outline'}>
+        <Button disabled={!isValid || !!checkFullYears} type={'submit'} variant={'outline'}>
           {t('saveChanges')}
         </Button>
       </div>
     </form>
-    // </div>
   )
 }
 

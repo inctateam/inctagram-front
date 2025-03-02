@@ -1,8 +1,8 @@
-import { Avatar } from '@/features/home-page/types'
+import { AvatarResponseType } from '@/features/home-page/types'
 import { Nullable } from '@/shared/types'
 export interface GetMyProfileResponse {
   aboutMe: string
-  avatars: Avatar[]
+  avatars: AvatarResponseType[]
   city: string
   country: string
   createdAt: string

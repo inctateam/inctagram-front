@@ -49,11 +49,11 @@ export interface PublicPostComment {
 
 //common interface
 export interface From {
-  avatars: Avatar[]
+  avatars: AvatarResponseType[]
   id: number
   username: string
 }
-export interface Avatar {
+export interface AvatarResponseType {
   createdAt: string
   fileSize: number
   height: number
