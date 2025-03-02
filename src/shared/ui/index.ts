@@ -1,5 +1,6 @@
 'use client'
 export * from './avatar'
+export * from './avatar-uploader'
 export * from './badge'
 export * from './button'
 export * from './calendar'

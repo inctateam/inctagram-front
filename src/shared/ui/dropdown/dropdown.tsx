@@ -11,15 +11,15 @@ import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 type DropdownMenuItemProps = {
   icon: ReactNode
   label: string
-  onClick?: () => void
 }
 
 type Props = {
   className?: string
   items: DropdownMenuItemProps[]
+  onClick: (label: string) => void
 } & ComponentPropsWithoutRef<typeof DropdownMenu>
 
-export const Dropdown = ({ className, items }: Props) => {
+export const Dropdown = ({ className, items, onClick }: Props) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -37,7 +37,7 @@ export const Dropdown = ({ className, items }: Props) => {
           <DropdownMenuItem key={i}>
             <Button
               className={'text-light-100'}
-              onClick={item.onClick}
+              onClick={() => onClick(item.label)}
               startIcon={item.icon}
               variant={'text'}
             >

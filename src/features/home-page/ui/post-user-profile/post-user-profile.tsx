@@ -1,14 +1,15 @@
 import { useState } from 'react'
 
 import { Post } from '@/features/home-page/ui/user-profile/types/user-profile.types'
-import { PostModal } from '@/features/post-page/ui/post'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { ImageContent } from '@/shared/ui/image-content'
 
 type Props = {
+  onDelete: (postId: number) => void // Функция для удаления поста
   post: Post
 }
 
-export const PostUserProfile = ({ post }: Props) => {
+export const PostUserProfile = ({ onDelete, post }: Props) => {
   const [openPostId, setOpenPostId] = useState(false)
   const handleOpenPostModal = () => {
     /*    if (!isExpanded) {
@@ -31,6 +32,10 @@ export const PostUserProfile = ({ post }: Props) => {
     setOpenPostId(prev => !prev)
   }
 
+  const handleDelete = () => {
+    onDelete(post.id) // Вызываем удаление поста
+  }
+
   return (
     <>
       <div className={'min-h-[120px] cursor-pointer'}>
@@ -40,7 +45,12 @@ export const PostUserProfile = ({ post }: Props) => {
         />
       </div>
       {openPostId && (
-        <PostModal onOpenChange={handleClosePostModal} open={openPostId} post={post}>
+        <PostModal
+          onDelete={handleDelete}
+          onOpenChange={handleClosePostModal}
+          open={openPostId}
+          post={post}
+        >
           <ImageContent itemImages={post.images.map(image => image.url)} />
         </PostModal>
       )}

@@ -49,6 +49,12 @@ export const postPageApi = instagramApi.injectEndpoints({
         }
       },
     }),
+    deletePost: builder.mutation<void, { postId: number }>({
+      query: ({ postId }) => ({
+        method: 'DELETE',
+        url: `v1/posts/${postId}`,
+      }),
+    }),
     post: builder.query<PublicPostItem, { postId: number }>({
       query: ({ postId, ...params }) => ({
         params,
@@ -65,6 +71,13 @@ export const postPageApi = instagramApi.injectEndpoints({
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/likes`,
+      }),
+    }),
+    uploadDescription: builder.mutation<void, { description: string; postId: number }>({
+      query: ({ description, postId }) => ({
+        body: { description },
+        method: 'PUT',
+        url: `v1/posts/${postId}`,
       }),
     }),
     uploadImageForPost: builder.mutation<UploadFileResponse, { file: File }>({
@@ -94,9 +107,11 @@ export const {
   useCommentAnswersQuery,
   useCommentLikesQuery,
   useCreatePostMutation,
+  useDeletePostMutation,
   usePostCommentsQuery,
   usePostLikesQuery,
   usePostQuery,
+  useUploadDescriptionMutation,
   useUploadImageForPostMutation,
   useUserPostsQuery,
 } = postPageApi
