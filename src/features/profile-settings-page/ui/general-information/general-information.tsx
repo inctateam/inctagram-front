@@ -97,7 +97,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       aboutMe: data.aboutMe ?? null,
       city: data.city ?? null,
       country: data.country ?? null,
-      dateOfBirth: data.dateOfBirth ? format(data.dateOfBirth, 'yyyy-MM-dd') : null,
+      dateOfBirth: data.dateOfBirth ? format(data.dateOfBirth, 'yyyy-MM-dd') : dateOfBirth,
       firstName: data.firstName,
       lastName: data.lastName,
       region: data.region ?? null,
@@ -123,88 +123,88 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   }
 
   return (
-    <div className={'flex gap-6 mt-9'}>
-      <div className={'flex flex-col gap-6'}>
-        <Avatar alt={'User avatar'} size={48} src={avatars[0].url} />
-        <Button className={'text-[0.9rem]'} type={'button'} variant={'outline'}>
-          Add a Profile Photo
-        </Button>
-      </div>
-      <form className={'flex flex-col gap-6 w-full '} onSubmit={handleSubmit(onSubmitHandler)}>
-        {/*<div className={'flex border-b border-dark-300 pb-6'}>*/}
-        {/*<div className={'flex flex-col w-full gap-6'}>*/}
-        <ControlledTextField
-          control={control}
-          error={!!errors.userName?.message}
-          helperText={errors.userName?.message}
-          label={t('userName')}
-          name={'userName'}
-          placeholder={'Enter your user name'}
-          required
-        />
-        <ControlledTextField
-          control={control}
-          error={!!errors.firstName?.message}
-          helperText={errors.firstName?.message}
-          label={t('firstName')}
-          name={'firstName'}
-          required
-        />
-        <ControlledTextField
-          control={control}
-          error={!!errors.lastName?.message}
-          helperText={errors.lastName?.message}
-          label={t('lastName')}
-          name={'lastName'}
-          required
-        />
-        <DatePickerSingle
-          defaultValue={dateOfBirth}
-          onDateSelect={date => setValue('dateOfBirth', date)}
-        />
-        <div className={'flex gap-6'}>
-          <div className={'flex flex-col w-1/2'}>
-            <ControlledSelect
-              className={'h-44'}
-              control={control}
-              defaultValue={country ?? countries[0].value}
-              label={t('selectYourCountry')}
-              name={'country'}
-              options={countries.map(country => ({
-                id: country.id,
-                label: country.label,
-                value: country.value,
-              }))}
-            />
-          </div>
-          <div className={'flex flex-col w-1/2'}>
-            <ControlledSelect
-              className={'h-44'}
-              control={control}
-              defaultValue={city}
-              label={t('selectYourCity')}
-              name={'city'}
-              options={cities ?? []}
-            />
-          </div>
-        </div>
-        <ControlledTextarea
-          className={'[&::-webkit-scrollbar]:hidden'}
-          control={control}
-          defaultValue={aboutMe ?? ''}
-          label={t('aboutMe')}
-          name={'aboutMe'}
-        />
-        {/*</div>*/}
-        {/*</div>*/}
-        <Separator />
-        <div className={'flex flex-row-reverse'}>
-          <Button disabled={!isValid} type={'submit'} variant={'outline'}>
-            {t('saveChanges')}
+    // <div className={'flex gap-6 mt-9'}>
+    <form className={'flex flex-col py-6 w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
+      <div className={'flex gap-6 mb-4'}>
+        <div className={'flex flex-col gap-6'}>
+          <Avatar alt={'User avatar'} size={48} src={avatars[0].url} />
+          <Button className={'text-[0.9rem]'} type={'button'} variant={'outline'}>
+            Add a Profile Photo
           </Button>
         </div>
-      </form>
-    </div>
+        <div className={'flex flex-col w-full gap-6'}>
+          <ControlledTextField
+            control={control}
+            error={!!errors.userName?.message}
+            helperText={errors.userName?.message}
+            label={t('userName')}
+            name={'userName'}
+            placeholder={'Enter your user name'}
+            required
+          />
+          <ControlledTextField
+            control={control}
+            error={!!errors.firstName?.message}
+            helperText={errors.firstName?.message}
+            label={t('firstName')}
+            name={'firstName'}
+            required
+          />
+          <ControlledTextField
+            control={control}
+            error={!!errors.lastName?.message}
+            helperText={errors.lastName?.message}
+            label={t('lastName')}
+            name={'lastName'}
+            required
+          />
+          <DatePickerSingle
+            defaultValue={dateOfBirth}
+            onDateSelect={date => setValue('dateOfBirth', date)}
+          />
+          <div className={'flex gap-6'}>
+            <div className={'flex flex-col w-1/2'}>
+              <ControlledSelect
+                className={'h-44'}
+                control={control}
+                defaultValue={country ?? countries[0].value}
+                label={t('selectYourCountry')}
+                name={'country'}
+                options={countries.map(country => ({
+                  id: country.id,
+                  label: country.label,
+                  value: country.value,
+                }))}
+              />
+            </div>
+            <div className={'flex flex-col w-1/2'}>
+              <ControlledSelect
+                className={'h-44'}
+                control={control}
+                defaultValue={city}
+                label={t('selectYourCity')}
+                name={'city'}
+                options={cities ?? []}
+              />
+            </div>
+          </div>
+          <ControlledTextarea
+            className={'min-h-20 max-h-32 [&::-webkit-scrollbar]:hidden'}
+            control={control}
+            defaultValue={aboutMe ?? ''}
+            label={t('aboutMe')}
+            name={'aboutMe'}
+          />
+        </div>
+      </div>
+      <Separator />
+      <div className={'flex flex-row-reverse mt-4'}>
+        <Button disabled={!isValid} type={'submit'} variant={'outline'}>
+          {t('saveChanges')}
+        </Button>
+      </div>
+    </form>
+    // </div>
   )
 }
 
