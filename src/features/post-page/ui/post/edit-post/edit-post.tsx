@@ -110,13 +110,11 @@ export const EditPost = ({
           </form>
         </div>
       </div>
-      {isClosePost && (
-        <ClosePost
-          onOpenChange={setIsClosePost}
-          onOpenChangeEdit={onOpenChangeEdit}
-          open={isClosePost}
-        />
-      )}
+      <ClosePost
+        onOpenChange={setIsClosePost}
+        onOpenChangeEdit={onOpenChangeEdit}
+        open={isClosePost}
+      />
     </Dialog>
   )
 }
