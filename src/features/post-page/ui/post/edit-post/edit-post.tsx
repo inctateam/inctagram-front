@@ -1,9 +1,10 @@
 'use client'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { useUploadDescriptionMutation } from '@/features/post-page/api'
+import { ClosePost } from '@/features/post-page/ui/post/close-post'
 import { Button, Dialog, ProgressBar, Textarea, Typography } from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,7 +15,8 @@ type Props = {
   children: ReactNode
   description: string
   id: number
-  onOpenChange: (open: boolean) => void
+  onDescriptionUpdate: (description: string) => void
+  onOpenChangeEdit: (open: boolean) => void
   open: boolean
   ownerId: number
   userName: string
@@ -31,11 +33,14 @@ export const EditPost = ({
   children,
   description,
   id,
-  onOpenChange,
+  onDescriptionUpdate,
+  onOpenChangeEdit,
   open,
   ownerId,
   userName,
 }: Props) => {
+  // Состояние окна с предупреждением о закрытии
+  const [isClosePost, setIsClosePost] = useState(false)
   // Хуки для работы с формой
   const { handleSubmit, register } = useForm<EditDescriptionSchema>({
     defaultValues: {
@@ -56,7 +61,9 @@ export const EditPost = ({
   const onSubmit = async (data: EditDescriptionSchema) => {
     try {
       await uploadDescription({ description: data.description, postId: id })
-      onOpenChange(false) // Закрываем модалку редактирования
+      // Обновление описания в родительском компоненте
+      onDescriptionUpdate(data.description) // Передаем новое описание в родительский компонент
+      onOpenChangeEdit(false) // Закрываем модалку редактирования
       toast.success('Description updated successfully')
     } catch (error) {
       console.error('Error updating description:', error)
@@ -64,14 +71,14 @@ export const EditPost = ({
   }
 
   return (
-    <Dialog closePosition={'inside'} onOpenChange={onOpenChange} open={open}>
+    <Dialog closePosition={'inside'} onOpenChange={() => setIsClosePost(true)} open={open}>
       <div className={'border border-dark-100'}>
-        <div className={'flex items-center pl-6 h-[60px] border-b border-dark-100'}>
+        <div className={'flex items-center pl-6 h-[4rem] border-b border-dark-100'}>
           <Typography variant={'h1'}>Edit Post</Typography>
         </div>
         <div
           className={
-            'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem] z-[9999]'
+            'flex w-[61rem] h-[35rem] bg-dark-300 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
           }
         >
           <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>{children}</div>
@@ -103,6 +110,11 @@ export const EditPost = ({
           </form>
         </div>
       </div>
+      <ClosePost
+        onOpenChange={setIsClosePost}
+        onOpenChangeEdit={onOpenChangeEdit}
+        open={isClosePost}
+      />
     </Dialog>
   )
 }

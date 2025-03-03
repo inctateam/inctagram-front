@@ -1,24 +1,28 @@
-import { ChangeEvent, RefObject, useState } from 'react'
-
-import { ImageOutline } from '@/assets/icons'
-import { Typography } from '@/shared/ui'
+import { ChangeEvent, ReactNode, RefObject } from 'react'
 
 type ImageUploaderProps = {
+  children: ReactNode
   fileInputRef: RefObject<HTMLInputElement>
+  maxSizeMb?: number
+  setError: (error: string) => void
   setPhotoToUpload: (file: File) => void
 }
 
-export const ImageUploader = ({ fileInputRef, setPhotoToUpload }: ImageUploaderProps) => {
-  const [error, setError] = useState('')
-
+export const ImageUploader = ({
+  children,
+  fileInputRef,
+  maxSizeMb = 20,
+  setError,
+  setPhotoToUpload,
+}: ImageUploaderProps) => {
   const onFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
     setError('')
 
     const validFormats = ['image/jpeg', 'image/png']
-    const maxSizeInB = 20000000
+    const maxSizeByte = maxSizeMb * 1024 * 1024
 
     if (e.currentTarget.files) {
-      if (e.currentTarget.files[0].size < maxSizeInB) {
+      if (e.currentTarget.files[0].size < maxSizeByte) {
         if (validFormats.includes(e.currentTarget.files[0].type)) {
           setPhotoToUpload(e.currentTarget.files[0])
         } else {
@@ -42,16 +46,7 @@ export const ImageUploader = ({ fileInputRef, setPhotoToUpload }: ImageUploaderP
         ref={fileInputRef}
         type={'file'}
       />
-      {error && (
-        <div
-          className={'w-full flex justify-center bg-danger-900 border border-danger-500 py-2 px-6'}
-        >
-          <Typography variant={'bold14'}>{error}</Typography>
-        </div>
-      )}
-      <div className={'w-[222px] h-[228px] flex justify-center items-center bg-dark-500'}>
-        <ImageOutline height={36} width={36} />
-      </div>
+      {children}
     </div>
   )
 }

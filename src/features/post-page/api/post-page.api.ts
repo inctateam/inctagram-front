@@ -49,6 +49,12 @@ export const postPageApi = instagramApi.injectEndpoints({
         }
       },
     }),
+    deletePost: builder.mutation<void, { postId: number }>({
+      query: ({ postId }) => ({
+        method: 'DELETE',
+        url: `v1/posts/${postId}`,
+      }),
+    }),
     post: builder.query<PublicPostItem, { postId: number }>({
       query: ({ postId, ...params }) => ({
         params,
@@ -101,6 +107,7 @@ export const {
   useCommentAnswersQuery,
   useCommentLikesQuery,
   useCreatePostMutation,
+  useDeletePostMutation,
   usePostCommentsQuery,
   usePostLikesQuery,
   usePostQuery,

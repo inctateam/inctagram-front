@@ -30,7 +30,7 @@ const iconButtonVariants = cva(
           'transition',
         ],
         color: 'default',
-        size: ['medium', 'small'],
+        size: ['medium', 'small', 'xs'],
       },
       {
         className: [
@@ -40,7 +40,7 @@ const iconButtonVariants = cva(
           'transition',
         ],
         color: 'primary',
-        size: ['medium', 'small'],
+        size: ['medium', 'small', 'xs'],
       },
     ],
     defaultVariants: {
@@ -51,6 +51,7 @@ const iconButtonVariants = cva(
       color: {
         carousel:
           'text-light-100 bg-dark-500/20 hover:bg-dark-500/40 active:bg-dark-500/60 disabled:text-light-900 disabled:bg-transparent transition',
+        cropper: 'rounded-none bg-dark-500 opacity-80 hover:opacity-100',
         default: 'text-light-100',
         primary: 'text-accent-500',
       },
@@ -58,6 +59,7 @@ const iconButtonVariants = cva(
         default: '',
         medium: 'text-2xl p-1.5',
         small: 'text-base p-1.5',
+        xs: 'text-xs p-0',
       },
     },
   }

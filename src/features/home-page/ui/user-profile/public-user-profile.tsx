@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
@@ -27,10 +27,12 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
 
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(userId)
 
-  const { data: posts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery({
+  const { data: initialPosts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery({
     pageSize: POSTS_PER_PAGE,
     userId,
   })
+
+  const [posts, setPosts] = useState(initialPosts?.items || [])
 
   const [trigger, { isFetching: isFetchingMore }] = useLazyGetPublicPostsByUserIdQuery()
 
@@ -38,11 +40,12 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   const loadMorePosts = useCallback(() => {
     if (
       posts &&
-      posts.items.length > 0 &&
-      posts.totalCount > posts.items.length &&
+      posts.length > 0 &&
+      initialPosts?.totalCount !== undefined && // Проверка, что totalCount определен
+      initialPosts.totalCount > posts.length &&
       !isFetchingMore
     ) {
-      const lastPost = posts.items[posts.items.length - 1]
+      const lastPost = posts[posts.length - 1]
 
       trigger({
         endCursorPostId: lastPost.id,
@@ -50,7 +53,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         userId,
       })
     }
-  }, [posts, isFetchingMore, trigger, userId])
+  }, [posts, isFetchingMore, trigger, userId, initialPosts])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,6 +79,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     }
   }, [posts, isFetchingMore, viewportRef, trigger, loadMorePosts])
 
+  const handlePostDeletion = (postId: number) => {
+    // Удалить пост локально из состояния
+    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId))
+  }
+
   if (profileLoading || postsLoading) {
     return <ProgressBar />
   }
@@ -84,7 +92,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     <ScrollArea viewportRef={viewportRef}>
       <div className={'flex flex-col mt-9 max-w-[932px] gap-[53px] mx-auto'}>
         <div className={'flex mx-auto gap-9 w-full'}>
-          <div className={'w-[204px'}>
+          <div className={'w-[204px]'}>
             <Avatar alt={'avatar'} size={48} src={publicProfile?.avatars[0]?.url} />
           </div>
 
@@ -128,10 +136,13 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         </div>
 
         <div className={'w-full flex flex-wrap gap-2 h-[450px] '}>
-          {Array.isArray(posts?.items) && posts.items.length > 0
-            ? posts.items.map(post => (
+          {Array.isArray(posts) && posts.length > 0
+            ? posts.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
-                  <PostUserProfile post={post} />
+                  <PostUserProfile
+                    onDelete={handlePostDeletion} // Передаем функцию удаления
+                    post={post}
+                  />
                 </div>
               ))
             : null}

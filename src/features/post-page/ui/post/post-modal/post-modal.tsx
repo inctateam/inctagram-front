@@ -1,6 +1,7 @@
 'use client'
 import { ReactNode, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { toast } from 'react-toastify'
 
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
@@ -9,19 +10,21 @@ import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashO
 import { useMeQuery } from '@/features/auth/api'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
-import { usePostCommentsQuery } from '@/features/post-page/api'
+import { useDeletePostMutation, usePostCommentsQuery } from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
+import { DeletePost } from '@/features/post-page/ui/post/delete-post'
 import { EditPost } from '@/features/post-page/ui/post/edit-post'
-import { Dialog, DialogBody, DialogHeader, Dropdown } from '@/shared/ui'
+import { Dialog, DialogBody, DialogHeader, Dropdown, ProgressBar } from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 
 import { Description } from '../../postDescription'
 
 type PostModalProps = {
   children: ReactNode
+  onDelete?: (postId: number) => void
   onOpenChange: (open: boolean) => void
   open: boolean
   post: PublicPostItem
@@ -47,7 +50,7 @@ const friendDropDown = [
   },
 ]
 const PostModal = (props: PostModalProps) => {
-  const { children, onOpenChange, open, post } = props
+  const { children, onDelete, onOpenChange, open, post } = props
   const {
     avatarOwner,
     avatarWhoLikes,
@@ -60,9 +63,12 @@ const PostModal = (props: PostModalProps) => {
     userName,
   } = post
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
+  const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
+  const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
   const { data: me } = useMeQuery()
+  const [deletePost, { isError, isLoading }] = useDeletePostMutation()
   const comments = me?.userId ? privateComments : publicComments
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
@@ -89,8 +95,33 @@ const PostModal = (props: PostModalProps) => {
     if (label === 'Edit post') {
       setIsEditPost(true) // Устанавливаем состояние, что редактирование активно
     } else if (label === 'Delete post') {
-      console.log('Delete post')
+      setIsDeletePost(true)
     }
+  }
+
+  // Функция для обновления описания
+  const handleDescriptionUpdate = (newDescription: string) => {
+    setCurrentDescription(newDescription) // Обновляем описание в состоянии
+  }
+  const handleDeletePost = async (id: number) => {
+    try {
+      await deletePost({ postId: id })
+      onOpenChange(true) // Закрываем модалку удаления
+      if (onDelete) {
+        onDelete(id) // удаляем из компоненты PublicUserProfile удалённый пост без перезагрузки страницы
+      }
+      toast.success('The post has been successfully deleted')
+    } catch (error) {
+      console.error('Error deleted post:', error)
+    }
+  }
+
+  if (isError) {
+    toast.error('The post has not been found')
+  }
+
+  if (isLoading) {
+    return <ProgressBar />
   }
 
   // Возвращаем портал с модальным окном
@@ -124,7 +155,7 @@ const PostModal = (props: PostModalProps) => {
                   <Description
                     avatar={avatarOwner}
                     createdAt={createdAt}
-                    description={description}
+                    description={currentDescription}
                     userName={userName}
                   />
                   <Comments comments={comments?.items || []} isAuth={!!me?.userId} />
@@ -147,19 +178,23 @@ const PostModal = (props: PostModalProps) => {
           </div>
         </Dialog>
       )}
-      {isEditPost && (
-        <EditPost
-          avatarOwner={avatarOwner}
-          description={description}
-          id={id}
-          onOpenChange={() => setIsEditPost(false)}
-          open={open}
-          ownerId={ownerId}
-          userName={userName}
-        >
-          {children}
-        </EditPost>
-      )}
+      <EditPost
+        avatarOwner={avatarOwner}
+        description={description}
+        id={id}
+        onDescriptionUpdate={handleDescriptionUpdate} // Передаем функцию обновления описания
+        onOpenChangeEdit={() => setIsEditPost(false)}
+        open={isEditPost}
+        ownerId={ownerId}
+        userName={userName}
+      >
+        {children}
+      </EditPost>
+      <DeletePost
+        onOpenChange={setIsDeletePost}
+        onOpenChangeDelete={() => handleDeletePost(id)}
+        open={isDeletePost}
+      />
     </>,
     document.body // Здесь мы указываем, что хотим отрисовать в body
   )
