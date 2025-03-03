@@ -1,5 +1,6 @@
 import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
+import { MyPayments } from '@/features/profile-settings-page/ui/my-payments'
 import { Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
 import { useTranslations } from 'next-intl'
 
@@ -32,7 +33,7 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       </TabsContent>
 
       <TabsContent value={'My-payments'}>
-        <Typography>My payments</Typography>
+        <MyPayments />
       </TabsContent>
     </Tabs>
   )

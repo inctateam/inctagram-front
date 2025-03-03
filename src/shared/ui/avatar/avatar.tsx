@@ -46,9 +46,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             {...props}
             alt={alt}
             className={'h-full w-full object-cover'}
-            height={height}
+            height={height || 48}
             src={src}
-            width={width}
+            width={width || 48}
           />
         ) : (
           <ImageOutline className={cn(iconSizeMap[size], 'text-light-100')} />

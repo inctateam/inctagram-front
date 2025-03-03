@@ -12,9 +12,11 @@ const CommentBody = ({ avatars, content, userName }: CommentBodyProps) => {
         <Avatar
           alt={'User Avatar'}
           className={'block sm:hidden'}
+          height={avatars[0].height}
           onClick={() => alert('redirect to user profile')}
           size={9}
           src={avatars[0]?.url}
+          width={avatars[0].width}
         />
       </div>
       <div className={'flex flex-col ml-3 mr-6 gap-1 text-wrap'}>
