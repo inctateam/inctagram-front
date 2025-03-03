@@ -8,7 +8,15 @@ import {
   useGetProfileQuery,
   useUploadProfileAvatarMutation,
 } from '@/features/home-page/ui/user-profile/api/user-profile.api'
-import { AlertDialog, Avatar, Button, CancelButton, ConfirmButton, Spinner } from '@/shared/ui'
+import {
+  AlertDialog,
+  Avatar,
+  Button,
+  CancelButton,
+  ConfirmButton,
+  ProgressBar,
+  Spinner,
+} from '@/shared/ui'
 
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
 
@@ -31,7 +39,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
     if (avatars?.[0]) {
       setAvatarSrc(avatars[0].url)
     }
-  }, [profileData])
+  }, [avatars, profileData])
   const handleDeletePhoto = async () => {
     setPhotoToUpload(null)
     try {
@@ -66,12 +74,21 @@ const AddAvatarSection = ({ avatars }: Props) => {
       </div>
     )
   }
+  if (!profileData) {
+    return <ProgressBar />
+  }
 
   return (
     <>
       <div className={'flex flex-col items-center mt-12'}>
         <div className={'relative mb-6'}>
-          <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
+          <Avatar
+            alt={'User avatar'}
+            height={avatars?.[0].height}
+            size={48}
+            src={avatarSrc}
+            width={avatars?.[0].width}
+          />
           {avatarSrc && (
             <div className={'absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2'}>
               <CloseOutline

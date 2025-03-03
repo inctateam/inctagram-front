@@ -93,7 +93,13 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
       <div className={'flex flex-col mt-9 max-w-[932px] gap-[53px] mx-auto'}>
         <div className={'flex mx-auto gap-9 w-full'}>
           <div className={'w-[204px]'}>
-            <Avatar alt={'avatar'} size={48} src={publicProfile?.avatars[0]?.url} />
+            <Avatar
+              alt={'avatar'}
+              height={publicProfile?.avatars[0]?.height}
+              size={48}
+              src={publicProfile?.avatars[0]?.url}
+              width={publicProfile?.avatars[0]?.width}
+            />
           </div>
 
           <div className={'flex flex-col'}>
