@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { CloseOutline } from '@/assets/icons'
+import { AvatarResponseType } from '@/features/home-page/types'
 import {
   useDeleteProfileAvatarMutation,
+  useGetProfileQuery,
   useUploadProfileAvatarMutation,
 } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { AlertDialog, Avatar, Button, CancelButton, ConfirmButton, Spinner } from '@/shared/ui'
@@ -11,19 +13,25 @@ import { AlertDialog, Avatar, Button, CancelButton, ConfirmButton, Spinner } fro
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
 
 interface Props {
-  avatarSrc: string | undefined
-  setAvatarSrc: (src: string | undefined) => void
+  avatars: AvatarResponseType[] | undefined
 }
-const AddAvatarSection = ({ avatarSrc, setAvatarSrc }: Props) => {
+const AddAvatarSection = ({ avatars }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
   const [photoToUpload, setPhotoToUpload] = useState<File | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [avatarSrc, setAvatarSrc] = useState<string | undefined>(undefined)
+  const { data: profileData } = useGetProfileQuery()
   const [deleteProfileAvatar, { isLoading: isDeleting }] = useDeleteProfileAvatarMutation()
   const [uploadProfileAvatar, { isLoading: isUploading }] = useUploadProfileAvatarMutation()
   const handlePhotoUploaded = (file: File) => {
     setPhotoToUpload(file) // Сохраняем файл для отправки на сервер
   }
 
+  useEffect(() => {
+    if (avatars?.[0]) {
+      setAvatarSrc(avatars[0].url)
+    }
+  }, [profileData])
   const handleDeletePhoto = async () => {
     setPhotoToUpload(null)
     try {
@@ -53,7 +61,7 @@ const AddAvatarSection = ({ avatarSrc, setAvatarSrc }: Props) => {
 
   if (isDeleting || isUploading) {
     return (
-      <div className={'w-[256px]'}>
+      <div className={'w-48'}>
         <Spinner />
       </div>
     )
@@ -79,11 +87,11 @@ const AddAvatarSection = ({ avatarSrc, setAvatarSrc }: Props) => {
           onSendPhoto={handleSendPhoto}
           open={open}
         />
-        {!avatarSrc ? (
-          <Button className={'text-[0.9rem] p-4'} onClick={() => setOpen(true)} variant={'outline'}>
-            Add a Profile Photo
-          </Button>
-        ) : null}
+        {/*{!avatarSrc ? (*/}
+        <Button className={'text-[0.9rem] p-4'} onClick={() => setOpen(true)} variant={'outline'}>
+          Add a Profile Photo
+        </Button>
+        {/*) : null}*/}
       </div>
       {/* Диалог подтверждения удаления фото аватара*/}
       <AlertDialog

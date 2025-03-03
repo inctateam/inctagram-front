@@ -1,14 +1,9 @@
-import { TabItem, Tabs } from '@/shared/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
 import { Meta, StoryObj } from '@storybook/react'
 
 const meta: Meta<typeof Tabs> = {
   args: {
     defaultValue: 'tab1',
-    tabs: [
-      { content: <p>Content for Tab 1</p>, label: 'Tab 1', value: 'tab1' },
-      { content: <p>Content for Tab 2</p>, label: 'Tab 2', value: 'tab2' },
-      { content: <p>Content for Tab 3</p>, label: 'Tab 3', value: 'tab3' },
-    ] as TabItem[],
   },
   component: Tabs,
   tags: ['autodocs'],
@@ -21,9 +16,26 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const TabsInDiv: Story = {
-  render: args => (
+  render: () => (
     <div style={{ width: '250px' }}>
-      <Tabs {...args} />
+      <Tabs defaultValue={'tab1'}>
+        <TabsList>
+          <TabsTrigger value={'tab1'}>Tab1</TabsTrigger>
+          <TabsTrigger value={'tab2'}>Tab2</TabsTrigger>
+          <TabsTrigger value={'tab3'}>Tab3</TabsTrigger>
+        </TabsList>
+        <TabsContent value={'tab1'}>
+          <Typography>tab1 content</Typography>
+        </TabsContent>
+
+        <TabsContent value={'tab2'}>
+          <Typography>tab2 content</Typography>
+        </TabsContent>
+
+        <TabsContent value={'tab3'}>
+          <Typography>tab3 content</Typography>
+        </TabsContent>
+      </Tabs>
     </div>
   ),
 }

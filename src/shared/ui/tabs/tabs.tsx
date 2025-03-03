@@ -4,21 +4,21 @@ import { cn } from '@/shared/utils'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
 
 type TabsProps = {
+  children: ReactNode
   className?: string
   defaultValue: string
-  tabs: TabItem[]
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
 
 const Tabs = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsProps>(
-  ({ className, defaultValue, tabs, ...props }, ref) => {
+  ({ children, className, defaultValue, ...props }, ref) => {
     return (
-      <TabsRoot className={'w-full'} defaultValue={defaultValue} ref={ref}>
-        <TabsList className={cn('flex justify-between', className)} tabs={tabs} {...props} />
-        {tabs.map(t => (
-          <TabsContent key={t.value} value={t.value}>
-            {t.content}
-          </TabsContent>
-        ))}
+      <TabsRoot
+        className={cn('w-full', className)}
+        defaultValue={defaultValue}
+        ref={ref}
+        {...props}
+      >
+        {children}
       </TabsRoot>
     )
   }
@@ -33,18 +33,14 @@ export type TabItem = {
 }
 
 type TabsListProps = {
+  children: ReactNode
   className?: string
-  tabs: TabItem[]
 } & ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 
 const TabsList = forwardRef<ElementRef<typeof TabsPrimitive.List>, TabsListProps>(
-  ({ className, tabs, ...props }, ref) => (
-    <TabsPrimitive.List className={className} ref={ref} {...props}>
-      {tabs.map(tab => (
-        <TabsTrigger key={tab.value} value={tab.value}>
-          {tab.label}
-        </TabsTrigger>
-      ))}
+  ({ children, className, ...props }, ref) => (
+    <TabsPrimitive.List className={cn('flex justify-between', className)} ref={ref} {...props}>
+      {children}
     </TabsPrimitive.List>
   )
 )
@@ -53,7 +49,7 @@ TabsList.displayName = TabsPrimitive.List.displayName
 type TabsTriggerProps = ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 
 const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, TabsTriggerProps>(
-  ({ value, ...props }, ref) => (
+  ({ children, value, ...props }, ref) => (
     <TabsPrimitive.Trigger
       className={`w-full h-9 text-base font-600 border-b-2 
   text-dark-100 data-[state=active]:text-accent-500 
@@ -68,7 +64,7 @@ const TabsTrigger = forwardRef<ElementRef<typeof TabsPrimitive.Trigger>, TabsTri
       value={value}
       {...props}
     >
-      <span className={'relative z-10'}>{value}</span>
+      <span className={'relative z-10'}>{children}</span>
     </TabsPrimitive.Trigger>
   )
 )

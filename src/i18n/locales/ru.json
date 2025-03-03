@@ -133,5 +133,29 @@
     "favorites": "Избранное",
     "messenger": "Мессенджер",
     "logout": "Выход"
+  },
+  "ProfileSettings": {
+    "GeneralInformation": {
+      "userName": "Имя пользователя",
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "dateOfBirth": "Дата рождения",
+      "selectYourCountry": "Выберите вашу страну",
+      "selectYourCity": "Выберите ваш город",
+      "aboutMe": "Обо мне",
+      "saveChanges": "Сохранить изменения",
+      "formErrors": {
+        "minMaxUserName": "Имя пользователя должно быть от 6 до 30 символов",
+        "minMaxFirstName": "Имя должно быть от 1 до 50 символов",
+        "minMaxLastName": "Фамилия должна быть от 1 до 50 символов",
+        "requiredField": "Обязательное поле",
+        "aboutMeMaxLength": "Текст должен быть короче",
+        "dateOfBirth": "Пользователь младше 13 лет не может создать профиль."
+      }
+    },
+    "generalInformation": "Общая информация",
+    "devices": "Устройства",
+    "accountManagement": "Управление аккаунтом",
+    "myPayments": "Мои платежи"
   }
 }

@@ -132,5 +132,29 @@
     "favorites": "Favorites",
     "messenger": "Messenger",
     "logout": "Logout"
+  },
+  "ProfileSettings": {
+    "GeneralInformation": {
+      "userName": "User name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of birth",
+      "selectYourCountry": "Select your country",
+      "selectYourCity": "Select your city",
+      "aboutMe": "About Me",
+      "saveChanges": "Save Changes",
+      "formErrors": {
+        "minMaxUserName": "UserName must be in 6 to 30 characters",
+        "minMaxFirstName": "First Name must be in 1 to 50 characters",
+        "minMaxLastName": "Last Name must be in 1 to 50 characters",
+        "requiredField": "Field is required",
+        "aboutMeMaxLength": "Text must be shorter",
+        "dateOfBirth": "A user under 13 cannot create a profile."
+      }
+    },
+    "generalInformation": "General information",
+    "devices": "Devices",
+    "accountManagement": "Account Management",
+    "myPayments": "My payments"
   }
 }
