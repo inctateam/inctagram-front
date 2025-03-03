@@ -196,7 +196,7 @@ const PostModal = (props: PostModalProps) => {
         open={isDeletePost}
       />
     </>,
-    document.body // Здесь мы указываем, что хотим отрисовать в body
+    document.body // Здесь мы указываем, что хотим отрисовать портал в body
   )
 }
 
