@@ -46,7 +46,6 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileSelect = () => {
-    console.log('11111')
     fileInputRef?.current?.click()
   }
 

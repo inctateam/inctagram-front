@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
@@ -41,8 +41,16 @@ export const EditPost = ({
 }: Props) => {
   // Состояние окна с предупреждением о закрытии
   const [isClosePost, setIsClosePost] = useState(false)
+  // Состояние для текущего описания (для отслеживания длины)
+  const [currentDescription, setCurrentDescription] = useState(description)
+  const [error, setError] = useState<null | string>(null)
   // Хуки для работы с формой
-  const { handleSubmit, register } = useForm<EditDescriptionSchema>({
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    setValue,
+  } = useForm<EditDescriptionSchema>({
     defaultValues: {
       description: description, // Устанавливаем начальное значение
     },
@@ -67,6 +75,33 @@ export const EditPost = ({
       toast.success('Description updated successfully')
     } catch (error) {
       console.error('Error updating description:', error)
+    }
+  }
+  // Функция для обработки нажатия на Enter
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      // Проверка длины текста перед отправкой формы
+      if (description.length > 500) {
+        toast.error('Description must not exceed 500 characters')
+
+        return
+      }
+      handleSubmit(onSubmit)() // Отправка формы
+    }
+  }
+  // Функция для обработки изменения текста
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newDescription = event.target.value
+
+    setValue('description', newDescription) // Обновление значения в форме
+    setCurrentDescription(newDescription) // Обновление состояния для отслеживания текста
+
+    // Если количество символов больше 500, показываем ошибку
+    if (newDescription.length > 500) {
+      setError('Description must not exceed 500 characters')
+    } else {
+      // Если меньше, убираем ошибку
+      setError(null)
     }
   }
 
@@ -97,11 +132,15 @@ export const EditPost = ({
                 minHeight={100}
                 {...register('description')} // Подключаем к react-hook-form
                 defaultValue={description} // Устанавливаем начальное значение
+                error={!!error} // Проверяем, есть ли ошибка
+                helperText={error || errors.description?.message} // Выводим сообщение об ошибке
+                onChange={handleDescriptionChange} // Обрабатываем изменения текста
+                onKeyDown={handleKeyDown} // Обработка нажатия клавиши
               />
             </div>
             <div className={'h-full flex flex-col items-end justify-between'}>
               <Typography className={'text-light-900 text-[12px]'}>
-                {description.length}/500
+                {currentDescription.length}/500
               </Typography>
               <Button disabled={isLoading} type={'submit'} variant={'primary'}>
                 {isLoading ? 'Saving...' : 'Save Changes'}
