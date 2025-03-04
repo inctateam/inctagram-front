@@ -1,5 +1,6 @@
 import { Nullable } from '@/shared/types'
 import { Pagination, TableBody, TableCell, TableHead, TableRoot, TableRow } from '@/shared/ui'
+import { useTranslations } from 'next-intl'
 type PaymentsDataType = {
   dateOfPayment: string
   endDateOfPayment: string
@@ -8,6 +9,8 @@ type PaymentsDataType = {
   subscriptionType: string
 }
 const MyPayments = () => {
+  const t = useTranslations('ProfileSettings.MyPayments')
+
   const paymentData: Nullable<PaymentsDataType[]> = [
     {
       dateOfPayment: '02.02.2023',
@@ -100,11 +103,11 @@ const MyPayments = () => {
       <TableRoot className={'w-full'}>
         <TableHead>
           <TableRow>
-            <TableCell>Date of Payment</TableCell>
-            <TableCell>End date of subscription</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Subscription Type</TableCell>
-            <TableCell>Payment Type</TableCell>
+            <TableCell>{t('dateOfPayment')}</TableCell>
+            <TableCell>{t('endDateOfSubscription')}</TableCell>
+            <TableCell>{t('price')}</TableCell>
+            <TableCell>{t('subscriptionType')}</TableCell>
+            <TableCell>{t('paymentType')}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

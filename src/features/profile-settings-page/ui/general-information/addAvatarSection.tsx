@@ -104,9 +104,9 @@ const AddAvatarSection = ({ avatars }: Props) => {
           onSendPhoto={handleSendPhoto}
           open={open}
         />
-        {/*{!avatarSrc ? (*/}
+        {/*{ (*/}
         <Button className={'text-[0.9rem] p-4'} onClick={() => setOpen(true)} variant={'outline'}>
-          Add a Profile Photo
+          {!avatarSrc ? 'Add a Profile Photo' : 'Update a Profile Photo'}
         </Button>
         {/*) : null}*/}
       </div>

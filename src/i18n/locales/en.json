@@ -152,6 +152,13 @@
         "dateOfBirth": "A user under 13 cannot create a profile."
       }
     },
+    "MyPayments": {
+      "dateOfPayment": "Date of Payment",
+      "endDateOfSubscription": "End date of subscription",
+      "price": "Price",
+      "subscriptionType": "Subscription Type",
+      "paymentType": "Payment Type"
+    },
     "generalInformation": "General information",
     "devices": "Devices",
     "accountManagement": "Account Management",

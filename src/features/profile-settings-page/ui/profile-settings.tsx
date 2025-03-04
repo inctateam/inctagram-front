@@ -1,14 +1,15 @@
-import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+'use client'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
 import { MyPayments } from '@/features/profile-settings-page/ui/my-payments'
 import { Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
 import { useTranslations } from 'next-intl'
 
-type ProfileSettingsProps = {
-  profileInfo: GetMyProfileResponse
-}
-const ProfileSettings = (props: ProfileSettingsProps) => {
-  const { profileInfo } = props
+// type ProfileSettingsProps = {
+//   profileInfo: GetMyProfileResponse
+// }
+// const ProfileSettings = (props: ProfileSettingsProps) => {
+const ProfileSettings = () => {
+  // const { profileInfo } = props
   const t = useTranslations('ProfileSettings')
 
   return (
@@ -21,7 +22,8 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       </TabsList>
 
       <TabsContent value={'General-information'}>
-        <GeneralInformation profileInfo={profileInfo} />
+        <GeneralInformation />
+        {/*<GeneralInformation profileInfo={profileInfo} />*/}
       </TabsContent>
 
       <TabsContent value={'Devices'}>

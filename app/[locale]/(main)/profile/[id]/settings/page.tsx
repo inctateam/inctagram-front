@@ -1,6 +1,5 @@
 'use client'
 import { useMeQuery } from '@/features/auth/api'
-import { useGetMyProfileQuery } from '@/features/profile-settings-page/api'
 import { ProfileSettings } from '@/features/profile-settings-page/ui'
 import { ProgressBar } from '@/shared/ui'
 import { redirect } from 'next/navigation'
@@ -10,9 +9,7 @@ export default function ProfileSettingsPage({ params }: { params: { id: string }
 
   const { data: me, isError: isMeError, isLoading: isMeLoading } = useMeQuery()
 
-  const { data: profileInfo } = useGetMyProfileQuery()
-
-  if (isMeLoading || !profileInfo) {
+  if (isMeLoading) {
     return <ProgressBar />
   }
   if (isMeError) {
@@ -29,5 +26,5 @@ export default function ProfileSettingsPage({ params }: { params: { id: string }
     redirect(`/profile/${userId}/settings`)
   }
 
-  return <ProfileSettings profileInfo={profileInfo} />
+  return <ProfileSettings />
 }
