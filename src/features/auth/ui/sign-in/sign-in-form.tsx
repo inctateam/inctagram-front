@@ -24,7 +24,7 @@ type Props = {} & PropsTranslations
 
 export function SignInForm({ messagesErrors, translAuth }: Props) {
   const [login, { isLoading: isLoadingLogin }] = useLoginMutation()
-  const { data: meData, isLoading: isLoadingMe, refetch: refetchMe } = useMeQuery()
+  const { isLoading: isLoadingMe, refetch: refetchMe } = useMeQuery()
   const router = useRouter()
 
   const loginSchema = createLoginSchema(messagesErrors)
@@ -44,10 +44,15 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
 
       if (response) {
         localStorage.setItem('access_token', response.accessToken)
-        await refetchMe()
-        if (meData && meData.userId) {
-          router.push(`/profile/${meData.userId}`)
-        }
+        // Пауза перед перезапросом данных о пользователе, чтобы токен был принят
+        setTimeout(async () => {
+          // Перезапрашиваем данные пользователя вручную
+          const refetchMeData = await refetchMe()
+
+          if (refetchMeData.data) {
+            router.push(`/profile/${refetchMeData.data.userId}`)
+          }
+        }, 500) // Пауза 500 мс для гарантии, что токен обновился
       }
     } catch (error: unknown) {
       handleRequestError(error, setError)
