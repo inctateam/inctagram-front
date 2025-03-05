@@ -18,14 +18,9 @@ import { PATH } from '@/shared/constants'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
+import { AlertDialog, CancelButton, ConfirmButton } from '../dialogs'
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
-
-// interface Props {
-//   activeItem: SIDEBAR_ITEMS
-//   onItemClick: (item: SIDEBAR_ITEMS) => void
-//   userId: number
-// }
 
 export const Sidebar = () => {
   const [logout] = useLogoutMutation()
@@ -46,6 +41,7 @@ export const Sidebar = () => {
 
   const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
   const [isCreatingPost, setIsCreatingPost] = useState<boolean>(false)
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
 
   const onItemClick = (item: SIDEBAR_ITEMS) => {
     setActiveItem(item)
@@ -79,7 +75,6 @@ export const Sidebar = () => {
           icon={<PlusSquareOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.CREATE}
           item={t('create')}
-          //onClick={() => onItemClick(SIDEBAR_ITEMS.CREATE)} доделать на закрытие модалки
           onClick={() => setIsCreatingPost(true)}
         />
 
@@ -129,9 +124,17 @@ export const Sidebar = () => {
           icon={<LogOutOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.LOGOUT}
           item={t('logout')}
-          onClick={handleLogout}
+          onClick={() => setIsLogoutDialogOpen(true)}
         />
       </div>
+      <AlertDialog
+        cancelButton={<CancelButton onClick={() => setIsLogoutDialogOpen(false)}>No</CancelButton>}
+        confirmButton={<ConfirmButton onClick={handleLogout}>Yes</ConfirmButton>}
+        description={'Are you really want to logout your account ' + `${getMeData?.email}` + '?'}
+        onOpenChange={setIsLogoutDialogOpen}
+        open={isLogoutDialogOpen}
+        title={'Log Out'}
+      />
     </div>
   )
 }
