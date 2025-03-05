@@ -1,7 +1,7 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
-import { useLoginMutation } from '@/features/auth/api'
+import { useLoginMutation, useMeQuery } from '@/features/auth/api'
 import { PropsTranslations } from '@/features/auth/ui'
 import { OAuth2 } from '@/features/auth/ui/o-auth-2'
 import { LoginFields, createLoginSchema } from '@/features/auth/ui/utils/login-shema'
@@ -23,7 +23,8 @@ import { useRouter } from 'next/navigation'
 type Props = {} & PropsTranslations
 
 export function SignInForm({ messagesErrors, translAuth }: Props) {
-  const [login, { isLoading }] = useLoginMutation()
+  const [login, { isLoading: isLoadingLogin }] = useLoginMutation()
+  const { data: meData, isLoading: isLoadingMe, refetch: refetchMe } = useMeQuery()
   const router = useRouter()
 
   const loginSchema = createLoginSchema(messagesErrors)
@@ -43,67 +44,71 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
 
       if (response) {
         localStorage.setItem('access_token', response.accessToken)
-        router.push('/')
+        await refetchMe()
+        if (meData && meData.userId) {
+          router.push(`/profile/${meData.userId}`)
+        }
       }
     } catch (error: unknown) {
       handleRequestError(error, setError)
     }
   }
 
+  if (isLoadingLogin || isLoadingMe) {
+    return <ProgressBar />
+  }
+
   return (
-    <>
-      {isLoading && <ProgressBar />}
-      <Card className={'flex flex-col w-[378px]'} variant={'auth'}>
-        <Typography className={'text-center'} variant={'h1'}>
-          {translAuth.signIn}
-        </Typography>
+    <Card className={'flex flex-col w-[378px]'} variant={'auth'}>
+      <Typography className={'text-center'} variant={'h1'}>
+        {translAuth.signIn}
+      </Typography>
 
-        {/* Кнопки авторизации через Google и GitHub */}
-        <OAuth2 />
+      {/* Кнопки авторизации через Google и GitHub */}
+      <OAuth2 />
 
-        <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
-          <ControlledTextField
-            autoComplete={'email'}
-            control={control}
-            error={!!errors.email?.message}
-            helperText={errors.email?.message}
-            label={<FormLabel required>{translAuth.email}</FormLabel>}
-            name={'email'}
-            placeholder={translAuth.email}
-          />
-          <ControlledPasswordTextField
-            autoComplete={'current-password'}
-            control={control}
-            error={!!errors.password?.message}
-            helperText={errors.password?.message}
-            label={<FormLabel required>{translAuth.password}</FormLabel>}
-            name={'password'}
-            placeholder={translAuth.password}
-          />
-          <TextLink
-            className={
-              'flex justify-end text-light-900 hover:text-accent-500 hover:underline duration-200 mt-9 mb-6 '
-            }
-            href={PATH.PASSWORD_RECOVERY}
-            underline={false}
-          >
-            {translAuth.forgotPassword}?
-          </TextLink>
-          <Button className={'w-full font-semibold'} type={'submit'} variant={'primary'}>
-            {translAuth.signIn}
-          </Button>
-        </form>
-        <Typography className={'text-center mt-4 mb-3'} variant={'regular16'}>
-          {translAuth.dontHaveAnAccount}?
-        </Typography>
+      <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
+        <ControlledTextField
+          autoComplete={'email'}
+          control={control}
+          error={!!errors.email?.message}
+          helperText={errors.email?.message}
+          label={<FormLabel required>{translAuth.email}</FormLabel>}
+          name={'email'}
+          placeholder={translAuth.email}
+        />
+        <ControlledPasswordTextField
+          autoComplete={'current-password'}
+          control={control}
+          error={!!errors.password?.message}
+          helperText={errors.password?.message}
+          label={<FormLabel required>{translAuth.password}</FormLabel>}
+          name={'password'}
+          placeholder={translAuth.password}
+        />
         <TextLink
-          className={'text-base font-semibold hover:text-accent-300 hover:underline'}
-          href={PATH.SIGN_UP}
+          className={
+            'flex justify-end text-light-900 hover:text-accent-500 hover:underline duration-200 mt-9 mb-6 '
+          }
+          href={PATH.PASSWORD_RECOVERY}
           underline={false}
         >
-          {translAuth.signUp}
+          {translAuth.forgotPassword}?
         </TextLink>
-      </Card>
-    </>
+        <Button className={'w-full font-semibold'} type={'submit'} variant={'primary'}>
+          {translAuth.signIn}
+        </Button>
+      </form>
+      <Typography className={'text-center mt-4 mb-3'} variant={'regular16'}>
+        {translAuth.dontHaveAnAccount}?
+      </Typography>
+      <TextLink
+        className={'text-base font-semibold hover:text-accent-300 hover:underline'}
+        href={PATH.SIGN_UP}
+        underline={false}
+      >
+        {translAuth.signUp}
+      </TextLink>
+    </Card>
   )
 }
