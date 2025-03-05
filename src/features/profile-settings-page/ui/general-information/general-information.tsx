@@ -18,15 +18,15 @@ const GeneralInformation = () => {
 
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
     const formattedData: UpdateMyProfile = {
-      aboutMe: data.aboutMe ?? null,
-      city: data.city ?? null,
-      country: data.country ?? null,
+      aboutMe: data.aboutMe || null,
+      city: data.city || null,
+      country: data.country || null,
       dateOfBirth: data.dateOfBirth
         ? format(data.dateOfBirth, 'yyyy-MM-dd')
         : profileInfo?.dateOfBirth || null,
       firstName: data.firstName,
       lastName: data.lastName,
-      region: data.region ?? null,
+      region: data.region || null,
       userName: data.userName,
     }
 
@@ -41,7 +41,7 @@ const GeneralInformation = () => {
   }
 
   if (!profileInfo) {
-    return <Spinner />
+    return <Spinner fullScreen />
   }
 
   return <GeneralInformationForm onSubmitHandler={onSubmitHandler} profileInfo={profileInfo} />

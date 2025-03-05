@@ -75,7 +75,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     mode: 'onChange',
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
-  const selectCountry = watch('country')
+  const currentCountry = watch('country')
   const onDateChange = (date: Date | undefined) => {
     if (!date) {
       return
@@ -88,22 +88,23 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
 
     const isOlderThan13 = date <= thirteenYearsAgo
 
-    if (!isOlderThan13) {
-      setCheckFullYears(tErrors('dateOfBirth'))
-    } else {
-      setCheckFullYears(null)
-    }
+    setCheckFullYears(!isOlderThan13 ? tErrors('dateOfBirth') : null)
+    // if (!isOlderThan13) {
+    //   setCheckFullYears(tErrors('dateOfBirth'))
+    // } else {
+    //   setCheckFullYears(null)
+    // }
     setValue('dateOfBirth', date)
   }
 
   useEffect(() => {
-    if (!countries || !selectCountry) {
+    if (!countries || !currentCountry) {
       return
     }
-    const foundCountry = countries.find(c => c.value === selectCountry)
+    const foundCountry = countries.find(c => c.value === currentCountry)
 
     setSelectedCountry(foundCountry)
-  }, [selectCountry, countries])
+  }, [currentCountry, countries])
 
   if (isLoadingCountries || isLoadingCities) {
     return <Spinner />
@@ -161,7 +162,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={profileInfo?.country ?? 'Select your country'}
+                defaultValue={profileInfo?.country || 'Select your country'}
                 label={t('selectYourCountry')}
                 name={'country'}
                 options={countries?.map(country => ({
@@ -175,17 +176,17 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                defaultValue={profileInfo?.city ?? 'Select your city'}
+                defaultValue={profileInfo?.city || 'Select your city'}
                 label={t('selectYourCity')}
                 name={'city'}
-                options={cities ?? []}
+                options={cities || []}
               />
             </div>
           </div>
           <ControlledTextarea
             className={'min-h-20 max-h-32 [&::-webkit-scrollbar]:hidden'}
             control={control}
-            defaultValue={profileInfo?.aboutMe ?? ''}
+            defaultValue={profileInfo?.aboutMe || ''}
             label={t('aboutMe')}
             name={'aboutMe'}
           />
