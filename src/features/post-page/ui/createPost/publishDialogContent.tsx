@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
@@ -46,6 +47,10 @@ export const PublishDialogContent = ({
 
     for (let i = 0; i < images.length; i++) {
       const res = await fetch(images[i])
+
+      if (!res.ok) {
+        toast.error('Failed to load image')
+      }
       const blob = await res.blob()
       const file = new File([blob], `postImage${i + 1}.png`, { type: 'image/png' })
 
