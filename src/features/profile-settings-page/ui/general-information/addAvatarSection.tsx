@@ -31,7 +31,14 @@ const AddAvatarSection = ({ avatars }: Props) => {
     if (avatars?.[0]) {
       setAvatarSrc(avatars[0].url)
     }
-  }, [profileData])
+
+    // Cleanup function to revoke the object URL when avatarSrc changes or component unmounts
+    return () => {
+      if (avatarSrc && avatarSrc.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarSrc)
+      }
+    }
+  }, [profileData, avatars])
   const handleDeletePhoto = async () => {
     setPhotoToUpload(null)
     try {
@@ -51,7 +58,9 @@ const AddAvatarSection = ({ avatars }: Props) => {
       try {
         await uploadProfileAvatar({ file: photoToUpload }).unwrap()
         setPhotoToUpload(null) // Сбрасываем состояние после успешной загрузки
-        setAvatarSrc(URL.createObjectURL(photoToUpload))
+        const objectUrl = URL.createObjectURL(photoToUpload)
+
+        setAvatarSrc(objectUrl)
       } catch (error) {
         console.error('Failed to upload avatar:', error)
         toast.error('Failed to upload avatar')
