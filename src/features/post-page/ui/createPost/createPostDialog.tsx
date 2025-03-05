@@ -1,6 +1,7 @@
 import { ComponentPropsWithoutRef, useRef, useState } from 'react'
 
 import { createPostSliceActions } from '@/features/post-page/ui/createPost/createPostSlice'
+import { FilteringDialogContent } from '@/features/post-page/ui/createPost/filteringDialogContent'
 import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
 import { useAppDispatch } from '@/services'
 import { Dialog } from '@/shared/ui'
@@ -65,8 +66,14 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
             fileInputRef={fileInputRef}
             handleBack={() => setStage('1')}
             handleFileSelect={handleFileSelect}
-            handleNext={() => setStage('4')}
+            handleNext={() => setStage('3')}
             setPhotoToUpload={setPhotoToUpload}
+          />
+        )}
+        {stage === '3' && (
+          <FilteringDialogContent
+            handleBack={() => setStage('2')}
+            handleNext={() => setStage('4')}
           />
         )}
         {stage === '4' && (
