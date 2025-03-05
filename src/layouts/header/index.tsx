@@ -3,7 +3,7 @@
 import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { Button, LocaleSwitcher, TextLink } from '@/shared/ui'
+import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
 
@@ -13,7 +13,11 @@ type Props = {
 
 export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
-  const { data } = useMeQuery()
+  const { data, isLoading } = useMeQuery()
+
+  if (isLoading) {
+    return <ProgressBar />
+  }
 
   return (
     <div
