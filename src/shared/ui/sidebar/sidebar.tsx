@@ -12,8 +12,9 @@ import {
   SearchOutline,
   TrendingUpOutline,
 } from '@/assets/icons'
-import { useLogoutMutation, useMeQuery } from '@/features/auth/api'
+import { authApi, useLogoutMutation, useMeQuery } from '@/features/auth/api'
 import { CreatePostDialog } from '@/features/post-page/ui/createPost/createPostDialog'
+import { useAppDispatch } from '@/services'
 import { PATH } from '@/shared/constants'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
@@ -26,7 +27,7 @@ export const Sidebar = () => {
   const [logout] = useLogoutMutation()
   const { data: getMeData } = useMeQuery()
   const router = useRouter()
-
+  const dispatch = useAppDispatch()
   const t = useTranslations('Sidebar')
 
   const handleLogout = async () => {
@@ -34,6 +35,8 @@ export const Sidebar = () => {
       await logout().unwrap()
       localStorage.removeItem('access_token')
       router.push(PATH.SIGN_IN)
+      // Сброс состояния
+      dispatch(authApi.util.resetApiState())
     } catch (error) {
       console.error('Logout failed:', error)
     }
