@@ -10,8 +10,8 @@ import { formatDistanceToNow } from 'date-fns'
 type Props = {
   item: PublicPostItem
 }
-const MIN_LETTERS = 75
-const MAX_LETTERS = 250
+const MIN_LETTERS = 65
+const MAX_LETTERS = 230
 
 /*
 const item.description =
