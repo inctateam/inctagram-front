@@ -1,34 +1,30 @@
-import { Checkbox } from '@radix-ui/react-checkbox'
-import { cn } from '@/shared/utils'
 import { forwardRef } from 'react'
+
 import { RadioButtonChecked, RadioButtonUnchecked } from '@/assets/icons'
-import { Textarea } from '../textarea'
+import { cn } from '@/shared/utils'
+import { Checkbox } from '@radix-ui/react-checkbox'
+
 import { Typography } from '../typography'
 
 interface RoundedCheckboxProps {
   checked: boolean
-  onChange: (checked: boolean) => void
   className?: string
   label?: string
+  onChange: (checked: boolean) => void
 }
 
 const RoundedCheckbox = forwardRef<HTMLButtonElement, RoundedCheckboxProps>(
-  ({ checked, onChange, className, label }, ref) => {
+  ({ checked, className, label, onChange }, ref) => {
     return (
       <div className={cn('flex items-end gap-4 ', className)}>
-        <Checkbox
-          ref={ref}
-          checked={checked}
-          onCheckedChange={onChange}
-          className="rounded-full"
-        >
+        <Checkbox checked={checked} className={'rounded-full'} onCheckedChange={onChange} ref={ref}>
           {checked ? (
-            <RadioButtonChecked className="w-5 h-5" />
+            <RadioButtonChecked className={'w-5 h-5'} />
           ) : (
-            <RadioButtonUnchecked className="w-5 h-5" />
+            <RadioButtonUnchecked className={'w-5 h-5'} />
           )}
         </Checkbox>
-        {label && <Typography className='leading-5'>{label}</Typography>}
+        {label && <Typography className={'leading-5'}>{label}</Typography>}
       </div>
     )
   }
