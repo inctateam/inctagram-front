@@ -4,7 +4,7 @@ import { BellOutline } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
+import { Badge, Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
 
@@ -16,9 +16,7 @@ export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
   const { data, isLoading } = useMeQuery()
 
-  //изменить на значения из запросов
-  const hasNotifications = true
-  const notificationCount = 5
+  const notificationCount = 3
 
   if (isLoading) {
     return <ProgressBar />
@@ -44,20 +42,14 @@ export const Header = ({ auth }: Props) => {
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
           {data && (
-            <div className={'mr-12 relative'}>
-              <BellOutline className={'w-[18px] h-5 relative'} />
-              {hasNotifications && (
-                <div
-                  className={
-                    'absolute top-2 right-1 transform translate-x-1/2 -translate-y-1/2 bg-danger-500  text-[10px] rounded-full w-3 h-3 flex items-center justify-center'
-                  }
-                >
-                  {notificationCount}
-                </div>
-              )}
+            <div className={'mr-5'}>
+              <Badge badgeContent={notificationCount} className={`mr-12`}>
+                <BellOutline />
+              </Badge>
             </div>
           )}
           <LocaleSwitcher />
+
           {!auth && !data && (
             <>
               <Button asChild className={'w-fit font-semibold'} variant={'text'}>
