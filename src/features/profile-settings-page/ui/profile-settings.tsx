@@ -30,7 +30,7 @@ const ProfileSettings = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <Tabs defaultValue={'General-information'}>
+    <Tabs className={'mt-3'} defaultValue={'General-information'}>
       <TabsList>
         <TabsTrigger value={'General-information'}>{t('generalInformation')}</TabsTrigger>
         <TabsTrigger value={'Devices'}>{t('devices')}</TabsTrigger>

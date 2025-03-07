@@ -107,97 +107,112 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
   }, [currentCountry, countries])
 
   if (isLoadingCountries || isLoadingCities) {
-    return <Spinner />
+    return <Spinner fullScreen />
   }
 
   return (
-    <form className={'flex flex-col py-6 w-full'} onSubmit={handleSubmit(onSubmitHandler)}>
-      <div className={'flex gap-6 mb-4'}>
+    <div className={'flex flex-col'}>
+      <div
+        className={
+          'flex gap-6 h-[532px] max-2xl:h-[25rem] overflow-y-scroll xl:[&::-webkit-scrollbar]:hidden'
+        }
+      >
         <div className={'flex flex-col gap-6'}>
           <AddAvatarSection avatars={profileInfo?.avatars} />
         </div>
-        <div className={'flex flex-col w-full gap-6'}>
-          <ControlledTextField
-            control={control}
-            error={!!errors.userName?.message}
-            helperText={errors.userName?.message}
-            label={t('userName')}
-            name={'userName'}
-            placeholder={'Enter your user name'}
-            required
-          />
-          <ControlledTextField
-            control={control}
-            error={!!errors.firstName?.message}
-            helperText={errors.firstName?.message}
-            label={t('firstName')}
-            name={'firstName'}
-            required
-          />
-          <ControlledTextField
-            control={control}
-            error={!!errors.lastName?.message}
-            helperText={errors.lastName?.message}
-            label={t('lastName')}
-            name={'lastName'}
-            required
-          />
-          <div>
-            <DatePickerSingle
-              defaultValue={profileInfo?.dateOfBirth}
-              error={!!checkFullYears}
-              onDateSelect={date => onDateChange(date)}
+        <form
+          className={'flex flex-col mt-6  w-full'}
+          id={'general-information-form'}
+          onSubmit={handleSubmit(onSubmitHandler)}
+        >
+          <div className={'flex flex-col w-full gap-6'}>
+            <ControlledTextField
+              control={control}
+              error={!!errors.userName?.message}
+              helperText={errors.userName?.message}
+              label={t('userName')}
+              name={'userName'}
+              placeholder={'Enter your user name'}
+              required
             />
-            {checkFullYears && (
-              <span className={'text-danger-500 text-xs'}>
-                {checkFullYears}{' '}
-                <a className={'underline'} href={PATH.PRIVACY_POLICY}>
-                  {tPrivacyPolicy('privacyPolicy')}
-                </a>
-              </span>
-            )}
-          </div>
-          <div className={'flex gap-6'}>
-            <div className={'flex flex-col w-1/2'}>
-              <ControlledSelect
-                className={'h-44'}
-                control={control}
-                defaultValue={profileInfo?.country || 'Select your country'}
-                label={t('selectYourCountry')}
-                name={'country'}
-                options={countries?.map(country => ({
-                  id: country.id,
-                  label: country.label,
-                  value: country.value,
-                }))}
+            <ControlledTextField
+              control={control}
+              error={!!errors.firstName?.message}
+              helperText={errors.firstName?.message}
+              label={t('firstName')}
+              name={'firstName'}
+              required
+            />
+            <ControlledTextField
+              control={control}
+              error={!!errors.lastName?.message}
+              helperText={errors.lastName?.message}
+              label={t('lastName')}
+              name={'lastName'}
+              required
+            />
+            <div>
+              <DatePickerSingle
+                defaultValue={profileInfo?.dateOfBirth}
+                error={!!checkFullYears}
+                onDateSelect={date => onDateChange(date)}
               />
+              {checkFullYears && (
+                <span className={'text-danger-500 text-xs'}>
+                  {checkFullYears}{' '}
+                  <a className={'underline'} href={PATH.PRIVACY_POLICY}>
+                    {tPrivacyPolicy('privacyPolicy')}
+                  </a>
+                </span>
+              )}
             </div>
-            <div className={'flex flex-col w-1/2'}>
-              <ControlledSelect
-                className={'h-44'}
-                control={control}
-                defaultValue={profileInfo?.city || 'Select your city'}
-                label={t('selectYourCity')}
-                name={'city'}
-                options={cities || []}
-              />
+            <div className={'flex gap-6'}>
+              <div className={'flex flex-col w-1/2'}>
+                <ControlledSelect
+                  className={'h-44'}
+                  control={control}
+                  defaultValue={profileInfo?.country || 'Select your country'}
+                  label={t('selectYourCountry')}
+                  name={'country'}
+                  options={countries?.map(country => ({
+                    id: country.id,
+                    label: country.label,
+                    value: country.value,
+                  }))}
+                />
+              </div>
+              <div className={'flex flex-col w-1/2'}>
+                <ControlledSelect
+                  className={'h-44'}
+                  control={control}
+                  defaultValue={profileInfo?.city || 'Select your city'}
+                  label={t('selectYourCity')}
+                  name={'city'}
+                  options={cities || []}
+                />
+              </div>
             </div>
+            <ControlledTextarea
+              className={'min-h-20 max-h-32 [&::-webkit-scrollbar]:hidden'}
+              control={control}
+              defaultValue={profileInfo?.aboutMe || ''}
+              label={t('aboutMe')}
+              name={'aboutMe'}
+            />
           </div>
-          <ControlledTextarea
-            className={'min-h-20 max-h-32 [&::-webkit-scrollbar]:hidden'}
-            control={control}
-            defaultValue={profileInfo?.aboutMe || ''}
-            label={t('aboutMe')}
-            name={'aboutMe'}
-          />
-        </div>
+        </form>
       </div>
-      <Separator />
-      <div className={'flex flex-row-reverse mt-4'}>
-        <Button disabled={!isValid || !!checkFullYears} type={'submit'} variant={'outline'}>
+      <Separator className={'my-6'} />
+      <div className={'flex flex-row-reverse mb-6'}>
+        <Button
+          disabled={!isValid || !!checkFullYears}
+          form={'general-information-form'}
+          type={'submit'}
+          variant={'outline'}
+        >
           {t('saveChanges')}
         </Button>
       </div>
-    </form>
+    </div>
   )
 }
