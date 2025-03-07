@@ -56,6 +56,12 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   }, [posts, isFetchingMore, trigger, userId, initialPosts])
 
   useEffect(() => {
+    if (initialPosts?.items) {
+      setPosts(initialPosts.items) // Обновляем посты после загрузки данных
+    }
+  }, [initialPosts]) // Следим за изменениями в initialPosts
+
+  useEffect(() => {
     const handleScroll = () => {
       const viewport = viewportRef.current
 
