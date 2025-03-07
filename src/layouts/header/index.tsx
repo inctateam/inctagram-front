@@ -16,6 +16,10 @@ export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
   const { data, isLoading } = useMeQuery()
 
+  //изменить на значения из запросов
+  const hasNotifications = true
+  const notificationCount = 5
+
   if (isLoading) {
     return <ProgressBar />
   }
@@ -39,7 +43,20 @@ export const Header = ({ auth }: Props) => {
           Inctagram
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
-          {data && <BellOutline className={'mr-12 w-[18px] h-5'} />}
+          {data && (
+            <div className={'mr-12 relative'}>
+              <BellOutline className={'w-[18px] h-5 relative'} />
+              {hasNotifications && (
+                <div
+                  className={
+                    'absolute top-2 right-1 transform translate-x-1/2 -translate-y-1/2 bg-danger-500  text-[10px] rounded-full w-3 h-3 flex items-center justify-center'
+                  }
+                >
+                  {notificationCount}
+                </div>
+              )}
+            </div>
+          )}
           <LocaleSwitcher />
           {!auth && !data && (
             <>
