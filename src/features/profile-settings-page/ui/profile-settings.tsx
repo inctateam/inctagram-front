@@ -8,26 +8,26 @@ import { useTranslations } from 'next-intl'
 
 const ProfileSettings = ({ params }: { params: { id: string } }) => {
   const t = useTranslations('ProfileSettings')
-  const { id } = params
-
-  const { data: me, isError: isMeError, isLoading: isMeLoading } = useMeQuery()
-
-  if (isMeLoading) {
-    return <ProgressBar />
-  }
-  if (isMeError) {
-    return <div>Error! Something went wrong</div>
-  }
-  const userId = me?.userId
-  const paramsUserId = Number(id)
-
-  if (!userId) {
-    redirect('/auth/sign-in')
-  }
-
-  if (userId && paramsUserId !== userId) {
-    redirect(`/profile/${userId}/settings`)
-  }
+  // const { id } = params
+  //
+  // const { data: me, isError: isMeError, isLoading: isMeLoading } = useMeQuery()
+  //
+  // if (isMeLoading) {
+  //   return <ProgressBar />
+  // }
+  // if (isMeError) {
+  //   return <div>Error! Something went wrong</div>
+  // }
+  // const userId = me?.userId
+  // const paramsUserId = Number(id)
+  //
+  // if (!userId) {
+  //   redirect('/auth/sign-in')
+  // }
+  //
+  // if (userId && paramsUserId !== userId) {
+  //   redirect(`/profile/${userId}/settings`)
+  // }
 
   return (
     <Tabs className={'mt-3'} defaultValue={'General-information'}>
