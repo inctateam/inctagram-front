@@ -1,12 +1,13 @@
 'use client'
 
-import { BellOutline } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { Badge, Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
+import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
+
+import { NotificationsDropdown } from './notifications-dropdown'
 
 type Props = {
   auth?: boolean
@@ -15,8 +16,6 @@ type Props = {
 export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
   const { data, isLoading } = useMeQuery()
-
-  const notificationCount = 3
 
   if (isLoading) {
     return <ProgressBar />
@@ -43,9 +42,7 @@ export const Header = ({ auth }: Props) => {
         <div className={'flex items-center justify-center gap-7'}>
           {data && (
             <div className={'mr-5'}>
-              <Badge badgeContent={notificationCount} className={`mr-12`}>
-                <BellOutline />
-              </Badge>
+              <NotificationsDropdown />
             </div>
           )}
           <LocaleSwitcher />
