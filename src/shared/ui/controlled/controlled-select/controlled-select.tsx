@@ -27,6 +27,8 @@ export const ControlledSelect = <TFieldValues extends FieldValues>({
     shouldUnregister,
   })
 
+  console.log('value', value)
+
   return (
     <Select {...selectProps} onValueChange={onChange} value={value}>
       {options?.map((option, index) => (

@@ -85,6 +85,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
           <Avatar
             alt={'User avatar'}
             height={avatars?.[0].height}
+            priority
             size={48}
             src={avatarSrc}
             width={avatars?.[0].width}

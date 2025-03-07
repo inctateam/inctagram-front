@@ -1,16 +1,16 @@
 import { AvatarResponseType } from '@/features/home-page/types'
 import { Nullable } from '@/shared/types'
 export interface GetMyProfileResponse {
-  aboutMe: string
+  aboutMe: Nullable<string>
   avatars: AvatarResponseType[]
-  city: string
-  country: string
+  city: Nullable<string>
+  country: Nullable<string>
   createdAt: string
-  dateOfBirth: string
-  firstName: string
+  dateOfBirth: Nullable<string>
+  firstName: Nullable<string>
   id: number
-  lastName: string
-  region: string
+  lastName: Nullable<string>
+  region: Nullable<string>
   userName: string
 }
 

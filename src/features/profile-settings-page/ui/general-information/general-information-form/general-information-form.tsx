@@ -28,7 +28,7 @@ import { useTranslations } from 'next-intl'
 
 type GeneralInformationFormProps = {
   onSubmitHandler(data: GeneralInformationFormValues): Promise<void>
-  profileInfo: GetMyProfileResponse | undefined
+  profileInfo: GetMyProfileResponse
 }
 /*global IntlMessages*/
 export type GeneralInformationSchemaType =
@@ -66,16 +66,17 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     watch,
   } = useForm<GeneralInformationFormValues>({
     defaultValues: {
-      city: profileInfo?.city,
-      country: profileInfo?.country,
-      firstName: profileInfo?.firstName,
-      lastName: profileInfo?.lastName,
-      userName: profileInfo?.userName,
+      city: profileInfo?.city || undefined,
+      country: profileInfo?.country || undefined,
+      firstName: profileInfo?.firstName || undefined,
+      lastName: profileInfo?.lastName || undefined,
+      userName: profileInfo?.userName || undefined,
     },
     mode: 'onChange',
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
   const currentCountry = watch('country')
+
   const onDateChange = (date: Date | undefined) => {
     if (!date) {
       return
@@ -106,15 +107,16 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     setSelectedCountry(foundCountry)
   }, [currentCountry, countries])
 
-  if (isLoadingCountries || isLoadingCities) {
-    return <Spinner fullScreen />
-  }
+  // if (isLoadingCountries || isLoadingCities) {
+  //   return <Spinner fullScreen />
+  // }
 
   return (
     <div className={'flex flex-col'}>
       <div
         className={
-          'flex gap-6 h-[532px] max-2xl:h-[25rem] overflow-y-scroll xl:[&::-webkit-scrollbar]:hidden'
+          'flex gap-9'
+          // 'flex gap-6 md:h-[532px] h-[25rem] overflow-y-scroll md:'
         }
       >
         <div className={'flex flex-col gap-6'}>
@@ -125,7 +127,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
           id={'general-information-form'}
           onSubmit={handleSubmit(onSubmitHandler)}
         >
-          <div className={'flex flex-col w-full gap-6'}>
+          <div className={'flex flex-col w-full gap-[23px]'}>
             <ControlledTextField
               control={control}
               error={!!errors.userName?.message}
@@ -153,8 +155,9 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
             />
             <div>
               <DatePickerSingle
-                defaultValue={profileInfo?.dateOfBirth}
+                defaultValue={profileInfo?.dateOfBirth || undefined}
                 error={!!checkFullYears}
+                label={t('dateOfBirth')}
                 onDateSelect={date => onDateChange(date)}
               />
               {checkFullYears && (
@@ -166,12 +169,11 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
                 </span>
               )}
             </div>
-            <div className={'flex gap-6'}>
-              <div className={'flex flex-col w-1/2'}>
+            <div className={'flex md:flex-row flex-col gap-6'}>
+              <div className={'flex flex-col md:w-1/2 w-full'}>
                 <ControlledSelect
                   className={'h-44'}
                   control={control}
-                  defaultValue={profileInfo?.country || 'Select your country'}
                   label={t('selectYourCountry')}
                   name={'country'}
                   options={countries?.map(country => ({
@@ -179,23 +181,27 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
                     label: country.label,
                     value: country.value,
                   }))}
+                  placeholder={'Select country'}
                 />
               </div>
-              <div className={'flex flex-col w-1/2'}>
+              <div className={'flex flex-col md:w-1/2 w-full'}>
                 <ControlledSelect
                   className={'h-44'}
                   control={control}
-                  defaultValue={profileInfo?.city || 'Select your city'}
                   label={t('selectYourCity')}
                   name={'city'}
                   options={cities || []}
+                  placeholder={'Select city'}
                 />
               </div>
             </div>
             <ControlledTextarea
-              className={'min-h-20 max-h-32 [&::-webkit-scrollbar]:hidden'}
+              autoResize={false}
+              className={'h-20 max-h-20 [&::-webkit-scrollbar]:hidden'}
               control={control}
               defaultValue={profileInfo?.aboutMe || ''}
+              error={!!errors.aboutMe?.message}
+              helperText={errors.aboutMe?.message}
               label={t('aboutMe')}
               name={'aboutMe'}
             />
@@ -203,7 +209,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
         </form>
       </div>
       <Separator className={'my-6'} />
-      <div className={'flex flex-row-reverse mb-6'}>
+      <div className={'flex flex-row-reverse mb-[3rem]'}>
         <Button
           disabled={!isValid || !!checkFullYears}
           form={'general-information-form'}
