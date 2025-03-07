@@ -1,5 +1,6 @@
 'use client'
 
+import { BellOutline } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
@@ -38,6 +39,7 @@ export const Header = ({ auth }: Props) => {
           Inctagram
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
+          {data && <BellOutline className={'mr-12 w-[18px] h-5'} />}
           <LocaleSwitcher />
           {!auth && !data && (
             <>
