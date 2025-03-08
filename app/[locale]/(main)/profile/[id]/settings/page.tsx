@@ -1,6 +1,6 @@
 import { ProfileSettings } from '@/features/profile-settings-page/ui'
 
-export default async function ProfileSettingsPage({ params }: { params: { id: string } }) {
+export default async function ProfileSettingsPage() {
   // const { id } = params
   //
   // const { data: me, isError: isMeError, isLoading: isMeLoading } = useMeQuery()
@@ -22,5 +22,5 @@ export default async function ProfileSettingsPage({ params }: { params: { id: st
   //   redirect(`/profile/${userId}/settings`)
   // }
 
-  return <ProfileSettings params={params} />
+  return <ProfileSettings />
 }

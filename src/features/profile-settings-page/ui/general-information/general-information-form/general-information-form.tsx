@@ -90,11 +90,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     const isOlderThan13 = date <= thirteenYearsAgo
 
     setCheckFullYears(!isOlderThan13 ? tErrors('dateOfBirth') : null)
-    // if (!isOlderThan13) {
-    //   setCheckFullYears(tErrors('dateOfBirth'))
-    // } else {
-    //   setCheckFullYears(null)
-    // }
+
     setValue('dateOfBirth', date)
   }
 
@@ -106,10 +102,6 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
 
     setSelectedCountry(foundCountry)
   }, [currentCountry, countries])
-
-  // if (isLoadingCountries || isLoadingCities) {
-  //   return <Spinner fullScreen />
-  // }
 
   return (
     <div className={'flex flex-col'}>
@@ -174,6 +166,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
                 <ControlledSelect
                   className={'h-44'}
                   control={control}
+                  disabled={isLoadingCountries}
                   label={t('selectYourCountry')}
                   name={'country'}
                   options={countries?.map(country => ({
@@ -188,6 +181,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
                 <ControlledSelect
                   className={'h-44'}
                   control={control}
+                  disabled={isLoadingCountries}
                   label={t('selectYourCity')}
                   name={'city'}
                   options={cities || []}

@@ -76,15 +76,12 @@ const AddAvatarSection = ({ avatars }: Props) => {
     }
   }
 
-  if (isDeleting || isUploading) {
+  if (isDeleting || isUploading || !profileData) {
     return (
       <div className={'w-48'}>
         <Spinner />
       </div>
     )
-  }
-  if (!profileData) {
-    return <ProgressBar />
   }
 
   return (

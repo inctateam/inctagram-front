@@ -2,18 +2,16 @@
 import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import {
-  useGetMyProfileQuery,
-  useUpdateProfileMutation,
-} from '@/features/profile-settings-page/api'
-import { UpdateMyProfile } from '@/features/profile-settings-page/types'
+import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
+import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
 import { GeneralInformationForm } from '@/features/profile-settings-page/ui/general-information/general-information-form/general-information-form'
 import { GeneralInformationFormValues } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
-import { Spinner } from '@/shared/ui'
 import { format } from 'date-fns'
 
-const GeneralInformation = () => {
-  const { data: profileInfo } = useGetMyProfileQuery()
+type Props = {
+  profileInfo: GetMyProfileResponse
+}
+const GeneralInformation = ({ profileInfo }: Props) => {
   const [updateProfile] = useUpdateProfileMutation()
 
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
@@ -40,11 +38,9 @@ const GeneralInformation = () => {
     }
   }
 
-  if (!profileInfo) {
-    return <Spinner fullScreen />
+  if (profileInfo) {
+    return <GeneralInformationForm onSubmitHandler={onSubmitHandler} profileInfo={profileInfo} />
   }
-
-  return <GeneralInformationForm onSubmitHandler={onSubmitHandler} profileInfo={profileInfo} />
 }
 
 export { GeneralInformation }

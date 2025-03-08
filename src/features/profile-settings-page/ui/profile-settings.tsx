@@ -1,40 +1,24 @@
 'use client'
-import { useMeQuery } from '@/features/auth/api'
+import { useGetMyProfileQuery } from '@/features/profile-settings-page/api'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
 import { MyPayments } from '@/features/profile-settings-page/ui/my-payments'
+import { PATH } from '@/shared/constants'
 import { ProgressBar, Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
 import { redirect } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import AccountManagement from './account-management/account-management'
 
-// type ProfileSettingsProps = {
-//   profileInfo: GetMyProfileResponse
-// }
-// const ProfileSettings = (props: ProfileSettingsProps) => {
-//   const { profileInfo } = props
-const ProfileSettings = ({ params }: { params: { id: string } }) => {
+export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')
-  // const { id } = params
-  //
-  // const { data: me, isError: isMeError, isLoading: isMeLoading } = useMeQuery()
-  //
-  // if (isMeLoading) {
-  //   return <ProgressBar />
-  // }
-  // if (isMeError) {
-  //   return <div>Error! Something went wrong</div>
-  // }
-  // const userId = me?.userId
-  // const paramsUserId = Number(id)
-  //
-  // if (!userId) {
-  //   redirect('/auth/sign-in')
-  // }
-  //
-  // if (userId && paramsUserId !== userId) {
-  //   redirect(`/profile/${userId}/settings`)
-  // }
+  const { data: profileInfo, isError, isFetching, isLoading } = useGetMyProfileQuery()
+
+  if (isLoading || isFetching) {
+    return <ProgressBar />
+  }
+  if (isError || !profileInfo) {
+    redirect(PATH.SIGN_IN)
+  }
 
   return (
     <Tabs className={'mt-3'} defaultValue={'General-information'}>
@@ -46,7 +30,7 @@ const ProfileSettings = ({ params }: { params: { id: string } }) => {
       </TabsList>
 
       <TabsContent value={'General-information'}>
-        <GeneralInformation />
+        <GeneralInformation profileInfo={profileInfo} />
       </TabsContent>
 
       <TabsContent value={'Devices'}>
@@ -63,7 +47,3 @@ const ProfileSettings = ({ params }: { params: { id: string } }) => {
     </Tabs>
   )
 }
-
-ProfileSettings.displayName = ProfileSettings
-
-export { ProfileSettings }
