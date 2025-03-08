@@ -1,44 +1,44 @@
 import { BellOutline } from '@/assets/icons'
 import { Badge, CustomDropdown, IconButton, Typography } from '@/shared/ui'
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { ScrollArea } from '@/shared/ui/scrollbar'
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 
 const items = [
   {
+    isReaded: false,
     text: 'Следующий платеж у вас спишется через 1 день',
     timestamp: '1 час назад',
     title: 'Новое уведомление!',
-    isReaded: false,
   },
   {
+    isReaded: false,
     text: 'Ваша подписка истекает через 7 дней',
     timestamp: '1 день назад',
     title: 'Новое уведомление!',
-    isReaded: false,
   },
   {
+    isReaded: true,
     text: 'Следующий платеж у вас спишется через 1 день',
     timestamp: '1 час назад',
     title: 'Новое уведомление!',
-    isReaded: true,
   },
   {
+    isReaded: true,
     text: 'Ваша подписка истекает через 7 дней',
     timestamp: '1 день назад',
     title: 'Новое уведомление!',
-    isReaded: true,
   },
   {
+    isReaded: true,
     text: 'Ваша подписка истекает через 7 дней',
     timestamp: '1 день назад',
     title: 'Новое уведомление!',
-    isReaded: true,
   },
   {
+    isReaded: true,
     text: 'Ваша подписка истекает через 7 дней',
     timestamp: '1 день назад',
     title: 'Новое уведомление!',
-    isReaded: true,
   },
 ]
 
@@ -48,12 +48,18 @@ export const NotificationsDropdown = () => {
   const customMenuContent = (
     <DropdownMenuPrimitive.Content
       align={'end'}
-      className={'z-50 p-4 w-[355px] h-[440px] bg-dark-500 rounded-md border border-dark-100'}
+      className={
+        'z-50 p-4 translate-x-3 w-[355px] h-[440px] bg-dark-500 rounded-md border border-dark-100'
+      }
     >
+      <div
+        className={
+          'absolute -top-2 right-5 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-dark-100'
+        }
+      ></div>
       <Typography className={'mb-4'} variant={'h3'}>
         Уведомления
       </Typography>
-
       <ScrollArea className={'h-[350px] w-[330px]'}>
         {items.map((item, i) => (
           <DropdownMenuPrimitive.Item
@@ -70,7 +76,7 @@ export const NotificationsDropdown = () => {
                   {item.title}
                 </Typography>
                 {!item.isReaded && (
-                  <Typography variant={'small'} className={'text-accent-500'}>
+                  <Typography className={'text-accent-500'} variant={'small'}>
                     Новое
                   </Typography>
                 )}
