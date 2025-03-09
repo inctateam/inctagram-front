@@ -21,7 +21,6 @@ import {
   ControlledTextarea,
   DatePickerSingle,
   Separator,
-  Spinner,
 } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
@@ -101,16 +100,12 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     const foundCountry = countries.find(c => c.value === currentCountry)
 
     setSelectedCountry(foundCountry)
-  }, [currentCountry, countries])
+    setValue('city', undefined)
+  }, [currentCountry, countries, setValue])
 
   return (
     <div className={'flex flex-col'}>
-      <div
-        className={
-          'flex gap-9'
-          // 'flex gap-6 md:h-[532px] h-[25rem] overflow-y-scroll md:'
-        }
-      >
+      <div className={'flex gap-9'}>
         <div className={'flex flex-col gap-6'}>
           <AddAvatarSection avatars={profileInfo?.avatars} />
         </div>
@@ -119,7 +114,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
           id={'general-information-form'}
           onSubmit={handleSubmit(onSubmitHandler)}
         >
-          <div className={'flex flex-col w-full gap-[23px]'}>
+          <div className={'flex flex-col w-full gap-6'}>
             <ControlledTextField
               control={control}
               error={!!errors.userName?.message}
@@ -181,7 +176,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
                 <ControlledSelect
                   className={'h-44'}
                   control={control}
-                  disabled={isLoadingCountries}
+                  disabled={isLoadingCities || !selectedCountry}
                   label={t('selectYourCity')}
                   name={'city'}
                   options={cities || []}
