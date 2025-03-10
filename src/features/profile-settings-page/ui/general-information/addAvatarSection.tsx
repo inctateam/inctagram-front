@@ -8,15 +8,7 @@ import {
   useGetProfileQuery,
   useUploadProfileAvatarMutation,
 } from '@/features/home-page/ui/user-profile/api/user-profile.api'
-import {
-  AlertDialog,
-  Avatar,
-  Button,
-  CancelButton,
-  ConfirmButton,
-  ProgressBar,
-  Spinner,
-} from '@/shared/ui'
+import { AlertDialog, Avatar, Button, CancelButton, ConfirmButton, Spinner } from '@/shared/ui'
 
 import AddProfilePhotoDialog from './addProfilePhotoDialog'
 
@@ -46,7 +38,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
         URL.revokeObjectURL(avatarSrc)
       }
     }
-  }, [profileData, avatars])
+  }, [profileData, avatars, avatarSrc])
   const handleDeletePhoto = async () => {
     setPhotoToUpload(null)
     try {

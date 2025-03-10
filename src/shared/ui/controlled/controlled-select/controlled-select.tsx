@@ -6,7 +6,9 @@ import { Select, SelectItem, SelectProps } from '@/shared/ui'
 export type ControlledSelectProps<TFieldValues extends FieldValues> = {
   className?: string
   label?: ReactNode
-  options: Array<{ id: string; label: string; value: string } & Record<string, any>> | undefined
+  options:
+    | Array<{ id: string; label: string; value: string } & Record<string, number | string>>
+    | undefined
 } & Omit<SelectProps, 'onChange' | 'value'> &
   UseControllerProps<TFieldValues>
 
@@ -26,8 +28,6 @@ export const ControlledSelect = <TFieldValues extends FieldValues>({
     name,
     shouldUnregister,
   })
-
-  console.log('value', value)
 
   return (
     <Select {...selectProps} onValueChange={onChange} value={value}>

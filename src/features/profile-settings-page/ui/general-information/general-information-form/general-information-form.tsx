@@ -3,10 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { GetUserProfileResponse } from '@/features/home-page/ui/user-profile/types/user-profile.types'
 import AddAvatarSection from '@/features/profile-settings-page/ui/general-information/addAvatarSection'
-import {
-  useGetCitiesQuery,
-  useGetCountriesQuery,
-} from '@/features/profile-settings-page/ui/servises/countriesAndCities.api'
+import { useGetCitiesQuery } from '@/features/profile-settings-page/ui/servises/countriesAndCities.api'
 import { FormatedCountry } from '@/features/profile-settings-page/ui/servises/types'
 import {
   GeneralInformationFormValues,
@@ -106,7 +103,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
       setSelectedCountry(foundCountry)
       setValue('city', undefined)
     }
-  }, [currentCountry, countries])
+  }, [currentCountry, countries, setValue])
 
   const onDateChange = (date: Date | undefined) => {
     if (!date) {
