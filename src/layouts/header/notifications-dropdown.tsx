@@ -57,6 +57,13 @@ export const NotificationsDropdown = () => {
           'absolute -top-2 right-5 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-dark-100'
         }
       ></div>
+      <div
+        className={
+          'absolute -top-[5px] right-[21px] w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-dark-500'
+        }
+      ></div>
+
+      <Typography className={'mb-4'} variant={'h3'}></Typography>
       <Typography className={'mb-4'} variant={'h3'}>
         Уведомления
       </Typography>
