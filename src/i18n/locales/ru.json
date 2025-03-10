@@ -153,6 +153,13 @@
         "dateOfBirth": "Пользователь младше 13 лет не может создать профиль."
       }
     },
+    "MyPayments": {
+      "dateOfPayment": "Дата оплаты",
+      "endDateOfSubscription": "Дата окончания подписки",
+      "price": "Цена",
+      "subscriptionType": "Тип подписки",
+      "paymentType": "Способ оплаты"
+    },
     "generalInformation": "Общая информация",
     "devices": "Устройства",
     "accountManagement": "Управление аккаунтом",

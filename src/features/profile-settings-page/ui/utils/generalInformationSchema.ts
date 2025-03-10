@@ -1,4 +1,4 @@
-import { GeneralInformationSchemaType } from '@/features/profile-settings-page/ui/general-information'
+import { GeneralInformationSchemaType } from '@/features/profile-settings-page/ui/general-information/general-information-form/general-information-form'
 import { z } from 'zod'
 
 export const GeneralInformationSchema = ({ ...scheme }: GeneralInformationSchemaType) =>

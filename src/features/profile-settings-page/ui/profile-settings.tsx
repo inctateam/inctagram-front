@@ -1,19 +1,27 @@
-import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+'use client'
+import { useGetProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
-import { Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
+import { MyPayments } from '@/features/profile-settings-page/ui/my-payments'
+import { PATH } from '@/shared/constants'
+import { ProgressBar, Tabs, TabsContent, TabsList, TabsTrigger, Typography } from '@/shared/ui'
+import { redirect } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import AccountManagement from './account-management/account-management'
 
-type ProfileSettingsProps = {
-  profileInfo: GetMyProfileResponse
-}
-const ProfileSettings = (props: ProfileSettingsProps) => {
-  const { profileInfo } = props
+export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')
+  const { data: profileInfo, isError, isFetching, isLoading } = useGetProfileQuery()
+
+  if (isLoading || isFetching) {
+    return <ProgressBar />
+  }
+  if (isError || !profileInfo) {
+    redirect(PATH.SIGN_IN)
+  }
 
   return (
-    <Tabs defaultValue={'General-information'}>
+    <Tabs className={'mt-3'} defaultValue={'General-information'}>
       <TabsList>
         <TabsTrigger value={'General-information'}>{t('generalInformation')}</TabsTrigger>
         <TabsTrigger value={'Devices'}>{t('devices')}</TabsTrigger>
@@ -34,12 +42,8 @@ const ProfileSettings = (props: ProfileSettingsProps) => {
       </TabsContent>
 
       <TabsContent value={'My-payments'}>
-        <Typography>My payments</Typography>
+        <MyPayments />
       </TabsContent>
     </Tabs>
   )
 }
-
-ProfileSettings.displayName = ProfileSettings
-
-export { ProfileSettings }
