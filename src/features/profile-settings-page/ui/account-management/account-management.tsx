@@ -2,6 +2,7 @@
 import { useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
+import { PayModal } from '@/features/profile-settings-page/ui/pay-modal'
 import { Card, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 
@@ -18,6 +19,7 @@ enum Costs {
 const AccountManagement = () => {
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [selectedCosts, setSelectedCosts] = useState(Costs.PERDAY)
+  const [isOpenPayModal, setIsOpenPayModal] = useState(false)
 
   return (
     <>
@@ -58,13 +60,21 @@ const AccountManagement = () => {
               onChange={checked => checked && setSelectedCosts(Costs.PERMONTH)}
             />
           </Card>
-          <div className={'flex justify-end items-center gap-14'}>
-            <PaypalLogo className={'w-24 h-16 mt-6'} />
-            <Typography>Or</Typography>
-            <StripeLogo className={'w-24 h-16 mt-6 mr-[-16px]'} />
+          <div className={'flex justify-end items-center gap-10 mr-[-16px]'}>
+            <button onClick={() => setIsOpenPayModal(true)} type={'button'}>
+              <PaypalLogo className={'w-[141px] h-[101px] mt-6'} />
+            </button>
+            <Typography className={'mb-4 select-none'}>Or</Typography>
+            <button onClick={() => setIsOpenPayModal(true)} type={'button'}>
+              <StripeLogo className={'w-[141px] h-[101px] mt-6'} />
+            </button>
           </div>
         </>
       )}
+      <PayModal buttonText={'OK'} checkbox onOpenChange={setIsOpenPayModal} open={isOpenPayModal}>
+        Auto-renewal will be enabled with this payment. You can disable it anytime in your profile
+        settings.
+      </PayModal>
     </>
   )
 }
