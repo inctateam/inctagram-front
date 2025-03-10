@@ -79,7 +79,11 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, Aler
               </div>
             </div>
             <RadixAlertDialog.Description className={'flex py-[30px] px-6'}>
-              <Typography as={'p'} className={'break-words'} variant={'regular16'}>
+              <Typography
+                as={'p'}
+                className={'break-words whitespace-pre-wrap'}
+                variant={'regular16'}
+              >
                 {description}
               </Typography>
             </RadixAlertDialog.Description>
