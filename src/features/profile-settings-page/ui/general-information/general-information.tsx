@@ -2,17 +2,23 @@
 import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
-import { useUpdateProfileMutation } from '@/features/profile-settings-page/api'
-import { GetMyProfileResponse, UpdateMyProfile } from '@/features/profile-settings-page/types'
+import { useUpdateProfileMutation } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import {
+  GetUserProfileResponse,
+  UpdateMyProfile,
+} from '@/features/home-page/ui/user-profile/types/user-profile.types'
 import { GeneralInformationForm } from '@/features/profile-settings-page/ui/general-information/general-information-form/general-information-form'
+import { useGetCountriesQuery } from '@/features/profile-settings-page/ui/servises/countriesAndCities.api'
 import { GeneralInformationFormValues } from '@/features/profile-settings-page/ui/utils/generalInformationSchema'
+import { ProgressBar } from '@/shared/ui'
 import { format } from 'date-fns'
 
 type Props = {
-  profileInfo: GetMyProfileResponse
+  profileInfo: GetUserProfileResponse
 }
 const GeneralInformation = ({ profileInfo }: Props) => {
   const [updateProfile] = useUpdateProfileMutation()
+  const { data: countries, isLoading: isLoadingCountries } = useGetCountriesQuery()
 
   const onSubmitHandler = async (data: GeneralInformationFormValues) => {
     const formattedData: UpdateMyProfile = {
@@ -38,9 +44,17 @@ const GeneralInformation = ({ profileInfo }: Props) => {
     }
   }
 
-  if (profileInfo) {
-    return <GeneralInformationForm onSubmitHandler={onSubmitHandler} profileInfo={profileInfo} />
+  if (!profileInfo || isLoadingCountries) {
+    return <ProgressBar />
   }
+
+  return (
+    <GeneralInformationForm
+      countries={countries || []}
+      onSubmitHandler={onSubmitHandler}
+      profileInfo={profileInfo}
+    />
+  )
 }
 
 export { GeneralInformation }

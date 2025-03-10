@@ -1,5 +1,5 @@
 'use client'
-import { useGetMyProfileQuery } from '@/features/profile-settings-page/api'
+import { useGetProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { GeneralInformation } from '@/features/profile-settings-page/ui/general-information'
 import { MyPayments } from '@/features/profile-settings-page/ui/my-payments'
 import { PATH } from '@/shared/constants'
@@ -11,7 +11,7 @@ import AccountManagement from './account-management/account-management'
 
 export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')
-  const { data: profileInfo, isError, isFetching, isLoading } = useGetMyProfileQuery()
+  const { data: profileInfo, isError, isFetching, isLoading } = useGetProfileQuery()
 
   if (isLoading || isFetching) {
     return <ProgressBar />

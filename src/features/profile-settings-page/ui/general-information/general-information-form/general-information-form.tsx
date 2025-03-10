@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { GetMyProfileResponse } from '@/features/profile-settings-page/types'
+import { GetUserProfileResponse } from '@/features/home-page/ui/user-profile/types/user-profile.types'
 import AddAvatarSection from '@/features/profile-settings-page/ui/general-information/addAvatarSection'
 import {
   useGetCitiesQuery,
@@ -20,24 +20,25 @@ import {
   ControlledTextField,
   ControlledTextarea,
   DatePickerSingle,
+  ProgressBar,
   Separator,
 } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 
 type GeneralInformationFormProps = {
+  countries: FormatedCountry[]
   onSubmitHandler(data: GeneralInformationFormValues): Promise<void>
-  profileInfo: GetMyProfileResponse
+  profileInfo: GetUserProfileResponse
 }
 /*global IntlMessages*/
 export type GeneralInformationSchemaType =
   IntlMessages['ProfileSettings']['GeneralInformation']['formErrors']
 
 export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
-  const { onSubmitHandler, profileInfo } = props
+  const { countries, onSubmitHandler, profileInfo } = props
   const [selectedCountry, setSelectedCountry] = useState<FormatedCountry | undefined>()
   const [checkFullYears, setCheckFullYears] = useState<Nullable<string>>(null)
-  const { data: countries, isLoading: isLoadingCountries } = useGetCountriesQuery()
   const { data: cities, isLoading: isLoadingCities } = useGetCitiesQuery(
     selectedCountry?.countryCode || '',
     {
@@ -57,6 +58,17 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     requiredField: tErrors('requiredField'),
   }
 
+  const defaultValues = useMemo(
+    () => ({
+      city: profileInfo?.city || undefined,
+      country: profileInfo?.country || undefined,
+      firstName: profileInfo?.firstName || undefined,
+      lastName: profileInfo?.lastName || undefined,
+      userName: profileInfo?.userName || undefined,
+    }),
+    [profileInfo]
+  )
+
   const {
     control,
     formState: { errors, isValid },
@@ -64,17 +76,37 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     setValue,
     watch,
   } = useForm<GeneralInformationFormValues>({
-    defaultValues: {
-      city: profileInfo?.city || undefined,
-      country: profileInfo?.country || undefined,
-      firstName: profileInfo?.firstName || undefined,
-      lastName: profileInfo?.lastName || undefined,
-      userName: profileInfo?.userName || undefined,
-    },
+    defaultValues,
+    // defaultValues: {
+    //   city: profileInfo?.city || undefined,
+    //   country: profileInfo?.country || undefined,
+    //   firstName: profileInfo?.firstName || undefined,
+    //   lastName: profileInfo?.lastName || undefined,
+    //   userName: profileInfo?.userName || undefined,
+    // },
     mode: 'onChange',
     resolver: zodResolver(GeneralInformationSchema(scheme)),
   })
   const currentCountry = watch('country')
+
+  useEffect(() => {
+    if (profileInfo?.city) {
+      setValue('city', profileInfo.city) // предотвращает лишние ререндеры
+    }
+  }, [profileInfo?.city, setValue])
+
+  useEffect(() => {
+    if (!countries || !currentCountry) {
+      return
+    }
+
+    const foundCountry = countries.find(c => c.value === currentCountry)
+
+    if (foundCountry?.value !== selectedCountry?.value) {
+      setSelectedCountry(foundCountry)
+      setValue('city', undefined)
+    }
+  }, [currentCountry, countries])
 
   const onDateChange = (date: Date | undefined) => {
     if (!date) {
@@ -93,15 +125,9 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
     setValue('dateOfBirth', date)
   }
 
-  useEffect(() => {
-    if (!countries || !currentCountry) {
-      return
-    }
-    const foundCountry = countries.find(c => c.value === currentCountry)
-
-    setSelectedCountry(foundCountry)
-    setValue('city', undefined)
-  }, [currentCountry, countries, setValue])
+  if (!profileInfo || isLoadingCities || !countries) {
+    return <ProgressBar />
+  }
 
   return (
     <div className={'flex flex-col'}>
@@ -114,7 +140,6 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
           id={'general-information-form'}
           onSubmit={handleSubmit(onSubmitHandler)}
         >
-          {/*<div className={'flex flex-col w-full gap-6'}>*/}
           <ControlledTextField
             control={control}
             error={!!errors.userName?.message}
@@ -161,7 +186,6 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                disabled={isLoadingCountries}
                 label={t('selectYourCountry')}
                 name={'country'}
                 options={countries || []}
@@ -172,7 +196,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
               <ControlledSelect
                 className={'h-44'}
                 control={control}
-                disabled={isLoadingCities || !selectedCountry}
+                disabled={isLoadingCities}
                 label={t('selectYourCity')}
                 name={'city'}
                 options={cities || []}
@@ -190,7 +214,6 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
             label={t('aboutMe')}
             name={'aboutMe'}
           />
-          {/*</div>*/}
         </form>
       </div>
       <Separator className={'my-6'} />

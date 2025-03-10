@@ -1,3 +1,5 @@
+import { Nullable } from '@/shared/types'
+
 export type GetUserProfileResponse = {
   aboutMe: string
   avatars: {
@@ -98,4 +100,14 @@ export type Avatar = {
   height: number
   url: string
   width: number
+}
+export interface UpdateMyProfile {
+  aboutMe: Nullable<string>
+  city: Nullable<string>
+  country: Nullable<string>
+  dateOfBirth: Nullable<string>
+  firstName: string
+  lastName: string
+  region: Nullable<string>
+  userName: string
 }
