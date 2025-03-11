@@ -5,26 +5,70 @@ import { useTranslations } from 'next-intl'
 
 const MyPayments = () => {
   const t = useTranslations('ProfileSettings.MyPayments')
+  /**
+   * Используем кастомный хук с сортировкой
+   */
   const {
     currentDataOnPage,
     currentPage,
     itemsPerPage,
     onChangeItemsPerPageHandler,
     onCurrentPageClickHandler,
+    onSortChangeHandler,
+    sortKey,
+    sortOrder,
     totalItems,
     totalPages,
   } = usePaymentsPagination(paymentData, 5)
 
+  /**
+   * Функция для определения направления сортировки
+   */
+  const getSortIndicator = (key: keyof (typeof paymentData)[0]) => {
+    if (sortKey === key) {
+      return sortOrder === 'asc' ? ' ↑' : ' ↓'
+    }
+
+    return ''
+  }
+
   return (
-    <div className={'flex items-start flex-col w-full gap-9 mt-6'}>
+    <div className={'flex items-start flex-col w-full gap-9 mt-6 justify-between h-[38rem]'}>
       <TableRoot className={'w-full'}>
         <TableHead>
           <TableRow>
-            <TableCell>{t('dateOfPayment')}</TableCell>
-            <TableCell>{t('endDateOfSubscription')}</TableCell>
-            <TableCell>{t('price')}</TableCell>
-            <TableCell>{t('subscriptionType')}</TableCell>
-            <TableCell>{t('paymentType')}</TableCell>
+            <TableCell
+              className={'cursor-pointer'}
+              onClick={() => onSortChangeHandler('dateOfPayment')}
+            >
+              {t('dateOfPayment')}
+              {getSortIndicator('dateOfPayment')}
+            </TableCell>
+            <TableCell
+              className={'cursor-pointer'}
+              onClick={() => onSortChangeHandler('endDateOfPayment')}
+            >
+              {t('endDateOfSubscription')}
+              {getSortIndicator('endDateOfPayment')}
+            </TableCell>
+            <TableCell className={'cursor-pointer'} onClick={() => onSortChangeHandler('price')}>
+              {t('price')}
+              {getSortIndicator('price')}
+            </TableCell>
+            <TableCell
+              className={'cursor-pointer'}
+              onClick={() => onSortChangeHandler('subscriptionType')}
+            >
+              {t('subscriptionType')}
+              {getSortIndicator('subscriptionType')}
+            </TableCell>
+            <TableCell
+              className={'cursor-pointer'}
+              onClick={() => onSortChangeHandler('paymentType')}
+            >
+              {t('paymentType')}
+              {getSortIndicator('paymentType')}
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,50 +97,3 @@ const MyPayments = () => {
 }
 
 export { MyPayments }
-
-// const paymentsData = paymentData // В вашем случае это данные, которые вы получаете
-// const [totalItems, setTotalItems] = useState(paymentsData?.length || 100)
-// const [currentPage, setCurrentPage] = useState(1)
-// const [itemsPerPage, setItemsPerPage] = useState(5)
-// const [currentDataOnPage, setCurrentDataOnPage] = useState<PaymentsDataResponse[]>([])
-//
-// // Функция для разделения данных на страницы
-// const splitArray = (arr: PaymentsDataResponse[], itemsPerPage: number) => {
-//   const result = []
-//
-//   for (let i = 0; i < arr.length; i += itemsPerPage) {
-//     result.push(arr.slice(i, i + itemsPerPage))
-//   }
-//
-//   return result
-// }
-
-// useMemo для вычислений, чтобы не перерасчитывать их при каждом рендере
-// const { splittingData, totalPages } = useMemo(() => {
-//   if (!paymentsData) {
-//     return { splittingData: [], totalPages: 1 }
-//   }
-//   const totalPages = Math.ceil(paymentsData.length / itemsPerPage) // Общее количество страниц
-//   const splittingData = splitArray(paymentsData, itemsPerPage) // Разделение данных на страницы
-//
-//   return { splittingData, totalPages }
-// }, [paymentsData, itemsPerPage]) // Зависимости: меняются, если изменяются данные или количество элементов на странице
-//
-// useEffect(() => {
-//   if (splittingData.length > 0) {
-//     setCurrentDataOnPage(splittingData[0] || []) // Устанавливаем данные для первой страницы
-//   }
-// }, [splittingData]) // Обновляем данные на странице, если splittingData изменилось
-//
-// const onChangeItemsPerPageHandler = useCallback((itemsPerPage: number) => {
-//   setItemsPerPage(itemsPerPage) // Изменение количества элементов на странице
-//   setCurrentPage(1) // Сброс на первую страницу
-// }, [])
-//
-// const onCurrentPageClickHandler = useCallback(
-//   (page: number) => {
-//     setCurrentPage(page) // Переключение на текущую страницу
-//     setCurrentDataOnPage(splittingData[page - 1] || [])
-//   },
-//   [splittingData]
-// )
