@@ -2,8 +2,7 @@
 import { useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-import { PayModal } from '@/features/profile-settings-page/ui/pay-modal'
-import { Card, Typography } from '@/shared/ui'
+import { AlertDialog, Card, ConfirmButton, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 import { useGetCurrentSubscriptionsQuery } from '../../api/subscriptions.api'
 
@@ -17,6 +16,14 @@ enum Option {
 export const AccountManagement = () => {
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
+  const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
+
+  const handleConfirmPay = () => {
+    if (isCheckedPayModal) {
+      // Логика для подтверждения платежа
+      setIsOpenPayModal(false)
+    }
+  }
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -58,10 +65,25 @@ export const AccountManagement = () => {
           </div>
         </>
       )}
-      <PayModal buttonText={'OK'} checkbox onOpenChange={setIsOpenPayModal} open={isOpenPayModal}>
-        Auto-renewal will be enabled with this payment. You can disable it anytime in your profile
-        settings.
-      </PayModal>
+      <AlertDialog
+        checkbox={
+          <RoundedCheckbox
+            checked={isCheckedPayModal}
+            label={'Agree'}
+            onChange={() => setIsCheckedPayModal(prev => !prev)}
+          />
+        }
+        confirmButton={
+          <ConfirmButton disabled={!isCheckedPayModal} onClick={handleConfirmPay}>
+            OK
+          </ConfirmButton>
+        }
+        description={
+          'Auto-renewal will be enabled with this payment. You can disable it anytime in your profile settings.'
+        }
+        onOpenChange={setIsOpenPayModal}
+        open={isOpenPayModal}
+      />
     </>
   )
 }
