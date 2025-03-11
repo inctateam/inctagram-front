@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 import { AlertDialog, Button, CancelButton, ConfirmButton } from '@/shared/ui'
 
+import RoundedCheckbox from '../../checkbox/rounded-checkbox'
+
 const meta = {
   argTypes: {
     description: { control: 'text' },
@@ -42,6 +44,48 @@ export const Controlled = {
             open={isVisible}
             {...args}
             cancelButton={<CancelButton>No</CancelButton>}
+            confirmButton={<ConfirmButton>Yes</ConfirmButton>}
+            onOpenChange={handleOpenChange}
+          />
+        )}
+      </div>
+    )
+  },
+}
+export const ControlledWithCheckbox = {
+  args: {
+    description:
+      'Auto-renewal will be enabled with this payment. You can disable it anytime in your profile settings',
+    position: 'center',
+  },
+  render: ({ ...args }) => {
+    const [isVisible, setIsVisible] = useState(false)
+    const [isAgreed, setIsAgreed] = useState(false)
+
+    const handleOpenChange = (open: boolean) => {
+      setIsVisible(open)
+    }
+
+    return (
+      <div>
+        <Button
+          onClick={() => {
+            setIsVisible(true)
+          }}
+        >
+          Show alert dialog
+        </Button>
+        {isVisible && (
+          <AlertDialog
+            open={isVisible}
+            {...args}
+            checkbox={
+              <RoundedCheckbox
+                checked={isAgreed}
+                label={'Agree'}
+                onChange={checked => setIsAgreed(checked)}
+              />
+            }
             confirmButton={<ConfirmButton>Yes</ConfirmButton>}
             onOpenChange={handleOpenChange}
           />
