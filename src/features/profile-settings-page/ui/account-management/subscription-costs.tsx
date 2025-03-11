@@ -1,0 +1,46 @@
+import { Typography, Card, Spinner } from '@/shared/ui'
+import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
+import { SubscriptionType } from '../../types'
+import { useState } from 'react'
+import { useGetPaymentCostSubscriptionsQuery } from '../../api/subscriptions.api'
+
+enum Costs {
+  PERDAY = 'per Day',
+  PERMONTH = 'per month',
+  PERWEEK = 'per 7 Days',
+}
+
+type Props ={
+    title: "Your subscription costs:" | "Change your subscription:"
+}
+export const SubscriptionCosts = ({title}: Props) => {
+  const [selectedCosts, setSelectedCosts] = useState(Costs.PERDAY)
+  const { data: paymentCostSubscriptions, isLoading } = useGetPaymentCostSubscriptionsQuery()
+
+  if (isLoading) return <Spinner/>
+
+  return (
+    <>
+      <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
+        {title}
+      </Typography>
+      <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6'}>
+        <RoundedCheckbox
+          checked={selectedCosts === Costs.PERDAY}
+          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.DAY)?.amount} ${Costs.PERDAY}`}
+          onChange={checked => checked && setSelectedCosts(Costs.PERDAY)}
+        />
+        <RoundedCheckbox
+          checked={selectedCosts === Costs.PERWEEK}
+          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.WEEKLY)?.amount} ${Costs.PERWEEK}`}
+          onChange={checked => checked && setSelectedCosts(Costs.PERWEEK)}
+        />
+        <RoundedCheckbox
+          checked={selectedCosts === Costs.PERMONTH}
+          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.MONTHLY)?.amount} ${Costs.PERMONTH}`}
+          onChange={checked => checked && setSelectedCosts(Costs.PERMONTH)}
+        />
+      </Card>
+    </>
+  )
+}
