@@ -4,8 +4,16 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { useUploadDescriptionMutation } from '@/features/post-page/api'
-import { ClosePost } from '@/features/post-page/ui/post/close-post'
-import { Button, Dialog, ProgressBar, Textarea, Typography } from '@/shared/ui'
+import {
+  AlertDialog,
+  Button,
+  CancelButton,
+  ConfirmButton,
+  Dialog,
+  ProgressBar,
+  Textarea,
+  Typography,
+} from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -149,10 +157,15 @@ export const EditPost = ({
           </form>
         </div>
       </div>
-      <ClosePost
+      <AlertDialog
+        cancelButton={<CancelButton>No</CancelButton>}
+        confirmButton={<ConfirmButton onClick={() => onOpenChangeEdit(true)}>Yes</ConfirmButton>}
+        description={
+          'Do you really want to close the edition of the publication? If you close changes won’t be saved'
+        }
         onOpenChange={setIsClosePost}
-        onOpenChangeEdit={onOpenChangeEdit}
         open={isClosePost}
+        title={'Close Post'}
       />
     </Dialog>
   )
