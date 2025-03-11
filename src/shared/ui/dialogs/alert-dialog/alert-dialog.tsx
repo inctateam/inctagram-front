@@ -9,6 +9,7 @@ import { VariantProps, cva } from 'class-variance-authority'
 
 type AlertDialogProps = {
   cancelButton?: ReactNode
+  checkbox?: ReactNode // Add a prop for the checkbox
   confirmButton?: ReactNode
   defaultOpen?: AlertDialogRootProps['defaultOpen']
   description?: string
@@ -43,6 +44,7 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, Aler
   (props, ref) => {
     const {
       cancelButton,
+      checkbox,
       confirmButton,
       defaultOpen,
       description,
@@ -88,6 +90,8 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, Aler
               </Typography>
             </RadixAlertDialog.Description>
             <div className={'flex justify-end pb-3 gap-6 px-6'}>
+              {/* Render the checkbox here */}
+              <div className={'flex items-center px-6'}>{checkbox}</div>
               <RadixAlertDialog.Action asChild>{confirmButton}</RadixAlertDialog.Action>
               <RadixAlertDialog.Cancel asChild>{cancelButton}</RadixAlertDialog.Cancel>
             </div>

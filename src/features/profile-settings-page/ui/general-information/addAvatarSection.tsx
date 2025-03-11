@@ -31,7 +31,14 @@ const AddAvatarSection = ({ avatars }: Props) => {
     if (avatars?.[0]) {
       setAvatarSrc(avatars[0].url)
     }
-  }, [profileData])
+
+    // Cleanup function to revoke the object URL when avatarSrc changes or component unmounts
+    return () => {
+      if (avatarSrc && avatarSrc.startsWith('blob:')) {
+        URL.revokeObjectURL(avatarSrc)
+      }
+    }
+  }, [profileData, avatars, avatarSrc])
   const handleDeletePhoto = async () => {
     setPhotoToUpload(null)
     try {
@@ -51,7 +58,9 @@ const AddAvatarSection = ({ avatars }: Props) => {
       try {
         await uploadProfileAvatar({ file: photoToUpload }).unwrap()
         setPhotoToUpload(null) // Сбрасываем состояние после успешной загрузки
-        setAvatarSrc(URL.createObjectURL(photoToUpload))
+        const objectUrl = URL.createObjectURL(photoToUpload)
+
+        setAvatarSrc(objectUrl)
       } catch (error) {
         console.error('Failed to upload avatar:', error)
         toast.error('Failed to upload avatar')
@@ -59,7 +68,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
     }
   }
 
-  if (isDeleting || isUploading) {
+  if (isDeleting || isUploading || !profileData) {
     return (
       <div className={'w-48'}>
         <Spinner />
@@ -71,7 +80,14 @@ const AddAvatarSection = ({ avatars }: Props) => {
     <>
       <div className={'flex flex-col items-center mt-12'}>
         <div className={'relative mb-6'}>
-          <Avatar alt={'User avatar'} size={48} src={avatarSrc} />
+          <Avatar
+            alt={'User avatar'}
+            height={avatars?.[0].height}
+            priority
+            size={48}
+            src={avatarSrc}
+            width={avatars?.[0].width}
+          />
           {avatarSrc && (
             <div className={'absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2'}>
               <CloseOutline
@@ -89,7 +105,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
         />
         {/*{!avatarSrc ? (*/}
         <Button className={'text-[0.9rem] p-4'} onClick={() => setOpen(true)} variant={'outline'}>
-          Add a Profile Photo
+          {!avatarSrc ? 'Add a Profile Photo' : 'Update a Profile Photo'}
         </Button>
         {/*) : null}*/}
       </div>

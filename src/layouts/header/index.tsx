@@ -3,9 +3,11 @@
 import { useMeQuery } from '@/features/auth/api'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
-import { Button, LocaleSwitcher, TextLink } from '@/shared/ui'
+import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
+
+import { NotificationsDropdown } from './notifications-dropdown'
 
 type Props = {
   auth?: boolean
@@ -13,13 +15,17 @@ type Props = {
 
 export const Header = ({ auth }: Props) => {
   const t = useTranslations('Header')
-  const { data } = useMeQuery()
+  const { data, isLoading } = useMeQuery()
+
+  if (isLoading) {
+    return <ProgressBar />
+  }
 
   return (
     <div
       className={cn(
         'sticky top-0 overflow-hidden',
-        'w-full h-[59px] min-h-[59px]',
+        'w-full h-[3.75rem] min-h-[3.75rem]',
         'border-b border-dark-300 border-solid bg-dark-700',
         'z-40'
       )}
@@ -34,7 +40,13 @@ export const Header = ({ auth }: Props) => {
           Inctagram
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
+          {data && (
+            <div className={'mr-5'}>
+              <NotificationsDropdown />
+            </div>
+          )}
           <LocaleSwitcher />
+
           {!auth && !data && (
             <>
               <Button asChild className={'w-fit font-semibold'} variant={'text'}>

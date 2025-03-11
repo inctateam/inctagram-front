@@ -1,1 +1,1 @@
-export * from './profile-settings.types'
+export * from './subscriptions.types'
