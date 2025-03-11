@@ -7,6 +7,8 @@ import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
 
+import { NotificationsDropdown } from './notifications-dropdown'
+
 type Props = {
   auth?: boolean
 }
@@ -38,7 +40,13 @@ export const Header = ({ auth }: Props) => {
           Inctagram
         </TextLink>
         <div className={'flex items-center justify-center gap-7'}>
+          {data && (
+            <div className={'mr-5'}>
+              <NotificationsDropdown />
+            </div>
+          )}
           <LocaleSwitcher />
+
           {!auth && !data && (
             <>
               <Button asChild className={'w-fit font-semibold'} variant={'text'}>
