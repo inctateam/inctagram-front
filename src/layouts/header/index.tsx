@@ -25,7 +25,7 @@ export const Header = ({ auth }: Props) => {
     <div
       className={cn(
         'sticky top-0 overflow-hidden',
-        'w-full h-[59px] min-h-[59px]',
+        'w-full h-[3.75rem] min-h-[3.75rem]',
         'border-b border-dark-300 border-solid bg-dark-700',
         'z-40'
       )}
