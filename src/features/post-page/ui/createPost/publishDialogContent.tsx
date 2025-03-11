@@ -4,8 +4,11 @@ import { toast } from 'react-toastify'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
-import { createPostSliceSelectors } from '@/features/post-page/ui/createPost/createPostSlice'
-import { useAppSelector } from '@/services'
+import {
+  createPostSliceActions,
+  createPostSliceSelectors,
+} from '@/features/post-page/ui/createPost/createPostSlice'
+import { useAppDispatch, useAppSelector } from '@/services'
 import { Avatar, ControlledTextarea, DialogBody, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,6 +45,8 @@ export const PublishDialogContent = ({
     setError,
   } = useForm<FormValues>({ resolver: zodResolver(publishPostSchema) })
 
+  const dispatch = useAppDispatch()
+
   const onSubmitHandler = async ({ description }: FormValues) => {
     const uploadIds = [] as string[]
 
@@ -53,8 +58,6 @@ export const PublishDialogContent = ({
       }
       const blob = await res.blob()
       const file = new File([blob], `postImage${i + 1}.png`, { type: 'image/png' })
-
-      URL.revokeObjectURL(images[i])
 
       await uploadPhoto({ file })
         .unwrap()
@@ -70,6 +73,8 @@ export const PublishDialogContent = ({
       .unwrap()
       .then(() => {
         onPostPublished()
+        images.forEach(image => URL.revokeObjectURL(image))
+        dispatch(createPostSliceActions.setImages({ images: [] }))
       })
       .catch((error: unknown) => {
         handleRequestError(error, setError, ['childrenMetadata'])
