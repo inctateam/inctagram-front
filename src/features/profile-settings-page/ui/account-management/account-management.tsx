@@ -5,22 +5,21 @@ import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { AlertDialog, Card, ConfirmButton, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 
+import { useGetCurrentSubscriptionsQuery } from '../../api/subscriptions.api'
+import { SubscriptionCosts } from './subscription-costs'
+
 enum Option {
   BUSINESS = 'Business',
   PERSONAL = 'Personal',
 }
 
-enum Costs {
-  PERDAY = '$10 per Day',
-  PERMONTH = '$100 per month',
-  PERWEEK = '$50 per7 Days',
-}
-const AccountManagement = () => {
+export const AccountManagement = () => {
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
-  const [selectedCosts, setSelectedCosts] = useState(Costs.PERDAY)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
-
+  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
+    skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
+  })
   const handleConfirmPay = () => {
     if (isCheckedPayModal) {
       // Логика для подтверждения платежа
@@ -47,27 +46,14 @@ const AccountManagement = () => {
       </Card>
       {selectedOption === Option.BUSINESS && (
         <>
-          <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
-            Your subscription costs:
-          </Typography>
-          <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6'}>
-            <RoundedCheckbox
-              checked={selectedCosts === Costs.PERDAY}
-              label={Costs.PERDAY}
-              onChange={checked => checked && setSelectedCosts(Costs.PERDAY)}
-            />
-            <RoundedCheckbox
-              checked={selectedCosts === Costs.PERWEEK}
-              label={Costs.PERWEEK}
-              onChange={checked => checked && setSelectedCosts(Costs.PERWEEK)}
-            />
-            <RoundedCheckbox
-              checked={selectedCosts === Costs.PERMONTH}
-              label={Costs.PERMONTH}
-              onChange={checked => checked && setSelectedCosts(Costs.PERMONTH)}
-            />
-          </Card>
-          <div className={'flex justify-end items-center gap-10 mr-[-20px]'}>
+          <SubscriptionCosts
+            title={
+              (currentSubscriptions?.data ?? []).length > 0
+                ? 'Change your subscription:'
+                : 'Your subscription costs:'
+            }
+          />
+          <div className={'flex justify-end items-center gap-10 mr-[-16px]'}>
             <button onClick={() => setIsOpenPayModal(true)} type={'button'}>
               <PaypalLogo className={'w-[141px] h-[101px] mt-6'} />
             </button>
@@ -100,5 +86,3 @@ const AccountManagement = () => {
     </>
   )
 }
-
-export default AccountManagement
