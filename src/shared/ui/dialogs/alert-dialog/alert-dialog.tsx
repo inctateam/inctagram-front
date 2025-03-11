@@ -22,7 +22,7 @@ type AlertDialogProps = {
 
 const alertDialogVariants = cva(
   [
-    'fixed flex flex-col max-w-[438px] bg-dark-300 border border-solid border-dark-100 py-3 rounded-sm',
+    'fixed flex flex-col max-w-[438px] bg-dark-300 border border-solid border-dark-100 py-3 rounded-sm z-50',
   ],
   {
     variants: {
@@ -60,7 +60,7 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, Aler
       <RadixAlertDialog.Root defaultOpen={defaultOpen} onOpenChange={onOpenChange} open={open}>
         <RadixAlertDialog.Trigger asChild>{trigger}</RadixAlertDialog.Trigger>
         <RadixAlertDialog.Portal>
-          <RadixAlertDialog.Overlay className={'fixed inset-0 bg-dark-900 opacity-60'} />
+          <RadixAlertDialog.Overlay className={'fixed inset-0 bg-dark-900 opacity-60 z-50'} />
           <RadixAlertDialog.Content
             className={cn(alertDialogVariants({ position }))}
             {...rest}
@@ -81,7 +81,11 @@ const AlertDialog = forwardRef<ElementRef<typeof RadixAlertDialog.Content>, Aler
               </div>
             </div>
             <RadixAlertDialog.Description className={'flex py-[30px] px-6'}>
-              <Typography as={'p'} className={'break-words'} variant={'regular16'}>
+              <Typography
+                as={'p'}
+                className={'break-words whitespace-pre-wrap'}
+                variant={'regular16'}
+              >
                 {description}
               </Typography>
             </RadixAlertDialog.Description>

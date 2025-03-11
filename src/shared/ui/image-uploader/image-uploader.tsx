@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, RefObject } from 'react'
+import { DragEvent, ReactNode, RefObject } from 'react'
 
 type ImageUploaderProps = {
   children: ReactNode
@@ -15,16 +15,16 @@ export const ImageUploader = ({
   setError,
   setPhotoToUpload,
 }: ImageUploaderProps) => {
-  const onFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFileSelected = (files: FileList | null) => {
     setError('')
 
     const validFormats = ['image/jpeg', 'image/png']
     const maxSizeByte = maxSizeMb * 1024 * 1024
 
-    if (e.currentTarget.files) {
-      if (e.currentTarget.files[0].size < maxSizeByte) {
-        if (validFormats.includes(e.currentTarget.files[0].type)) {
-          setPhotoToUpload(e.currentTarget.files[0])
+    if (files) {
+      if (files[0].size < maxSizeByte) {
+        if (validFormats.includes(files[0].type)) {
+          setPhotoToUpload(files[0])
         } else {
           setError('The photo must have JPEG or PNG format')
         }
@@ -37,12 +37,23 @@ export const ImageUploader = ({
     }
   }
 
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const files = e.dataTransfer.files
+
+    onFileSelected(files)
+  }
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
   return (
-    <div>
+    <div className={'relative'} onDragOver={handleDragOver} onDrop={handleDrop}>
       <input
         accept={'.jpg, .jpeg, .png'}
         className={'hidden'}
-        onChange={onFileSelected}
+        onChange={e => onFileSelected(e.currentTarget.files)}
         ref={fileInputRef}
         type={'file'}
       />
