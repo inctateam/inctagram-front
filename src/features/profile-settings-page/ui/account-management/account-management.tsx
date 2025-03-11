@@ -2,11 +2,16 @@
 import { useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-import { AlertDialog, Card, ConfirmButton, Typography } from '@/shared/ui'
+import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 
-import { useGetCurrentSubscriptionsQuery } from '../../api/subscriptions.api'
+import {
+  useCreateSubscriptionMutation,
+  useGetCurrentSubscriptionsQuery,
+} from '../../api/subscriptions.api'
 import { SubscriptionCosts } from './subscription-costs'
+import { PaymentType } from '../../types'
+import { baseUrl } from '@/shared/constants'
 
 enum Option {
   BUSINESS = 'Business',
@@ -17,14 +22,35 @@ export const AccountManagement = () => {
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
+  const [paymentType, setPaymentType] = useState('')
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
-  const handleConfirmPay = () => {
-    if (isCheckedPayModal) {
-      // Логика для подтверждения платежа
-      setIsOpenPayModal(false)
+
+  const [createSubscription, { isLoading: isLoadingPayment }] = useCreateSubscriptionMutation()
+  const handlePaymentClick = (type: PaymentType) => {
+    setPaymentType(type)
+    setIsOpenPayModal(true)
+  }
+  const handleConfirmPay = async () => {
+    const response = await createSubscription({
+      amount: 
+      baseUrl: baseUrl,
+      paymentType: paymentType as PaymentType,
+      typeSubscription: 
+    })
+
+    if (!response.data) {
+      return
     }
+    if (response.data.url) {
+      window.location.href = response.data.url // Redirect to the payment page
+    }
+    setIsOpenPayModal(false)
+  }
+
+  if (isLoadingPayment) {
+    return <ProgressBar />
   }
 
   return (
@@ -54,11 +80,11 @@ export const AccountManagement = () => {
             }
           />
           <div className={'flex justify-end items-center gap-10 mr-[-16px]'}>
-            <button onClick={() => setIsOpenPayModal(true)} type={'button'}>
+            <button onClick={() => handlePaymentClick(PaymentType.PAYPAL)} type={'button'}>
               <PaypalLogo className={'w-[141px] h-[101px] mt-6'} />
             </button>
             <Typography className={'mb-4 select-none'}>Or</Typography>
-            <button onClick={() => setIsOpenPayModal(true)} type={'button'}>
+            <button onClick={() => handlePaymentClick(PaymentType.STRIPE)} type={'button'}>
               <StripeLogo className={'w-[141px] h-[101px] mt-6'} />
             </button>
           </div>
