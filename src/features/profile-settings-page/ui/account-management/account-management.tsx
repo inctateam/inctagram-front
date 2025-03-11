@@ -17,17 +17,16 @@ export const AccountManagement = () => {
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
-
+  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
+    skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
+  })
   const handleConfirmPay = () => {
     if (isCheckedPayModal) {
       // Логика для подтверждения платежа
       setIsOpenPayModal(false)
     }
   }
-  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
-    skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
-  })
-  
+
   return (
     <>
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>

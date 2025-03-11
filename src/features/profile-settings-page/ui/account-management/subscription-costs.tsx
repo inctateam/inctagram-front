@@ -10,14 +10,20 @@ enum Costs {
   PERWEEK = 'per 7 Days',
 }
 
-type Props ={
-    title: "Your subscription costs:" | "Change your subscription:"
+type Props = {
+  title: 'Your subscription costs:' | 'Change your subscription:'
 }
-export const SubscriptionCosts = ({title}: Props) => {
+export const SubscriptionCosts = ({ title }: Props) => {
   const [selectedCosts, setSelectedCosts] = useState(Costs.PERDAY)
   const { data: paymentCostSubscriptions, isLoading } = useGetPaymentCostSubscriptionsQuery()
 
-  if (isLoading) return <Spinner/>
+  if (isLoading) return <Spinner />
+
+  const getLabel = (type: SubscriptionType, costLabel: Costs) => {
+    if (!paymentCostSubscriptions) return
+    const subscription = paymentCostSubscriptions.data.find(sub => sub.typeDescription === type)
+    return subscription ? `$${subscription.amount} ${costLabel}` : ''
+  }
 
   return (
     <>
@@ -27,17 +33,17 @@ export const SubscriptionCosts = ({title}: Props) => {
       <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6'}>
         <RoundedCheckbox
           checked={selectedCosts === Costs.PERDAY}
-          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.DAY)?.amount} ${Costs.PERDAY}`}
+          label={getLabel(SubscriptionType.DAY, Costs.PERDAY)}
           onChange={checked => checked && setSelectedCosts(Costs.PERDAY)}
         />
         <RoundedCheckbox
           checked={selectedCosts === Costs.PERWEEK}
-          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.WEEKLY)?.amount} ${Costs.PERWEEK}`}
+          label={getLabel(SubscriptionType.WEEKLY, Costs.PERWEEK)}
           onChange={checked => checked && setSelectedCosts(Costs.PERWEEK)}
         />
         <RoundedCheckbox
           checked={selectedCosts === Costs.PERMONTH}
-          label={`$${paymentCostSubscriptions?.data.find(subscription => subscription.typeDescription === SubscriptionType.MONTHLY)?.amount} ${Costs.PERMONTH}`}
+          label={getLabel(SubscriptionType.MONTHLY, Costs.PERMONTH)}
           onChange={checked => checked && setSelectedCosts(Costs.PERMONTH)}
         />
       </Card>
