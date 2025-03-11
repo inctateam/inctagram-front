@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { AlertDialog, Card, ConfirmButton, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
-import { useGetCurrentSubscriptionsQuery } from '../../api/subscriptions.api'
 
+import { useGetCurrentSubscriptionsQuery } from '../../api/subscriptions.api'
 import { SubscriptionCosts } from './subscription-costs'
 
 enum Option {

@@ -1,8 +1,10 @@
-import { Typography, Card, Spinner } from '@/shared/ui'
-import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
-import { SubscriptionType } from '../../types'
 import { useState } from 'react'
+
+import { Card, Spinner, Typography } from '@/shared/ui'
+import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
+
 import { useGetPaymentCostSubscriptionsQuery } from '../../api/subscriptions.api'
+import { SubscriptionType } from '../../types'
 
 enum Costs {
   PERDAY = 'per Day',
@@ -11,17 +13,22 @@ enum Costs {
 }
 
 type Props = {
-  title: 'Your subscription costs:' | 'Change your subscription:'
+  title: 'Change your subscription:' | 'Your subscription costs:'
 }
 export const SubscriptionCosts = ({ title }: Props) => {
   const [selectedCosts, setSelectedCosts] = useState(Costs.PERDAY)
   const { data: paymentCostSubscriptions, isLoading } = useGetPaymentCostSubscriptionsQuery()
 
-  if (isLoading) return <Spinner />
+  if (isLoading) {
+    return <Spinner />
+  }
 
   const getLabel = (type: SubscriptionType, costLabel: Costs) => {
-    if (!paymentCostSubscriptions) return
+    if (!paymentCostSubscriptions) {
+      return
+    }
     const subscription = paymentCostSubscriptions.data.find(sub => sub.typeDescription === type)
+
     return subscription ? `$${subscription.amount} ${costLabel}` : ''
   }
 
