@@ -1,129 +1,117 @@
-import { Nullable } from '@/shared/types'
-import { Pagination, TableBody, TableCell, TableHead, TableRoot, TableRow } from '@/shared/ui'
+import { useGetMyPaymentsQuery } from '@/features/profile-settings-page/api/subscriptions.api'
+import { MyPayment, PaymentType } from '@/features/profile-settings-page/types'
+import usePaymentsPagination from '@/shared/hooks/usePaymentsPagination'
+import {
+  Pagination,
+  ProgressBar,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRoot,
+  TableRow,
+} from '@/shared/ui'
 import { useTranslations } from 'next-intl'
-type PaymentsDataType = {
-  dateOfPayment: string
-  endDateOfPayment: string
-  paymentType: string
-  price: number
-  subscriptionType: string
-}
+
 const MyPayments = () => {
   const t = useTranslations('ProfileSettings.MyPayments')
+  const { data: paymentsData, isLoading } = useGetMyPaymentsQuery()
+  const {
+    currentDataOnPage,
+    currentPage,
+    formatSubscriptionDuration,
+    itemsPerPage,
+    onChangeItemsPerPageHandler,
+    onCurrentPageClickHandler,
+    onSortChangeHandler,
+    sortKey,
+    sortOrder,
+    totalItems,
+    totalPages,
+  } = usePaymentsPagination(paymentsData)
 
-  const paymentData: Nullable<PaymentsDataType[]> = [
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 20,
-      subscriptionType: '1 day',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 10,
-      subscriptionType: '12 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'Stripe',
-      price: 200,
-      subscriptionType: '33 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'Stripe',
-      price: 50,
-      subscriptionType: '100 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 20,
-      subscriptionType: '1 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 10,
-      subscriptionType: '10 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'Stripe',
-      price: 200,
-      subscriptionType: '100 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'Stripe',
-      price: 50,
-      subscriptionType: '100 days',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 20,
-      subscriptionType: '1 day',
-    },
-    {
-      dateOfPayment: '02.02.2023',
-      endDateOfPayment: '02.02.2024',
-      paymentType: 'PayPal',
-      price: 10,
-      subscriptionType: '10 days',
-    },
-    // {
-    //   dateOfPayment: '02.02.2023',
-    //   endDateOfPayment: '02.02.2024',
-    //   paymentType: 'Stripe',
-    //   price: 200,
-    //   subscriptionType: '100 days',
-    // },
-    // {
-    //   dateOfPayment: '02.02.2023',
-    //   endDateOfPayment: '02.02.2024',
-    //   paymentType: 'Stripe',
-    //   price: 50,
-    //   subscriptionType: '100 days',
-    // },
-  ]
+  const getSortIndicator = (key: keyof MyPayment) => {
+    if (sortKey === key) {
+      return sortOrder === 'asc' ? ' ↑' : ' ↓'
+    }
+
+    return ''
+  }
+
+  const formatPaymentType = (paymentType: PaymentType): string => {
+    return paymentType.charAt(0).toUpperCase() + paymentType.slice(1).toLowerCase()
+  }
+
+  if (isLoading) {
+    return <ProgressBar />
+  }
 
   return (
-    <div className={'flex items-start flex-col w-full gap-9 mt-6'}>
-      <TableRoot className={'w-full'}>
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('dateOfPayment')}</TableCell>
-            <TableCell>{t('endDateOfSubscription')}</TableCell>
-            <TableCell>{t('price')}</TableCell>
-            <TableCell>{t('subscriptionType')}</TableCell>
-            <TableCell>{t('paymentType')}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paymentData &&
-            paymentData.map((data, index) => (
+    <div
+      className={
+        'flex items-start flex-col w-full gap-9 mt-6 justify-between h-[38rem] overflow-y-auto'
+      }
+    >
+      <div className={'h-[28rem] overflow-y-auto w-full flex-1'}>
+        <TableRoot className={'w-full relative'}>
+          <TableHead className={'sticky top-0'}>
+            <TableRow>
+              <TableCell
+                className={'cursor-pointer'}
+                onClick={() => onSortChangeHandler('dateOfPayment')}
+              >
+                {t('dateOfPayment')}
+                {getSortIndicator('dateOfPayment')}
+              </TableCell>
+              <TableCell
+                className={'cursor-pointer'}
+                onClick={() => onSortChangeHandler('endDateOfSubscription')}
+              >
+                {t('endDateOfSubscription')}
+                {getSortIndicator('endDateOfSubscription')}
+              </TableCell>
+              <TableCell className={'cursor-pointer'} onClick={() => onSortChangeHandler('price')}>
+                {t('price')}
+                {getSortIndicator('price')}
+              </TableCell>
+              <TableCell
+                className={'cursor-pointer'}
+                onClick={() => onSortChangeHandler('subscriptionType')}
+              >
+                {t('subscriptionType')}
+                {getSortIndicator('subscriptionType')}
+              </TableCell>
+              <TableCell
+                className={'cursor-pointer'}
+                onClick={() => onSortChangeHandler('paymentType')}
+              >
+                {t('paymentType')}
+                {getSortIndicator('paymentType')}
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {currentDataOnPage.map((data, index) => (
               <TableRow key={index}>
                 <TableCell>{new Date(data.dateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
-                <TableCell>{new Date(data.endDateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
+                <TableCell>
+                  {new Date(data.endDateOfSubscription).toLocaleDateString('ru-RU')}
+                </TableCell>
                 <TableCell>{`$${data.price}`}</TableCell>
-                <TableCell>{data.subscriptionType}</TableCell>
-                <TableCell>{data.paymentType}</TableCell>
+                <TableCell>{formatSubscriptionDuration(data.subscriptionType)}</TableCell>
+                <TableCell>{formatPaymentType(data.paymentType)}</TableCell>
               </TableRow>
             ))}
-        </TableBody>
-      </TableRoot>
-      <Pagination initialItemsPerPage={10} totalItems={100} />
+          </TableBody>
+        </TableRoot>
+      </div>
+      <Pagination
+        currentPage={currentPage}
+        initialItemsPerPage={itemsPerPage}
+        onChangeItemsPerPageHandler={onChangeItemsPerPageHandler}
+        onCurrentPageClickHandler={onCurrentPageClickHandler}
+        totalItems={totalItems}
+        totalPages={totalPages}
+      />
     </div>
   )
 }

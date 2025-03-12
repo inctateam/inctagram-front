@@ -13,7 +13,8 @@ export type MyPaymentsResponse = MyPayment[]
 export interface MyPayment {
   dateOfPayment: string
   endDateOfSubscription: string
-  price: number
+  paymentType: PaymentType
+  price: 0
   subscriptionId: string
   subscriptionType: SubscriptionType
   userId: number
@@ -39,6 +40,7 @@ export interface SubscriptionData {
 }
 
 export enum PaymentType {
+  CREDIT_CARD = 'CREDIT_CARD',
   PAYPAL = 'PAYPAL',
   STRIPE = 'STRIPE',
 }
