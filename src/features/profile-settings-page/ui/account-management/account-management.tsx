@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
+import { baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 
@@ -10,9 +11,8 @@ import {
   useGetCurrentSubscriptionsQuery,
   useGetPaymentCostSubscriptionsQuery,
 } from '../../api/subscriptions.api'
-import { SubscriptionCosts } from './subscription-costs'
 import { PaymentType, SubscriptionType } from '../../types'
-import { baseUrl } from '@/shared/constants'
+import { SubscriptionCosts } from './subscription-costs'
 
 enum Option {
   BUSINESS = 'Business',
@@ -44,6 +44,7 @@ export const AccountManagement = () => {
       const defaultSubscription = paymentCostSubscriptions.data.find(
         sub => sub.typeDescription === SubscriptionType.DAY
       )
+
       if (defaultSubscription) {
         setSelectedSubscriptionType(defaultSubscription.typeDescription)
         setSelectedAmount(defaultSubscription.amount)
@@ -54,6 +55,7 @@ export const AccountManagement = () => {
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
       console.error('Amount is not selected')
+
       return
     }
     setPaymentType(type)
@@ -100,17 +102,17 @@ export const AccountManagement = () => {
       {selectedOption === Option.BUSINESS && (
         <>
           <SubscriptionCosts
+            onSelectSubscription={(type, amount) => {
+              setSelectedSubscriptionType(type)
+              setSelectedAmount(amount)
+            }}
+            paymentCostSubscriptions={paymentCostSubscriptions} // Передача данных в SubscriptionCosts
+            selectedSubscriptionType={selectedSubscriptionType}
             title={
               (currentSubscriptions?.data ?? []).length > 0
                 ? 'Change your subscription:'
                 : 'Your subscription costs:'
             }
-            onSelectSubscription={(type, amount) => {
-              setSelectedSubscriptionType(type)
-              setSelectedAmount(amount)
-            }}
-            selectedSubscriptionType={selectedSubscriptionType}
-            paymentCostSubscriptions={paymentCostSubscriptions} // Передача данных в SubscriptionCosts
           />
           <div className={'flex justify-end items-center gap-10 mr-[-16px]'}>
             <button onClick={() => handlePaymentClick(PaymentType.PAYPAL)} type={'button'}>

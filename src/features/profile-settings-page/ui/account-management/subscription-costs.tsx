@@ -10,18 +10,17 @@ enum Costs {
 }
 
 type Props = {
-  title: 'Change your subscription:' | 'Your subscription costs:'
   onSelectSubscription: (type: SubscriptionType, amount: number) => void
-  selectedSubscriptionType: SubscriptionType
   paymentCostSubscriptions?: PaymentCostSubscriptionsResponse // Данные передаются из родительского компонента
+  selectedSubscriptionType: SubscriptionType
+  title: 'Change your subscription:' | 'Your subscription costs:'
 }
 export const SubscriptionCosts = ({
-  title,
   onSelectSubscription,
-  selectedSubscriptionType,
   paymentCostSubscriptions,
+  selectedSubscriptionType,
+  title,
 }: Props) => {
-
   // Функция для получения текстового описания стоимости в зависимости от типа подписки
   const getCostLabel = (type: SubscriptionType) => {
     switch (type) {
@@ -44,8 +43,8 @@ export const SubscriptionCosts = ({
       <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6'}>
         {paymentCostSubscriptions?.data.map(subscription => (
           <RoundedCheckbox
-            key={subscription.typeDescription}
             checked={selectedSubscriptionType === subscription.typeDescription}
+            key={subscription.typeDescription}
             label={`$${subscription.amount} ${getCostLabel(subscription.typeDescription)}`}
             onChange={() => onSelectSubscription(subscription.typeDescription, subscription.amount)}
           />
