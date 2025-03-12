@@ -7,7 +7,7 @@ import { ProgressBar, Tabs, TabsContent, TabsList, TabsTrigger, Typography } fro
 import { redirect } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
-import AccountManagement from './account-management/account-management'
+import { AccountManagement } from './account-management'
 
 export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')

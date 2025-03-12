@@ -1,10 +1,13 @@
 import { ComponentPropsWithoutRef, useRef, useState } from 'react'
 
-import { createPostSliceActions } from '@/features/post-page/ui/createPost/createPostSlice'
+import {
+  createPostSliceActions,
+  createPostSliceSelectors,
+} from '@/features/post-page/ui/createPost/createPostSlice'
 import { FilteringDialogContent } from '@/features/post-page/ui/createPost/filteringDialogContent'
 import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
-import { useAppDispatch } from '@/services'
-import { Dialog } from '@/shared/ui'
+import { useAppDispatch, useAppSelector } from '@/services'
+import { AlertDialog, CancelButton, ConfirmButton, Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 
 import { AddFilesDialogContent } from './addFilesDialogContent'
@@ -12,10 +15,18 @@ import { CroppingDialogContent } from './croppingDialogContent'
 
 type CreatePostDialogProps = {
   onPostPublished: () => void
-} & {} & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
+} & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 
-export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialogProps) => {
+export const CreatePostDialog = ({
+  onOpenChange,
+  onPostPublished,
+  ...props
+}: CreatePostDialogProps) => {
+  const images = useAppSelector(createPostSliceSelectors.selectImages)
+
   const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
+
+  const [openAlertModal, setOpenAlertModal] = useState(false)
 
   const dispatch = useAppDispatch()
 
@@ -29,19 +40,9 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
     setStage('2')
   }
 
-  // if (photoToUpload) {
-  //   uploadPhoto({ file: photoToUpload })
-  //     .unwrap()
-  //     .then(res => {
-  //       setImages([...images, res.images[0]])
-  //       dispatch(createPostSliceActions.addImage({ image: res.images[0] }))
-  //       setStage('2')
-  //     })
-  //   setPhotoToUpload(null)
-  // }
-
   const handleOpenDraft = () => {
     setStage('2')
+    dispatch(createPostSliceActions.getImagesFromDraft())
   }
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -52,7 +53,19 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
 
   return (
     <>
-      <Dialog {...props} closePosition={stage === '1' ? 'inside' : 'none'}>
+      <Dialog
+        {...props}
+        closePosition={stage === '1' ? 'inside' : 'none'}
+        onOpenChange={open => {
+          if (onOpenChange) {
+            if (!open && images.length > 0) {
+              setOpenAlertModal(true)
+            } else {
+              onOpenChange(open)
+            }
+          }
+        }}
+      >
         {stage === '1' && (
           <AddFilesDialogContent
             fileInputRef={fileInputRef}
@@ -85,6 +98,37 @@ export const CreatePostDialog = ({ onPostPublished, ...props }: CreatePostDialog
             }}
           />
         )}
+        <AlertDialog
+          cancelButton={
+            <CancelButton
+              onClick={() => {
+                onOpenChange?.(false)
+                dispatch(createPostSliceActions.moveImagesToDraft())
+                setStage('1')
+              }}
+            >
+              Save Draft
+            </CancelButton>
+          }
+          confirmButton={
+            <ConfirmButton
+              onClick={() => {
+                onOpenChange?.(false)
+                dispatch(createPostSliceActions.setImages({ images: [] }))
+                setStage('1')
+              }}
+            >
+              Discard
+            </ConfirmButton>
+          }
+          description={
+            `Do you really want to close the creation of a publication?\n` +
+            `If you close everything will be deleted`
+          }
+          onOpenChange={setOpenAlertModal}
+          open={openAlertModal}
+          title={'Close'}
+        />
       </Dialog>
     </>
   )

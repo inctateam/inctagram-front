@@ -15,9 +15,17 @@ import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
-import { DeletePost } from '@/features/post-page/ui/post/delete-post'
 import { EditPost } from '@/features/post-page/ui/post/edit-post'
-import { Dialog, DialogBody, DialogHeader, Dropdown, ProgressBar } from '@/shared/ui'
+import {
+  AlertDialog,
+  CancelButton,
+  ConfirmButton,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  Dropdown,
+  ProgressBar,
+} from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 
 import { Description } from '../../postDescription'
@@ -127,57 +135,53 @@ const PostModal = (props: PostModalProps) => {
   // Возвращаем портал с модальным окном
   return createPortal(
     <>
-      {!isEditPost && (
-        <Dialog closePosition={'outside'} onOpenChange={handleClosePostModal} open={open}>
-          <div
-            className={
-              'flex w-[61rem] h-[35rem] bg-dark-300 border border-dark-100 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
-            }
-          >
-            <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>
-              {children}
-            </div>
-            <div className={'flex flex-1 flex-col w-1/2 justify-between max-sm:w-full'}>
-              <DialogHeader className={'flex justify-between'}>
-                <AvatarBlock avatarOwner={avatarOwner} ownerId={ownerId} userName={userName} />
-                {me?.userId && (
-                  <Dropdown
-                    className={'bg-dark-500'}
-                    items={dropDownItems}
-                    onClick={handleActionDropdown}
-                  />
-                )}
-              </DialogHeader>
-              <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
-                <div
-                  className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
-                >
-                  <Description
-                    avatar={avatarOwner}
-                    createdAt={createdAt}
-                    description={currentDescription}
-                    userName={userName}
-                  />
-                  <Comments comments={comments?.items || []} isAuth={!!me?.userId} />
-                </div>
-                <div
-                  className={
-                    'flex flex-col gap-2 bg-dark-300 border-t border-dark-100 px-6 pt-3 pb-2'
-                  }
-                >
-                  {me?.userId && <InteractionButtons isLiked={isLiked} />}
-                  <LikesList
-                    avatarWhoLikes={avatarWhoLikes}
-                    createdAt={createdAt}
-                    likesCount={likesCount}
-                  />
-                  {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
-                </div>
-              </DialogBody>
-            </div>
+      <Dialog closePosition={'outside'} onOpenChange={handleClosePostModal} open={open}>
+        <div
+          className={
+            'flex w-[61rem] h-[35rem] bg-dark-300 border border-dark-100 max-sm:flex-col max-sm:w-[20rem] max-sm:h-[37rem]'
+          }
+        >
+          <div className={'flex w-1/2 h-full relative max-sm:h-1/2 max-sm:w-full'}>{children}</div>
+          <div className={'flex flex-1 flex-col w-1/2 justify-between max-sm:w-full'}>
+            <DialogHeader className={'flex justify-between'}>
+              <AvatarBlock avatarOwner={avatarOwner} ownerId={ownerId} userName={userName} />
+              {me?.userId && (
+                <Dropdown
+                  className={'bg-dark-500'}
+                  items={dropDownItems}
+                  onClick={handleActionDropdown}
+                />
+              )}
+            </DialogHeader>
+            <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
+              <div
+                className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
+              >
+                <Description
+                  avatar={avatarOwner}
+                  createdAt={createdAt}
+                  description={currentDescription}
+                  userName={userName}
+                />
+                <Comments comments={comments?.items || []} isAuth={!!me?.userId} />
+              </div>
+              <div
+                className={
+                  'flex flex-col gap-2 bg-dark-300 border-t border-dark-100 px-6 pt-3 pb-2'
+                }
+              >
+                {me?.userId && <InteractionButtons isLiked={isLiked} />}
+                <LikesList
+                  avatarWhoLikes={avatarWhoLikes}
+                  createdAt={createdAt}
+                  likesCount={likesCount}
+                />
+                {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
+              </div>
+            </DialogBody>
           </div>
-        </Dialog>
-      )}
+        </div>
+      </Dialog>
       <EditPost
         avatarOwner={avatarOwner}
         description={description}
@@ -190,10 +194,13 @@ const PostModal = (props: PostModalProps) => {
       >
         {children}
       </EditPost>
-      <DeletePost
+      <AlertDialog
+        cancelButton={<CancelButton>No</CancelButton>}
+        confirmButton={<ConfirmButton onClick={() => handleDeletePost(id)}>Yes</ConfirmButton>}
+        description={'Are you sure you want to delete this post?'}
         onOpenChange={setIsDeletePost}
-        onOpenChangeDelete={() => handleDeletePost(id)}
         open={isDeletePost}
+        title={'Delete Post'}
       />
     </>,
     document.body // Здесь мы указываем, что хотим отрисовать портал в body

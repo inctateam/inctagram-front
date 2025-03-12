@@ -8,7 +8,7 @@ import {
 import { FILTERS } from '@/features/post-page/ui/createPost/filters'
 import { getFilteredImage } from '@/features/post-page/ui/createPost/getFilteredImage'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody } from '@/shared/ui'
+import { DialogBody, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Image from 'next/image'
 
@@ -38,16 +38,17 @@ export const FilteringDialogContent = ({ handleBack, handleNext }: FilteringDial
         </div>
         <div className={'w-1/2 h-full flex flex-wrap gap-6 justify-center py-6'}>
           {FILTERS.map((filter, index) => (
-            <div className={''} key={index}>
+            <div className={'group flex flex-col gap-1 items-center justify-center'} key={index}>
               <Image
                 alt={'123'}
-                className={'object-cover block aspect-square'}
+                className={'object-cover block aspect-square rounded-sm'}
                 height={108}
                 onClick={() => setFilterHandler(filter.value)}
                 src={images[currentImage]}
                 style={{ filter: filter.value }}
                 width={108}
               />
+              <Typography className={'group-hover:text-accent-100'}>{filter.name}</Typography>
             </div>
           ))}
         </div>

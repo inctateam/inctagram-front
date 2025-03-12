@@ -1,6 +1,8 @@
 import { RefObject, useState } from 'react'
 
 import { ImageOutline } from '@/assets/icons'
+import { createPostSliceSelectors } from '@/features/post-page/ui/createPost/createPostSlice'
+import { useAppSelector } from '@/services'
 import { Button, DialogBody, DialogHeader, ImageUploader, Typography } from '@/shared/ui'
 
 type AddFilesDialogContentProps = {
@@ -16,13 +18,9 @@ export const AddFilesDialogContent = ({
   handleOpenDraft,
   setPhotoToUpload,
 }: AddFilesDialogContentProps) => {
-  // const fileInputRef = useRef<HTMLInputElement | null>(null)
-  //
-  // const handleFileSelect = () => {
-  //   fileInputRef?.current?.click()
-  // }
-
   const [error, setError] = useState('')
+
+  const draftImages = useAppSelector(createPostSliceSelectors.selectDraftImages)
 
   return (
     <div className={'w-[492px] h-[564px] flex flex-col'}>
@@ -54,7 +52,7 @@ export const AddFilesDialogContent = ({
           <Button onClick={handleFileSelect} variant={'primary'}>
             Select from computer
           </Button>
-          <Button onClick={() => handleOpenDraft()} variant={'outline'}>
+          <Button disabled={draftImages.length === 0} onClick={handleOpenDraft} variant={'outline'}>
             Open draft
           </Button>
         </div>

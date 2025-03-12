@@ -1,10 +1,9 @@
 import { forwardRef } from 'react'
 
 import { RadioButtonChecked, RadioButtonUnchecked } from '@/assets/icons'
+import { Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { Checkbox } from '@radix-ui/react-checkbox'
-
-import { Typography } from '../typography'
 
 interface RoundedCheckboxProps {
   checked: boolean

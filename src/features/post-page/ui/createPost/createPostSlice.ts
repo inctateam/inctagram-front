@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  croppedImages: [] as string[],
+  draftImages: [] as string[],
   images: [] as string[],
 }
 
@@ -15,8 +15,13 @@ export const createPostSlice = createSlice({
     deleteImage: (state, action: PayloadAction<{ index: number }>) => {
       state.images.splice(action.payload.index, 1)
     },
-    setCroppedImages: (state, action: PayloadAction<{ images: string[] }>) => {
-      state.croppedImages = [...action.payload.images]
+    getImagesFromDraft: state => {
+      state.images = state.draftImages
+      state.draftImages = []
+    },
+    moveImagesToDraft: state => {
+      state.draftImages = state.images
+      state.images = []
     },
     setImage: (state, action: PayloadAction<{ image: string; index: number }>) => {
       state.images[action.payload.index] = action.payload.image
@@ -26,7 +31,7 @@ export const createPostSlice = createSlice({
     },
   },
   selectors: {
-    selectCroppedImages: state => state.croppedImages,
+    selectDraftImages: state => state.draftImages,
     selectImages: state => state.images,
   },
 })
