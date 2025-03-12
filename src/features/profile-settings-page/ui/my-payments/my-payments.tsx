@@ -1,23 +1,24 @@
-import { paymentData } from '@/features/profile-settings-page/ui/my-payments/mockData'
+import { useGetMyPaymentsQuery } from '@/features/profile-settings-page/api/subscriptions.api'
+import { MyPayment, PaymentType } from '@/features/profile-settings-page/types'
 import usePaymentsPagination from '@/shared/hooks/usePaymentsPagination'
-import { Pagination, TableBody, TableCell, TableHead, TableRoot, TableRow } from '@/shared/ui'
+import {
+  Pagination,
+  ProgressBar,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRoot,
+  TableRow,
+} from '@/shared/ui'
 import { useTranslations } from 'next-intl'
-
-type ColumnType =
-  | 'dateOfPayment'
-  | 'endDateOfPayment'
-  | 'paymentType'
-  | 'price'
-  | 'subscriptionType'
 
 const MyPayments = () => {
   const t = useTranslations('ProfileSettings.MyPayments')
-  /**
-   * Используем кастомный хук с сортировкой
-   */
+  const { data: paymentsData, isLoading } = useGetMyPaymentsQuery()
   const {
     currentDataOnPage,
     currentPage,
+    formatSubscriptionDuration,
     itemsPerPage,
     onChangeItemsPerPageHandler,
     onCurrentPageClickHandler,
@@ -26,17 +27,22 @@ const MyPayments = () => {
     sortOrder,
     totalItems,
     totalPages,
-  } = usePaymentsPagination(paymentData, 5)
+  } = usePaymentsPagination(paymentsData)
 
-  /**
-   * Функция для определения направления сортировки
-   */
-  const getSortIndicator = (key: ColumnType) => {
+  const getSortIndicator = (key: keyof MyPayment) => {
     if (sortKey === key) {
       return sortOrder === 'asc' ? ' ↑' : ' ↓'
     }
 
     return ''
+  }
+
+  const formatPaymentType = (paymentType: PaymentType): string => {
+    return paymentType.charAt(0).toUpperCase() + paymentType.slice(1).toLowerCase()
+  }
+
+  if (isLoading) {
+    return <ProgressBar />
   }
 
   return (
@@ -58,10 +64,10 @@ const MyPayments = () => {
               </TableCell>
               <TableCell
                 className={'cursor-pointer'}
-                onClick={() => onSortChangeHandler('endDateOfPayment')}
+                onClick={() => onSortChangeHandler('endDateOfSubscription')}
               >
                 {t('endDateOfSubscription')}
-                {getSortIndicator('endDateOfPayment')}
+                {getSortIndicator('endDateOfSubscription')}
               </TableCell>
               <TableCell className={'cursor-pointer'} onClick={() => onSortChangeHandler('price')}>
                 {t('price')}
@@ -84,18 +90,17 @@ const MyPayments = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentDataOnPage &&
-              currentDataOnPage.map((data, index) => (
-                <TableRow key={index}>
-                  <TableCell>{new Date(data.dateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
-                  <TableCell>
-                    {new Date(data.endDateOfPayment).toLocaleDateString('ru-RU')}
-                  </TableCell>
-                  <TableCell>{`$${data.price}`}</TableCell>
-                  <TableCell>{data.subscriptionType}</TableCell>
-                  <TableCell>{data.paymentType}</TableCell>
-                </TableRow>
-              ))}
+            {currentDataOnPage.map((data, index) => (
+              <TableRow key={index}>
+                <TableCell>{new Date(data.dateOfPayment).toLocaleDateString('ru-RU')}</TableCell>
+                <TableCell>
+                  {new Date(data.endDateOfSubscription).toLocaleDateString('ru-RU')}
+                </TableCell>
+                <TableCell>{`$${data.price}`}</TableCell>
+                <TableCell>{formatSubscriptionDuration(data.subscriptionType)}</TableCell>
+                <TableCell>{formatPaymentType(data.paymentType)}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </TableRoot>
       </div>

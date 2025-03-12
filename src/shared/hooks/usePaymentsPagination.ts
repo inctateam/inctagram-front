@@ -1,30 +1,44 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import { PaymentsDataResponse } from '@/features/profile-settings-page/types/payments.types'
+import { MyPayment, SubscriptionType } from '@/features/profile-settings-page/types'
 
 type SortOrder = 'asc' | 'desc'
 
-const usePaymentsPagination = (
-  paymentsData: PaymentsDataResponse[] | null,
-  initialItemsPerPage = 5
-) => {
+const usePaymentsPagination = (paymentsData: MyPayment[] | undefined, initialItemsPerPage = 5) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage)
-  const [sortKey, setSortKey] = useState<keyof PaymentsDataResponse | null>(null)
+  const [sortKey, setSortKey] = useState<keyof MyPayment | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
 
   /**
-   * Функция сортировки массива
+   * Функция для форматирования subscriptionType
    */
-  const sortData = (
-    data: PaymentsDataResponse[],
-    key: keyof PaymentsDataResponse,
-    order: SortOrder
-  ) => {
+  const formatSubscriptionDuration = (subscriptionType: SubscriptionType): string => {
+    const formats: Record<SubscriptionType, string> = {
+      [SubscriptionType.DAY]: '1 day',
+      [SubscriptionType.MONTHLY]: '1 month',
+      [SubscriptionType.WEEKLY]: '7 days',
+    }
+
+    return formats[subscriptionType]
+  }
+
+  /**
+   * Сортировка данных по ключу
+   */
+  const sortData = (data: MyPayment[], key: keyof MyPayment, order: SortOrder) => {
     return [...data].sort((a, b) => {
+      if (key === 'subscriptionType') {
+        const durationA = getDurationInDays(a.subscriptionType)
+        const durationB = getDurationInDays(b.subscriptionType)
+
+        return order === 'asc' ? durationA - durationB : durationB - durationA
+      }
+
       if (typeof a[key] === 'number' && typeof b[key] === 'number') {
         return order === 'asc' ? a[key] - b[key] : b[key] - a[key]
       }
+
       if (typeof a[key] === 'string' && typeof b[key] === 'string') {
         return order === 'asc' ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key])
       }
@@ -34,9 +48,25 @@ const usePaymentsPagination = (
   }
 
   /**
+   * Преобразование subscriptionType в количество дней
+   */
+  const getDurationInDays = (subscriptionType: SubscriptionType): number => {
+    switch (subscriptionType) {
+      case SubscriptionType.DAY:
+        return 1
+      case SubscriptionType.MONTHLY:
+        return 30
+      case SubscriptionType.WEEKLY:
+        return 7
+      default:
+        return 0
+    }
+  }
+
+  /**
    * Разделение данных на страницы
    */
-  const splitArray = (arr: PaymentsDataResponse[], itemsPerPage: number) => {
+  const splitArray = (arr: MyPayment[], itemsPerPage: number) => {
     const result = []
 
     for (let i = 0; i < arr.length; i += itemsPerPage) {
@@ -73,12 +103,9 @@ const usePaymentsPagination = (
   }, [])
 
   const onSortChangeHandler = useCallback(
-    (key: keyof PaymentsDataResponse) => {
+    (key: keyof MyPayment) => {
       setSortOrder(prevOrder => (sortKey === key && prevOrder === 'asc' ? 'desc' : 'asc'))
       setSortKey(key)
-      /**
-       * При изменении сортировки возвращаемся на первую страницу
-       */
       setCurrentPage(1)
     },
     [sortKey]
@@ -87,6 +114,7 @@ const usePaymentsPagination = (
   return {
     currentDataOnPage: paymentsData ? currentDataOnPage : [],
     currentPage,
+    formatSubscriptionDuration,
     itemsPerPage,
     onChangeItemsPerPageHandler,
     onCurrentPageClickHandler,
