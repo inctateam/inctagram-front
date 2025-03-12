@@ -5,7 +5,7 @@ import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { PATH, baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import {
   useCreateSubscriptionMutation,
@@ -22,6 +22,7 @@ enum Option {
 
 const AccountManagement = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
@@ -30,7 +31,8 @@ const AccountManagement = () => {
     SubscriptionType.DAY
   )
   const [selectedAmount, setSelectedAmount] = useState<number>(0) // Инициализация по умолчанию
-
+  const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false)
+  const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -54,6 +56,15 @@ const AccountManagement = () => {
     }
   }, [paymentCostSubscriptions])
 
+  useEffect(() => {
+    const success = searchParams.get('success')
+
+    if (success === 'true') {
+      setIsSuccessAlertOpen(true)
+    } else if (success === 'false') {
+      setIsErrorAlertOpen(true)
+    }
+  }, [searchParams])
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
       console.error('Amount is not selected')
@@ -145,6 +156,28 @@ const AccountManagement = () => {
         }
         onOpenChange={setIsOpenPayModal}
         open={isOpenPayModal}
+      />
+      <AlertDialog
+        confirmButton={
+          <ConfirmButton className={'w-[366px] ml-[-70px]'} variant={'primary'}>
+            Back to payment
+          </ConfirmButton>
+        }
+        description={'Transaction failed, please try again'}
+        onOpenChange={setIsErrorAlertOpen}
+        open={isErrorAlertOpen}
+        title={'Error'}
+      />
+      <AlertDialog
+        confirmButton={
+          <ConfirmButton className={'w-[366px] ml-[-70px]'} variant={'primary'}>
+            Ok
+          </ConfirmButton>
+        }
+        description={'Payment was successful!'}
+        onOpenChange={setIsSuccessAlertOpen}
+        open={isSuccessAlertOpen}
+        title={'Success'}
       />
     </>
   )
