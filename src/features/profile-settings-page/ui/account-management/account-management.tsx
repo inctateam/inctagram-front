@@ -13,6 +13,7 @@ import {
 } from '../../api/subscriptions.api'
 import { PaymentType, SubscriptionType } from '../../types'
 import { SubscriptionCosts } from './subscription-costs'
+import { useRouter } from 'next/navigation'
 
 enum Option {
   BUSINESS = 'Business',
@@ -20,6 +21,7 @@ enum Option {
 }
 
 export const AccountManagement = () => {
+  const router = useRouter()
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
@@ -73,7 +75,7 @@ export const AccountManagement = () => {
       return
     }
     if (response.data.url) {
-      window.location.href = response.data.url // Redirect to the payment page
+      router.push(response.data.url)
     }
     setIsOpenPayModal(false)
   }
