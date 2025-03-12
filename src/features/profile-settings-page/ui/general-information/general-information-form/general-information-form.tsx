@@ -103,7 +103,7 @@ export const GeneralInformationForm = (props: GeneralInformationFormProps) => {
       setSelectedCountry(foundCountry)
       setValue('city', undefined)
     }
-  }, [currentCountry, countries, setValue])
+  }, [currentCountry, countries, setValue, selectedCountry?.value])
 
   const onDateChange = (date: Date | undefined) => {
     if (!date) {
