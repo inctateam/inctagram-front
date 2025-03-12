@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
@@ -8,9 +8,10 @@ import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 import {
   useCreateSubscriptionMutation,
   useGetCurrentSubscriptionsQuery,
+  useGetPaymentCostSubscriptionsQuery,
 } from '../../api/subscriptions.api'
 import { SubscriptionCosts } from './subscription-costs'
-import { PaymentType } from '../../types'
+import { PaymentType, SubscriptionType } from '../../types'
 import { baseUrl } from '@/shared/constants'
 
 enum Option {
@@ -23,21 +24,47 @@ export const AccountManagement = () => {
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
   const [paymentType, setPaymentType] = useState('')
+  const [selectedSubscriptionType, setSelectedSubscriptionType] = useState<SubscriptionType>(
+    SubscriptionType.DAY
+  )
+  const [selectedAmount, setSelectedAmount] = useState<number>(0) // Инициализация по умолчанию
+
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
-
+  const { data: paymentCostSubscriptions, isLoading: isLoadingSubscriptions } =
+    useGetPaymentCostSubscriptionsQuery(undefined, {
+      skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
+    })
   const [createSubscription, { isLoading: isLoadingPayment }] = useCreateSubscriptionMutation()
+
+  // Установка подписки DAY по умолчанию при загрузке данных
+  useEffect(() => {
+    if (paymentCostSubscriptions?.data) {
+      const defaultSubscription = paymentCostSubscriptions.data.find(
+        sub => sub.typeDescription === SubscriptionType.DAY
+      )
+      if (defaultSubscription) {
+        setSelectedSubscriptionType(defaultSubscription.typeDescription)
+        setSelectedAmount(defaultSubscription.amount)
+      }
+    }
+  }, [paymentCostSubscriptions])
+
   const handlePaymentClick = (type: PaymentType) => {
+    if (!selectedAmount) {
+      console.error('Amount is not selected')
+      return
+    }
     setPaymentType(type)
     setIsOpenPayModal(true)
   }
   const handleConfirmPay = async () => {
     const response = await createSubscription({
-      amount: 
+      amount: selectedAmount,
       baseUrl: baseUrl,
       paymentType: paymentType as PaymentType,
-      typeSubscription: 
+      typeSubscription: selectedSubscriptionType,
     })
 
     if (!response.data) {
@@ -49,7 +76,7 @@ export const AccountManagement = () => {
     setIsOpenPayModal(false)
   }
 
-  if (isLoadingPayment) {
+  if (isLoadingPayment || isLoadingSubscriptions) {
     return <ProgressBar />
   }
 
@@ -78,6 +105,12 @@ export const AccountManagement = () => {
                 ? 'Change your subscription:'
                 : 'Your subscription costs:'
             }
+            onSelectSubscription={(type, amount) => {
+              setSelectedSubscriptionType(type)
+              setSelectedAmount(amount)
+            }}
+            selectedSubscriptionType={selectedSubscriptionType}
+            paymentCostSubscriptions={paymentCostSubscriptions} // Передача данных в SubscriptionCosts
           />
           <div className={'flex justify-end items-center gap-10 mr-[-16px]'}>
             <button onClick={() => handlePaymentClick(PaymentType.PAYPAL)} type={'button'}>
