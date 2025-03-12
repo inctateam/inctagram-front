@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
+import { useMeQuery } from '@/features/auth/api'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import { useGetPublicUserProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
@@ -9,7 +11,7 @@ import {
   createPostSliceSelectors,
 } from '@/features/post-page/ui/createPost/createPostSlice'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { Avatar, ControlledTextarea, DialogBody, TextLink } from '@/shared/ui'
+import { Avatar, ControlledTextarea, DialogBody, Spinner, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -37,6 +39,23 @@ export const PublishDialogContent = ({
   const [uploadPhoto] = useUploadImageForPostMutation()
 
   const images = useAppSelector(createPostSliceSelectors.selectImages)
+
+  const { data: authData } = useMeQuery()
+
+  const { data: profileData, isLoading: profileIsLoading } = useGetPublicUserProfileQuery(
+    authData!.userId,
+    {
+      skip: authData?.userId === undefined,
+    }
+  )
+
+  let profileAvatarUrl = undefined
+
+  if (profileData?.avatars && profileData?.avatars.length > 0) {
+    if (profileData?.avatars[0].url) {
+      profileAvatarUrl = profileData?.avatars[0].url
+    }
+  }
 
   const {
     control,
@@ -89,18 +108,26 @@ export const PublishDialogContent = ({
           <ImageContent itemImages={images}></ImageContent>
         </div>
         <div className={'w-1/2 h-full flex flex-col pt-6 px-6 pb-10'}>
-          <div className={'flex items-center gap-3 pb-6'}>
-            <Avatar alt={'avatar'} size={9} />{' '}
-            <TextLink
-              className={'hover:underline'}
-              color={'regular'}
-              href={'/profile/3'}
-              size={'large'}
-              underline={false}
-            >
-              ProfileUrl
-            </TextLink>
-          </div>
+          {!profileIsLoading ? (
+            <div>
+              <TextLink
+                className={'hover:underline pb-6'}
+                color={'regular'}
+                href={`/profile/${JSON.stringify(authData?.userId)}`}
+                size={'large'}
+                target={'_blank'}
+                underline={false}
+              >
+                <Avatar alt={'avatar'} className={'mr-3'} size={9} src={profileAvatarUrl} />
+                {profileData?.userName}
+              </TextLink>
+            </div>
+          ) : (
+            <div>
+              <Spinner />
+            </div>
+          )}
+
           <form id={'publish-form'} onSubmit={handleSubmit(onSubmitHandler)}>
             <ControlledTextarea
               className={'h-[200px] resize-none bg-dark-500'}
