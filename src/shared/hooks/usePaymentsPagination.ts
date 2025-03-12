@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { PaymentsDataResponse } from '@/features/profile-settings-page/types/payments.types'
 
@@ -12,21 +12,6 @@ const usePaymentsPagination = (
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage)
   const [sortKey, setSortKey] = useState<keyof PaymentsDataResponse | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
-
-  if (!paymentsData) {
-    return {
-      currentDataOnPage: [],
-      currentPage,
-      itemsPerPage,
-      onChangeItemsPerPageHandler: () => {},
-      onCurrentPageClickHandler: () => {},
-      onSortChangeHandler: () => {},
-      sortKey,
-      sortOrder,
-      totalItems: 0,
-      totalPages: 0,
-    }
-  }
 
   /**
    * Функция сортировки массива
@@ -100,7 +85,7 @@ const usePaymentsPagination = (
   )
 
   return {
-    currentDataOnPage,
+    currentDataOnPage: paymentsData ? currentDataOnPage : [],
     currentPage,
     itemsPerPage,
     onChangeItemsPerPageHandler,
@@ -108,8 +93,8 @@ const usePaymentsPagination = (
     onSortChangeHandler,
     sortKey,
     sortOrder,
-    totalItems,
-    totalPages,
+    totalItems: paymentsData ? totalItems : 0,
+    totalPages: paymentsData ? totalPages : 0,
   }
 }
 

@@ -35,7 +35,7 @@ export const paymentData: Nullable<PaymentsDataResponse[]> = [
     endDateOfPayment: '2025-03-10T16:30:25.636Z',
     paymentType: 'PayPal',
     price: 20,
-    subscriptionType: '1 days',
+    subscriptionType: '1 day',
   },
   {
     dateOfPayment: '2025-03-09T16:30:25.636Z',
