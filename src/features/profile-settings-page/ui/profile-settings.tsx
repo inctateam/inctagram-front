@@ -25,7 +25,13 @@ export const ProfileSettings = () => {
       <TabsList>
         <TabsTrigger value={'General-information'}>{t('generalInformation')}</TabsTrigger>
         <TabsTrigger value={'Devices'}>{t('devices')}</TabsTrigger>
-        <TabsTrigger value={'Account-management'}>{t('accountManagement')}</TabsTrigger>
+
+        <TabsTrigger value={'Account-management'}>
+          <a href={PATH.ACCOUNT.replace(':id', profileInfo.id.toString())}>
+            {t('accountManagement')}
+          </a>
+        </TabsTrigger>
+
         <TabsTrigger value={'My-payments'}>{t('myPayments')}</TabsTrigger>
       </TabsList>
 

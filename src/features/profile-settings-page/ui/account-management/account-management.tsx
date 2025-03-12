@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-import { baseUrl } from '@/shared/constants'
+import { PATH, baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
+import { useRouter } from 'next/navigation'
 
 import {
   useCreateSubscriptionMutation,
@@ -13,14 +14,13 @@ import {
 } from '../../api/subscriptions.api'
 import { PaymentType, SubscriptionType } from '../../types'
 import { SubscriptionCosts } from './subscription-costs'
-import { useRouter } from 'next/navigation'
 
 enum Option {
   BUSINESS = 'Business',
   PERSONAL = 'Personal',
 }
 
-export const AccountManagement = () => {
+const AccountManagement = () => {
   const router = useRouter()
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
@@ -66,7 +66,7 @@ export const AccountManagement = () => {
   const handleConfirmPay = async () => {
     const response = await createSubscription({
       amount: selectedAmount,
-      baseUrl: baseUrl,
+      baseUrl: baseUrl + PATH.ACCOUNT,
       paymentType: paymentType as PaymentType,
       typeSubscription: selectedSubscriptionType,
     })
@@ -149,3 +149,5 @@ export const AccountManagement = () => {
     </>
   )
 }
+
+export { AccountManagement }
