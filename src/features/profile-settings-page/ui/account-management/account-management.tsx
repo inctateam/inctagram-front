@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
+import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
 import { baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
@@ -84,6 +85,7 @@ export const AccountManagement = () => {
 
   return (
     <>
+      <CurrentSubscription />
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
