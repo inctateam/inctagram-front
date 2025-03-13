@@ -1,5 +1,7 @@
 import { DragEvent, ReactNode, RefObject } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 type ImageUploaderProps = {
   children: ReactNode
   fileInputRef: RefObject<HTMLInputElement>
@@ -15,6 +17,8 @@ export const ImageUploader = ({
   setError,
   setPhotoToUpload,
 }: ImageUploaderProps) => {
+  const t = useTranslations('ImageUploader')
+
   const onFileSelected = (files: FileList | null) => {
     setError('')
 
@@ -26,10 +30,10 @@ export const ImageUploader = ({
         if (validFormats.includes(files[0].type)) {
           setPhotoToUpload(files[0])
         } else {
-          setError('The photo must have JPEG or PNG format')
+          setError(t('formatError'))
         }
       } else {
-        setError('The photo must be less than 20 Mb')
+        setError(t('sizeError'))
       }
     }
     if (fileInputRef.current) {

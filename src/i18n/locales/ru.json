@@ -181,5 +181,9 @@
     "errors": {
       "failedToLoadImage": "Ошибка при загрузке изображения"
     }
+  },
+  "ImageUploader": {
+    "formatError": "The photo must have JPEG or PNG format",
+    "sizeError": "The photo must be less than 20 Mb"
   }
 }
