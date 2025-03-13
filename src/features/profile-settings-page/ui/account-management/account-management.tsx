@@ -5,11 +5,12 @@ import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { PATH, baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import {
   useCreateSubscriptionMutation,
   useGetCurrentSubscriptionsQuery,
+  useGetMyPaymentsQuery,
   useGetPaymentCostSubscriptionsQuery,
 } from '../../api/subscriptions.api'
 import { PaymentType, SubscriptionType } from '../../types'
@@ -22,6 +23,8 @@ enum Option {
 
 const AccountManagement = () => {
   const router = useRouter()
+  const params = useParams()
+  const userId: string = params.id as string
   const searchParams = useSearchParams()
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
@@ -33,6 +36,8 @@ const AccountManagement = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(0) // Инициализация по умолчанию
   const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false)
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
+  const [subscriptionCreationTime, setSubscriptionCreationTime] = useState<Date | null>(null)
+  const [isSubscriptionRequested, setIsSubscriptionRequested] = useState(false)
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -41,6 +46,7 @@ const AccountManagement = () => {
       skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
     })
   const [createSubscription, { isLoading: isLoadingPayment }] = useCreateSubscriptionMutation()
+  const { refetch: refetchMyPayments } = useGetMyPaymentsQuery()
 
   // Установка подписки DAY по умолчанию при загрузке данных
   useEffect(() => {
@@ -60,6 +66,14 @@ const AccountManagement = () => {
     const success = searchParams.get('success')
 
     if (success === 'true') {
+      // Проверяем, был ли запрос на подписку
+      if (!isSubscriptionRequested) {
+        setIsErrorAlertOpen(true) // Показываем ошибку, если запроса не было
+
+        return
+      }
+      // Проверяем, был ли создан новый платеж после создания подписки
+      checkForNewPayment()
       setIsSuccessAlertOpen(true)
     } else if (success === 'false') {
       setIsErrorAlertOpen(true)
@@ -74,10 +88,41 @@ const AccountManagement = () => {
     setPaymentType(type)
     setIsOpenPayModal(true)
   }
+
+  const checkForNewPayment = async () => {
+    if (!subscriptionCreationTime) {
+      return
+    }
+
+    // Запрашиваем актуальный список платежей
+    const { data: updatedPayments } = await refetchMyPayments()
+
+    if (updatedPayments) {
+      // Ищем платеж, который был создан после subscriptionCreationTime
+      const newPayment = updatedPayments.find(payment => {
+        const paymentDate = new Date(payment.dateOfPayment)
+
+        return paymentDate > subscriptionCreationTime
+      })
+
+      if (newPayment) {
+        setIsSuccessAlertOpen(true) // Показываем успех, если платеж найден
+      } else {
+        setIsErrorAlertOpen(true) // Показываем ошибку, если платеж не найден
+      }
+    }
+  }
+
   const handleConfirmPay = async () => {
+    // Устанавливаем флаг, что запрос на подписку был отправлен
+    setIsSubscriptionRequested(true)
+
+    // Сохраняем текущее время перед созданием подписки
+    setSubscriptionCreationTime(new Date())
+
     const response = await createSubscription({
       amount: selectedAmount,
-      baseUrl: baseUrl + PATH.ACCOUNT,
+      baseUrl: `${baseUrl + PATH.ACCOUNT.replace(':id', userId)}`,
       paymentType: paymentType as PaymentType,
       typeSubscription: selectedSubscriptionType,
     })
