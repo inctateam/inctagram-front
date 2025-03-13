@@ -9,6 +9,7 @@ import { PublishDialogContent } from '@/features/post-page/ui/createPost/publish
 import { useAppDispatch, useAppSelector } from '@/services'
 import { AlertDialog, CancelButton, ConfirmButton, Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { useTranslations } from 'next-intl'
 
 import { AddFilesDialogContent } from './addFilesDialogContent'
 import { CroppingDialogContent } from './croppingDialogContent'
@@ -29,6 +30,8 @@ export const CreatePostDialog = ({
   onPostPublished,
   ...props
 }: CreatePostDialogProps) => {
+  const t = useTranslations('CreatePost')
+
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
   const [stage, setStage] = useState<CreatePostStages>(CreatePostStages.AddFiles)
@@ -108,7 +111,7 @@ export const CreatePostDialog = ({
                 setStage(CreatePostStages.AddFiles)
               }}
             >
-              Save Draft
+              {t('saveDraft')}
             </CancelButton>
           }
           confirmButton={
@@ -119,16 +122,13 @@ export const CreatePostDialog = ({
                 setStage(CreatePostStages.AddFiles)
               }}
             >
-              Discard
+              {t('discard')}
             </ConfirmButton>
           }
-          description={
-            `Do you really want to close the creation of a publication?\n` +
-            `If you close everything will be deleted`
-          }
+          description={`${t('closeAlertDescription1')}\n${t('closeAlertDescription2')}`}
           onOpenChange={setOpenAlertModal}
           open={openAlertModal}
-          title={'Close'}
+          title={t('closeAlertTitle')}
         />
       </Dialog>
     </>

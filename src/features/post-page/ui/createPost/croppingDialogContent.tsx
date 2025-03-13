@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from '@/services'
 import { DialogBody, IconButton, ImageUploader } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { Slider } from '@/shared/ui/slider/slider'
+import { useTranslations } from 'next-intl'
 
 type CroppingDialogContentProps = {
   fileInputRef: RefObject<HTMLInputElement>
@@ -37,6 +38,8 @@ export const CroppingDialogContent = ({
   setPhotoToUpload,
   setStage,
 }: CroppingDialogContentProps) => {
+  const t = useTranslations('CreatePost')
+
   const dispatch = useAppDispatch()
   const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -72,7 +75,7 @@ export const CroppingDialogContent = ({
       <CreatePostHeader
         handleBack={() => setStage(CreatePostStages.AddFiles)}
         handleNext={() => setStage(CreatePostStages.Filtering)}
-        title={'Cropping'}
+        title={t('cropping')}
       />
       <DialogBody className={'h-full'}>
         <div className={'h-full relative flex-grow flex justify-center'}>

@@ -1,5 +1,6 @@
 import { ArrowBackOutline } from '@/assets/icons'
 import { Button, DialogHeader, IconButton, Typography } from '@/shared/ui'
+import { useTranslations } from 'next-intl'
 
 type CreatePostHeaderProps = {
   handleBack: () => void
@@ -14,6 +15,8 @@ export const CreatePostHeader = ({
   publish,
   title,
 }: CreatePostHeaderProps) => {
+  const t = useTranslations('CreatePost')
+
   return (
     <DialogHeader className={'flex justify-center items-center relative'}>
       <IconButton className={'hover:bg-dark-100/70 absolute left-6'} onClick={() => handleBack()}>
@@ -22,7 +25,7 @@ export const CreatePostHeader = ({
       <Typography variant={'h1'}>{title}</Typography>
       {!publish && (
         <Button className={'absolute right-6'} onClick={() => handleNext?.()} variant={'text'}>
-          Next
+          {t('next')}
         </Button>
       )}
       {publish && (
@@ -32,7 +35,7 @@ export const CreatePostHeader = ({
           type={'submit'}
           variant={'text'}
         >
-          Publish
+          {t('publish')}
         </Button>
       )}
     </DialogHeader>

@@ -4,6 +4,7 @@ import { ImageOutline } from '@/assets/icons'
 import { createPostSliceSelectors } from '@/features/post-page/ui/createPost/createPostSlice'
 import { useAppSelector } from '@/services'
 import { Button, DialogBody, DialogHeader, ImageUploader, Typography } from '@/shared/ui'
+import { useTranslations } from 'next-intl'
 
 type AddFilesDialogContentProps = {
   fileInputRef: RefObject<HTMLInputElement>
@@ -18,6 +19,7 @@ export const AddFilesDialogContent = ({
   handleOpenDraft,
   setPhotoToUpload,
 }: AddFilesDialogContentProps) => {
+  const t = useTranslations('CreatePost')
   const [error, setError] = useState('')
 
   const draftImages = useAppSelector(createPostSliceSelectors.selectDraftImages)
@@ -25,7 +27,7 @@ export const AddFilesDialogContent = ({
   return (
     <div className={'w-[492px] h-[564px] flex flex-col'}>
       <DialogHeader>
-        <Typography variant={'h1'}>Add photo</Typography>
+        <Typography variant={'h1'}>{t('addPhoto')}</Typography>
       </DialogHeader>
       <DialogBody className={'flex-grow flex flex-col justify-around items-center px-6'}>
         <ImageUploader

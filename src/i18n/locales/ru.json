@@ -164,5 +164,22 @@
     "devices": "Устройства",
     "accountManagement": "Управление аккаунтом",
     "myPayments": "Мои платежи"
+  },
+  "CreatePost": {
+    "closeAlertTitle": "Закрыть",
+    "saveDraft": "Сохранить черновик",
+    "discard": "Отменить",
+    "closeAlertDescription1": "Вы уверены, что хотите закрыть создание публикации?",
+    "closeAlertDescription2": "При закрытии все будет удалено",
+    "addPhoto": "Добавление фото",
+    "cropping": "Редактирование",
+    "filtering": "Фильтры",
+    "publication": "Публикация",
+    "publish": "Опубликовать",
+    "next": "Далее",
+    "enterDescription": "Введите описание для вашей публикации",
+    "errors": {
+      "failedToLoadImage": "Ошибка при загрузке изображения"
+    }
   }
 }

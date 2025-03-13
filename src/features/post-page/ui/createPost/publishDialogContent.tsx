@@ -12,9 +12,10 @@ import {
   createPostSliceSelectors,
 } from '@/features/post-page/ui/createPost/createPostSlice'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { Avatar, ControlledTextarea, DialogBody, Spinner, TextLink } from '@/shared/ui'
+import { Avatar, ControlledTextarea, DialogBody, ProgressBar, Spinner, TextLink } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations } from 'next-intl'
 import { z } from 'zod'
 
 export const publishPostSchema = z.object({
@@ -33,8 +34,11 @@ type CroppingDialogContentProps = {
 }
 
 export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDialogContentProps) => {
-  const [createPost] = useCreatePostMutation()
-  const [uploadPhoto] = useUploadImageForPostMutation()
+  const t = useTranslations('CreatePost')
+  const tErrors = useTranslations('CreatePost.errors')
+
+  const [createPost, { isLoading: isLoadingCreatePost }] = useCreatePostMutation()
+  const [uploadPhoto, { isLoading: isLoadingUploadPhoto }] = useUploadImageForPostMutation()
 
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -71,7 +75,7 @@ export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDial
       const res = await fetch(images[i])
 
       if (!res.ok) {
-        toast.error('Failed to load image')
+        toast.error(tErrors('failedToLoadImage'))
       }
       const blob = await res.blob()
       const file = new File([blob], `postImage${i + 1}.png`, { type: 'image/png' })
@@ -100,10 +104,11 @@ export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDial
 
   return (
     <div className={'w-[972px] h-[564px] flex flex-col'}>
+      {(isLoadingCreatePost || isLoadingUploadPhoto) && <ProgressBar />}
       <CreatePostHeader
         handleBack={() => setStage(CreatePostStages.Filtering)}
         publish
-        title={'Publication'}
+        title={t('publication')}
       />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
@@ -136,7 +141,7 @@ export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDial
               control={control}
               error={!!errors.description}
               helperText={errors.description?.message}
-              label={'Введите описание для вашей публикации'}
+              label={t('enterDescription')}
               name={'description'}
             />
           </form>

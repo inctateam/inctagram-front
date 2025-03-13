@@ -12,12 +12,15 @@ import { useAppDispatch, useAppSelector } from '@/services'
 import { DialogBody, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 type FilteringDialogContentProps = {
   setStage: (stage: CreatePostStages) => void
 }
 
 export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps) => {
+  const t = useTranslations('CreatePost')
+
   const dispatch = useAppDispatch()
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -34,7 +37,7 @@ export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps
       <CreatePostHeader
         handleBack={() => setStage(CreatePostStages.Cropping)}
         handleNext={() => setStage(CreatePostStages.Publish)}
-        title={'Filtering'}
+        title={t('filtering')}
       />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
