@@ -43,6 +43,7 @@ export const CurrentSubscription = () => {
   }, [dataSubscriptions, setValue])
 
   const handleAutoRenewal = async () => {
+    console.log('AutoRenewal')
     try {
       const response = await cancelAutoRenewal()
 
@@ -81,9 +82,12 @@ export const CurrentSubscription = () => {
           </TableBody>
         </TableRoot>
       </Card>
-      <form onSubmit={handleSubmit(handleAutoRenewal)}>
-        <ControlledCheckbox control={control} label={'Auto-Renewal'} name={'autoRenewal'} />
-      </form>
+      <ControlledCheckbox
+        control={control}
+        label={'Auto-Renewal'}
+        name={'autoRenewal'}
+        onSubmit={handleSubmit(handleAutoRenewal)}
+      />
     </>
   )
 }
