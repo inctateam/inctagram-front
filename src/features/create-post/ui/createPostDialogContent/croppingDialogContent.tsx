@@ -12,18 +12,17 @@ import {
   MaximizeOutline,
   PlusCircleOutline,
 } from '@/assets/icons'
-import { CreatePostStages } from '@/features/post-page/ui/createPost/createPostDialog'
-import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
   createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
-import { getCroppedImage } from '@/features/post-page/ui/createPost/getCroppedImage'
+  getCroppedImage,
+} from '@/features/create-post/utils'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody, IconButton, ImageUploader } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
-import { Slider } from '@/shared/ui/slider/slider'
+import { DialogBody, IconButton, ImageContent, ImageUploader, Slider } from '@/shared/ui'
 import { useTranslations } from 'next-intl'
+
+import { CreatePostStages } from '../createPostDialog'
+import { CreatePostHeader } from './createPostHeader'
 
 type CroppingDialogContentProps = {
   fileInputRef: RefObject<HTMLInputElement>

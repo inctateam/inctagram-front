@@ -3,20 +3,25 @@ import { toast } from 'react-toastify'
 
 import { useMeQuery } from '@/features/auth/api'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import { createPostSliceActions, createPostSliceSelectors } from '@/features/create-post/utils'
 import { useGetPublicUserProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
-import { CreatePostStages } from '@/features/post-page/ui/createPost/createPostDialog'
-import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
-import {
-  createPostSliceActions,
-  createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { Avatar, ControlledTextarea, DialogBody, ProgressBar, Spinner, TextLink } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
+import {
+  Avatar,
+  ControlledTextarea,
+  DialogBody,
+  ImageContent,
+  ProgressBar,
+  Spinner,
+  TextLink,
+} from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations } from 'next-intl'
 import { z } from 'zod'
+
+import { CreatePostStages } from '../createPostDialog'
+import { CreatePostHeader } from './createPostHeader'
 
 export const publishPostSchema = z.object({
   description: z

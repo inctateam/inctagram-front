@@ -1,18 +1,17 @@
 import { ComponentPropsWithoutRef, useRef, useState } from 'react'
 
-import {
-  createPostSliceActions,
-  createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
-import { FilteringDialogContent } from '@/features/post-page/ui/createPost/filteringDialogContent'
-import { PublishDialogContent } from '@/features/post-page/ui/createPost/publishDialogContent'
 import { useAppDispatch, useAppSelector } from '@/services'
 import { AlertDialog, CancelButton, ConfirmButton, Dialog } from '@/shared/ui'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useTranslations } from 'next-intl'
 
-import { AddFilesDialogContent } from './addFilesDialogContent'
-import { CroppingDialogContent } from './croppingDialogContent'
+import { createPostSliceActions, createPostSliceSelectors } from '../utils'
+import {
+  AddFilesDialogContent,
+  CroppingDialogContent,
+  FilteringDialogContent,
+  PublishDialogContent,
+} from './createPostDialogContent'
 
 type CreatePostDialogProps = {
   onPostPublished: () => void

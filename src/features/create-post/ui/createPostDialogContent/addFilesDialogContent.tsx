@@ -1,7 +1,7 @@
 import { RefObject, useState } from 'react'
 
 import { ImageOutline } from '@/assets/icons'
-import { createPostSliceSelectors } from '@/features/post-page/ui/createPost/createPostSlice'
+import { createPostSliceSelectors } from '@/features/create-post/utils'
 import { useAppSelector } from '@/services'
 import { Button, DialogBody, DialogHeader, ImageUploader, Typography } from '@/shared/ui'
 import { useTranslations } from 'next-intl'

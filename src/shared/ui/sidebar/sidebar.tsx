@@ -13,7 +13,7 @@ import {
   TrendingUpOutline,
 } from '@/assets/icons'
 import { authApi, useLogoutMutation, useMeQuery } from '@/features/auth/api'
-import { CreatePostDialog } from '@/features/post-page/ui/createPost/createPostDialog'
+import { CreatePostDialog } from '@/features/create-post/ui/createPostDialog'
 import { useAppDispatch } from '@/services'
 import { PATH } from '@/shared/constants'
 import { useRouter } from 'next/navigation'
