@@ -6,7 +6,7 @@ import { cn } from '@/shared/utils'
 import { TextLink } from '../text-link'
 
 interface SidebarItemProps {
-  href?: (typeof PATH)[keyof typeof PATH]
+  href: (typeof PATH)[keyof typeof PATH] | string //string убрать потом, когда все пути сделаются константами
   icon: ReactNode
   isActive?: boolean
   isDisabled?: boolean
@@ -14,7 +14,7 @@ interface SidebarItemProps {
   onClick?: () => void
 }
 export const SidebarItem = ({
-  href = PATH.ROOT,
+  href,
   icon,
   isActive = false,
   isDisabled = false,

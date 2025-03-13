@@ -3,6 +3,8 @@ export const PATH = {
   PASSWORD_RECOVERY: '/auth/recovery', // forgot password page
   PASSWORD_RESET: '/auth/password-reset', // creating new password
   PRIVACY_POLICY: '/privacy-policy',
+  PROFILE: '/profile/:id',
+  PROFILE_SETTINGS: '/profile/:id/settings',
   ROOT: '/',
   SIGN_IN: '/auth/sign-in', // login page
   SIGN_UP: '/auth/sign-up', // register new user

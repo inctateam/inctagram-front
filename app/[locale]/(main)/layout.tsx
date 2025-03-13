@@ -1,8 +1,9 @@
 'use client'
 import React from 'react'
 
-import { Header, LayoutContainer } from '@/layouts'
-import { cn } from '@/shared/utils'
+import { useMeQuery } from '@/features/auth/api'
+import { CenteredLayout } from '@/layouts'
+import { Sidebar } from '@/shared/ui/sidebar'
 
 export default function HomeLayout({
   children,
@@ -11,15 +12,17 @@ export default function HomeLayout({
   children: React.ReactNode
   modal: React.ReactNode
 }>) {
+  const { data } = useMeQuery()
+
   return (
     <>
-      <Header />
-      <LayoutContainer className={cn('sm:pt-6 pt-4')}>
-        <main>
+      <CenteredLayout>
+        <div className={'flex gap-6 justify-space-between w-full'}>
+          {data && <Sidebar />}
           {children}
           {modal}
-        </main>
-      </LayoutContainer>
+        </div>
+      </CenteredLayout>
     </>
   )
 }

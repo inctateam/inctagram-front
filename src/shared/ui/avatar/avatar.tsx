@@ -16,7 +16,7 @@ type AvatarOwnProps = {
 type AvatarProps = AvatarOwnProps & Omit<ComponentPropsWithoutRef<typeof Image>, 'src'>
 
 const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ alt = 'Profile avatar', className, onClick, size, src, ...props }, ref) => {
+  ({ alt = 'Profile avatar', className, height, onClick, size, src, width, ...props }, ref) => {
     const iconSizeMap: Record<AvatarOwnProps['size'], string> = {
       6: 'w-6 h-6',
       9: 'w-6 h-6',
@@ -46,9 +46,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
             {...props}
             alt={alt}
             className={'h-full w-full object-cover'}
-            height={size}
+            height={height || 48}
             src={src}
-            width={size}
+            width={width || 48}
           />
         ) : (
           <ImageOutline className={cn(iconSizeMap[size], 'text-light-100')} />

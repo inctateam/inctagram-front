@@ -1,18 +1,29 @@
 'use client'
-import { Dialog, DialogBody, DialogHeader, Typography } from '@/shared/ui'
-import { useRouter } from 'next/navigation'
+import { usePostQuery } from '@/features/post-page/api'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
+import { ProgressBar } from '@/shared/ui'
+import { ImageContent } from '@/shared/ui/image-content'
 
 export default function Post({ params: { id } }: { params: { id: string } }) {
-  const router = useRouter()
+  const postId = Number(id)
+
+  const { data: post, error, isLoading } = usePostQuery({ postId })
+
+  if (isLoading) {
+    return <ProgressBar />
+  }
+
+  if (error) {
+    return <div>Error loading post</div>
+  }
+  if (!post) {
+    return <div>Post not found</div>
+  }
 
   return (
-    <Dialog closePosition={'inside'} onOpenChange={() => router.back()} open>
-      <DialogHeader>
-        <Typography variant={'h2'}>Post {id}</Typography>
-      </DialogHeader>
-      <DialogBody className={'p-6'}>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-      </DialogBody>
-    </Dialog>
+    // <PostModal onOpenChange={() => router.back()} open post={post}>
+    <PostModal onOpenChange={open => !open} open post={post}>
+      <ImageContent itemImages={post?.images.map(image => image.url) ?? []} />
+    </PostModal>
   )
 }

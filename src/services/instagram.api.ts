@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const instagramApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://inctagram.work/api/',
+    credentials: 'include',
     prepareHeaders: headers => {
       const token = localStorage.getItem('access_token')
 
@@ -15,5 +16,5 @@ export const instagramApi = createApi({
   }),
   endpoints: () => ({}),
   reducerPath: 'instagramApi',
-  tagTypes: ['Me'],
+  tagTypes: ['Me', 'MyProfile'],
 })

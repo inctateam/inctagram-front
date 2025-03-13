@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import {
   BookmarkOutline,
@@ -11,54 +12,97 @@ import {
   SearchOutline,
   TrendingUpOutline,
 } from '@/assets/icons'
+import { authApi, useLogoutMutation, useMeQuery } from '@/features/auth/api'
+import { CreatePostDialog } from '@/features/create-post/ui/createPostDialog'
+import { useAppDispatch } from '@/services'
+import { PATH } from '@/shared/constants'
+import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
+import { AlertDialog, CancelButton, ConfirmButton } from '../dialogs'
 import { SidebarItem } from './sidebar-item'
 import { SIDEBAR_ITEMS } from './types'
 
 export const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState<string>('Home')
+  const [logout] = useLogoutMutation()
+  const { data: getMeData } = useMeQuery()
+  const router = useRouter()
+  const dispatch = useAppDispatch()
   const t = useTranslations('Sidebar')
-  const handleItemClick = (item: string) => {
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap()
+      localStorage.removeItem('access_token')
+      router.push(PATH.SIGN_IN)
+      // Сброс состояния
+      dispatch(authApi.util.resetApiState())
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
+  const [activeItem, setActiveItem] = useState<SIDEBAR_ITEMS>(SIDEBAR_ITEMS.HOME)
+  const [isCreatingPost, setIsCreatingPost] = useState<boolean>(false)
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
+
+  const onItemClick = (item: SIDEBAR_ITEMS) => {
     setActiveItem(item)
   }
 
+  const onPostPublished = () => {
+    setIsCreatingPost(false)
+    toast.success('Post has been published successfully')
+    if (getMeData?.userId) {
+      router.push(PATH.PROFILE.replace(':id', getMeData?.userId?.toString()))
+    }
+  }
+
   return (
-    <div className={'flex flex-col pl-5 items-start h-[660px] w-[220px] border-r border-gray-700'}>
-      <div className={'flex flex-col mt-8 space-y-6'}>
+    <div className={'flex flex-col pl-5 items-start w-[220px] border-r border-gray-700 '}>
+      <CreatePostDialog
+        onOpenChange={setIsCreatingPost}
+        onPostPublished={onPostPublished}
+        open={isCreatingPost}
+      />
+      <div className={'flex flex-col mt-[72px] space-y-6 '}>
         <SidebarItem
+          href={'/'}
           icon={<HomeOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.HOME}
           item={t('home')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.HOME)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.HOME)}
         />
         <SidebarItem
           href={'/'}
           icon={<PlusSquareOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.CREATE}
           item={t('create')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.CREATE)}
+          onClick={() => setIsCreatingPost(true)}
         />
+
         <SidebarItem
-          href={'/'}
+          href={PATH.PROFILE.replace(':id', String(getMeData?.userId))}
           icon={<Person />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
         />
+
         <SidebarItem
           href={'/'}
           icon={<MessageCircle />}
-          isActive={activeItem === SIDEBAR_ITEMS.MESSANGER}
+          isActive={activeItem === SIDEBAR_ITEMS.MESSENGER}
           item={t('messenger')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.MESSANGER)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.MESSENGER)}
         />
+
         <SidebarItem
           href={'/'}
           icon={<SearchOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.SEARCH}
           item={t('search')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.SEARCH)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.SEARCH)}
         />
       </div>
       <div className={'flex flex-col mt-16 space-y-6'}>
@@ -67,25 +111,33 @@ export const Sidebar = () => {
           icon={<TrendingUpOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.STATISTICS}
           item={t('statistics')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.STATISTICS)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.STATISTICS)}
         />
         <SidebarItem
           href={'/'}
           icon={<BookmarkOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.FAVORITES}
           item={t('favorites')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.FAVORITES)}
+          onClick={() => onItemClick(SIDEBAR_ITEMS.FAVORITES)}
         />
       </div>
-      <div className={'mt-auto mb-8'}>
+      <div className={'mt-44'}>
         <SidebarItem
           href={'/'}
           icon={<LogOutOutline />}
           isActive={activeItem === SIDEBAR_ITEMS.LOGOUT}
           item={t('logout')}
-          onClick={() => handleItemClick(SIDEBAR_ITEMS.LOGOUT)}
+          onClick={() => setIsLogoutDialogOpen(true)}
         />
       </div>
+      <AlertDialog
+        cancelButton={<CancelButton onClick={() => setIsLogoutDialogOpen(false)}>No</CancelButton>}
+        confirmButton={<ConfirmButton onClick={handleLogout}>Yes</ConfirmButton>}
+        description={'Are you really want to logout your account ' + `${getMeData?.email}` + '?'}
+        onOpenChange={setIsLogoutDialogOpen}
+        open={isLogoutDialogOpen}
+        title={'Log Out'}
+      />
     </div>
   )
 }

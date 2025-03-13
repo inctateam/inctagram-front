@@ -12,10 +12,7 @@ export const CarouselDots = React.forwardRef<HTMLDivElement, React.HTMLAttribute
     return (
       <div className={'absolute -mt-8 flex items-center justify-center w-full'}>
         <div
-          className={cn(
-            'z-50 flex items-center justify-center gap-3 bg-dark-500/20 p-2',
-            className
-          )}
+          className={cn('z-1 flex items-center justify-center gap-3 bg-dark-500/20 p-2', className)}
           ref={ref}
           {...props}
         >
@@ -24,7 +21,7 @@ export const CarouselDots = React.forwardRef<HTMLDivElement, React.HTMLAttribute
             .map((_, index) => (
               <span
                 className={cn(
-                  'h-2 w-2 rounded-full cursor-pointer',
+                  'h-2 w-2 rounded-full cursor-pointer select-none',
                   index === selectedIndex ? 'bg-accent-500 ' : 'bg-light-100'
                 )}
                 key={index}

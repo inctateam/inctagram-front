@@ -1,18 +1,23 @@
 'use client'
 
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentPropsWithoutRef, ElementRef, LegacyRef, Ref, forwardRef } from 'react'
 
 import { cn } from '@/shared/utils'
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 
 type ScrollAreaProps = {
   orientation?: 'horizontal' | 'vertical'
+  viewportRef?: Ref<HTMLDivElement>
 } & ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
 
-const ScrollArea = forwardRef<ElementRef<typeof ScrollAreaPrimitive.Root>, ScrollAreaProps>(
-  ({ children, className, ...props }, ref) => (
-    <ScrollAreaPrimitive.Root className={cn(' h-full w-full', className)} ref={ref} {...props}>
-      <ScrollAreaPrimitive.Viewport className={'h-full w-full'}>
+const ScrollArea = forwardRef<LegacyRef<HTMLDivElement>, ScrollAreaProps>(
+  ({ children, className, viewportRef, ...props }, ref) => (
+    <ScrollAreaPrimitive.Root
+      className={cn(' h-full w-full', className)}
+      ref={ref as LegacyRef<HTMLDivElement> | undefined}
+      {...props}
+    >
+      <ScrollAreaPrimitive.Viewport className={'h-full w-full'} ref={viewportRef}>
         {children}
       </ScrollAreaPrimitive.Viewport>
 

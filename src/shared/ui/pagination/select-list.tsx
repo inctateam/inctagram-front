@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 
 type Props = {
-  setItemsPerPage: (setitems: number) => void
+  setItemsPerPage: (setItems: number) => void
 }
 
 export const SelectList = ({ setItemsPerPage }: Props) => {
@@ -16,7 +16,8 @@ export const SelectList = ({ setItemsPerPage }: Props) => {
         className={'border-[1.5px] rounded-sm border-dark-300 bg-dark-500 pl-[6px]'}
         onChange={itemsPerPageHandler}
       >
-        {[10, 20, 30, 50, 100].map((page, index) => {
+        {[5, 10, 20, 30, 50, 100].map((page, index) => {
+          // {[10, 20, 30, 50, 100].map((page, index) => {
           return (
             <option key={index} value={page}>
               {page}

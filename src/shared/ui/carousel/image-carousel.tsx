@@ -10,23 +10,25 @@ import Image from 'next/image'
 
 type ImageCarouselProps = {
   images: string[]
+  onClick?: () => void
+  selectedIndexCallBack?: (index: number) => void
 }
 
-export function ImageCarousel({ images }: ImageCarouselProps) {
+export function ImageCarousel({ images, onClick, selectedIndexCallBack }: ImageCarouselProps) {
   return (
-    <Carousel opts={{ loop: true }}>
+    <Carousel opts={{ loop: true }} selectedIndexCallBack={selectedIndexCallBack}>
       <CarouselContent>
         {images.map((image, index) => (
           <CarouselItem key={index}>
-            <div className={'flex aspect-square items-center justify-center'}>
-              <Image
-                alt={`img ${index}`}
-                className={'w-full h-full object-cover'}
-                height={500}
-                src={image}
-                width={500}
-              />
-            </div>
+            <Image
+              alt={`img ${index}`}
+              className={'w-full min-h-32 h-full object-cover'}
+              height={400}
+              onClick={onClick}
+              priority
+              src={image}
+              width={400}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -36,3 +38,5 @@ export function ImageCarousel({ images }: ImageCarouselProps) {
     </Carousel>
   )
 }
+
+ImageCarousel.displayName = 'ImageCarousel'

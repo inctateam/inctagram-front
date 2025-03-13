@@ -40,7 +40,7 @@ const Checkbox = forwardRef<ElementRef<typeof RadixCheckbox.Root>, CheckboxProps
       className
     )
 
-    const labelStyles = cn('ml-2', disabled ? 'text-light-900' : 'text-light-500')
+    const labelStyles = cn('ml-2 cursor-pointer', disabled ? 'text-light-900' : 'text-light-500')
 
     return (
       <div className={'flex'}>
