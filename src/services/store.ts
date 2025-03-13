@@ -1,6 +1,6 @@
 import { useDispatch, useSelector, useStore } from 'react-redux'
 
-import { createPostSlice } from '@/features/post-page/ui/createPost/createPostSlice'
+import { createPostSlice } from '@/features/create-post/utils/createPostSlice'
 import { geoApi } from '@/features/profile-settings-page/ui/servises/countriesAndCities.api'
 import { instagramApi } from '@/services'
 import { combineSlices, configureStore } from '@reduxjs/toolkit'

@@ -1,23 +1,26 @@
 import { useState } from 'react'
 
-import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
+import { FILTERS } from '@/features/create-post/constants'
 import {
   createPostSliceActions,
   createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
-import { FILTERS } from '@/features/post-page/ui/createPost/filters'
-import { getFilteredImage } from '@/features/post-page/ui/createPost/getFilteredImage'
+  getFilteredImage,
+} from '@/features/create-post/utils'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody, Typography } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
+import { DialogBody, ImageContent, Typography } from '@/shared/ui'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
+
+import { CreatePostStages } from '../createPostDialog'
+import { CreatePostHeader } from './createPostHeader'
 
 type FilteringDialogContentProps = {
-  handleBack: () => void
-  handleNext: () => void
+  setStage: (stage: CreatePostStages) => void
 }
 
-export const FilteringDialogContent = ({ handleBack, handleNext }: FilteringDialogContentProps) => {
+export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps) => {
+  const t = useTranslations('CreatePost')
+
   const dispatch = useAppDispatch()
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -31,7 +34,11 @@ export const FilteringDialogContent = ({ handleBack, handleNext }: FilteringDial
 
   return (
     <div className={'w-[972px] h-[564px] flex flex-col'}>
-      <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Filtering'} />
+      <CreatePostHeader
+        handleBack={() => setStage(CreatePostStages.Cropping)}
+        handleNext={() => setStage(CreatePostStages.Publish)}
+        title={t('filtering')}
+      />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
           <ImageContent itemImages={images} selectedIndexCallBack={setCurrentImage}></ImageContent>

@@ -12,32 +12,33 @@ import {
   MaximizeOutline,
   PlusCircleOutline,
 } from '@/assets/icons'
-import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
   createPostSliceSelectors,
-} from '@/features/post-page/ui/createPost/createPostSlice'
-import { getCroppedImage } from '@/features/post-page/ui/createPost/getCroppedImage'
+  getCroppedImage,
+} from '@/features/create-post/utils'
 import { useAppDispatch, useAppSelector } from '@/services'
-import { DialogBody, IconButton, ImageUploader } from '@/shared/ui'
-import { ImageContent } from '@/shared/ui/image-content'
-import { Slider } from '@/shared/ui/slider/slider'
+import { DialogBody, IconButton, ImageContent, ImageUploader, Slider } from '@/shared/ui'
+import { useTranslations } from 'next-intl'
+
+import { CreatePostStages } from '../createPostDialog'
+import { CreatePostHeader } from './createPostHeader'
 
 type CroppingDialogContentProps = {
   fileInputRef: RefObject<HTMLInputElement>
-  handleBack: () => void
   handleFileSelect: () => void
-  handleNext: () => void
   setPhotoToUpload: (file: File) => void
+  setStage: (stage: CreatePostStages) => void
 }
 
 export const CroppingDialogContent = ({
   fileInputRef,
-  handleBack,
   handleFileSelect,
-  handleNext,
   setPhotoToUpload,
+  setStage,
 }: CroppingDialogContentProps) => {
+  const t = useTranslations('CreatePost')
+
   const dispatch = useAppDispatch()
   const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -70,7 +71,11 @@ export const CroppingDialogContent = ({
 
   return (
     <div className={'w-[492px] h-[564px] flex flex-col'}>
-      <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
+      <CreatePostHeader
+        handleBack={() => setStage(CreatePostStages.AddFiles)}
+        handleNext={() => setStage(CreatePostStages.Filtering)}
+        title={t('cropping')}
+      />
       <DialogBody className={'h-full'}>
         <div className={'h-full relative flex-grow flex justify-center'}>
           {!edit && (
@@ -120,7 +125,11 @@ export const CroppingDialogContent = ({
             >
               {imagesState.map((image, index) => (
                 <div className={'relative'} key={index}>
-                  <img alt={''} className={'w-20 h-20 object-contain'} src={image} />
+                  <img
+                    alt={`image ${index + 1}`}
+                    className={'w-20 h-20 object-contain'}
+                    src={image}
+                  />
                   <IconButton
                     className={'absolute top-1 right-1'}
                     color={'cropper'}

@@ -21,7 +21,7 @@ const buttonVariants = cva(
     'px-6 py-1.5',
     'text-base font-600',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-700',
-    'transition',
+    'transition text-nowrap',
   ],
   {
     defaultVariants: {

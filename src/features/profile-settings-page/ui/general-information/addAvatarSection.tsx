@@ -82,11 +82,11 @@ const AddAvatarSection = ({ avatars }: Props) => {
         <div className={'relative mb-6'}>
           <Avatar
             alt={'User avatar'}
-            height={avatars?.[0].height}
+            height={avatars && avatars.length > 0 ? avatars?.[0].height : undefined}
             priority
             size={48}
             src={avatarSrc}
-            width={avatars?.[0].width}
+            width={avatars && avatars.length > 0 ? avatars?.[0].width : undefined}
           />
           {avatarSrc && (
             <div className={'absolute top-0 right-0  transform translate-y-1/2 -translate-x-1/2'}>

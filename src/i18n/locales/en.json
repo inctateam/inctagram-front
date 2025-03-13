@@ -163,5 +163,26 @@
     "devices": "Devices",
     "accountManagement": "Account Management",
     "myPayments": "My payments"
+  },
+  "CreatePost": {
+    "closeAlertTitle": "Close",
+    "saveDraft": "Save Draft",
+    "discard": "Discard",
+    "closeAlertDescription1": "Do you really want to close the creation of a publication?",
+    "closeAlertDescription2": "If you close everything will be deleted",
+    "addPhoto": "Add photo",
+    "cropping": "Cropping",
+    "filtering": "Filtering",
+    "publication": "Publication",
+    "publish": "Publish",
+    "next": "Next",
+    "enterDescription": "Enter description for your publication",
+    "errors": {
+      "failedToLoadImage": "Failed to load image"
+    }
+  },
+  "ImageUploader": {
+    "formatError": "The photo must have JPEG or PNG format",
+    "sizeError": "The photo must be less than 20 Mb"
   }
 }

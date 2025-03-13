@@ -1,9 +1,5 @@
 export const FILTERS = [
   {
-    name: 'Original',
-    value: 'none',
-  },
-  {
     name: 'Amaro',
     value: 'contrast(0.9) brightness(1.1) hue-rotate(-10deg) saturate(1.5)',
   },
@@ -34,5 +30,9 @@ export const FILTERS = [
   {
     name: 'Maven',
     value: 'contrast(0.95) brightness(0.95) saturate(1.5) sepia(0.25)',
+  },
+  {
+    name: 'Toaster',
+    value: 'contrast(1.5) brightness(0.9)',
   },
 ]
