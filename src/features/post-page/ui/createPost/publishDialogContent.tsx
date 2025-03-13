@@ -5,6 +5,7 @@ import { useMeQuery } from '@/features/auth/api'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { useGetPublicUserProfileQuery } from '@/features/home-page/ui/user-profile/api/user-profile.api'
 import { useCreatePostMutation, useUploadImageForPostMutation } from '@/features/post-page/api'
+import { CreatePostStages } from '@/features/post-page/ui/createPost/createPostDialog'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -27,14 +28,11 @@ export const publishPostSchema = z.object({
 type FormValues = z.infer<typeof publishPostSchema>
 
 type CroppingDialogContentProps = {
-  handleBack: () => void
   onPostPublished: () => void
+  setStage: (stage: CreatePostStages) => void
 }
 
-export const PublishDialogContent = ({
-  handleBack,
-  onPostPublished,
-}: CroppingDialogContentProps) => {
+export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDialogContentProps) => {
   const [createPost] = useCreatePostMutation()
   const [uploadPhoto] = useUploadImageForPostMutation()
 
@@ -102,7 +100,11 @@ export const PublishDialogContent = ({
 
   return (
     <div className={'w-[972px] h-[564px] flex flex-col'}>
-      <CreatePostHeader handleBack={handleBack} publish title={'Publication'} />
+      <CreatePostHeader
+        handleBack={() => setStage(CreatePostStages.Filtering)}
+        publish
+        title={'Publication'}
+      />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
           <ImageContent itemImages={images}></ImageContent>

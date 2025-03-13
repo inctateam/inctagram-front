@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { CreatePostStages } from '@/features/post-page/ui/createPost/createPostDialog'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -13,11 +14,10 @@ import { ImageContent } from '@/shared/ui/image-content'
 import Image from 'next/image'
 
 type FilteringDialogContentProps = {
-  handleBack: () => void
-  handleNext: () => void
+  setStage: (stage: CreatePostStages) => void
 }
 
-export const FilteringDialogContent = ({ handleBack, handleNext }: FilteringDialogContentProps) => {
+export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps) => {
   const dispatch = useAppDispatch()
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
@@ -31,7 +31,11 @@ export const FilteringDialogContent = ({ handleBack, handleNext }: FilteringDial
 
   return (
     <div className={'w-[972px] h-[564px] flex flex-col'}>
-      <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Filtering'} />
+      <CreatePostHeader
+        handleBack={() => setStage(CreatePostStages.Cropping)}
+        handleNext={() => setStage(CreatePostStages.Publish)}
+        title={'Filtering'}
+      />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
           <ImageContent itemImages={images} selectedIndexCallBack={setCurrentImage}></ImageContent>

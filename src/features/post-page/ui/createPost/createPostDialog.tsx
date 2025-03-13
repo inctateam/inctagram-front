@@ -17,6 +17,13 @@ type CreatePostDialogProps = {
   onPostPublished: () => void
 } & ComponentPropsWithoutRef<typeof DialogPrimitive.Root>
 
+export enum CreatePostStages {
+  AddFiles = 1,
+  Cropping = 2,
+  Filtering = 3,
+  Publish = 4,
+}
+
 export const CreatePostDialog = ({
   onOpenChange,
   onPostPublished,
@@ -24,7 +31,7 @@ export const CreatePostDialog = ({
 }: CreatePostDialogProps) => {
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
-  const [stage, setStage] = useState<'1' | '2' | '3' | '4'>('1')
+  const [stage, setStage] = useState<CreatePostStages>(CreatePostStages.AddFiles)
 
   const [openAlertModal, setOpenAlertModal] = useState(false)
 
@@ -37,11 +44,11 @@ export const CreatePostDialog = ({
 
     dispatch(createPostSliceActions.addImage({ image: newImage }))
     setPhotoToUpload(null)
-    setStage('2')
+    setStage(CreatePostStages.Cropping)
   }
 
   const handleOpenDraft = () => {
-    setStage('2')
+    setStage(CreatePostStages.Cropping)
     dispatch(createPostSliceActions.getImagesFromDraft())
   }
 
@@ -55,7 +62,7 @@ export const CreatePostDialog = ({
     <>
       <Dialog
         {...props}
-        closePosition={stage === '1' ? 'inside' : 'none'}
+        closePosition={stage === CreatePostStages.AddFiles ? 'inside' : 'none'}
         onOpenChange={open => {
           if (onOpenChange) {
             if (!open && images.length > 0) {
@@ -66,7 +73,7 @@ export const CreatePostDialog = ({
           }
         }}
       >
-        {stage === '1' && (
+        {stage === CreatePostStages.AddFiles && (
           <AddFilesDialogContent
             fileInputRef={fileInputRef}
             handleFileSelect={handleFileSelect}
@@ -74,28 +81,22 @@ export const CreatePostDialog = ({
             setPhotoToUpload={setPhotoToUpload}
           />
         )}
-        {stage === '2' && (
+        {stage === CreatePostStages.Cropping && (
           <CroppingDialogContent
             fileInputRef={fileInputRef}
-            handleBack={() => setStage('1')}
             handleFileSelect={handleFileSelect}
-            handleNext={() => setStage('3')}
             setPhotoToUpload={setPhotoToUpload}
+            setStage={setStage}
           />
         )}
-        {stage === '3' && (
-          <FilteringDialogContent
-            handleBack={() => setStage('2')}
-            handleNext={() => setStage('4')}
-          />
-        )}
-        {stage === '4' && (
+        {stage === CreatePostStages.Filtering && <FilteringDialogContent setStage={setStage} />}
+        {stage === CreatePostStages.Publish && (
           <PublishDialogContent
-            handleBack={() => setStage('2')}
             onPostPublished={() => {
-              setStage('1')
+              setStage(CreatePostStages.AddFiles)
               onPostPublished()
             }}
+            setStage={setStage}
           />
         )}
         <AlertDialog
@@ -104,7 +105,7 @@ export const CreatePostDialog = ({
               onClick={() => {
                 onOpenChange?.(false)
                 dispatch(createPostSliceActions.moveImagesToDraft())
-                setStage('1')
+                setStage(CreatePostStages.AddFiles)
               }}
             >
               Save Draft
@@ -115,7 +116,7 @@ export const CreatePostDialog = ({
               onClick={() => {
                 onOpenChange?.(false)
                 dispatch(createPostSliceActions.setImages({ images: [] }))
-                setStage('1')
+                setStage(CreatePostStages.AddFiles)
               }}
             >
               Discard

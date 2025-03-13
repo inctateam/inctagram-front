@@ -12,6 +12,7 @@ import {
   MaximizeOutline,
   PlusCircleOutline,
 } from '@/assets/icons'
+import { CreatePostStages } from '@/features/post-page/ui/createPost/createPostDialog'
 import { CreatePostHeader } from '@/features/post-page/ui/createPost/createPostHeader'
 import {
   createPostSliceActions,
@@ -25,18 +26,16 @@ import { Slider } from '@/shared/ui/slider/slider'
 
 type CroppingDialogContentProps = {
   fileInputRef: RefObject<HTMLInputElement>
-  handleBack: () => void
   handleFileSelect: () => void
-  handleNext: () => void
   setPhotoToUpload: (file: File) => void
+  setStage: (stage: CreatePostStages) => void
 }
 
 export const CroppingDialogContent = ({
   fileInputRef,
-  handleBack,
   handleFileSelect,
-  handleNext,
   setPhotoToUpload,
+  setStage,
 }: CroppingDialogContentProps) => {
   const dispatch = useAppDispatch()
   const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
@@ -70,7 +69,11 @@ export const CroppingDialogContent = ({
 
   return (
     <div className={'w-[492px] h-[564px] flex flex-col'}>
-      <CreatePostHeader handleBack={handleBack} handleNext={handleNext} title={'Cropping'} />
+      <CreatePostHeader
+        handleBack={() => setStage(CreatePostStages.AddFiles)}
+        handleNext={() => setStage(CreatePostStages.Filtering)}
+        title={'Cropping'}
+      />
       <DialogBody className={'h-full'}>
         <div className={'h-full relative flex-grow flex justify-center'}>
           {!edit && (
@@ -120,7 +123,11 @@ export const CroppingDialogContent = ({
             >
               {imagesState.map((image, index) => (
                 <div className={'relative'} key={index}>
-                  <img alt={''} className={'w-20 h-20 object-contain'} src={image} />
+                  <img
+                    alt={`image ${index + 1}`}
+                    className={'w-20 h-20 object-contain'}
+                    src={image}
+                  />
                   <IconButton
                     className={'absolute top-1 right-1'}
                     color={'cropper'}
