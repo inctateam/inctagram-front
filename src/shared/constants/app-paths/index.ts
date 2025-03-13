@@ -1,5 +1,4 @@
 export const PATH = {
-  ACCOUNT: '/profile/:id/settings/account',
   CONFIRM_EMAIL: '/auth/registration-confirmation',
   PASSWORD_RECOVERY: '/auth/recovery', // forgot password page
   PASSWORD_RESET: '/auth/password-reset', // creating new password

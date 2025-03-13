@@ -26,6 +26,7 @@ const AccountManagement = () => {
   const params = useParams()
   const userId: string = params.id as string
   const searchParams = useSearchParams()
+
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
   const [isOpenPayModal, setIsOpenPayModal] = useState(false)
   const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
@@ -79,6 +80,34 @@ const AccountManagement = () => {
       setIsErrorAlertOpen(true)
     }
   }, [searchParams])
+
+  // useEffect(() => {
+  //   const success = searchParams.get('success')
+
+  //   if (success === 'true' || success === 'false') {
+  //     // Проверяем, был ли запрос на подписку
+  //     if (!isSubscriptionRequested) {
+  //       setIsErrorAlertOpen(true) // Показываем ошибку, если запроса не было
+
+  //       return
+  //     }
+
+  //     // Проверяем, был ли создан новый платеж после создания подписки
+  //     checkForNewPayment()
+
+  //     // Обновляем URL, добавляя параметр section
+  //     const newSearchParams = new URLSearchParams(searchParams.toString())
+
+  //     newSearchParams.set('section', currentSection || 'General-information') // Сохраняем текущий раздел
+  //     router.replace(`?${newSearchParams.toString()}`) // Обновляем URL без перезагрузки страницы
+
+  //     if (success === 'true') {
+  //       setIsSuccessAlertOpen(true)
+  //     } else {
+  //       setIsErrorAlertOpen(true)
+  //     }
+  //   }
+  // }, [searchParams])
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
       console.error('Amount is not selected')
@@ -122,7 +151,7 @@ const AccountManagement = () => {
 
     const response = await createSubscription({
       amount: selectedAmount,
-      baseUrl: `${baseUrl + PATH.ACCOUNT.replace(':id', userId)}`,
+      baseUrl: `${baseUrl + PATH.PROFILE_SETTINGS.replace(':id', userId)}`,
       paymentType: paymentType as PaymentType,
       typeSubscription: selectedSubscriptionType,
     })
