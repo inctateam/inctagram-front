@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
+//import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
 import { PATH, baseUrl } from '@/shared/constants'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
@@ -38,6 +38,7 @@ const AccountManagement = () => {
   const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false)
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
 
+  console.log(isErrorAlertOpen)
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -66,7 +67,7 @@ const AccountManagement = () => {
 
     if (success === 'true') {
       setIsSuccessAlertOpen(true)
-    } else {
+    } else if (success === 'false') {
       setIsErrorAlertOpen(true)
     }
   }, [searchParams])
@@ -104,7 +105,7 @@ const AccountManagement = () => {
 
   return (
     <>
-      <CurrentSubscription />
+      {/* <CurrentSubscription /> */}
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
@@ -172,7 +173,11 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Transaction failed, please try again'}
-        onOpenChange={setIsErrorAlertOpen}
+        onOpenChange={open => {
+          if (!open) {
+            setIsErrorAlertOpen(false) // Сброс состояния при закрытии
+          }
+        }}
         open={isErrorAlertOpen}
         title={'Error'}
       />
@@ -183,7 +188,11 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Payment was successful!'}
-        onOpenChange={setIsSuccessAlertOpen}
+        onOpenChange={open => {
+          if (!open) {
+            setIsSuccessAlertOpen(false) // Сброс состояния при закрытии
+          }
+        }}
         open={isSuccessAlertOpen}
         title={'Success'}
       />
