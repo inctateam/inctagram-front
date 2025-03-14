@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
 import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
 import { PATH, baseUrl } from '@/shared/constants'
+import useBoolean from '@/shared/hooks/useBoolean'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
 import RoundedCheckbox from '@/shared/ui/checkbox/rounded-checkbox'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
@@ -28,15 +29,17 @@ const AccountManagement = () => {
   const searchParams = useSearchParams()
 
   const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
-  const [isOpenPayModal, setIsOpenPayModal] = useState(false)
-  const [isCheckedPayModal, setIsCheckedPayModal] = useState(false)
+  const [isOpenPayModal, { setFalse: closePayModal, setTrue: openPayModal }] = useBoolean(false)
+  const [isCheckedPayModal, { toggle: togglePayModal }] = useBoolean(false)
   const [paymentType, setPaymentType] = useState('')
   const [selectedSubscriptionType, setSelectedSubscriptionType] = useState<SubscriptionType>(
     SubscriptionType.DAY
   )
   const [selectedAmount, setSelectedAmount] = useState<number>(0) // Инициализация по умолчанию
-  const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false)
-  const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
+  const [isSuccessAlertOpen, { setFalse: closeSuccessAlert, setTrue: openSuccessAlert }] =
+    useBoolean(false)
+  const [isErrorAlertOpen, { setFalse: closeErrorAlert, setTrue: openErrorAlert }] =
+    useBoolean(false)
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -68,9 +71,9 @@ const AccountManagement = () => {
       const success = searchParams.get('success')
 
       if (success === 'true') {
-        setIsSuccessAlertOpen(true)
+        openSuccessAlert()
       } else if (success === 'false') {
-        setIsErrorAlertOpen(true)
+        openErrorAlert()
       }
       localStorage.removeItem('isPaymentRequested') // Очищаем флаг после использования
     }
@@ -83,7 +86,7 @@ const AccountManagement = () => {
       return
     }
     setPaymentType(type)
-    setIsOpenPayModal(true)
+    openPayModal()
   }
 
   const handleConfirmPay = async () => {
@@ -101,7 +104,7 @@ const AccountManagement = () => {
     if (response.data.url) {
       router.push(response.data.url)
     }
-    setIsOpenPayModal(false)
+    closePayModal()
   }
 
   if (isLoadingPayment || isLoadingSubscriptions) {
@@ -154,11 +157,7 @@ const AccountManagement = () => {
       )}
       <AlertDialog
         checkbox={
-          <RoundedCheckbox
-            checked={isCheckedPayModal}
-            label={'Agree'}
-            onChange={() => setIsCheckedPayModal(prev => !prev)}
-          />
+          <RoundedCheckbox checked={isCheckedPayModal} label={'Agree'} onChange={togglePayModal} />
         }
         confirmButton={
           <ConfirmButton disabled={!isCheckedPayModal} onClick={handleConfirmPay}>
@@ -168,7 +167,7 @@ const AccountManagement = () => {
         description={
           'Auto-renewal will be enabled with this payment. You can disable it anytime in your profile settings.'
         }
-        onOpenChange={setIsOpenPayModal}
+        onOpenChange={open => (open ? openPayModal() : closePayModal())}
         open={isOpenPayModal}
       />
       <AlertDialog
@@ -178,11 +177,7 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Transaction failed, please try again'}
-        onOpenChange={open => {
-          if (!open) {
-            setIsErrorAlertOpen(false) // Сброс состояния при закрытии
-          }
-        }}
+        onOpenChange={open => (open ? openErrorAlert() : closeErrorAlert())}
         open={isErrorAlertOpen}
         title={'Error'}
       />
@@ -193,11 +188,7 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Payment was successful!'}
-        onOpenChange={open => {
-          if (!open) {
-            setIsSuccessAlertOpen(false) // Сброс состояния при закрытии
-          }
-        }}
+        onOpenChange={open => (open ? openSuccessAlert() : closeSuccessAlert())}
         open={isSuccessAlertOpen}
         title={'Success'}
       />
