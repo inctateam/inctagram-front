@@ -37,7 +37,6 @@ const AccountManagement = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(0) // Инициализация по умолчанию
   const [isSuccessAlertOpen, setIsSuccessAlertOpen] = useState(false)
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
-
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
@@ -61,13 +60,19 @@ const AccountManagement = () => {
     }
   }, [paymentCostSubscriptions])
 
+  // Проверяем localStorage при монтировании компонента
   useEffect(() => {
-    const success = searchParams.get('success')
+    const isPaymentRequested = localStorage.getItem('isPaymentRequested') === 'true'
 
-    if (success === 'true') {
-      setIsSuccessAlertOpen(true)
-    } else {
-      setIsErrorAlertOpen(true)
+    if (isPaymentRequested) {
+      const success = searchParams.get('success')
+
+      if (success === 'true') {
+        setIsSuccessAlertOpen(true)
+      } else if (success === 'false') {
+        setIsErrorAlertOpen(true)
+      }
+      localStorage.removeItem('isPaymentRequested') // Очищаем флаг после использования
     }
   }, [searchParams])
 
@@ -82,6 +87,7 @@ const AccountManagement = () => {
   }
 
   const handleConfirmPay = async () => {
+    localStorage.setItem('isPaymentRequested', 'true') // Устанавливаем флаг перед запросом
     const response = await createSubscription({
       amount: selectedAmount,
       baseUrl: `${baseUrl + PATH.PROFILE_SETTINGS.replace(':id', userId)}`,
@@ -172,7 +178,11 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Transaction failed, please try again'}
-        onOpenChange={setIsErrorAlertOpen}
+        onOpenChange={open => {
+          if (!open) {
+            setIsErrorAlertOpen(false) // Сброс состояния при закрытии
+          }
+        }}
         open={isErrorAlertOpen}
         title={'Error'}
       />
@@ -183,7 +193,11 @@ const AccountManagement = () => {
           </ConfirmButton>
         }
         description={'Payment was successful!'}
-        onOpenChange={setIsSuccessAlertOpen}
+        onOpenChange={open => {
+          if (!open) {
+            setIsSuccessAlertOpen(false) // Сброс состояния при закрытии
+          }
+        }}
         open={isSuccessAlertOpen}
         title={'Success'}
       />
