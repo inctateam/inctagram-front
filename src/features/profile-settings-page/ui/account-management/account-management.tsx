@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-//import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
+import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
 import { PATH, baseUrl } from '@/shared/constants'
 import { useBoolean } from '@/shared/hooks'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
@@ -137,13 +137,17 @@ const AccountManagement = ({ accountType }: Props) => {
     closePayModal()
   }
 
+  const accountTypeChange = () => {
+    setSelectedOption(Option.PERSONAL)
+  }
+
   if (isLoadingPayment || isLoadingSubscriptions) {
     return <ProgressBar />
   }
 
   return (
     <>
-      {/* <CurrentSubscription /> */}
+      <CurrentSubscription accountTypeChange={accountTypeChange} />
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
