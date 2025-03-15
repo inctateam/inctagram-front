@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 
 import { PaypalLogo, StripeLogo } from '@/assets/icons'
-import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
+//import { CurrentSubscription } from '@/features/profile-settings-page/ui/account-management/current-subscription'
 import { PATH, baseUrl } from '@/shared/constants'
 import { useBoolean } from '@/shared/hooks'
 import { AlertDialog, Card, ConfirmButton, ProgressBar, Typography } from '@/shared/ui'
@@ -22,13 +22,24 @@ enum Option {
   PERSONAL = 'Personal',
 }
 
-const AccountManagement = () => {
+type Props = {
+  accountType: 'business' | 'personal'
+}
+const AccountManagement = ({ accountType }: Props) => {
   const router = useRouter()
   const params = useParams()
   const userId: string = params.id as string
   const searchParams = useSearchParams()
 
-  const [selectedOption, setSelectedOption] = useState(Option.PERSONAL)
+  const [selectedOption, setSelectedOption] = useState<Option>(
+    accountType === 'business' ? Option.BUSINESS : Option.PERSONAL
+  )
+
+  // Синхронизация selectedOption с accountType из URL
+  useEffect(() => {
+    setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
+  }, [accountType])
+
   const [isOpenPayModal, { setFalse: closePayModal, setTrue: openPayModal }] = useBoolean(false)
   const [isCheckedPayModal, { toggle: togglePayModal }] = useBoolean(false)
   const [paymentType, setPaymentType] = useState('')
@@ -66,6 +77,12 @@ const AccountManagement = () => {
   // Проверяем localStorage при монтировании компонента
   useEffect(() => {
     const isPaymentRequested = localStorage.getItem('isPaymentRequested') === 'true'
+    const accountType = localStorage.getItem('accountType')
+
+    if (accountType) {
+      setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
+      localStorage.removeItem('accountType')
+    }
 
     if (isPaymentRequested) {
       const success = searchParams.get('success')
@@ -77,8 +94,17 @@ const AccountManagement = () => {
       }
       localStorage.removeItem('isPaymentRequested') // Очищаем флаг после использования
     }
-  }, [searchParams])
+    // Если accountType отсутствует в URL, устанавливаем значение по умолчанию
+    if (!accountType) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
 
+      newSearchParams.set(
+        'accountType',
+        selectedOption === Option.BUSINESS ? 'business' : 'personal'
+      )
+      router.replace(`?${newSearchParams.toString()}`)
+    }
+  }, [searchParams, router, selectedOption])
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
       console.error('Amount is not selected')
@@ -91,6 +117,10 @@ const AccountManagement = () => {
 
   const handleConfirmPay = async () => {
     localStorage.setItem('isPaymentRequested', 'true') // Устанавливаем флаг перед запросом
+    localStorage.setItem(
+      'accountType',
+      selectedOption === Option.BUSINESS ? 'business' : 'personal'
+    )
     const response = await createSubscription({
       amount: selectedAmount,
       baseUrl: `${baseUrl + PATH.PROFILE_SETTINGS.replace(':id', userId)}`,
@@ -113,7 +143,7 @@ const AccountManagement = () => {
 
   return (
     <>
-      <CurrentSubscription />
+      {/* <CurrentSubscription /> */}
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
@@ -121,12 +151,28 @@ const AccountManagement = () => {
         <RoundedCheckbox
           checked={selectedOption === Option.PERSONAL}
           label={Option.PERSONAL}
-          onChange={checked => checked && setSelectedOption(Option.PERSONAL)}
+          onChange={checked => {
+            if (checked) {
+              setSelectedOption(Option.PERSONAL)
+              const newSearchParams = new URLSearchParams(searchParams.toString())
+
+              newSearchParams.set('accountType', 'personal')
+              router.replace(`?${newSearchParams.toString()}`)
+            }
+          }}
         />
         <RoundedCheckbox
           checked={selectedOption === Option.BUSINESS}
           label={Option.BUSINESS}
-          onChange={checked => checked && setSelectedOption(Option.BUSINESS)}
+          onChange={checked => {
+            if (checked) {
+              setSelectedOption(Option.BUSINESS)
+              const newSearchParams = new URLSearchParams(searchParams.toString())
+
+              newSearchParams.set('accountType', 'business')
+              router.replace(`?${newSearchParams.toString()}`)
+            }
+          }}
         />
       </Card>
       {selectedOption === Option.BUSINESS && (
