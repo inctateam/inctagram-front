@@ -104,13 +104,17 @@ const AccountManagement = () => {
     setIsOpenPayModal(false)
   }
 
+  const accountTypeChange = () => {
+    setSelectedOption(Option.PERSONAL)
+  }
+
   if (isLoadingPayment || isLoadingSubscriptions) {
     return <ProgressBar />
   }
 
   return (
     <>
-      <CurrentSubscription />
+      <CurrentSubscription accountTypeChange={accountTypeChange} />
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
