@@ -114,7 +114,12 @@ const AccountManagement = () => {
 
   return (
     <>
-      <CurrentSubscription accountTypeChange={accountTypeChange} />
+      {currentSubscriptions?.hasAutoRenewal && (
+        <CurrentSubscription
+          accountTypeChange={accountTypeChange}
+          currentSubscriptions={currentSubscriptions}
+        />
+      )}
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
       </Typography>
