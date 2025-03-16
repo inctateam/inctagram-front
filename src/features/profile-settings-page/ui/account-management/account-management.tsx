@@ -74,6 +74,21 @@ const AccountManagement = ({ accountType }: Props) => {
     }
   }, [paymentCostSubscriptions])
 
+  useEffect(() => {
+    if (currentSubscriptions && currentSubscriptions.data?.length > 0) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+
+      newSearchParams.set('accountType', 'business')
+      router.replace(`?${newSearchParams.toString()}`)
+      localStorage.setItem('accountType', 'business')
+    } else {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+
+      newSearchParams.set('accountType', 'personal')
+      router.replace(`?${newSearchParams.toString()}`)
+      localStorage.setItem('accountType', 'personal')
+    }
+  }, [currentSubscriptions, router, searchParams])
   // Проверяем localStorage при монтировании компонента
   useEffect(() => {
     const isPaymentRequested = localStorage.getItem('isPaymentRequested') === 'true'
@@ -147,7 +162,7 @@ const AccountManagement = ({ accountType }: Props) => {
 
   return (
     <>
-      {currentSubscriptions?.hasAutoRenewal && (
+      {currentSubscriptions && currentSubscriptions.data?.length > 0 && (
         <CurrentSubscription
           accountTypeChange={accountTypeChange}
           currentSubscriptions={currentSubscriptions}
