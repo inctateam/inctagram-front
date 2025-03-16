@@ -1,9 +1,7 @@
 import { toast } from 'react-toastify'
 
-import {
-  useCancelAutoRenewalMutation,
-  useGetCurrentSubscriptionsQuery,
-} from '@/features/profile-settings-page/api/subscriptions.api'
+import { useCancelAutoRenewalMutation } from '@/features/profile-settings-page/api/subscriptions.api'
+import { CurrentPaymentSubscriptionResponse } from '@/features/profile-settings-page/types'
 import {
   Card,
   Checkbox,
@@ -18,12 +16,12 @@ import {
 
 type Props = {
   accountTypeChange: () => void
+  currentSubscriptions: CurrentPaymentSubscriptionResponse
 }
 
-export const CurrentSubscription = ({ accountTypeChange }: Props) => {
-  const { data: dataSubscriptions, isLoading: isLoadingSubscriptions } =
-    useGetCurrentSubscriptionsQuery()
-  const [cancelAutoRenewal] = useCancelAutoRenewalMutation()
+export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }: Props) => {
+  const [cancelAutoRenewal, { isLoading: isLoadingCancelAutoRenewal }] =
+    useCancelAutoRenewalMutation()
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -44,7 +42,7 @@ export const CurrentSubscription = ({ accountTypeChange }: Props) => {
     }
   }
 
-  if (isLoadingSubscriptions) {
+  if (isLoadingCancelAutoRenewal) {
     return <ProgressBar />
   }
 
@@ -62,16 +60,17 @@ export const CurrentSubscription = ({ accountTypeChange }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataSubscriptions && (
+            {currentSubscriptions && (
               <TableRow>
                 <TableCell>
                   {formatDate(
-                    dataSubscriptions.data[dataSubscriptions.data.length - 1].endDateOfSubscription
+                    currentSubscriptions.data[currentSubscriptions.data.length - 1]
+                      .endDateOfSubscription
                   )}
                 </TableCell>
                 <TableCell>
                   {formatDate(
-                    dataSubscriptions.data[dataSubscriptions.data.length - 1].dateOfPayment
+                    currentSubscriptions.data[currentSubscriptions.data.length - 1].dateOfPayment
                   )}
                 </TableCell>
               </TableRow>
@@ -80,7 +79,7 @@ export const CurrentSubscription = ({ accountTypeChange }: Props) => {
         </TableRoot>
       </Card>
       <Checkbox
-        defaultChecked={dataSubscriptions?.hasAutoRenewal}
+        defaultChecked={currentSubscriptions?.hasAutoRenewal}
         label={'Auto-Renewal'}
         name={'autoRenewal'}
         onCheckedChange={handleAutoRenewal}
