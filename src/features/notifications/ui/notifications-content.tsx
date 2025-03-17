@@ -1,9 +1,14 @@
 import { ScrollArea, Typography } from '@/shared/ui'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
+import { formatDistanceToNow } from 'date-fns'
 
-import { Item } from './notifications'
-export const NotificationsContent = ({ notifications }: { notifications: Item[] }) => {
-  return (
+import { Notification } from '../types'
+type Props = {
+  notifications: Notification[]
+}
+
+export const NotificationsContent = ({ notifications }: Props) => {
+  return notifications.length > 0 ? (
     <DropdownMenuPrimitive.Content
       align={'end'}
       className={
@@ -33,25 +38,29 @@ export const NotificationsContent = ({ notifications }: { notifications: Item[] 
               (i < notifications.length - 1 ? ' border-b border-dark-100' : '') +
               (i === 0 ? ' border-t border-dark-100' : '')
             }
-            key={i}
+            key={item.id}
           >
             <div>
               <div className={'flex items-center gap-1 mt-3'}>
                 <Typography className={'font-bold'} variant={'medium14'}>
                   New notification!
                 </Typography>
-                {!item.isReaded && (
+                {!item.isRead && (
                   <Typography className={'text-accent-500'} variant={'small'}>
                     New
                   </Typography>
                 )}
               </div>
-              <Typography>{item.text}</Typography>
-              <Typography className={'text-xs text-light-900 mb-3'}>{item.timestamp}</Typography>
+              <Typography>{item.message}</Typography>
+              <Typography className={'text-xs text-light-900 mb-3'}>
+                {formatDistanceToNow(item.createdAt)}
+              </Typography>
             </div>
           </DropdownMenuPrimitive.Item>
         ))}
       </ScrollArea>
     </DropdownMenuPrimitive.Content>
+  ) : (
+    'No notifications'
   )
 }

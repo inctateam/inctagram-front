@@ -1,59 +1,21 @@
 import { BellOutline } from '@/assets/icons'
 import { Badge, CustomDropdown, IconButton } from '@/shared/ui'
 
+import { useGetNotificationsQuery } from '../api/notifications.api'
 import { NotificationsContent } from './notifications-content'
 
-const items = [
-  {
-    isReaded: false,
-    text: 'Следующий платеж у вас спишется через 1 день',
-    timestamp: '1 час назад',
-    title: 'Новое уведомление!',
-  },
-  {
-    isReaded: false,
-    text: 'Ваша подписка истекает через 7 дней',
-    timestamp: '1 день назад',
-    title: 'Новое уведомление!',
-  },
-  {
-    isReaded: true,
-    text: 'Следующий платеж у вас спишется через 1 день',
-    timestamp: '1 час назад',
-    title: 'Новое уведомление!',
-  },
-  {
-    isReaded: true,
-    text: 'Ваша подписка истекает через 7 дней',
-    timestamp: '1 день назад',
-    title: 'Новое уведомление!',
-  },
-  {
-    isReaded: true,
-    text: 'Ваша подписка истекает через 7 дней',
-    timestamp: '1 день назад',
-    title: 'Новое уведомление!',
-  },
-  {
-    isReaded: true,
-    text: 'Ваша подписка истекает через 7 дней',
-    timestamp: '1 день назад',
-    title: 'Новое уведомление!',
-  },
-]
-
-export type Item = {
-  isReaded: boolean
-  text: string
-  timestamp: string
-  title: string
-}
-const notificationCount = 3
+const NOTIFICATIONS_LIMIT = 100
 
 export const Notifications = () => {
+  const { data: notifications } = useGetNotificationsQuery({
+    pageSize: NOTIFICATIONS_LIMIT,
+    sortBy: 'createdAt',
+  })
+  const notificationCount = notifications?.notReadCount || 0
+
   return (
     <CustomDropdown
-      menuContent={<NotificationsContent notifications={items} />}
+      menuContent={<NotificationsContent notifications={notifications?.items || []} />}
       triggerElement={
         <IconButton>
           <Badge badgeContent={notificationCount} className={`mr-12`}>
