@@ -44,7 +44,7 @@ const items = [
 
 const notificationCount = 3
 
-export const NotificationsDropdown = () => {
+export const Notifications = () => {
   const customMenuContent = (
     <DropdownMenuPrimitive.Content
       align={'end'}
