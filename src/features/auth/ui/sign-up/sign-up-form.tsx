@@ -28,7 +28,7 @@ import { SignUpPageProps } from './sign-up-page'
 export function SignUpForm({ translatedForm }: SignUpPageProps) {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
     reset,
     setError,
@@ -180,7 +180,11 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
           {!agreesToTerms && validatedFields.agreesToTerms && (
             <FormHelperText error>{translatedForm.errors.agreesToTerms}</FormHelperText>
           )}
-          <Button className={'w-full'} disabled={!agreesToTerms || isLoading} type={'submit'}>
+          <Button
+            className={'w-full'}
+            disabled={!agreesToTerms || isLoading || !isValid}
+            type={'submit'}
+          >
             {translatedForm.signUp}
           </Button>
           <Typography className={'text-center'} variant={'regular16'}>
