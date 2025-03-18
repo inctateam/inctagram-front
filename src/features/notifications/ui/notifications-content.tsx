@@ -1,11 +1,9 @@
-import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useGetNotificationsQuery } from '@/features/notifications/api/notifications.api'
 import { ScrollArea, Typography } from '@/shared/ui'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { formatDistanceToNow } from 'date-fns'
-
-import { Notification } from '../types'
 
 const NOTIFICATIONS_LIMIT = 5
 
@@ -29,7 +27,6 @@ export const NotificationsContent = ({ setNotReading }: Props) => {
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useRef<HTMLDivElement | null>(null)
 
-  console.log('cursor', cursor)
   const setLastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (isFetching) {
