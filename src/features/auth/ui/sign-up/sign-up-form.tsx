@@ -177,7 +177,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
             onBlur={() => handleBlur('agreesToTerms')}
             shouldValidateOnChange={shouldValidateOnChange('agreesToTerms')}
           />
-          {!agreesToTerms && (
+          {!agreesToTerms && validatedFields.agreesToTerms && (
             <FormHelperText error>{translatedForm.errors.agreesToTerms}</FormHelperText>
           )}
           <Button className={'w-full'} disabled={!agreesToTerms || isLoading} type={'submit'}>
