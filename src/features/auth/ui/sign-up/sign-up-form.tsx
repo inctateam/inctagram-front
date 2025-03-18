@@ -30,6 +30,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
     setError,
     watch,
   } = useForm<SignUpFields>({
@@ -77,6 +78,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
       .unwrap()
       .then(() => {
         setModalOpen(true)
+        reset()
       })
       .catch(error => handleRequestError(error, setError))
   })
