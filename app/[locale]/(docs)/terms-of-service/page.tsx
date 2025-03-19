@@ -22,12 +22,15 @@ const TermsOfService = () => {
           carefully, as they govern your use of our services and outline your rights and
           responsibilities.
           <br />
+          <br />
           <strong>1. Acceptance of Terms</strong>
+          <br />
           By creating an account or using our services, you acknowledge that you have read,
           understood, and agree to be bound by these Terms of Service, our Privacy Policy, and any
           other relevant guidelines we may provide. It is important that you fully understand these
           terms, as they establish a legal agreement between you and our company regarding your use
           of our platform, and your continued use signifies your acceptance of these conditions.
+          <br />
           <br />
           <strong>2. User Accounts</strong>
           <br />
@@ -38,6 +41,7 @@ const TermsOfService = () => {
           account or any other breach of security, you must notify us immediately so that we can
           take appropriate action to protect your account.
           <br />
+          <br />
           <strong>3. Content Guidelines</strong>
           <br />
           You are solely responsible for the content you post, share, or transmit on our platform.
@@ -46,6 +50,7 @@ const TermsOfService = () => {
           defamatory, obscene, or otherwise objectionable. We reserve the right to review and remove
           any content that we believe violates these guidelines or is harmful to our community, and
           repeated violations may lead to account suspension or termination.
+          <br />
           <br />
           <strong>4. Intellectual Property</strong>
           <br />
@@ -56,6 +61,7 @@ const TermsOfService = () => {
           works and resources we provide are respected and safeguarded against unauthorized use,
           which could undermine our business and community.
           <br />
+          <br />
           <strong>5. Third-Party Links</strong>
           <br />
           Our platform may contain links to third-party websites or services that are not owned or
@@ -64,6 +70,7 @@ const TermsOfService = () => {
           terms and conditions of any third-party site you visit, as we cannot be held liable for
           any issues that may arise from your interactions with these external sites, including any
           data shared or transactions conducted.
+          <br />
           <br />
           <strong>6. Limitation of Liability</strong>
           <br />
@@ -75,6 +82,7 @@ const TermsOfService = () => {
           which means that our financial responsibility is limited to the fees directly associated
           with your use of our services.
           <br />
+          <br />
           <strong>7. Termination</strong>
           <br />
           We reserve the right to suspend or terminate your account and access to our services at
@@ -83,6 +91,7 @@ const TermsOfService = () => {
           actions are detrimental to the integrity of our community or violate our terms in any way,
           we will take action to protect our users and our platform’s reputation as necessary.
           <br />
+          <br />
           <strong>8. Changes to Terms</strong>
           <br />
           We may update these Terms of Service from time to time to reflect changes in our practices
@@ -90,6 +99,7 @@ const TermsOfService = () => {
           by posting the new terms on our platform and indicating the effective date. Your continued
           use of our services after any changes constitutes your acceptance of the new terms, so it
           is important that you review them periodically to stay informed about our policies.
+          <br />
           <br />
           <strong>9. Governing Law</strong>
           <br />
