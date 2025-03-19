@@ -133,7 +133,9 @@ export const Sidebar = () => {
       <AlertDialog
         cancelButton={<CancelButton onClick={() => setIsLogoutDialogOpen(false)}>No</CancelButton>}
         confirmButton={<ConfirmButton onClick={handleLogout}>Yes</ConfirmButton>}
-        description={'Are you really want to logout your account ' + `${getMeData?.email}` + '?'}
+        description={
+          'Are you really want to log out of your account ' + `${getMeData?.email}` + '?'
+        }
         onOpenChange={setIsLogoutDialogOpen}
         open={isLogoutDialogOpen}
         title={'Log Out'}
