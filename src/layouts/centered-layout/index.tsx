@@ -10,7 +10,7 @@ type Props = {
 
 export const CenteredLayout = ({ auth = false, children }: Props) => {
   return (
-    <div className={'h-screen overflow-hidden'}>
+    <div>
       <Header auth={auth} />
       <LayoutContainer className={cn('sm:pt-6 pt-4')}>
         <main>{children}</main>
