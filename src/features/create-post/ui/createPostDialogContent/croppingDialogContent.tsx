@@ -40,7 +40,7 @@ export const CroppingDialogContent = ({
   const t = useTranslations('CreatePost')
 
   const dispatch = useAppDispatch()
-  const imagesState = useAppSelector(createPostSliceSelectors.selectImages)
+  const imagesState = useAppSelector(createPostSliceSelectors.selectFilteredImages)
 
   const [currentImage, setCurrentImage] = useState<number>(0)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
