@@ -18,41 +18,62 @@ const PrivacyPolicy = () => {
       <div className={'flex justify-center items-center'}>
         <Typography className={'w-[80%] text-center'} variant={'regular14'}>
           <strong>Introduction</strong>
+          <br />
           At [Social Network Name], we are committed to protecting your privacy. This Privacy Policy
           outlines how we collect, use, and share your personal information when you use our
           services. By accessing our platform, you agree to the terms outlined in this policy.
           <br />
+          <br />
           <strong>Information We Collect</strong>
+          <br />
           We collect various types of information to provide and improve our services. This
           includes: Personal Information: Information you provide directly, such as your name, email
           address, and profile picture. Usage Data: Information about how you use our platform,
           including your interactions with other users and content. Cookies and Tracking
-          Technologies: We use cookies to enhance your experience and analyze site traffic. <br />
+          Technologies: We use cookies to enhance your experience and analyze site traffic.
+          <br />
+          <br />
           <strong>How We Use Your Information</strong>
+          <br />
           We use the information we collect for various purposes, including: To create and manage
           your account. To personalize your experience and content. To communicate with you about
-          updates, promotions, and news. To analyze usage trends and improve our services. <br />
+          updates, promotions, and news. To analyze usage trends and improve our services.
+          <br />
+          <br />
           <strong>Sharing Your Information</strong>
+          <br />
           We may share your information in the following circumstances: With Other Users: Your
           profile information and posts may be visible to other users on the platform. With Service
           Providers: We may employ third-party companies to facilitate our services, such as
           analytics and marketing. For Legal Reasons: We may disclose your information if required
-          by law or to protect our rights. <br />
+          by law or to protect our rights.
+          <br />
+          <br />
           <strong>Your Rights</strong>
+          <br />
           You have certain rights regarding your personal information: Access: You can request
           access to the personal information we hold about you. Correction: You can request to
           correct any inaccurate or incomplete information. Deletion: You can request the deletion
-          of your personal information, subject to certain exceptions. <br />
+          of your personal information, subject to certain exceptions.
+          <br />
+          <br />
           <strong>Data Security</strong>
+          <br />
           We take the security of your information seriously and implement appropriate technical and
           organizational measures to protect it. However, no method of transmission over the
-          internet is completely secure, so we cannot guarantee its absolute security. <br />
+          internet is completely secure, so we cannot guarantee its absolute security.
+          <br />
+          <br />
           <strong>Changes to This Policy</strong>
+          <br />
           We may update our Privacy Policy from time to time. We will notify you of any changes by
           posting the new policy on this page. Your continued use of the service after any
           modifications to the Privacy Policy will constitute your acknowledgment of the
-          modifications and your consent to abide by and be bound by the modified policy. <br />
+          modifications and your consent to abide by and be bound by the modified policy.
+          <br />
+          <br />
           <strong>Contact Us</strong>
+          <br />
           If you have any questions or concerns about this Privacy Policy, please contact us at:
           [Contact Information] [Social Network Name] [Address] [Email Address] <br />
           This Privacy Policy is effective as of [Effective Date]. Personal data (usually referred

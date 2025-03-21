@@ -22,6 +22,7 @@ export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps
   const t = useTranslations('CreatePost')
 
   const dispatch = useAppDispatch()
+  const filteredImages = useAppSelector(createPostSliceSelectors.selectFilteredImages)
   const images = useAppSelector(createPostSliceSelectors.selectImages)
 
   const [currentImage, setCurrentImage] = useState<number>(0)
@@ -29,7 +30,7 @@ export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps
   const setFilterHandler = async (filter: string) => {
     const link = await getFilteredImage(images[currentImage], filter)
 
-    dispatch(createPostSliceActions.setImage({ image: link, index: currentImage }))
+    dispatch(createPostSliceActions.setFilteredImage({ image: link, index: currentImage }))
   }
 
   return (
@@ -41,7 +42,10 @@ export const FilteringDialogContent = ({ setStage }: FilteringDialogContentProps
       />
       <DialogBody className={'flex flex-grow'}>
         <div className={'w-1/2 h-full flex'}>
-          <ImageContent itemImages={images} selectedIndexCallBack={setCurrentImage}></ImageContent>
+          <ImageContent
+            itemImages={filteredImages}
+            selectedIndexCallBack={setCurrentImage}
+          ></ImageContent>
         </div>
         <div className={'w-1/2 h-full flex flex-wrap gap-6 justify-center py-6'}>
           {FILTERS.map((filter, index) => (
