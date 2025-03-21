@@ -4,7 +4,7 @@ import { cn } from '@/shared/utils'
 import { Slot } from '@radix-ui/react-slot'
 
 type BadgeProps = {
-  badgeContent: number
+  badgeContent?: number
   children: ReactNode
   className?: string
 }
@@ -29,7 +29,7 @@ const Badge = (props: BadgeProps) => {
   return (
     <div className={badgeStyles.boxWrap}>
       <Component className={badgeStyles.icon}>{children}</Component>
-      {badgeContent > 0 && (
+      {badgeContent && badgeContent > 0 && (
         <div className={cn(badgeStyles.indicator, className)}>{badgeContent}</div>
       )}
     </div>

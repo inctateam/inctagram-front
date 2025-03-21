@@ -1,14 +1,63 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useGetNotificationsQuery } from '@/features/notifications/api/notifications.api'
 import { ScrollArea, Typography } from '@/shared/ui'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { formatDistanceToNow } from 'date-fns'
 
-import { Notification } from '../types'
-type Props = {
-  notifications: Notification[]
-}
+const NOTIFICATIONS_LIMIT = 5
 
-export const NotificationsContent = ({ notifications }: Props) => {
-  return notifications.length > 0 ? (
+type Props = {
+  setNotReading: (count: number) => void
+}
+export const NotificationsContent = ({ setNotReading }: Props) => {
+  const [cursor, setCursor] = useState<number | undefined>(undefined)
+  const { data: notifications, isFetching } = useGetNotificationsQuery({
+    cursor,
+    pageSize: NOTIFICATIONS_LIMIT,
+    sortBy: 'createdAt',
+  })
+
+  useEffect(() => {
+    if (notifications?.notReadCount !== undefined) {
+      setNotReading(notifications.notReadCount)
+    }
+  }, [notifications?.notReadCount, setNotReading])
+
+  const observer = useRef<IntersectionObserver | null>(null)
+  const lastItemRef = useRef<HTMLDivElement | null>(null)
+
+  const setLastItemRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetching) {
+        return
+      }
+
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting) {
+            const lastItemId = notifications?.items[notifications.items.length - 1]?.id
+
+            if (lastItemId) {
+              setCursor(lastItemId)
+            }
+          }
+        },
+        { threshold: 0.2 }
+      )
+
+      if (node) {
+        observer.current.observe(node)
+      }
+    },
+    [notifications, isFetching]
+  )
+
+  return (
     <DropdownMenuPrimitive.Content
       align={'end'}
       className={
@@ -30,15 +79,16 @@ export const NotificationsContent = ({ notifications }: Props) => {
       <Typography className={'mb-4'} variant={'h3'}>
         Notifications
       </Typography>
-      <ScrollArea className={'h-[350px] w-[330px]'}>
-        {notifications.map((item, i) => (
+      <ScrollArea className={'h-[350px] w-[330px]'} viewportRef={lastItemRef}>
+        {notifications?.items.map((item, i) => (
           <DropdownMenuPrimitive.Item
             className={
               'relative flex items-center text-sm pr-1' +
-              (i < notifications.length - 1 ? ' border-b border-dark-100' : '') +
+              (i < notifications?.items.length - 1 ? ' border-b border-dark-100' : '') +
               (i === 0 ? ' border-t border-dark-100' : '')
             }
-            key={item.id}
+            key={i}
+            ref={i === notifications?.items.length - 1 ? setLastItemRef : null}
           >
             <div>
               <div className={'flex items-center gap-1 mt-3'}>
@@ -58,9 +108,8 @@ export const NotificationsContent = ({ notifications }: Props) => {
             </div>
           </DropdownMenuPrimitive.Item>
         ))}
+        {isFetching && <Typography>Загружаем...</Typography>}
       </ScrollArea>
     </DropdownMenuPrimitive.Content>
-  ) : (
-    'No notifications'
   )
 }
