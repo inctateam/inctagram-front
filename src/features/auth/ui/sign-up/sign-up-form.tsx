@@ -28,8 +28,9 @@ import { SignUpPageProps } from './sign-up-page'
 export function SignUpForm({ translatedForm }: SignUpPageProps) {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
+    reset,
     setError,
     watch,
   } = useForm<SignUpFields>({
@@ -77,6 +78,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
       .unwrap()
       .then(() => {
         setModalOpen(true)
+        reset()
       })
       .catch(error => handleRequestError(error, setError))
   })
@@ -175,10 +177,14 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
             onBlur={() => handleBlur('agreesToTerms')}
             shouldValidateOnChange={shouldValidateOnChange('agreesToTerms')}
           />
-          {!agreesToTerms && (
+          {!agreesToTerms && validatedFields.agreesToTerms && (
             <FormHelperText error>{translatedForm.errors.agreesToTerms}</FormHelperText>
           )}
-          <Button className={'w-full'} disabled={!agreesToTerms || isLoading} type={'submit'}>
+          <Button
+            className={'w-full'}
+            disabled={!agreesToTerms || isLoading || !isValid}
+            type={'submit'}
+          >
             {translatedForm.signUp}
           </Button>
           <Typography className={'text-center'} variant={'regular16'}>

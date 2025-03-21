@@ -1,7 +1,7 @@
 export const FILTERS = [
   {
-    name: 'Amaro',
-    value: 'contrast(0.9) brightness(1.1) hue-rotate(-10deg) saturate(1.5)',
+    name: 'None',
+    value: '',
   },
   {
     name: 'Brannan',

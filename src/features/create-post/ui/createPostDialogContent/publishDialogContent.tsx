@@ -45,7 +45,7 @@ export const PublishDialogContent = ({ onPostPublished, setStage }: CroppingDial
   const [createPost, { isLoading: isLoadingCreatePost }] = useCreatePostMutation()
   const [uploadPhoto, { isLoading: isLoadingUploadPhoto }] = useUploadImageForPostMutation()
 
-  const images = useAppSelector(createPostSliceSelectors.selectImages)
+  const images = useAppSelector(createPostSliceSelectors.selectFilteredImages)
 
   const { data: authData } = useMeQuery()
 

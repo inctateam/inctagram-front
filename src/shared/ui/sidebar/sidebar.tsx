@@ -68,14 +68,14 @@ export const Sidebar = () => {
       <div className={'flex flex-col mt-[72px] space-y-6 '}>
         <SidebarItem
           href={'/'}
-          icon={<HomeOutline />}
+          icon={<HomeOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.HOME}
           item={t('home')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.HOME)}
         />
         <SidebarItem
           href={'/'}
-          icon={<PlusSquareOutline />}
+          icon={<PlusSquareOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.CREATE}
           item={t('create')}
           onClick={() => setIsCreatingPost(true)}
@@ -83,7 +83,7 @@ export const Sidebar = () => {
 
         <SidebarItem
           href={PATH.PROFILE.replace(':id', String(getMeData?.userId))}
-          icon={<Person />}
+          icon={<Person className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.MY_PROFILE}
           item={t('myProfile')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.MY_PROFILE)}
@@ -91,7 +91,7 @@ export const Sidebar = () => {
 
         <SidebarItem
           href={'/'}
-          icon={<MessageCircle />}
+          icon={<MessageCircle className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.MESSENGER}
           item={t('messenger')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.MESSENGER)}
@@ -99,7 +99,7 @@ export const Sidebar = () => {
 
         <SidebarItem
           href={'/'}
-          icon={<SearchOutline />}
+          icon={<SearchOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.SEARCH}
           item={t('search')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.SEARCH)}
@@ -108,14 +108,14 @@ export const Sidebar = () => {
       <div className={'flex flex-col mt-16 space-y-6'}>
         <SidebarItem
           href={'/'}
-          icon={<TrendingUpOutline />}
+          icon={<TrendingUpOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.STATISTICS}
           item={t('statistics')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.STATISTICS)}
         />
         <SidebarItem
           href={'/'}
-          icon={<BookmarkOutline />}
+          icon={<BookmarkOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.FAVORITES}
           item={t('favorites')}
           onClick={() => onItemClick(SIDEBAR_ITEMS.FAVORITES)}
@@ -124,7 +124,7 @@ export const Sidebar = () => {
       <div className={'mt-44'}>
         <SidebarItem
           href={'/'}
-          icon={<LogOutOutline />}
+          icon={<LogOutOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.LOGOUT}
           item={t('logout')}
           onClick={() => setIsLogoutDialogOpen(true)}
@@ -133,7 +133,9 @@ export const Sidebar = () => {
       <AlertDialog
         cancelButton={<CancelButton onClick={() => setIsLogoutDialogOpen(false)}>No</CancelButton>}
         confirmButton={<ConfirmButton onClick={handleLogout}>Yes</ConfirmButton>}
-        description={'Are you really want to logout your account ' + `${getMeData?.email}` + '?'}
+        description={
+          'Are you really want to log out of your account ' + `${getMeData?.email}` + '?'
+        }
         onOpenChange={setIsLogoutDialogOpen}
         open={isLogoutDialogOpen}
         title={'Log Out'}
