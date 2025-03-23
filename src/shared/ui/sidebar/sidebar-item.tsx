@@ -1,9 +1,8 @@
 import { ReactNode } from 'react'
 
 import { PATH } from '@/shared/constants'
+import { TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
-
-import { TextLink } from '../text-link'
 
 interface SidebarItemProps {
   href: (typeof PATH)[keyof typeof PATH] | string //string убрать потом, когда все пути сделаются константами
@@ -34,7 +33,7 @@ export const SidebarItem = ({
       onClick={onClick}
       underline={false}
     >
-      {icon && <div className={'w-6 h-6'}>{icon}</div>}
+      {icon && <div className={'flex items-center justify-center'}>{icon}</div>}
       <span>{item}</span>
     </TextLink>
   )

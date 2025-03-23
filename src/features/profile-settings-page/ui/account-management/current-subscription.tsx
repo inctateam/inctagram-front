@@ -1,14 +1,10 @@
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
-import {
-  useCancelAutoRenewalMutation,
-  useGetCurrentSubscriptionsQuery,
-} from '@/features/profile-settings-page/api/subscriptions.api'
+import { useCancelAutoRenewalMutation } from '@/features/profile-settings-page/api/subscriptions.api'
+import { CurrentPaymentSubscriptionResponse } from '@/features/profile-settings-page/types'
 import {
   Card,
-  ControlledCheckbox,
+  Checkbox,
   ProgressBar,
   TableBody,
   TableCell,
@@ -18,17 +14,14 @@ import {
   Typography,
 } from '@/shared/ui'
 
-// type Props = {}
+type Props = {
+  accountTypeChange: () => void
+  currentSubscriptions: CurrentPaymentSubscriptionResponse
+}
 
-export const CurrentSubscription = () => {
-  const { data: dataSubscriptions, isLoading: isLoadingSubscriptions } =
-    useGetCurrentSubscriptionsQuery()
-  const [cancelAutoRenewal] = useCancelAutoRenewalMutation()
-  const { control, handleSubmit, setValue } = useForm({
-    defaultValues: {
-      autoRenewal: false, // Изначально autoRenewal в false
-    },
-  })
+export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }: Props) => {
+  const [cancelAutoRenewal, { isLoading: isLoadingCancelAutoRenewal }] =
+    useCancelAutoRenewalMutation()
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -36,26 +29,20 @@ export const CurrentSubscription = () => {
     return date.toLocaleDateString('ru-RU') // Для формата 12.12.2022
   }
 
-  useEffect(() => {
-    if (dataSubscriptions) {
-      setValue('autoRenewal', dataSubscriptions.hasAutoRenewal) // Устанавливаем значение при получении данных
+  const handleAutoRenewal = async (value: boolean) => {
+    if (value) {
+      return
     }
-  }, [dataSubscriptions, setValue])
-
-  const handleAutoRenewal = async () => {
-    console.log('AutoRenewal')
     try {
-      const response = await cancelAutoRenewal()
-
-      if (response) {
-        toast.success('Auto renewal has been cancelled')
-      }
+      await cancelAutoRenewal().unwrap()
+      toast.success('Auto renewal has been cancelled')
+      accountTypeChange()
     } catch {
       toast.error('Failed to cancel auto renewal')
     }
   }
 
-  if (isLoadingSubscriptions) {
+  if (isLoadingCancelAutoRenewal) {
     return <ProgressBar />
   }
 
@@ -73,20 +60,29 @@ export const CurrentSubscription = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataSubscriptions?.data.map((data, index) => (
-              <TableRow key={index}>
-                <TableCell>{formatDate(data.endDateOfSubscription)}</TableCell>
-                <TableCell>{formatDate(data.dateOfPayment)}</TableCell>
+            {currentSubscriptions && (
+              <TableRow>
+                <TableCell>
+                  {formatDate(
+                    currentSubscriptions.data[currentSubscriptions.data.length - 1]
+                      .endDateOfSubscription
+                  )}
+                </TableCell>
+                <TableCell>
+                  {formatDate(
+                    currentSubscriptions.data[currentSubscriptions.data.length - 1].dateOfPayment
+                  )}
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </TableRoot>
       </Card>
-      <ControlledCheckbox
-        control={control}
+      <Checkbox
+        defaultChecked={currentSubscriptions?.hasAutoRenewal}
         label={'Auto-Renewal'}
         name={'autoRenewal'}
-        onSubmit={handleSubmit(handleAutoRenewal)}
+        onCheckedChange={handleAutoRenewal}
       />
     </>
   )

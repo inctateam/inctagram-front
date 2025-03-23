@@ -69,7 +69,7 @@ export const Post = ({ item }: Props) => {
       : `${item.description.substring(0, MAX_LETTERS)}...`
 
   return (
-    <li className={'flex flex-col max-h-[390px]'}>
+    <li className={'flex flex-col max-h-[390px] mb-3'}>
       <div className={'min-h-[120px] h-[240px] cursor-pointer'}>
         <ImageContent
           itemImages={itemImages.map(image => image.url)}

@@ -9,31 +9,51 @@ import { ProgressBar, Tabs, TabsContent, TabsList, TabsTrigger, Typography } fro
 import { redirect, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
+import { useGetCurrentSubscriptionsQuery } from '../api/subscriptions.api'
 import { AccountManagement } from './account-management'
 
 export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')
   const { data: profileInfo, isError, isFetching, isLoading } = useGetProfileQuery()
   const router = useRouter()
+  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery()
   const searchParams = useSearchParams()
   const currentSection = searchParams.get('section') || 'General-information'
+  // Получаем accountType из localStorage или из URL
+  const accountTypeFromStorage = localStorage.getItem('accountType')
+  const accountTypeFromURL = searchParams.get('accountType')
+  const accountTypeFromSubscriptions =
+    (currentSubscriptions?.data?.length ?? 0) > 0 ? 'business' : 'personal'
+  const accountType =
+    accountTypeFromSubscriptions || accountTypeFromStorage || accountTypeFromURL || 'personal'
+
+  function isAccountType(accountType: string): accountType is 'business' | 'personal' {
+    return accountType === 'business' || accountType === 'personal'
+  }
 
   useEffect(() => {
     const success = searchParams.get('success')
+    const section = searchParams.get('section')
 
-    if (success && !searchParams.get('section')) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
+    const newSearchParams = new URLSearchParams(searchParams.toString())
 
+    // Если есть success и нет section, переходим на Account-management
+    if (success && !section) {
       newSearchParams.set('section', 'Account-management')
       router.replace(`?${newSearchParams.toString()}`)
-    } else if (!searchParams.get('section')) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-
+    }
+    // Если section отсутствует, устанавливаем General-information
+    else if (!section) {
       newSearchParams.set('section', 'General-information')
       router.replace(`?${newSearchParams.toString()}`)
     }
+    // Если section не Account-management, удаляем success и accountType
+    else if (section !== 'Account-management') {
+      newSearchParams.delete('success')
+      newSearchParams.delete('accountType')
+      router.replace(`?${newSearchParams.toString()}`)
+    }
   }, [router, searchParams])
-
   if (isLoading || isFetching) {
     return <ProgressBar />
   }
@@ -45,9 +65,10 @@ export const ProfileSettings = () => {
 
     newSearchParams.set('section', value)
 
-    // Удалить 'success' параметр, если выбрана другая вкладка, кроме 'Account-management'
+    // Удалить 'success' и 'accountType' параметр, если выбрана другая вкладка, кроме 'Account-management'
     if (value !== 'Account-management') {
       newSearchParams.delete('success')
+      newSearchParams.delete('accountType')
     }
 
     router.replace(`?${newSearchParams.toString()}`)
@@ -78,7 +99,7 @@ export const ProfileSettings = () => {
       </TabsContent>
 
       <TabsContent value={'Account-management'}>
-        <AccountManagement />
+        {isAccountType(accountType) ? <AccountManagement accountType={accountType} /> : null}
       </TabsContent>
 
       <TabsContent value={'My-payments'}>

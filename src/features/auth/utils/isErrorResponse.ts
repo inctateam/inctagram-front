@@ -1,13 +1,13 @@
-type FieldErrorResponse = {
+type ErrorResponse = {
   data: {
     error: string
-    messages: { field: string; message: string }[]
+    messages: string
     statusCode: number
   }
   status: number
 }
 
-export const isFieldErrorResponse = (error: unknown): error is FieldErrorResponse => {
+export const isErrorResponse = (error: unknown): error is ErrorResponse => {
   return (
     typeof error === 'object' &&
     error !== null &&
@@ -15,6 +15,6 @@ export const isFieldErrorResponse = (error: unknown): error is FieldErrorRespons
     typeof error.data === 'object' &&
     error.data !== null &&
     'messages' in error.data &&
-    typeof error.data.messages !== 'string'
+    typeof error.data.messages === 'string'
   )
 }

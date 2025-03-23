@@ -1,13 +1,12 @@
 'use client'
 
 import { useMeQuery } from '@/features/auth/api'
+import { Notifications } from '@/features/notifications/ui/notifications'
 import { LayoutContainer } from '@/layouts'
 import { PATH } from '@/shared/constants'
 import { Button, LocaleSwitcher, ProgressBar, TextLink } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { useTranslations } from 'next-intl'
-
-import { NotificationsDropdown } from './notifications-dropdown'
 
 type Props = {
   auth?: boolean
@@ -42,7 +41,7 @@ export const Header = ({ auth }: Props) => {
         <div className={'flex items-center justify-center gap-7'}>
           {data && (
             <div className={'mr-5'}>
-              <NotificationsDropdown />
+              <Notifications />
             </div>
           )}
           <LocaleSwitcher />

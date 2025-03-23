@@ -1,6 +1,8 @@
 import { ErrorOption } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
+import { isErrorResponse } from '@/features/auth/utils/isErrorResponse'
+
 import { isFetchError } from './isFetchError'
 import { isFieldErrorResponse } from './isFieldErrorResponse'
 
@@ -23,7 +25,11 @@ export const handleRequestError = <T>(
         }
       })
     } else {
-      toast.error('Unknown error')
+      if (isErrorResponse(error)) {
+        toast.error(error.data.messages)
+      } else {
+        toast.error('Unknown error')
+      }
     }
   }
 }
