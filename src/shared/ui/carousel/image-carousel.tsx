@@ -12,9 +12,15 @@ type ImageCarouselProps = {
   images: string[]
   onClick?: () => void
   selectedIndexCallBack?: (index: number) => void
+  size?: 'big' | 'small'
 }
 
-export function ImageCarousel({ images, onClick, selectedIndexCallBack }: ImageCarouselProps) {
+export function ImageCarousel({
+  images,
+  onClick,
+  selectedIndexCallBack,
+  size = 'big',
+}: ImageCarouselProps) {
   return (
     <Carousel opts={{ loop: true }} selectedIndexCallBack={selectedIndexCallBack}>
       <CarouselContent>
@@ -32,8 +38,8 @@ export function ImageCarousel({ images, onClick, selectedIndexCallBack }: ImageC
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      {size === 'big' && <CarouselPrevious />}
+      {size === 'big' && <CarouselNext />}
       <CarouselDots />
     </Carousel>
   )
