@@ -56,7 +56,6 @@
         "requiredEmail": "Email is required"
       },
       "toastMessages": {
-        "success": "Success",
         "expiredCode": "Recovery code is invalid or has expired",
         "recaptchaError": "Recaptcha error",
         "unknownError": "Unknown Error"

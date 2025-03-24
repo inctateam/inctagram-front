@@ -7,7 +7,7 @@ import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { Button, Card, ControlledPasswordTextField, ProgressBar, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
 /*global IntlMessages*/
@@ -39,6 +39,8 @@ type Props = {
 }
 
 export const PasswordResetForm = ({ translatedForm }: Props) => {
+  const router = useRouter()
+
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
 
@@ -60,7 +62,8 @@ export const PasswordResetForm = ({ translatedForm }: Props) => {
         })
           .unwrap()
           .then(() => {
-            toast(translatedForm.errors.newPasswordSuccess)
+            toast.success(translatedForm.errors.newPasswordSuccess)
+            router.replace('sign-in')
           })
       } catch (error: unknown) {
         handleRequestError(error, setError, ['code'])

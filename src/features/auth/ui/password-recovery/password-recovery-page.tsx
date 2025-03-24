@@ -58,7 +58,6 @@ export const PasswordRecoveryPage = () => {
 
       if (resData === null) {
         setModalOpen(true)
-        toast.success(tToast('success'))
       }
     } catch (error: unknown) {
       handleRequestError(error, setError, ['baseUrl', 'recaptcha'])
