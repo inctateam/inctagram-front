@@ -39,7 +39,6 @@ export const authApi = instagramApi.injectEndpoints({
       }),
     }),
     login: builder.mutation<LoginResponse, LoginArgs>({
-      invalidatesTags: ['Me'],
       query: args => ({ body: args, method: 'POST', url: 'v1/auth/login' }),
     }),
     logout: builder.mutation<void, void>({
