@@ -6,9 +6,15 @@ type Props = {
   itemImages: string[]
   onClick?: () => void
   selectedIndexCallBack?: (index: number) => void
+  size?: 'big' | 'small'
 }
 
-export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Props) => {
+export const ImageContent = ({
+  itemImages,
+  onClick,
+  selectedIndexCallBack,
+  size = 'big',
+}: Props) => {
   if (itemImages.length === 0) {
     return (
       <Image
@@ -39,6 +45,7 @@ export const ImageContent = ({ itemImages, onClick, selectedIndexCallBack }: Pro
         images={itemImages}
         onClick={onClick}
         selectedIndexCallBack={selectedIndexCallBack} // Передаем функцию обновления selectedIndex
+        size={size}
       />
     )
   }

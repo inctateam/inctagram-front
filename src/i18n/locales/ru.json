@@ -56,7 +56,6 @@
         "requiredEmail": "Email обязателен"
       },
       "toastMessages": {
-        "success": "Завершено успешно",
         "expiredCode": "Код восстановления недействителен или истёк",
         "recaptchaError": "Ошибка Recaptcha",
         "unknownError": "Неизвестная ошибка"

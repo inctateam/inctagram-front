@@ -75,6 +75,7 @@ export const Post = ({ item }: Props) => {
           itemImages={itemImages.map(image => image.url)}
           onClick={handleOpenPostModal}
           selectedIndexCallBack={setSelectedIndex}
+          size={'small'}
         />
       </div>
 
