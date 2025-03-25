@@ -172,6 +172,9 @@ const AccountManagement = () => {
       <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6 mb-11'}>
         <RoundedCheckbox
           checked={selectedOption === Option.PERSONAL}
+          disabled={
+            Array.isArray(currentSubscriptions?.data) && currentSubscriptions.data.length > 0
+          }
           label={Option.PERSONAL}
           onChange={checked => {
             if (checked) {
