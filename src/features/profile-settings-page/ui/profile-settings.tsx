@@ -20,7 +20,8 @@ export const ProfileSettings = () => {
   const searchParams = useSearchParams()
   const currentSection = searchParams.get('section') || 'General-information'
   // Получаем accountType из localStorage или из URL
-  const accountTypeFromStorage = localStorage.getItem('accountType')
+  const accountTypeFromStorage =
+    (typeof window !== 'undefined' && localStorage.getItem('accountType')) || ''
   const accountTypeFromURL = searchParams.get('accountType')
   const accountTypeFromSubscriptions =
     (currentSubscriptions?.data?.length ?? 0) > 0 ? 'business' : 'personal'

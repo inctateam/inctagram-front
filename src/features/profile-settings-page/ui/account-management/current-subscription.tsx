@@ -70,7 +70,16 @@ export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }:
                 </TableCell>
                 <TableCell>
                   {formatDate(
-                    currentSubscriptions.data[currentSubscriptions.data.length - 1].dateOfPayment
+                    (date => {
+                      const newDate = new Date(date)
+
+                      newDate.setDate(newDate.getDate() + 1)
+
+                      return newDate.toISOString()
+                    })(
+                      currentSubscriptions.data[currentSubscriptions.data.length - 1]
+                        .endDateOfSubscription
+                    )
                   )}
                 </TableCell>
               </TableRow>
