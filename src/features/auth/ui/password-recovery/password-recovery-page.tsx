@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { UseFormSetError } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
 import { PasswordRecoveryArgs } from '@/features/auth/types'
