@@ -6,7 +6,7 @@ import { PATH } from '@/shared/constants/app-paths'
 import { ProgressBar } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-const CallbackPage = () => {
+const CallbackGithubPage = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -24,10 +24,10 @@ const CallbackPage = () => {
   return <div></div>
 }
 
-const CallbackPageWithSuspense = () => (
+const CallbackGithubPageWithSuspense = () => (
   <Suspense fallback={<ProgressBar />}>
-    <CallbackPage />
+    <CallbackGithubPage />
   </Suspense>
 )
 
-export default CallbackPageWithSuspense
+export default CallbackGithubPageWithSuspense

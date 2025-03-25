@@ -1,10 +1,11 @@
 'use client'
 import { useForm } from 'react-hook-form'
 
-import { useLoginMutation, useMeQuery } from '@/features/auth/api'
+import { useLoginMutation } from '@/features/auth/api'
 import { PropsTranslations } from '@/features/auth/ui'
 import { OAuth2 } from '@/features/auth/ui/o-auth-2'
 import { LoginFields, createLoginSchema } from '@/features/auth/ui/utils/login-shema'
+import { decodeToken } from '@/features/auth/utils/decodeToken'
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PATH } from '@/shared/constants'
 import {
@@ -24,7 +25,6 @@ type Props = {} & PropsTranslations
 
 export function SignInForm({ messagesErrors, translAuth }: Props) {
   const [login, { isLoading: isLoadingLogin }] = useLoginMutation()
-  const { isLoading: isLoadingMe, refetch: refetchMe } = useMeQuery()
   const router = useRouter()
 
   const loginSchema = createLoginSchema(messagesErrors)
@@ -37,29 +37,20 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
   } = useForm<LoginFields>({
     resolver: zodResolver(loginSchema),
   })
-
   const onSubmit = async (data: LoginFields) => {
     try {
-      const response = await login(data).unwrap()
+      const res = await login(data).unwrap()
 
-      if (response) {
-        localStorage.setItem('access_token', response.accessToken)
-        // Пауза перед перезапросом данных о пользователе, чтобы токен был принят
-        setTimeout(async () => {
-          // Перезапрашиваем данные пользователя вручную
-          const refetchMeData = await refetchMe()
-
-          if (refetchMeData.data) {
-            router.push(`/profile/${refetchMeData.data.userId}`)
-          }
-        }, 500) // Пауза 500 мс для гарантии, что токен обновился
+      if (res) {
+        localStorage.setItem('access_token', res.accessToken)
+        router.push(`/profile/${decodeToken(res.accessToken)?.userId}`)
       }
     } catch (error: unknown) {
       handleRequestError(error, setError)
     }
   }
 
-  if (isLoadingLogin || isLoadingMe) {
+  if (isLoadingLogin) {
     return <ProgressBar />
   }
 
@@ -68,10 +59,7 @@ export function SignInForm({ messagesErrors, translAuth }: Props) {
       <Typography className={'text-center'} variant={'h1'}>
         {translAuth.signIn}
       </Typography>
-
-      {/* Кнопки авторизации через Google и GitHub */}
       <OAuth2 />
-
       <form className={'flex flex-col space-y-6 w-full'} onSubmit={handleSubmit(onSubmit)}>
         <ControlledTextField
           autoComplete={'email'}
