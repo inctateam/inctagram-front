@@ -54,6 +54,7 @@ const AccountManagement = ({ accountType }: Props) => {
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
     skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
   })
+
   const { data: paymentCostSubscriptions, isLoading: isLoadingSubscriptions } =
     useGetPaymentCostSubscriptionsQuery(undefined, {
       skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
