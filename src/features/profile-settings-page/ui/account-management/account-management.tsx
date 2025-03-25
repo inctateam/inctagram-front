@@ -22,23 +22,21 @@ enum Option {
   PERSONAL = 'Personal',
 }
 
-type Props = {
-  accountType: 'business' | 'personal'
-}
-const AccountManagement = ({ accountType }: Props) => {
+// type Props = {
+//   accountType: 'business' | 'personal'
+// }
+const AccountManagement = () => {
   const router = useRouter()
   const params = useParams()
   const userId: string = params.id as string
   const searchParams = useSearchParams()
 
-  const [selectedOption, setSelectedOption] = useState<Option>(
-    accountType === 'business' ? Option.BUSINESS : Option.PERSONAL
-  )
+  const [selectedOption, setSelectedOption] = useState<Option | undefined>(undefined)
 
   // Синхронизация selectedOption с accountType из URL
-  useEffect(() => {
-    setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
-  }, [accountType])
+  // useEffect(() => {
+  //   setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
+  // }, [accountType])
 
   const [isOpenPayModal, { setFalse: closePayModal, setTrue: openPayModal }] = useBoolean(false)
   const [isCheckedPayModal, { toggle: togglePayModal }] = useBoolean(false)
@@ -51,15 +49,29 @@ const AccountManagement = ({ accountType }: Props) => {
     useBoolean(false)
   const [isErrorAlertOpen, { setFalse: closeErrorAlert, setTrue: openErrorAlert }] =
     useBoolean(false)
-  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery(undefined, {
-    skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
-  })
+  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery()
 
   const { data: paymentCostSubscriptions, isLoading: isLoadingSubscriptions } =
     useGetPaymentCostSubscriptionsQuery(undefined, {
       skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
     })
   const [createSubscription, { isLoading: isLoadingPayment }] = useCreateSubscriptionMutation()
+
+  // Устанавливаем начальное значение selectedOption после загрузки подписок
+  useEffect(() => {
+    if (currentSubscriptions && !isLoadingSubscriptions) {
+      const hasSubscriptions = currentSubscriptions?.data?.length > 0
+
+      setSelectedOption(hasSubscriptions ? Option.BUSINESS : Option.PERSONAL)
+
+      // Обновляем URL и localStorage в соответствии с фактическим состоянием
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+
+      newSearchParams.set('accountType', hasSubscriptions ? 'business' : 'personal')
+      router.replace(`?${newSearchParams.toString()}`)
+      localStorage.setItem('accountType', hasSubscriptions ? 'business' : 'personal')
+    }
+  }, [currentSubscriptions, isLoadingSubscriptions, router, searchParams])
 
   // Установка подписки DAY по умолчанию при загрузке данных
   useEffect(() => {
@@ -75,30 +87,15 @@ const AccountManagement = ({ accountType }: Props) => {
     }
   }, [paymentCostSubscriptions])
 
-  useEffect(() => {
-    if (currentSubscriptions && currentSubscriptions.data?.length > 0) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-
-      newSearchParams.set('accountType', 'business')
-      router.replace(`?${newSearchParams.toString()}`)
-      localStorage.setItem('accountType', 'business')
-    } else {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-
-      newSearchParams.set('accountType', 'personal')
-      router.replace(`?${newSearchParams.toString()}`)
-      localStorage.setItem('accountType', 'personal')
-    }
-  }, [currentSubscriptions, router, searchParams])
   // Проверяем localStorage при монтировании компонента
   useEffect(() => {
     const isPaymentRequested = localStorage.getItem('isPaymentRequested') === 'true'
-    const accountType = localStorage.getItem('accountType')
+    // const accountType = localStorage.getItem('accountType')
 
-    if (accountType) {
-      setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
-      localStorage.removeItem('accountType')
-    }
+    // if (accountType) {
+    //   setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
+    //   localStorage.removeItem('accountType')
+    // }
 
     if (isPaymentRequested) {
       const success = searchParams.get('success')
@@ -111,15 +108,15 @@ const AccountManagement = ({ accountType }: Props) => {
       localStorage.removeItem('isPaymentRequested') // Очищаем флаг после использования
     }
     // Если accountType отсутствует в URL, устанавливаем значение по умолчанию
-    if (!accountType) {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
+    // if (!accountType) {
+    //   const newSearchParams = new URLSearchParams(searchParams.toString())
 
-      newSearchParams.set(
-        'accountType',
-        selectedOption === Option.BUSINESS ? 'business' : 'personal'
-      )
-      router.replace(`?${newSearchParams.toString()}`)
-    }
+    //   newSearchParams.set(
+    //     'accountType',
+    //     selectedOption === Option.BUSINESS ? 'business' : 'personal'
+    //   )
+    //   router.replace(`?${newSearchParams.toString()}`)
+    // }
   }, [searchParams, router, selectedOption])
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
@@ -153,9 +150,9 @@ const AccountManagement = ({ accountType }: Props) => {
     closePayModal()
   }
 
-  const accountTypeChange = () => {
-    setSelectedOption(Option.PERSONAL)
-  }
+  // const accountTypeChange = () => {
+  //   setSelectedOption(Option.PERSONAL)
+  // }
 
   if (isLoadingPayment || isLoadingSubscriptions) {
     return <ProgressBar />
@@ -165,7 +162,7 @@ const AccountManagement = ({ accountType }: Props) => {
     <>
       {currentSubscriptions && currentSubscriptions.data?.length > 0 && (
         <CurrentSubscription
-          accountTypeChange={accountTypeChange}
+          //accountTypeChange={accountTypeChange}
           currentSubscriptions={currentSubscriptions}
         />
       )}

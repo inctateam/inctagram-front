@@ -15,11 +15,11 @@ import {
 } from '@/shared/ui'
 
 type Props = {
-  accountTypeChange: () => void
+  //accountTypeChange: () => void
   currentSubscriptions: CurrentPaymentSubscriptionResponse
 }
 
-export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }: Props) => {
+export const CurrentSubscription = ({ currentSubscriptions }: Props) => {
   const [cancelAutoRenewal, { isLoading: isLoadingCancelAutoRenewal }] =
     useCancelAutoRenewalMutation()
 
@@ -36,7 +36,7 @@ export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }:
     try {
       await cancelAutoRenewal().unwrap()
       toast.success('Auto renewal has been cancelled')
-      accountTypeChange()
+      // accountTypeChange()
     } catch {
       toast.error('Failed to cancel auto renewal')
     }
