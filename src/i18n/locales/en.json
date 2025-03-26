@@ -178,7 +178,10 @@
     "enterDescription": "Enter description for your publication",
     "errors": {
       "failedToLoadImage": "Failed to load image"
-    }
+    },
+    "maxFilesAlertTitle": "Alert",
+    "maxFilesAlertDescription": "It is possible to upload 10 images per post"
+
   },
   "ImageUploader": {
     "formatError": "The photo must have JPEG or PNG format",
