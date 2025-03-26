@@ -179,7 +179,9 @@
     "enterDescription": "Введите описание для вашей публикации",
     "errors": {
       "failedToLoadImage": "Ошибка при загрузке изображения"
-    }
+    },
+    "maxFilesAlertTitle": "Оповещение",
+    "maxFilesAlertDescription": "Максимально возможное количество изображений для поста - 10"
   },
   "ImageUploader": {
     "formatError": "The photo must have JPEG or PNG format",
