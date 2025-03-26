@@ -2,6 +2,7 @@ import { toast } from 'react-toastify'
 
 import { useCancelAutoRenewalMutation } from '@/features/profile-settings-page/api/subscriptions.api'
 import { CurrentPaymentSubscriptionResponse } from '@/features/profile-settings-page/types'
+import { useBoolean } from '@/shared/hooks'
 import {
   Card,
   Checkbox,
@@ -15,32 +16,57 @@ import {
 } from '@/shared/ui'
 
 type Props = {
-  accountTypeChange: () => void
+  //accountTypeChange: () => void
   currentSubscriptions: CurrentPaymentSubscriptionResponse
 }
 
-export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }: Props) => {
+export const CurrentSubscription = ({ currentSubscriptions }: Props) => {
   const [cancelAutoRenewal, { isLoading: isLoadingCancelAutoRenewal }] =
     useCancelAutoRenewalMutation()
+  const [isAutoRenewalChecked, { setFalse: disableAutoRenewal, setTrue: enableAutoRenewal }] =
+    useBoolean(currentSubscriptions?.hasAutoRenewal)
 
+  const [isCheckboxDisabled, { setTrue: disableCheckbox }] = useBoolean()
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
 
     return date.toLocaleDateString('ru-RU') // Для формата 12.12.2022
   }
+  const handleAutoRenewal = async (checked: boolean) => {
+    if (checked) {
+      // Если пытаются включить автоподписку, но она уже отключена
+      if (isCheckboxDisabled) {
+        return
+      }
 
-  const handleAutoRenewal = async (value: boolean) => {
-    if (value) {
+      // Здесь можно добавить логику для включения автоподписки, если нужно
       return
     }
+
     try {
       await cancelAutoRenewal().unwrap()
       toast.success('Auto renewal has been cancelled')
-      accountTypeChange()
+      disableAutoRenewal() // Снимаем галочку
+      disableCheckbox() // Блокируем чекбокс
     } catch {
       toast.error('Failed to cancel auto renewal')
+      // В случае ошибки оставляем чекбокс в прежнем состоянии
+      enableAutoRenewal()
     }
   }
+
+  // const handleAutoRenewal = async (value: boolean) => {
+  //   if (value) {
+  //     return
+  //   }
+  //   try {
+  //     await cancelAutoRenewal().unwrap()
+  //     toast.success('Auto renewal has been cancelled')
+  //     // accountTypeChange()
+  //   } catch {
+  //     toast.error('Failed to cancel auto renewal')
+  //   }
+  // }
 
   if (isLoadingCancelAutoRenewal) {
     return <ProgressBar />
@@ -88,7 +114,8 @@ export const CurrentSubscription = ({ accountTypeChange, currentSubscriptions }:
         </TableRoot>
       </Card>
       <Checkbox
-        defaultChecked={currentSubscriptions?.hasAutoRenewal}
+        checked={isAutoRenewalChecked}
+        disabled={!isCheckboxDisabled && !isAutoRenewalChecked}
         label={'Auto-Renewal'}
         name={'autoRenewal'}
         onCheckedChange={handleAutoRenewal}
