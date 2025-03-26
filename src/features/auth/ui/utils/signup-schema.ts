@@ -22,9 +22,8 @@ export const signUpSchema = ({ tErrors }: SchemaProps) =>
         .min(6, tErrors.passwordMinLength)
         .max(20, tErrors.passwordMaxLength)
         .regex(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])/,
+          /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])(?!.*[а-яА-ЯёЁ])/,
           { message: tErrors.password }
-          //'Password must contain a-z, A-Z, ! " # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _` { | } ~'
         )
         .refine(value => value.trim() !== '', tErrors.requiredField),
       passwordConfirmation: z
