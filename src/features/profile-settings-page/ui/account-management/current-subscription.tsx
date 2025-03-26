@@ -115,8 +115,7 @@ export const CurrentSubscription = ({ currentSubscriptions }: Props) => {
       </Card>
       <Checkbox
         checked={isAutoRenewalChecked}
-        //defaultChecked={currentSubscriptions?.hasAutoRenewal}
-        disabled={isCheckboxDisabled}
+        disabled={!isCheckboxDisabled}
         label={'Auto-Renewal'}
         name={'autoRenewal'}
         onCheckedChange={handleAutoRenewal}

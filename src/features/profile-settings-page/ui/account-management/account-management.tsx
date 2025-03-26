@@ -21,10 +21,6 @@ enum Option {
   BUSINESS = 'Business',
   PERSONAL = 'Personal',
 }
-
-// type Props = {
-//   accountType: 'business' | 'personal'
-// }
 const AccountManagement = () => {
   const router = useRouter()
   const params = useParams()
@@ -32,11 +28,6 @@ const AccountManagement = () => {
   const searchParams = useSearchParams()
 
   const [selectedOption, setSelectedOption] = useState<Option | undefined>(undefined)
-
-  // Синхронизация selectedOption с accountType из URL
-  // useEffect(() => {
-  //   setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
-  // }, [accountType])
 
   const [isOpenPayModal, { setFalse: closePayModal, setTrue: openPayModal }] = useBoolean(false)
   const [isCheckedPayModal, { toggle: togglePayModal }] = useBoolean(false)
@@ -52,11 +43,10 @@ const AccountManagement = () => {
   const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery()
 
   const { data: paymentCostSubscriptions, isLoading: isLoadingSubscriptions } =
-    useGetPaymentCostSubscriptionsQuery(undefined, {
-      skip: selectedOption !== Option.BUSINESS, // Пропустить запрос, если не выбран BUSINESS
-    })
+    useGetPaymentCostSubscriptionsQuery()
   const [createSubscription, { isLoading: isLoadingPayment }] = useCreateSubscriptionMutation()
 
+  console.log('Subscription', currentSubscriptions?.data.length, currentSubscriptions?.data)
   // Устанавливаем начальное значение selectedOption после загрузки подписок
   useEffect(() => {
     if (currentSubscriptions && !isLoadingSubscriptions) {
@@ -90,12 +80,6 @@ const AccountManagement = () => {
   // Проверяем localStorage при монтировании компонента
   useEffect(() => {
     const isPaymentRequested = localStorage.getItem('isPaymentRequested') === 'true'
-    // const accountType = localStorage.getItem('accountType')
-
-    // if (accountType) {
-    //   setSelectedOption(accountType === 'business' ? Option.BUSINESS : Option.PERSONAL)
-    //   localStorage.removeItem('accountType')
-    // }
 
     if (isPaymentRequested) {
       const success = searchParams.get('success')
@@ -107,16 +91,6 @@ const AccountManagement = () => {
       }
       localStorage.removeItem('isPaymentRequested') // Очищаем флаг после использования
     }
-    // Если accountType отсутствует в URL, устанавливаем значение по умолчанию
-    // if (!accountType) {
-    //   const newSearchParams = new URLSearchParams(searchParams.toString())
-
-    //   newSearchParams.set(
-    //     'accountType',
-    //     selectedOption === Option.BUSINESS ? 'business' : 'personal'
-    //   )
-    //   router.replace(`?${newSearchParams.toString()}`)
-    // }
   }, [searchParams, router, selectedOption])
   const handlePaymentClick = (type: PaymentType) => {
     if (!selectedAmount) {
@@ -150,10 +124,6 @@ const AccountManagement = () => {
     closePayModal()
   }
 
-  // const accountTypeChange = () => {
-  //   setSelectedOption(Option.PERSONAL)
-  // }
-
   if (isLoadingPayment || isLoadingSubscriptions) {
     return <ProgressBar />
   }
@@ -161,10 +131,7 @@ const AccountManagement = () => {
   return (
     <>
       {currentSubscriptions && currentSubscriptions.data?.length > 0 && (
-        <CurrentSubscription
-          //accountTypeChange={accountTypeChange}
-          currentSubscriptions={currentSubscriptions}
-        />
+        <CurrentSubscription currentSubscriptions={currentSubscriptions} />
       )}
       <Typography className={'mt-7 mb-1.5'} variant={'bold16'}>
         Account type:
@@ -172,6 +139,11 @@ const AccountManagement = () => {
       <Card className={'flex flex-col gap-7 pt-4 pb-4 pl-6 mb-11'}>
         <RoundedCheckbox
           checked={selectedOption === Option.PERSONAL}
+          className={
+            Array.isArray(currentSubscriptions?.data) && currentSubscriptions.data.length > 0
+              ? 'opacity-50'
+              : ''
+          }
           disabled={
             Array.isArray(currentSubscriptions?.data) && currentSubscriptions.data.length > 0
           }
