@@ -28,7 +28,7 @@
         "agreesToTerms": "You have to agree our terms and conditions",
         "email": "The email must match the format example@example.com",
         "usernameExists": "A user with this name is already registered",
-        "password": "Password must contain a-z, A-Z and special characters",
+        "password": "Password must contain only Latin letters, numbers, and special characters",
         "passwordMinLength": "Minimum number of characters 6",
         "passwordMaxLength": "Maximum number of characters 20",
         "passwordConfirmation": "The passwords must match",
