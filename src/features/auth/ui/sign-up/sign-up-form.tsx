@@ -147,7 +147,7 @@ export function SignUpForm({ translatedForm }: SignUpPageProps) {
           <ControlledCheckbox
             control={control}
             label={
-              <div className={'flex items-center'}>
+              <div>
                 <Typography variant={'small'}>{translatedForm.agreeToTerms}</Typography>
                 <span className={'mx-1'}>
                   <TextLink
