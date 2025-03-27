@@ -28,7 +28,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
   }
 
   useEffect(() => {
-    if (avatars?.[0]) {
+    if (avatars?.[0] && !avatarSrc) {
       setAvatarSrc(avatars[0].url)
     }
 
@@ -70,7 +70,7 @@ const AddAvatarSection = ({ avatars }: Props) => {
 
   if (isDeleting || isUploading || !profileData) {
     return (
-      <div className={'w-48'}>
+      <div className={'w-48 h-48 mt-12 flex justify-center items-center'}>
         <Spinner />
       </div>
     )
