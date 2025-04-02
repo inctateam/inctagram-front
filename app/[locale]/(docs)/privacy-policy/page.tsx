@@ -149,6 +149,7 @@ const PrivacyPolicy = () => {
           documentation for your browser or contact its maker for support. Browser settings cannot
           prevent so-called flash cookies from being set. Instead, you will need to change the
           setting of your Flash player.
+          <br />
         </Typography>
       </div>
     </div>
