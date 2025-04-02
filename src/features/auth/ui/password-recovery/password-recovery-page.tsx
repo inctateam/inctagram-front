@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { UseFormSetError } from 'react-hook-form'
-import { toast } from 'react-toastify'
 
 import { useCodeValidationCheckMutation, usePasswordRecoveryMutation } from '@/features/auth/api'
 import { PasswordRecoveryArgs } from '@/features/auth/types'
@@ -58,7 +57,6 @@ export const PasswordRecoveryPage = () => {
 
       if (resData === null) {
         setModalOpen(true)
-        toast.success(tToast('success'))
       }
     } catch (error: unknown) {
       handleRequestError(error, setError, ['baseUrl', 'recaptcha'])

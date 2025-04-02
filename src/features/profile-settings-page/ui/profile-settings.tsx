@@ -9,27 +9,28 @@ import { ProgressBar, Tabs, TabsContent, TabsList, TabsTrigger, Typography } fro
 import { redirect, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
-import { useGetCurrentSubscriptionsQuery } from '../api/subscriptions.api'
+//import { useGetCurrentSubscriptionsQuery } from '../api/subscriptions.api'
 import { AccountManagement } from './account-management'
 
 export const ProfileSettings = () => {
   const t = useTranslations('ProfileSettings')
   const { data: profileInfo, isError, isFetching, isLoading } = useGetProfileQuery()
   const router = useRouter()
-  const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery()
+  //const { data: currentSubscriptions } = useGetCurrentSubscriptionsQuery()
   const searchParams = useSearchParams()
   const currentSection = searchParams.get('section') || 'General-information'
   // Получаем accountType из localStorage или из URL
-  const accountTypeFromStorage = localStorage.getItem('accountType')
-  const accountTypeFromURL = searchParams.get('accountType')
-  const accountTypeFromSubscriptions =
-    (currentSubscriptions?.data?.length ?? 0) > 0 ? 'business' : 'personal'
-  const accountType =
-    accountTypeFromSubscriptions || accountTypeFromStorage || accountTypeFromURL || 'personal'
+  // const accountTypeFromStorage =
+  //   (typeof window !== 'undefined' && localStorage.getItem('accountType')) || ''
+  // const accountTypeFromURL = searchParams.get('accountType')
+  // const accountTypeFromSubscriptions =
+  //   (currentSubscriptions?.data?.length ?? 0) > 0 ? 'business' : 'personal'
+  // const accountType =
+  //   accountTypeFromSubscriptions || accountTypeFromStorage || accountTypeFromURL || 'personal'
 
-  function isAccountType(accountType: string): accountType is 'business' | 'personal' {
-    return accountType === 'business' || accountType === 'personal'
-  }
+  // function isAccountType(accountType: string): accountType is 'business' | 'personal' {
+  //   return accountType === 'business' || accountType === 'personal'
+  // }
 
   useEffect(() => {
     const success = searchParams.get('success')
@@ -99,7 +100,8 @@ export const ProfileSettings = () => {
       </TabsContent>
 
       <TabsContent value={'Account-management'}>
-        {isAccountType(accountType) ? <AccountManagement accountType={accountType} /> : null}
+        {/* {isAccountType(accountType) ? */}
+        <AccountManagement />
       </TabsContent>
 
       <TabsContent value={'My-payments'}>

@@ -42,6 +42,7 @@ export const PostUserProfile = ({ onDelete, post }: Props) => {
         <ImageContent
           itemImages={post.images.map(image => image['url'])}
           onClick={handleOpenPostModal}
+          size={'small'}
         />
       </div>
       {openPostId && (

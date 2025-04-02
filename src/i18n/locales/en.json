@@ -28,7 +28,7 @@
         "agreesToTerms": "You have to agree our terms and conditions",
         "email": "The email must match the format example@example.com",
         "usernameExists": "A user with this name is already registered",
-        "password": "Password must contain a-z, A-Z and special characters",
+        "password": "Password must contain only Latin letters, numbers, and special characters",
         "passwordMinLength": "Minimum number of characters 6",
         "passwordMaxLength": "Maximum number of characters 20",
         "passwordConfirmation": "The passwords must match",
@@ -56,7 +56,6 @@
         "requiredEmail": "Email is required"
       },
       "toastMessages": {
-        "success": "Success",
         "expiredCode": "Recovery code is invalid or has expired",
         "recaptchaError": "Recaptcha error",
         "unknownError": "Unknown Error"
@@ -179,7 +178,9 @@
     "enterDescription": "Enter description for your publication",
     "errors": {
       "failedToLoadImage": "Failed to load image"
-    }
+    },
+    "maxFilesAlertTitle": "Alert",
+    "maxFilesAlertDescription": "It is possible to upload 10 images per post"
   },
   "ImageUploader": {
     "formatError": "The photo must have JPEG or PNG format",

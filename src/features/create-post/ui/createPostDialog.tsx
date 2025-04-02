@@ -36,6 +36,7 @@ export const CreatePostDialog = ({
   const [stage, setStage] = useState<CreatePostStages>(CreatePostStages.AddFiles)
 
   const [openAlertModal, setOpenAlertModal] = useState(false)
+  const [openMaxFilesAlert, setOpenMaxFilesAlert] = useState(false)
 
   const dispatch = useAppDispatch()
 
@@ -57,7 +58,23 @@ export const CreatePostDialog = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleFileSelect = () => {
-    fileInputRef?.current?.click()
+    if (images.length >= 10) {
+      setOpenMaxFilesAlert(true)
+    } else {
+      fileInputRef?.current?.click()
+    }
+  }
+
+  const onHandleSaveDraft = () => {
+    onOpenChange?.(false)
+    dispatch(createPostSliceActions.moveImagesToDraft())
+    setStage(CreatePostStages.AddFiles)
+  }
+
+  const onDiscardCreatePost = () => {
+    onOpenChange?.(false)
+    dispatch(createPostSliceActions.setImages({ images: [] }))
+    setStage(CreatePostStages.AddFiles)
   }
 
   return (
@@ -102,32 +119,21 @@ export const CreatePostDialog = ({
           />
         )}
         <AlertDialog
-          cancelButton={
-            <CancelButton
-              onClick={() => {
-                onOpenChange?.(false)
-                dispatch(createPostSliceActions.moveImagesToDraft())
-                setStage(CreatePostStages.AddFiles)
-              }}
-            >
-              {t('saveDraft')}
-            </CancelButton>
-          }
+          cancelButton={<CancelButton onClick={onHandleSaveDraft}>{t('saveDraft')}</CancelButton>}
           confirmButton={
-            <ConfirmButton
-              onClick={() => {
-                onOpenChange?.(false)
-                dispatch(createPostSliceActions.setImages({ images: [] }))
-                setStage(CreatePostStages.AddFiles)
-              }}
-            >
-              {t('discard')}
-            </ConfirmButton>
+            <ConfirmButton onClick={onDiscardCreatePost}>{t('discard')}</ConfirmButton>
           }
           description={`${t('closeAlertDescription1')}\n${t('closeAlertDescription2')}`}
           onOpenChange={setOpenAlertModal}
           open={openAlertModal}
           title={t('closeAlertTitle')}
+        />
+        <AlertDialog
+          confirmButton={<ConfirmButton>OK</ConfirmButton>}
+          description={t('maxFilesAlertDescription')}
+          onOpenChange={setOpenMaxFilesAlert}
+          open={openMaxFilesAlert}
+          title={t('maxFilesAlertTitle')}
         />
       </Dialog>
     </>

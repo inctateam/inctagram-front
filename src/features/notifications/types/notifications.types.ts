@@ -19,9 +19,10 @@ export interface GetNotificationsResponse {
   pageSize: number
   totalCount: number
 }
-
-export interface NotificationObject {
+export interface WebSocketNotification {
   clientId: string
+  createdAt: string
+  eventType: number
   id: number
   isRead: boolean
   message: string
