@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import BookmarkOutline from '@/assets/icons/components/filled-outlined-pairs/BookmarkOutline'
@@ -11,11 +11,13 @@ import PersonRemove from '@/assets/icons/components/filled-outlined-pairs/Person
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import PaperPlaneOutline from '@/assets/icons/components/outlined/PaperPlaneOutline'
 import { useMeQuery } from '@/features/auth/api'
-import { usePublicPostsByIdQuery } from '@/features/home-page/api'
+import { usePublicPostCommentsQuery, usePublicPostsByIdQuery } from '@/features/home-page/api'
 import {
   useGetPublicPostsByUserIdQuery,
   useLazyGetPublicPostsByUserIdQuery,
 } from '@/features/home-page/ui/user-profile/api/user-profile.api'
+import { usePostCommentsQuery } from '@/features/post-page/api'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Avatar, Button, Dropdown, ProgressBar, Spinner, Textarea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { PostBlock } from '@/shared/ui/post-block'
@@ -26,14 +28,36 @@ import Link from 'next/link'
 
 import noData from '../../../../../public/images/no-data.svg'
 
+const dropRemove = [
+  {
+    icon: <PersonRemove />,
+    label: 'Unfollow',
+  },
+  {
+    icon: <TrashOutline />,
+    label: 'Delete post',
+  },
+]
+const dropAdd = [
+  {
+    icon: <PersonAdd />,
+    label: 'Follow',
+  },
+  {
+    icon: <CopyOutline />,
+    label: 'Copy Link',
+  },
+]
+const POSTS_PER_PAGE = 8
+const LAZY_POSTS_PER_PAGE = 9
+
 type Props = {
   postId: number
   userId: number
 }
-const POSTS_PER_PAGE = 8
-const LAZY_POSTS_PER_PAGE = 9
 
 export const PostsPage = ({ postId, userId }: Props) => {
+  const [openPostId, setOpenPostId] = useState(false)
   const { data: me } = useMeQuery()
   const {
     data: post,
@@ -48,7 +72,9 @@ export const PostsPage = ({ postId, userId }: Props) => {
     pageSize: POSTS_PER_PAGE,
     userId,
   })
-
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId: postId })
+  const { data: privateComments } = usePostCommentsQuery({ postId: postId })
+  const comments = me ? privateComments : publicComments
   const [trigger, { isFetching: isFetchingMore }] = useLazyGetPublicPostsByUserIdQuery()
 
   const viewportRef = useRef<HTMLDivElement>(null)
@@ -93,7 +119,6 @@ export const PostsPage = ({ postId, userId }: Props) => {
     }
   }, [posts, isFetchingMore, viewportRef, trigger, loadMorePosts])
 
-  // Обработка ошибок и загрузки
   if (errorPost || errorPosts) {
     toast.error('Error loading posts')
 
@@ -105,7 +130,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
   if (isLoadingPosts) {
     return <Spinner fullScreen />
   }
-  // Если нет данных
+
   if (!post || !posts) {
     return (
       <div className={'max-w-[972px] mx-auto flex justify-center items-center'}>
@@ -113,29 +138,13 @@ export const PostsPage = ({ postId, userId }: Props) => {
       </div>
     )
   }
-  const dropRemove = [
-    {
-      icon: <PersonRemove />,
-      label: 'Unfollow',
-    },
-    {
-      icon: <TrashOutline />,
-      label: 'Delete post',
-    },
-  ]
-  const dropAdd = [
-    {
-      icon: <PersonAdd />,
-      label: 'Follow',
-    },
-    {
-      icon: <CopyOutline />,
-      label: 'Copy Link',
-    },
-  ]
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
   const dropDownItems = me?.userId === post?.ownerId ? dropAdd : dropRemove
   const handleActionPostsPage = () => {}
+
+  const handleOpenClosePostModal = () => {
+    setOpenPostId(prev => !prev)
+  }
 
   return (
     <ScrollArea className={'h-[91vh] max-w-[972px] mx-auto'} viewportRef={viewportRef}>
@@ -176,10 +185,10 @@ export const PostsPage = ({ postId, userId }: Props) => {
               <Avatar alt={'avatar'} size={9} src={post.avatarOwner} />
             </Link>
             <p>
-              <Typography className={'inline mr-1'} variant={'h3'}>
+              <Typography as={'span'} className={'text-sm font-bold inline mr-1'}>
                 {post.userName}
               </Typography>
-              <Typography className={'inline'} variant={'regular14'}>
+              <Typography as={'span'} className={'inline'} variant={'regular14'}>
                 {post.description}
               </Typography>
             </p>
@@ -203,10 +212,12 @@ export const PostsPage = ({ postId, userId }: Props) => {
               </Typography>
             </Button>
           </div>
-          <Button className={'p-0'} variant={'text'}>
-            <Typography className={'text-light-900 cursor-pointer'} variant={'bold14'}>
-              View All Comments (114)
-            </Typography>
+          <Button
+            className={'p-0 text-light-900 text-sm font-bold'}
+            onClick={handleOpenClosePostModal}
+            variant={'text'}
+          >
+            View All Comments ({comments?.items.length})
           </Button>
           <form className={'flex justify-between items-start'}>
             <Textarea
@@ -219,8 +230,11 @@ export const PostsPage = ({ postId, userId }: Props) => {
             </Button>
           </form>
         </div>
-        <PostBlock data={posts} />
+        <PostBlock data={posts} me={me} />
       </div>
+      <PostModal me={me} onOpenChange={handleOpenClosePostModal} open={openPostId} post={post}>
+        <ImageContent itemImages={post.images.map(image => image.url)} />
+      </PostModal>
     </ScrollArea>
   )
 }

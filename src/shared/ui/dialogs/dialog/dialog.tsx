@@ -23,7 +23,7 @@ export const Dialog = ({
   return (
     <DialogPrimitive.Root {...props}>
       <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>
-      <DialogContent {...dialogContentProps}>
+      <DialogContent aria-describedby={undefined} {...dialogContentProps}>
         <DialogCloseIcon closePosition={closePosition} />
         {children}
       </DialogContent>
