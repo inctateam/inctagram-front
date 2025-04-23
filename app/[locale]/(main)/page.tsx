@@ -10,13 +10,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 export default function Home() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { data, error, isLoading } = useMeQuery()
+  const { data: me, error, isLoading } = useMeQuery()
 
   useEffect(() => {
-    if (data) {
-      router.push(`/profile/${data.userId}`)
+    if (me) {
+      router.push(`/profile/${me.userId}`)
     }
-  }, [data, router])
+  }, [me, router])
 
   // 🔹 АВТОРИЗАЦИЯ GOOGLE ПРОДОЛЖАЕТСЯ И ЗАКАНЧИВАЕТСЯ НА СТРАНИЦЕ baseUrl/auth/google
   const code = searchParams.get('code')
@@ -31,7 +31,7 @@ export default function Home() {
     return <Spinner fullScreen />
   }
 
-  if (error || !data) {
-    return <PublicPage />
+  if (error || !me) {
+    return <PublicPage me={me} />
   }
 }
