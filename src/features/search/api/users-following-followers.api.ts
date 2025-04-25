@@ -1,9 +1,24 @@
 import { instagramApi } from '@/services'
 
-import { GetUsersResponse } from '../types'
+import { GetUserByNameResponse, GetUsersResponse } from '../types'
 
 export const usersFollowingFollowersApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    following: builder.mutation<void, { userId: number }>({
+      invalidatesTags: ['UsersByName'],
+      query: ({ userId: selectedUserId }) => ({
+        body: { selectedUserId },
+        method: 'POST',
+        url: `v1/users/following`,
+      }),
+    }),
+    getUserByName: builder.query<GetUserByNameResponse, { userName: string }>({
+      providesTags: ['UsersByName'],
+      query: ({ userName }) => ({
+        method: 'GET',
+        url: `v1/users/${userName}`,
+      }),
+    }),
     getUsers: builder.query<
       GetUsersResponse,
       {
@@ -30,7 +45,19 @@ export const usersFollowingFollowersApi = instagramApi.injectEndpoints({
       }),
       serializeQueryArgs: ({ endpointName, queryArgs }) => `${endpointName} ${queryArgs.search}`,
     }),
+    removeFollower: builder.mutation<void, { userId: number }>({
+      invalidatesTags: ['UsersByName'],
+      query: ({ userId }) => ({
+        method: 'DELETE',
+        url: `v1/users/follower/${userId}`,
+      }),
+    }),
   }),
 })
 
-export const { useGetUsersQuery } = usersFollowingFollowersApi
+export const {
+  useFollowingMutation,
+  useGetUserByNameQuery,
+  useGetUsersQuery,
+  useRemoveFollowerMutation,
+} = usersFollowingFollowersApi

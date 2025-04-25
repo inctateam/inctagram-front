@@ -3,8 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react'
 
 import { PATH } from '@/shared/constants'
 import { useDebounce } from '@/shared/hooks'
-import { ScrollArea, SearchTextField, TextLink, Typography } from '@/shared/ui'
-import Image from 'next/image'
+import { Avatar, ScrollArea, SearchTextField, TextLink, Typography } from '@/shared/ui'
 
 import { useGetUsersQuery } from '../api/users-following-followers.api'
 
@@ -101,17 +100,7 @@ export const SearchPage = () => {
                     : null
                 }
               >
-                {user.avatars[0] ? (
-                  <Image
-                    alt={user.userName}
-                    className={'rounded-full'}
-                    height={48}
-                    src={user.avatars[0]?.url}
-                    width={48}
-                  />
-                ) : (
-                  <div className={'w-12 h-12 bg-light-900 rounded-full'} />
-                )}
+                <Avatar alt={user.userName} size={12} src={user.avatars[0]?.url} />
                 <div className={'flex flex-col'}>
                   <TextLink
                     className={'justify-start'}
