@@ -7,10 +7,15 @@ import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOut
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import PersonAdd from '@/assets/icons/components/filled-outlined-pairs/PersonAdd'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
-import { useMeQuery } from '@/features/auth/api'
+import { MeResponse } from '@/features/auth/types'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
-import { useDeletePostMutation, usePostCommentsQuery } from '@/features/post-page/api'
+import {
+  useDeletePostMutation,
+  usePostCommentsQuery,
+  usePostLikesQuery,
+  useUploadPostLikeStatusMutation,
+} from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
@@ -32,6 +37,7 @@ import { Description } from '../../postDescription'
 
 type PostModalProps = {
   children: ReactNode
+  me: MeResponse | undefined
   onDelete?: (postId: number) => void
   onOpenChange: (open: boolean) => void
   open: boolean
@@ -58,7 +64,7 @@ const friendDropDown = [
   },
 ]
 const PostModal = (props: PostModalProps) => {
-  const { children, onDelete, onOpenChange, open, post } = props
+  const { children, me, onDelete, onOpenChange, open, post } = props
   const {
     avatarOwner,
     avatarWhoLikes,
@@ -73,14 +79,27 @@ const PostModal = (props: PostModalProps) => {
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
   const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
   const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
+  const [statusLiked, setStatusLiked] = useState(isLiked)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
-  const { data: me } = useMeQuery()
   const [deletePost, { isError, isLoading }] = useDeletePostMutation()
-  const comments = me?.userId ? privateComments : publicComments
+  const comments = me ? privateComments : publicComments
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
+  const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
+  const { data: postLikes } = usePostLikesQuery({ postId: id })
 
+  console.log(postLikes)
+  /*  console.log(
+    'id: ',
+    id,
+    'isLiked: ',
+    isLiked,
+    'statusLiked: ',
+    statusLiked,
+    'likesCount: ',
+    likesCount
+  )*/
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
     window.history.pushState({}, '', `/profile/${ownerId}/${id}`)
@@ -121,6 +140,15 @@ const PostModal = (props: PostModalProps) => {
       toast.success('The post has been successfully deleted')
     } catch (error) {
       console.error('Error deleted post:', error)
+    }
+  }
+  const handlerTogglePostLike = async () => {
+    try {
+      await uploadPostLikeStatus({ postId: id })
+
+      setStatusLiked(prev => !prev)
+    } catch {
+      toast.error('The post has not been found')
     }
   }
 
@@ -170,7 +198,12 @@ const PostModal = (props: PostModalProps) => {
                   'flex flex-col gap-2 bg-dark-300 border-t border-dark-100 px-6 pt-3 pb-2'
                 }
               >
-                {me?.userId && <InteractionButtons isLiked={isLiked} />}
+                {me?.userId && (
+                  <InteractionButtons
+                    isLiked={statusLiked}
+                    togglePostLike={handlerTogglePostLike}
+                  />
+                )}
                 <LikesList
                   avatarWhoLikes={avatarWhoLikes}
                   createdAt={createdAt}

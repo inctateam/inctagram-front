@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify'
 
+import { MeResponse } from '@/features/auth/types'
 import { usePublicPostsQuery, useTotalCountRegisteredUsersQuery } from '@/features/home-page/api'
 import { ProgressBar, ScrollArea } from '@/shared/ui'
 import { PostBlock } from '@/shared/ui/post-block'
@@ -8,7 +9,11 @@ import Image from 'next/image'
 
 import noData from '../../../../../public/images/no-data.svg'
 
-export const PublicPage = () => {
+type Props = {
+  me: MeResponse | undefined
+}
+
+export const PublicPage = ({ me }: Props) => {
   const { data: dataPosts, error: errorPosts, isLoading: isLoadingPosts } = usePublicPostsQuery({})
   const {
     data: dataUsers,
@@ -40,7 +45,7 @@ export const PublicPage = () => {
     <ScrollArea className={'max-w-[972px] mx-auto h-[91vh]'}>
       <div className={'mr-2'}>
         <TotalUsersBlock totalUsers={totalUsers} />
-        <PostBlock data={dataPosts} />
+        <PostBlock data={dataPosts} me={me} />
       </div>
     </ScrollArea>
   )

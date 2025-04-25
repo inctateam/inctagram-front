@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { MeResponse } from '@/features/auth/types'
 import { PublicPostItem } from '@/features/home-page/types'
 import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Typography } from '@/shared/ui'
@@ -9,16 +10,12 @@ import { formatDistanceToNow } from 'date-fns'
 
 type Props = {
   item: PublicPostItem
+  me: MeResponse | undefined
 }
 const MIN_LETTERS = 70
 const MAX_LETTERS = 240
 
-/*
-const item.description =
-  'lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet.lorem ipsum dolor sit amet. lorem ipsum dolor sit amet. lorem ipsum dolor sit amet.'
-*/
-
-export const Post = ({ item }: Props) => {
+export const Post = ({ item, me }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [openPostId, setOpenPostId] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0) // Храним текущий индекс изображения
@@ -99,11 +96,9 @@ export const Post = ({ item }: Props) => {
           )}
         </Typography>
       </div>
-      {openPostId && (
-        <PostModal onOpenChange={handleClosePostModal} open={openPostId} post={item}>
-          <ImageContent itemImages={item.images.map(image => image.url)} />
-        </PostModal>
-      )}
+      <PostModal me={me} onOpenChange={handleClosePostModal} open={openPostId} post={item}>
+        <ImageContent itemImages={item.images.map(image => image.url)} />
+      </PostModal>
     </li>
   )
 }

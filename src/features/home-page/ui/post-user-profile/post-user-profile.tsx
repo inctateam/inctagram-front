@@ -1,15 +1,17 @@
 import { useState } from 'react'
 
+import { MeResponse } from '@/features/auth/types'
 import { Post } from '@/features/home-page/ui/user-profile/types/user-profile.types'
 import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { ImageContent } from '@/shared/ui/image-content'
 
 type Props = {
+  me: MeResponse | undefined
   onDelete: (postId: number) => void // Функция для удаления поста
   post: Post
 }
 
-export const PostUserProfile = ({ onDelete, post }: Props) => {
+export const PostUserProfile = ({ me, onDelete, post }: Props) => {
   const [openPostId, setOpenPostId] = useState(false)
   const handleOpenPostModal = () => {
     /*    if (!isExpanded) {
@@ -45,16 +47,15 @@ export const PostUserProfile = ({ onDelete, post }: Props) => {
           size={'small'}
         />
       </div>
-      {openPostId && (
-        <PostModal
-          onDelete={handleDelete}
-          onOpenChange={handleClosePostModal}
-          open={openPostId}
-          post={post}
-        >
-          <ImageContent itemImages={post.images.map(image => image.url)} />
-        </PostModal>
-      )}
+      <PostModal
+        me={me}
+        onDelete={handleDelete}
+        onOpenChange={handleClosePostModal}
+        open={openPostId}
+        post={post}
+      >
+        <ImageContent itemImages={post.images.map(image => image.url)} />
+      </PostModal>
     </>
   )
 }

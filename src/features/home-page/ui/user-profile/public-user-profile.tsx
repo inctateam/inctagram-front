@@ -204,6 +204,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
             ? posts.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
                   <PostUserProfile
+                    me={isAuth}
                     onDelete={handlePostDeletion} // Передаем функцию удаления
                     post={post}
                   />
