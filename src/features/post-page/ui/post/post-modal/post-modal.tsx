@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { toast } from 'react-toastify'
 
@@ -65,21 +65,13 @@ const friendDropDown = [
 ]
 const PostModal = (props: PostModalProps) => {
   const { children, me, onDelete, onOpenChange, open, post } = props
-  const {
-    avatarOwner,
-    avatarWhoLikes,
-    createdAt,
-    description,
-    id,
-    isLiked,
-    likesCount,
-    ownerId,
-    userName,
-  } = post
+  const { avatarOwner, avatarWhoLikes, createdAt, description, id, likesCount, ownerId, userName } =
+    post
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
   const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
   const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
-  const [statusLiked, setStatusLiked] = useState(isLiked)
+  const { data: postLikes } = usePostLikesQuery({ postId: id })
+  const [statusLiked, setStatusLiked] = useState<boolean | undefined>(undefined)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
   const [deletePost, { isError, isLoading }] = useDeletePostMutation()
@@ -87,19 +79,11 @@ const PostModal = (props: PostModalProps) => {
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
   const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
-  const { data: postLikes } = usePostLikesQuery({ postId: id })
 
-  console.log(postLikes)
-  /*  console.log(
-    'id: ',
-    id,
-    'isLiked: ',
-    isLiked,
-    'statusLiked: ',
-    statusLiked,
-    'likesCount: ',
-    likesCount
-  )*/
+  useEffect(() => {
+    setStatusLiked(postLikes?.items.some(user => user.userId === me?.userId))
+  }, [postLikes, me?.userId])
+
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
     window.history.pushState({}, '', `/profile/${ownerId}/${id}`)
@@ -132,7 +116,7 @@ const PostModal = (props: PostModalProps) => {
   }
   const handleDeletePost = async (id: number) => {
     try {
-      await deletePost({ postId: id })
+      await deletePost({ postId: id }).unwrap()
       onOpenChange(true) // Закрываем модалку удаления
       if (onDelete) {
         onDelete(id) // удаляем из компоненты PublicUserProfile удалённый пост без перезагрузки страницы
@@ -144,8 +128,7 @@ const PostModal = (props: PostModalProps) => {
   }
   const handlerTogglePostLike = async () => {
     try {
-      await uploadPostLikeStatus({ postId: id })
-
+      await uploadPostLikeStatus({ postId: id }).unwrap()
       setStatusLiked(prev => !prev)
     } catch {
       toast.error('The post has not been found')
