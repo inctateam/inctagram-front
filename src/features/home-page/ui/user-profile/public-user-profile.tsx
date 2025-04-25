@@ -42,11 +42,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     pageSize: POSTS_PER_PAGE,
     userId,
   })
-  const [follow] = useFollowingMutation()
-  const [unfollow] = useRemoveFollowerMutation()
-
+  const [follow, { isLoading: loadingFollow }] = useFollowingMutation()
+  const [unfollow, { isLoading: loadingUnfollow }] = useRemoveFollowerMutation()
+  const isLoadingFollowAction = loadingFollow || loadingUnfollow
   const [posts, setPosts] = useState(initialPosts?.items || [])
-  const [isFollowing, { toggle }] = useBoolean(userByNameData?.isFollowing)
+  const [isFollowing, { setFalse, setTrue }] = useBoolean(false)
   const [trigger, { isFetching: isFetchingMore }] = useLazyGetPublicPostsByUserIdQuery()
 
   const viewportRef = useRef<HTMLDivElement>(null)
@@ -68,6 +68,13 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     }
   }, [posts, isFetchingMore, trigger, userId, initialPosts])
 
+  useEffect(() => {
+    if (userByNameData?.isFollowing === true) {
+      setTrue()
+    } else if (userByNameData?.isFollowing === false) {
+      setFalse()
+    }
+  }, [userByNameData?.isFollowing])
   useEffect(() => {
     if (initialPosts?.items) {
       setPosts(initialPosts.items) // Обновляем посты после загрузки данных
@@ -102,9 +109,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     // Удалить пост локально из состояния
     setPosts(prevPosts => prevPosts.filter(post => post.id !== postId))
   }
-
   const onFollowButtonClickHandler = async () => {
-    toggle()
+    if (isLoadingFollowAction) {
+      return
+    }
+
     try {
       if (!isFollowing) {
         await follow({ userId }).unwrap()
@@ -113,10 +122,12 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
         await unfollow({ userId }).unwrap()
         toast.success('Subscription successfully cancelled')
       }
+
+      // Обновим данные пользователя после действия
+      await refetchUserByNameData()
     } catch (e) {
-      console.log(e)
-    } finally {
-      refetchUserByNameData()
+      console.error(e)
+      toast.error('Something went wrong. Please try again.')
     }
   }
 
@@ -146,6 +157,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
               </div>
               {isAuth && publicProfile?.id !== isAuth.userId && (
                 <Button
+                  disabled={isLoadingFollowAction}
                   onClick={onFollowButtonClickHandler}
                   variant={isFollowing ? 'outline' : 'primary'}
                 >
@@ -205,3 +217,19 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     </ScrollArea>
   )
 }
+// const onFollowButtonClickHandler = async () => {
+//   toggle()
+//   try {
+//     if (!isFollowing) {
+//       await follow({ userId }).unwrap()
+//       toast.success(`Success! You subscribed to ${userByNameData?.userName || 'user'}`)
+//     } else {
+//       await unfollow({ userId }).unwrap()
+//       toast.success('Subscription successfully cancelled')
+//     }
+//   } catch (e) {
+//     console.log(e)
+//   } finally {
+//     refetchUserByNameData()
+//   }
+// }
