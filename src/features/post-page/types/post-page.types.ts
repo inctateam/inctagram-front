@@ -39,8 +39,15 @@ export interface CommentLikesItems {
   userName: string
 }
 
-export interface CommentLikesResponse extends ResponseParams {
+export interface CommentLikesResponse {
+  isLiked: boolean
   items: CommentLikesItems[]
+  nextCursor: null
+  page: number
+  pageSize: number
+  pagesCount: number
+  prevCursor: number
+  totalCount: number
 }
 
 //Answers

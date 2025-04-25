@@ -4,7 +4,7 @@ import HeartOutline from '@/assets/icons/components/filled-outlined-pairs/HeartO
 import PaperPlaneOutline from '@/assets/icons/components/outlined/PaperPlaneOutline'
 import { IconButton } from '@/shared/ui'
 type Props = {
-  isLiked: boolean
+  isLiked?: boolean
   togglePostLike: () => void
 }
 const InteractionButtons = ({ isLiked, togglePostLike }: Props) => {

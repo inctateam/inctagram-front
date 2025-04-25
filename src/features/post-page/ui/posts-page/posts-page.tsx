@@ -4,19 +4,21 @@ import { toast } from 'react-toastify'
 
 import BookmarkOutline from '@/assets/icons/components/filled-outlined-pairs/BookmarkOutline'
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
-import HeartOutline from '@/assets/icons/components/filled-outlined-pairs/HeartOutline'
-import MessageCircleOutline from '@/assets/icons/components/filled-outlined-pairs/MessageCircleOutline'
 import PersonAdd from '@/assets/icons/components/filled-outlined-pairs/PersonAdd'
 import PersonRemove from '@/assets/icons/components/filled-outlined-pairs/PersonRemove'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
-import PaperPlaneOutline from '@/assets/icons/components/outlined/PaperPlaneOutline'
 import { useMeQuery } from '@/features/auth/api'
 import { usePublicPostCommentsQuery, usePublicPostsByIdQuery } from '@/features/home-page/api'
 import {
   useGetPublicPostsByUserIdQuery,
   useLazyGetPublicPostsByUserIdQuery,
 } from '@/features/home-page/ui/user-profile/api/user-profile.api'
-import { usePostCommentsQuery } from '@/features/post-page/api'
+import {
+  usePostCommentsQuery,
+  usePostLikesQuery,
+  useUploadPostLikeStatusMutation,
+} from '@/features/post-page/api'
+import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst'
 import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Avatar, Button, Dropdown, ProgressBar, Spinner, Textarea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
@@ -72,11 +74,13 @@ export const PostsPage = ({ postId, userId }: Props) => {
     pageSize: POSTS_PER_PAGE,
     userId,
   })
+  const { data: postLikes } = usePostLikesQuery({ postId })
+  const [statusLiked, setStatusLiked] = useState<boolean | undefined>(undefined)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: postId })
   const { data: privateComments } = usePostCommentsQuery({ postId: postId })
   const comments = me ? privateComments : publicComments
   const [trigger, { isFetching: isFetchingMore }] = useLazyGetPublicPostsByUserIdQuery()
-
+  const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
   const viewportRef = useRef<HTMLDivElement>(null)
   const loadMorePosts = useCallback(() => {
     if (
@@ -96,6 +100,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
   }, [posts, isFetchingMore, trigger, userId])
 
   useEffect(() => {
+    setStatusLiked(postLikes?.items.some(user => user.userId === userId))
     const handleScroll = () => {
       const viewport = viewportRef.current
 
@@ -117,7 +122,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
         viewport.removeEventListener('scroll', handleScroll)
       }
     }
-  }, [posts, isFetchingMore, viewportRef, trigger, loadMorePosts])
+  }, [posts, isFetchingMore, viewportRef, trigger, loadMorePosts, postLikes?.items, userId])
 
   if (errorPost || errorPosts) {
     toast.error('Error loading posts')
@@ -141,6 +146,14 @@ export const PostsPage = ({ postId, userId }: Props) => {
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
   const dropDownItems = me?.userId === post?.ownerId ? dropAdd : dropRemove
   const handleActionPostsPage = () => {}
+  const handlerTogglePostLike = async () => {
+    try {
+      await uploadPostLikeStatus({ postId }).unwrap()
+      setStatusLiked(prev => !prev)
+    } catch {
+      toast.error('The post has not been found')
+    }
+  }
 
   const handleOpenClosePostModal = () => {
     setOpenPostId(prev => !prev)
@@ -174,9 +187,9 @@ export const PostsPage = ({ postId, userId }: Props) => {
           </div>
           <div className={'flex justify-between items-center'}>
             <div className={'flex justify-start items-center gap-5'}>
-              <HeartOutline height={'24px'} width={'24px'} />
-              <MessageCircleOutline height={'24px'} width={'24px'} />
-              <PaperPlaneOutline height={'24px'} width={'24px'} />
+              {me?.userId && (
+                <InteractionButtons isLiked={statusLiked} togglePostLike={handlerTogglePostLike} />
+              )}
             </div>
             <BookmarkOutline height={'24px'} width={'24px'} />
           </div>
