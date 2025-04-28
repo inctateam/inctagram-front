@@ -53,7 +53,8 @@ const myDropDown = [
     label: 'Delete post',
   },
 ]
-const friendDropDown = [
+
+export const friendDropDown = [
   {
     icon: <PersonAdd />,
     label: 'Follow',

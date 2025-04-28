@@ -21,15 +21,7 @@ const LikesList = (props: LikesListProps) => {
       <div className={'flex mr-3'}>
         <div className={'flex -space-x-2'}>
           {avatarWhoLikes.slice(0, 3).map((avatar, index) => {
-            return (
-              <Avatar
-                alt={'Avatar who likes'}
-                // className={`absolute left-${index} z-${index}`}
-                key={index}
-                size={6}
-                src={avatar}
-              />
-            )
+            return <Avatar alt={'Avatar who likes'} key={index} size={6} src={avatar} />
           })}
         </div>
         <Typography variant={'regular14'}>

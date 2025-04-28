@@ -5,11 +5,12 @@ type PostDescriptionProps = {
   avatar?: string
   createdAt: string
   description?: string
+  isTimeAgoMode?: boolean
   userName: string
 }
 
 const Description = (props: PostDescriptionProps) => {
-  const { avatar, createdAt, description, userName } = props
+  const { avatar, createdAt, description, isTimeAgoMode = true, userName } = props
 
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true })
 
@@ -25,11 +26,13 @@ const Description = (props: PostDescriptionProps) => {
           </Typography>{' '}
           {description}
         </Typography>
-        <div>
-          <Typography as={'p'} className={'text-light-900'} variant={'small'}>
-            {timeAgo}
-          </Typography>
-        </div>
+        {isTimeAgoMode && (
+          <div>
+            <Typography as={'p'} className={'text-light-900'} variant={'small'}>
+              {timeAgo}
+            </Typography>
+          </div>
+        )}
       </div>
     </div>
   )
