@@ -3,18 +3,19 @@ import { format } from 'date-fns'
 
 type LikesListProps = {
   avatarWhoLikes: string[]
-  createdAt: string
+  createdAt?: string
   likesCount: number
 }
 
 const LikesList = (props: LikesListProps) => {
   const { avatarWhoLikes, createdAt, likesCount } = props
 
-  const formatDate = (dateString: string) => {
+  function formatDate(dateString: string) {
     const date = new Date(dateString)
 
     return format(date, 'MMMM d, yyyy')
   }
+  const formatedDate = createdAt ? formatDate(createdAt) : null
 
   return (
     <div className={'flex flex-col gap-1'}>
@@ -31,9 +32,11 @@ const LikesList = (props: LikesListProps) => {
           </Typography>
         </Typography>
       </div>
-      <Typography className={'text-light-900'} variant={'small'}>
-        {formatDate(createdAt)}
-      </Typography>
+      {createdAt && (
+        <Typography className={'text-light-900'} variant={'small'}>
+          {formatedDate}
+        </Typography>
+      )}
     </div>
   )
 }

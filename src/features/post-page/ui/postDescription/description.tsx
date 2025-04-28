@@ -3,16 +3,15 @@ import { formatDistanceToNow } from 'date-fns'
 
 type PostDescriptionProps = {
   avatar?: string
-  createdAt: string
+  createdAt?: string
   description?: string
-  isTimeAgoMode?: boolean
   userName: string
 }
 
 const Description = (props: PostDescriptionProps) => {
-  const { avatar, createdAt, description, isTimeAgoMode = true, userName } = props
+  const { avatar, createdAt, description, userName } = props
 
-  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true })
+  const timeAgo = createdAt ? formatDistanceToNow(new Date(createdAt), { addSuffix: true }) : null
 
   return (
     <div className={'flex gap-3'}>
@@ -26,7 +25,7 @@ const Description = (props: PostDescriptionProps) => {
           </Typography>{' '}
           {description}
         </Typography>
-        {isTimeAgoMode && (
+        {createdAt && (
           <div>
             <Typography as={'p'} className={'text-light-900'} variant={'small'}>
               {timeAgo}

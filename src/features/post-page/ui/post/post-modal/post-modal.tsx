@@ -54,7 +54,7 @@ const myDropDown = [
   },
 ]
 
-export const friendDropDown = [
+const friendDropDown = [
   {
     icon: <PersonAdd />,
     label: 'Follow',
