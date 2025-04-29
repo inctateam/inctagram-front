@@ -19,12 +19,14 @@ const Description = (props: PostDescriptionProps) => {
         <Avatar alt={'User Avatar'} size={9} src={avatar} />
       </div>
       <div>
-        <Typography as={'p'} className={'text-balance mb-1'} variant={'regular14'}>
-          <Typography as={'span'} variant={'bold14'}>
+        <p className={'mb-1'}>
+          <Typography as={'span'} className={'mr-1'} variant={'bold14'}>
             {userName}
-          </Typography>{' '}
-          {description}
-        </Typography>
+          </Typography>
+          <Typography as={'span'} variant={'regular14'}>
+            {description}
+          </Typography>
+        </p>
         <div>
           <Typography as={'p'} className={'text-light-900'} variant={'small'}>
             {timeAgo}

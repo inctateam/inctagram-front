@@ -109,7 +109,6 @@ const PostModal = (props: PostModalProps) => {
       setIsDeletePost(true)
     }
   }
-
   // Функция для обновления описания
   const handleDescriptionUpdate = (newDescription: string) => {
     setCurrentDescription(newDescription) // Обновляем описание в состоянии
@@ -128,9 +127,12 @@ const PostModal = (props: PostModalProps) => {
   }
   const handlerTogglePostLike = async () => {
     try {
-      await uploadPostLikeStatus({ postId: id }).unwrap()
+      const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+
       setStatusLiked(prev => !prev)
+      await uploadPostLikeStatus({ likeStatus, postId: id }).unwrap()
     } catch {
+      setStatusLiked(prev => !prev)
       toast.error('The post has not been found')
     }
   }

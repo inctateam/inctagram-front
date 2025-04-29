@@ -116,3 +116,7 @@ export interface Image {
 export interface UploadFileResponse {
   images: Image[]
 }
+export interface UploadPostLikeStatusArgs {
+  likeStatus: 'DISLIKE' | 'LIKE' | 'NONE'
+  postId: number
+}
