@@ -148,9 +148,12 @@ export const PostsPage = ({ postId, userId }: Props) => {
   const handleActionPostsPage = () => {}
   const handlerTogglePostLike = async () => {
     try {
-      await uploadPostLikeStatus({ postId }).unwrap()
+      const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+
       setStatusLiked(prev => !prev)
+      await uploadPostLikeStatus({ likeStatus, postId }).unwrap()
     } catch {
+      setStatusLiked(prev => !prev)
       toast.error('The post has not been found')
     }
   }
@@ -198,10 +201,10 @@ export const PostsPage = ({ postId, userId }: Props) => {
               <Avatar alt={'avatar'} size={9} src={post.avatarOwner} />
             </Link>
             <p>
-              <Typography as={'span'} className={'text-sm font-bold inline mr-1'}>
+              <Typography as={'span'} className={'mr-1'} variant={'bold14'}>
                 {post.userName}
               </Typography>
-              <Typography as={'span'} className={'inline'} variant={'regular14'}>
+              <Typography as={'span'} variant={'regular14'}>
                 {post.description}
               </Typography>
             </p>
