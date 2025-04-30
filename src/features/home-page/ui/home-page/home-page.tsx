@@ -4,28 +4,28 @@ import { useCallback, useRef, useState } from 'react'
 
 import { usePublicationsFollowersQuery } from '@/features/home-page/api'
 import Publication from '@/features/home-page/ui/home-page/publication/publication'
-import { ProgressBar, ScrollArea } from '@/shared/ui'
+import { ProgressBar } from '@/shared/ui'
 import { formatDistanceToNow } from 'date-fns'
 
-export const HomePage = () => {
-  const [cursor, setCursor] = useState(0)
-  const [page, setPage] = useState(1)
+const INITIAL_CURSOR = 0
+const INITIAL_PAGE_SIZE = 4
 
+export const HomePage = () => {
+  const [cursor, setCursor] = useState(INITIAL_CURSOR)
   const {
     data: publications,
     isError,
     isFetching,
     isLoading,
-  } = usePublicationsFollowersQuery({
-    endCursorPostId: cursor,
-    pageNumber: page,
-    pageSize: 12,
-  })
+  } = usePublicationsFollowersQuery(
+    { endCursorPostId: cursor, pageSize: INITIAL_PAGE_SIZE },
+    { refetchOnMountOrArgChange: true }
+  )
 
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (isFetching || !publications?.nextCursor || publications.nextCursor === 0) {
+      if (isFetching || !publications?.nextCursor) {
         return
       }
 
@@ -37,7 +37,6 @@ export const HomePage = () => {
         entries => {
           if (entries[0].isIntersecting) {
             setCursor(publications.nextCursor!)
-            setPage(prev => prev + 1)
           }
         },
         { threshold: 0.1 }
@@ -54,7 +53,7 @@ export const HomePage = () => {
     return <div className={'text-red-500 text-center'}>🚫 ERROR! Posts not found!</div>
   }
 
-  if (!publications?.items?.length && !isLoading) {
+  if (publications?.items?.length === 0 && !isLoading) {
     return (
       <div className={'flex w-full justify-center items-start text-light-900'}>
         There are no publications yet 🙁
@@ -63,13 +62,12 @@ export const HomePage = () => {
   }
 
   return (
-    // <ScrollArea viewportRef={lastItemRef}>
     <div className={'flex flex-col w-full justify-center items-center gap-6'}>
       {(isLoading || isFetching) && <ProgressBar />}
-      {publications?.items.map((publication, index) => {
-        const isLast = index === publications.items.length - 1
+      {(publications?.items ?? []).map((publication, index, arr) => {
         const timeAgo = formatDistanceToNow(new Date(publication.createdAt), { addSuffix: true })
         const postImages = publication.images.map(i => i.url)
+        const isLast = index === arr.length - 1
 
         return (
           <div key={publication.id} ref={isLast ? lastItemRef : null}>
@@ -78,6 +76,5 @@ export const HomePage = () => {
         )
       })}
     </div>
-    // </ScrollArea>
   )
 }

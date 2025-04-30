@@ -42,6 +42,7 @@ export const homePageApi = instagramApi.injectEndpoints({
     >({
       merge: (currentCache, newResponse) => {
         return {
+          ...currentCache,
           ...newResponse,
           items: [
             ...(currentCache?.items || []),
