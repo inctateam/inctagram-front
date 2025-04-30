@@ -1,81 +1,83 @@
 'use client'
+
+import { useCallback, useRef, useState } from 'react'
+
 import { usePublicationsFollowersQuery } from '@/features/home-page/api'
 import Publication from '@/features/home-page/ui/home-page/publication/publication'
-import { ProgressBar } from '@/shared/ui'
+import { ProgressBar, ScrollArea } from '@/shared/ui'
 import { formatDistanceToNow } from 'date-fns'
 
 export const HomePage = () => {
+  const [cursor, setCursor] = useState(0)
+  const [page, setPage] = useState(1)
+
   const {
-    data: publicationsFollowers,
+    data: publications,
     isError,
     isFetching,
     isLoading,
   } = usePublicationsFollowersQuery({
-    endCursorPostId: 0,
-    pageNumber: 1,
+    endCursorPostId: cursor,
+    pageNumber: page,
     pageSize: 12,
   })
 
-  console.log('publicationsFollowers', publicationsFollowers)
+  const observer = useRef<IntersectionObserver | null>(null)
+  const lastItemRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetching || !publications?.nextCursor || publications.nextCursor === 0) {
+        return
+      }
+
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting) {
+            setCursor(publications.nextCursor!)
+            setPage(prev => prev + 1)
+          }
+        },
+        { threshold: 0.1 }
+      )
+
+      if (node) {
+        observer.current.observe(node)
+      }
+    },
+    [isFetching, publications?.nextCursor]
+  )
+
   if (isError) {
-    return <div>ERROR! Posts not found!</div>
+    return <div className={'text-red-500 text-center'}>🚫 ERROR! Posts not found!</div>
   }
-  if (publicationsFollowers?.items?.length === 0) {
+
+  if (!publications?.items?.length && !isLoading) {
     return (
       <div className={'flex w-full justify-center items-start text-light-900'}>
-        There is no publications yet🙁
+        There are no publications yet 🙁
       </div>
     )
   }
 
   return (
+    // <ScrollArea viewportRef={lastItemRef}>
     <div className={'flex flex-col w-full justify-center items-center gap-6'}>
-      {isLoading || (isFetching && <ProgressBar />)}
-      {publicationsFollowers?.items &&
-        publicationsFollowers?.items.map(publication => {
-          const timeAgo = formatDistanceToNow(new Date(publication.createdAt), { addSuffix: true })
-          const postImages = publication.images.map(i => i.url)
+      {(isLoading || isFetching) && <ProgressBar />}
+      {publications?.items.map((publication, index) => {
+        const isLast = index === publications.items.length - 1
+        const timeAgo = formatDistanceToNow(new Date(publication.createdAt), { addSuffix: true })
+        const postImages = publication.images.map(i => i.url)
 
-          return (
-            <Publication
-              key={publication.id}
-              postImages={postImages}
-              publication={publication}
-              timeAgo={timeAgo}
-            />
-          )
-        })}
+        return (
+          <div key={publication.id} ref={isLast ? lastItemRef : null}>
+            <Publication postImages={postImages} publication={publication} timeAgo={timeAgo} />
+          </div>
+        )
+      })}
     </div>
+    // </ScrollArea>
   )
 }
-// <div className={'flex flex-col w-[491px]'} key={publication.id}>
-//   <div className={'flex justify-between items-center w-full mb-3'}>
-//     <div className={'flex gap-1 justify-center items-center'}>
-//       <AvatarBlock
-//         avatarOwner={publication.avatarOwner}
-//         ownerId={publication.ownerId}
-//         userName={publication.userName}
-//       />
-//       <span className={'text-[12px] text-light-900 mb-1'}>●</span>
-//       <p className={'text-[12px] text-light-900'}>{timeAgo}</p>
-//     </div>
-//     <Dropdown
-//       className={'bg-dark-500'}
-//       items={dropDownItems}
-//       onClick={handleActionDropdown}
-//     />
-//   </div>
-//   <ImageContent itemImages={postImages} />
-//   <InteractionButtons isLiked={publication.isLiked} togglePostLike={() => {}} />
-//   <Description
-//     avatar={publication.avatarOwner}
-//     description={publication.description}
-//     userName={publication.userName}
-//   />
-//   <LikesList
-//     avatarWhoLikes={publication.avatarWhoLikes}
-//     likesCount={publication.likesCount}
-//   />
-//   <p>----View All Comments----</p>
-//   <CommentForm onSubmit={() => {}} />
-// </div>

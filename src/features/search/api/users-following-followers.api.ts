@@ -13,6 +13,7 @@ export const usersFollowingFollowersApi = instagramApi.injectEndpoints({
       }),
     }),
     getUserByName: builder.query<GetUserByNameResponse, { userName: string }>({
+      // providesTags: (result, error, { userName }) => [{ id: userName, type: 'UsersByName' }],
       providesTags: ['UsersByName'],
       query: ({ userName }) => ({
         method: 'GET',
@@ -46,6 +47,7 @@ export const usersFollowingFollowersApi = instagramApi.injectEndpoints({
       serializeQueryArgs: ({ endpointName, queryArgs }) => `${endpointName} ${queryArgs.search}`,
     }),
     removeFollower: builder.mutation<void, { userId: number }>({
+      // invalidatesTags: (result, error, { userId }) => [{ id: userId, type: 'UsersByName' }],
       invalidatesTags: ['UsersByName'],
       query: ({ userId }) => ({
         method: 'DELETE',

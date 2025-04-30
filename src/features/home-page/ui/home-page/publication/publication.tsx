@@ -5,7 +5,9 @@ import { toast } from 'react-toastify'
 
 import { PersonAdd, PersonRemoveOutline } from '@/assets/icons'
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PublicationsFollowersItem } from '@/features/home-page/types'
+import { useUploadPostLikeStatusMutation } from '@/features/post-page/api'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
@@ -15,6 +17,7 @@ import {
   useGetUserByNameQuery,
   useRemoveFollowerMutation,
 } from '@/features/search/api/users-following-followers.api'
+import { useBoolean } from '@/shared/hooks'
 import { Dropdown, ImageContent } from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 type Props = {
@@ -24,9 +27,12 @@ type Props = {
 }
 const Publication = ({ postImages, publication, timeAgo }: Props) => {
   const [isFollowing, setIsFollowing] = useState(true)
+  const [isLiked, { setFalse: setUnLike, setTrue: setLike }] = useBoolean(false)
+
   const { data } = useGetUserByNameQuery({ userName: publication.userName })
   const [follow] = useFollowingMutation()
   const [unFollow] = useRemoveFollowerMutation()
+  const [updateLikeStatus] = useUploadPostLikeStatusMutation()
   const dropDownItems = [
     {
       action: isFollowing ? 'unfollow' : 'follow',
@@ -43,6 +49,9 @@ const Publication = ({ postImages, publication, timeAgo }: Props) => {
   useEffect(() => {
     if (data?.isFollowing) {
       setIsFollowing(true)
+    }
+    if (publication?.isLiked) {
+      setLike()
     }
   }, [])
   const handleActionDropdown = async (label: string) => {
@@ -72,6 +81,21 @@ const Publication = ({ postImages, publication, timeAgo }: Props) => {
       }
     }
   }
+  const onLikeClickHandler = async () => {
+    const likeStatus = isLiked ? 'NONE' : 'LIKE'
+
+    try {
+      await updateLikeStatus({ likeStatus, postId: publication.id }).unwrap()
+
+      if (likeStatus === 'LIKE') {
+        setLike()
+      } else {
+        setUnLike()
+      }
+    } catch (e) {
+      handleRequestError(e)
+    }
+  }
 
   return (
     <div className={'flex flex-col w-[491px]'}>
@@ -88,7 +112,7 @@ const Publication = ({ postImages, publication, timeAgo }: Props) => {
         <Dropdown className={'bg-dark-500'} items={dropDownItems} onClick={handleActionDropdown} />
       </div>
       <ImageContent itemImages={postImages} />
-      <InteractionButtons isLiked={publication.isLiked} togglePostLike={() => {}} />
+      <InteractionButtons isLiked={isLiked} togglePostLike={onLikeClickHandler} />
       <Description
         avatar={publication.avatarOwner}
         description={publication.description}

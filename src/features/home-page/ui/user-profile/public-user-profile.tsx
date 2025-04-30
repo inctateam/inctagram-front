@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
 import {
   useFollowingMutation,
@@ -126,8 +127,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
       // Обновим данные пользователя после действия
       await refetchUserByNameData()
     } catch (e) {
-      console.error(e)
-      toast.error('Something went wrong. Please try again.')
+      handleRequestError(e)
     }
   }
 

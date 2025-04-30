@@ -6,6 +6,7 @@ import {
   CommentsResponse,
   GetCommentAnswersArgs,
   GetPostCommentsArgs,
+  PostLikeStatus,
   UploadFileResponse,
   UserPostResponse,
   UserPostsArgs,
@@ -93,10 +94,10 @@ export const postPageApi = instagramApi.injectEndpoints({
         }
       },
     }),
-    uploadPostLikeStatus: builder.mutation<void, { postId: number }>({
-      query: ({ postId }) => ({
+    uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
+      query: ({ likeStatus = 'NONE', postId }) => ({
         body: {
-          likeStatus: 'YES',
+          likeStatus,
         },
         method: 'PUT',
         url: `v1/posts/${postId}/like-status`,

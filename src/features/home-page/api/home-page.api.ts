@@ -5,7 +5,6 @@ import {
   PublicPostItem,
   PublicPostsArgs,
   PublicPostsResponse,
-  PublicationsFollowersItem,
   PublicationsFollowersQueryArgs,
   PublicationsFollowersResponse,
   TotalCountRegisteredUsersResponse,
@@ -41,9 +40,22 @@ export const homePageApi = instagramApi.injectEndpoints({
       PublicationsFollowersResponse,
       PublicationsFollowersQueryArgs
     >({
-      query: () => ({
+      merge: (currentCache, newResponse) => {
+        return {
+          ...newResponse,
+          items: [
+            ...(currentCache?.items || []),
+            ...(newResponse?.items || []).filter(
+              newItem => !(currentCache?.items || []).some(item => item.id === newItem.id)
+            ),
+          ],
+        }
+      },
+      query: params => ({
+        params,
         url: 'v1/home/publications-followers',
       }),
+      serializeQueryArgs: ({ endpointName }) => endpointName,
     }),
     totalCountRegisteredUsers: builder.query<TotalCountRegisteredUsersResponse, void>({
       query: () => ({

@@ -116,3 +116,5 @@ export interface Image {
 export interface UploadFileResponse {
   images: Image[]
 }
+
+export type PostLikeStatus = 'DISLIKE' | 'LIKE' | 'NONE'
