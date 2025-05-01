@@ -4,11 +4,10 @@ import { format } from 'date-fns'
 type LikesListProps = {
   avatarWhoLikes: string[]
   createdAt: string
-  likesCount: number
 }
 
 const LikesList = (props: LikesListProps) => {
-  const { avatarWhoLikes, createdAt, likesCount } = props
+  const { avatarWhoLikes, createdAt } = props
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -33,9 +32,9 @@ const LikesList = (props: LikesListProps) => {
           })}
         </div>
         <Typography variant={'regular14'}>
-          {likesCount}{' '}
+          {avatarWhoLikes.length}{' '}
           <Typography as={'span'} variant={'bold14'}>
-            {likesCount === 1 ? 'Like' : 'Likes'}
+            {avatarWhoLikes.length === 1 ? 'Like' : 'Likes'}
           </Typography>
         </Typography>
       </div>
