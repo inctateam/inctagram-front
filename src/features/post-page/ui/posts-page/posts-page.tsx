@@ -19,7 +19,6 @@ import {
   useUploadPostLikeStatusMutation,
 } from '@/features/post-page/api'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst'
-import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Avatar, Button, Dropdown, ProgressBar, Spinner, Textarea, Typography } from '@/shared/ui'
 import { ImageContent } from '@/shared/ui/image-content'
 import { PostBlock } from '@/shared/ui/post-block'
@@ -59,12 +58,12 @@ type Props = {
 }
 
 export const PostsPage = ({ postId, userId }: Props) => {
-  const [openPostId, setOpenPostId] = useState(false)
   const { data: me } = useMeQuery()
   const {
     data: post,
     error: errorPost,
     isLoading: isLoadingPost,
+    refetch: refetchPost,
   } = usePublicPostsByIdQuery({ postId })
   const {
     data: posts,
@@ -75,6 +74,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
     userId,
   })
   const { data: postLikes } = usePostLikesQuery({ postId })
+  const [openPostId, setOpenPostId] = useState<null | number>(null)
   const [statusLiked, setStatusLiked] = useState<boolean | undefined>(undefined)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: postId })
   const { data: privateComments } = usePostCommentsQuery({ postId: postId })
@@ -152,14 +152,17 @@ export const PostsPage = ({ postId, userId }: Props) => {
 
       setStatusLiked(prev => !prev)
       await uploadPostLikeStatus({ likeStatus, postId }).unwrap()
+      refetchPost()
     } catch {
       setStatusLiked(prev => !prev)
       toast.error('The post has not been found')
     }
   }
-
-  const handleOpenClosePostModal = () => {
-    setOpenPostId(prev => !prev)
+  const handleOpenPostModal = () => {
+    setOpenPostId(postId)
+  }
+  const handleClosePostModal = () => {
+    setOpenPostId(null)
   }
 
   return (
@@ -230,7 +233,7 @@ export const PostsPage = ({ postId, userId }: Props) => {
           </div>
           <Button
             className={'p-0 text-light-900 text-sm font-bold'}
-            onClick={handleOpenClosePostModal}
+            onClick={handleOpenPostModal}
             variant={'text'}
           >
             View All Comments ({comments?.items.length})
@@ -246,11 +249,13 @@ export const PostsPage = ({ postId, userId }: Props) => {
             </Button>
           </form>
         </div>
-        <PostBlock data={posts} me={me} />
+        <PostBlock
+          data={posts}
+          me={me}
+          onClosePostModal={handleClosePostModal}
+          openPostId={openPostId}
+        />
       </div>
-      <PostModal me={me} onOpenChange={handleOpenClosePostModal} open={openPostId} post={post}>
-        <ImageContent itemImages={post.images.map(image => image.url)} />
-      </PostModal>
     </ScrollArea>
   )
 }

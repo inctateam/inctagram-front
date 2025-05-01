@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { MeResponse } from '@/features/auth/types'
 import { PublicPostItem } from '@/features/home-page/types'
@@ -11,15 +11,23 @@ import { formatDistanceToNow } from 'date-fns'
 type Props = {
   item: PublicPostItem
   me: MeResponse | undefined
+  onClosePostModal?: () => void
+  openPost?: boolean
 }
 const MIN_LETTERS = 70
 const MAX_LETTERS = 240
 
-export const Post = ({ item, me }: Props) => {
+export const Post = ({ item, me, onClosePostModal, openPost }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [openPostId, setOpenPostId] = useState(false)
+  const [openPostId, setOpenPostId] = useState(openPost || false)
   const [selectedIndex, setSelectedIndex] = useState(0) // Храним текущий индекс изображения
   const [itemImages, setItemImages] = useState(item.images) // Храним изображения
+
+  useEffect(() => {
+    if (openPost !== undefined) {
+      setOpenPostId(openPost)
+    }
+  }, [openPost])
 
   const timeAgo = formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })
 
@@ -53,6 +61,9 @@ export const Post = ({ item, me }: Props) => {
       setItemImages(item.images)
     }*/
     setOpenPostId(prev => !prev)
+    if (onClosePostModal) {
+      onClosePostModal()
+    }
   }
 
   const shortDescription =
