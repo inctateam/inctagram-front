@@ -18,7 +18,9 @@ import { useBoolean } from '@/shared/hooks'
 export const usePostInteractions = (publication: PublicationsFollowersItem) => {
   const [isFollowing, setIsFollowing] = useState(true)
   const [isLiked, { setFalse: setUnLike, setTrue: setLike }] = useBoolean(false)
-  const { data } = useGetUserByNameQuery({ userName: publication.userName })
+  const { data: userByName } = useGetUserByNameQuery({
+    userName: publication.userName,
+  })
   const [follow] = useFollowingMutation()
   const [unFollow] = useRemoveFollowerMutation()
   const [updateLikeStatus] = useUploadPostLikeStatusMutation()
@@ -26,8 +28,8 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
   const { data: publicationComments } = usePostCommentsQuery({ postId: publication.id })
 
   useEffect(() => {
-    if (data?.isFollowing) {
-      setIsFollowing(true)
+    if (userByName?.isFollowing) {
+      setIsFollowing(userByName.isFollowing)
     }
 
     if (publication.isLiked) {
@@ -35,7 +37,7 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
     } else {
       setUnLike()
     }
-  }, [publication.isLiked])
+  }, [publication.isLiked, userByName?.isFollowing, isFollowing])
 
   const handleLikeToggle = async () => {
     const likeStatus = isLiked ? 'NONE' : 'LIKE'
@@ -63,7 +65,8 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
         await unFollow({ userId: publication.ownerId }).unwrap()
         setIsFollowing(false)
         toast.success('You un-followed')
-      } else {
+      }
+      if (!isFollowing) {
         await follow({ userId: publication.ownerId }).unwrap()
         setIsFollowing(true)
         toast.success('You followed')
