@@ -148,7 +148,9 @@ export const PostsPage = ({ postId, userId }: Props) => {
   const handleActionPostsPage = () => {}
   const handlerTogglePostLike = async () => {
     try {
-      await uploadPostLikeStatus({ postId }).unwrap()
+      const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+
+      await uploadPostLikeStatus({ likeStatus, postId }).unwrap()
       setStatusLiked(prev => !prev)
     } catch {
       toast.error('The post has not been found')

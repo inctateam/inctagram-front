@@ -14,7 +14,7 @@ const Description = (props: PostDescriptionProps) => {
   const timeAgo = createdAt ? formatDistanceToNow(new Date(createdAt), { addSuffix: true }) : null
 
   return (
-    <div className={'flex gap-3'}>
+    <div className={'flex gap-4 pr-3 mb-2'}>
       <div>
         <Avatar alt={'User Avatar'} size={9} src={avatar} />
       </div>

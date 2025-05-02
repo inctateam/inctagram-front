@@ -36,5 +36,5 @@ export default function Home() {
     return <PublicPage me={me} />
   }
 
-  return <HomePage me={me} />
+  return <HomePage />
 }
