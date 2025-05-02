@@ -20,7 +20,7 @@ const LikesList = (props: LikesListProps) => {
 
   return (
     <div className={'flex flex-col gap-1'}>
-      <div className={'flex mr-3'}>
+      <div className={'flex mr-3 gap-2'}>
         <div className={'flex -space-x-2'}>
           {avatarsItems.map((avatar, index) => {
             return <Avatar alt={'Avatar who likes'} key={index} size={6} src={avatar} />

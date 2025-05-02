@@ -44,14 +44,12 @@ export const homePageApi = instagramApi.injectEndpoints({
       merge: (currentCache, newResponse) => {
         const mergedItemsMap = new Map<number, PublicationsFollowersItem>()
 
-        // Добавляем существующие
         for (const item of currentCache?.items || []) {
           mergedItemsMap.set(item.id, item)
         }
 
-        // Обновляем или добавляем новые
         for (const newItem of newResponse?.items || []) {
-          mergedItemsMap.set(newItem.id, newItem) // заменит, если id уже есть
+          mergedItemsMap.set(newItem.id, newItem)
         }
 
         return {

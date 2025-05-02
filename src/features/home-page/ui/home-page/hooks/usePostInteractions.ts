@@ -3,7 +3,11 @@ import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PublicationsFollowersItem } from '@/features/home-page/types'
-import { useUploadPostLikeStatusMutation } from '@/features/post-page/api'
+import {
+  useAddPostCommentMutation,
+  usePostCommentsQuery,
+  useUploadPostLikeStatusMutation,
+} from '@/features/post-page/api'
 import {
   useFollowingMutation,
   useGetUserByNameQuery,
@@ -18,6 +22,8 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
   const [follow] = useFollowingMutation()
   const [unFollow] = useRemoveFollowerMutation()
   const [updateLikeStatus] = useUploadPostLikeStatusMutation()
+  const [addPostComment] = useAddPostCommentMutation()
+  const { data: publicationComments } = usePostCommentsQuery({ postId: publication.id })
 
   useEffect(() => {
     if (data?.isFollowing) {
@@ -74,7 +80,20 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
     toast('Link copied to clipboard')
   }
 
+  const addPostCommentHandle = async (content: string) => {
+    if (content.length === 0) {
+      return
+    }
+    try {
+      await addPostComment({ content, postId: publication.id }).unwrap()
+    } catch (e) {
+      handleRequestError(e)
+    }
+  }
+
   return {
+    addPostCommentHandle,
+    comments: publicationComments?.items || [],
     handleCopyLink,
     handleFollowToggle,
     handleLikeToggle,
