@@ -60,7 +60,7 @@ export const homePageApi = instagramApi.injectEndpoints({
           items: Array.from(mergedItemsMap.values()),
         }
       },
-      providesTags: (result, error, arg) => [{ id: 'LIST', type: 'PublicationsFollowers' }],
+      providesTags: () => [{ id: 'LIST', type: 'PublicationsFollowers' }],
       query: params => ({
         params,
         url: 'v1/home/publications-followers',
