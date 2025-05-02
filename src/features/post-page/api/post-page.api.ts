@@ -95,10 +95,9 @@ export const postPageApi = instagramApi.injectEndpoints({
       },
     }),
     uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
+      invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }],
       query: ({ likeStatus = 'NONE', postId }) => ({
-        body: {
-          likeStatus,
-        },
+        body: { likeStatus },
         method: 'PUT',
         url: `v1/posts/${postId}/like-status`,
       }),

@@ -5,6 +5,7 @@ import {
   PublicPostItem,
   PublicPostsArgs,
   PublicPostsResponse,
+  PublicationsFollowersItem,
   PublicationsFollowersQueryArgs,
   PublicationsFollowersResponse,
   TotalCountRegisteredUsersResponse,
@@ -41,17 +42,25 @@ export const homePageApi = instagramApi.injectEndpoints({
       PublicationsFollowersQueryArgs
     >({
       merge: (currentCache, newResponse) => {
+        const mergedItemsMap = new Map<number, PublicationsFollowersItem>()
+
+        // Добавляем существующие
+        for (const item of currentCache?.items || []) {
+          mergedItemsMap.set(item.id, item)
+        }
+
+        // Обновляем или добавляем новые
+        for (const newItem of newResponse?.items || []) {
+          mergedItemsMap.set(newItem.id, newItem) // заменит, если id уже есть
+        }
+
         return {
           ...currentCache,
           ...newResponse,
-          items: [
-            ...(currentCache?.items || []),
-            ...(newResponse?.items || []).filter(
-              newItem => !(currentCache?.items || []).some(item => item.id === newItem.id)
-            ),
-          ],
+          items: Array.from(mergedItemsMap.values()),
         }
       },
+      providesTags: (result, error, arg) => [{ id: 'LIST', type: 'PublicationsFollowers' }],
       query: params => ({
         params,
         url: 'v1/home/publications-followers',
