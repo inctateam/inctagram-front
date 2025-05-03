@@ -34,7 +34,7 @@ export const signUpSchema = ({ tErrors }: SchemaProps) =>
         .string()
         .min(1, tErrors.requiredField)
         .min(6, tErrors.usernameMinLength)
-        .max(30, tErrors.usernameMaxLength),
+        .max(20, tErrors.usernameMaxLength),
     })
     .refine(data => data.password === data.passwordConfirmation, {
       message: tErrors.passwordConfirmation,

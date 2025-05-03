@@ -40,7 +40,7 @@ type PostModalProps = {
   me: MeResponse | undefined
   onDelete?: (postId: number) => void
   onOpenChange: (open: boolean) => void
-  open: boolean
+  open?: boolean
   post: PublicPostItem
 }
 const myDropDown = [
@@ -66,12 +66,11 @@ const friendDropDown = [
 ]
 const PostModal = (props: PostModalProps) => {
   const { children, me, onDelete, onOpenChange, open, post } = props
-  const { avatarOwner, avatarWhoLikes, createdAt, description, id, likesCount, ownerId, userName } =
-    post
+  const { avatarOwner, createdAt, description, id, ownerId, userName } = post
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
   const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
   const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
-  const { data: postLikes } = usePostLikesQuery({ postId: id })
+  const { data: postLikes, refetch: refetchPostLikes } = usePostLikesQuery({ postId: id })
   const [statusLiked, setStatusLiked] = useState<boolean | undefined>(undefined)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
@@ -80,6 +79,11 @@ const PostModal = (props: PostModalProps) => {
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
   const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
+
+  const avatarUrls: string[] =
+    postLikes?.items
+      ?.map(item => item.avatars[0]?.url) // может вернуть (string | undefined)[]
+      .filter((url): url is string => Boolean(url)) ?? [] // фильтруем undefined и приводим к string[]
 
   useEffect(() => {
     setStatusLiked(postLikes?.items.some(user => user.userId === me?.userId))
@@ -110,7 +114,6 @@ const PostModal = (props: PostModalProps) => {
       setIsDeletePost(true)
     }
   }
-
   // Функция для обновления описания
   const handleDescriptionUpdate = (newDescription: string) => {
     setCurrentDescription(newDescription) // Обновляем описание в состоянии
@@ -129,9 +132,13 @@ const PostModal = (props: PostModalProps) => {
   }
   const handlerTogglePostLike = async () => {
     try {
-      await uploadPostLikeStatus({ postId: id }).unwrap()
+      const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+
       setStatusLiked(prev => !prev)
+      await uploadPostLikeStatus({ likeStatus, postId: id }).unwrap()
+      refetchPostLikes()
     } catch {
+      setStatusLiked(prev => !prev)
       toast.error('The post has not been found')
     }
   }
@@ -188,11 +195,7 @@ const PostModal = (props: PostModalProps) => {
                     togglePostLike={handlerTogglePostLike}
                   />
                 )}
-                <LikesList
-                  avatarWhoLikes={avatarWhoLikes}
-                  createdAt={createdAt}
-                  likesCount={likesCount}
-                />
+                <LikesList avatarWhoLikes={avatarUrls} createdAt={createdAt} />
                 {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
               </div>
             </DialogBody>

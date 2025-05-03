@@ -33,7 +33,7 @@
         "passwordMaxLength": "Maximum number of characters 20",
         "passwordConfirmation": "The passwords must match",
         "usernameMinLength": "Minimum number of characters 6",
-        "usernameMaxLength": "Maximum number of characters 30",
+        "usernameMaxLength": "Maximum number of characters 20",
         "requiredField": "Required"
       }
     },

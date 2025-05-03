@@ -9,6 +9,7 @@ import {
   GetPostCommentsArgs,
   PostLikeStatus,
   UploadFileResponse,
+  UploadPostLikeStatusArgs,
   UserPostResponse,
   UserPostsArgs,
 } from '@/features/post-page/types/post-page.types'
