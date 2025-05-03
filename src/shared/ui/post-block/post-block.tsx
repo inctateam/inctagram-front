@@ -1,5 +1,5 @@
 import { MeResponse } from '@/features/auth/types'
-import { PublicPostItem, PublicPostsResponse } from '@/features/home-page/types'
+import { PublicPostsResponse } from '@/features/home-page/types'
 import { Post } from '@/shared/ui/post'
 
 type Props = {
