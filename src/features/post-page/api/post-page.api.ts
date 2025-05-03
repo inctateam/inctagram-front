@@ -2,12 +2,13 @@ import { PublicPostItem } from '@/features/home-page/types'
 import {
   AnswerLikesArgs,
   AnswersResponse,
+  CommentItems,
   CommentLikesResponse,
   CommentsResponse,
   GetCommentAnswersArgs,
   GetPostCommentsArgs,
+  PostLikeStatus,
   UploadFileResponse,
-  UploadPostLikeStatusArgs,
   UserPostResponse,
   UserPostsArgs,
 } from '@/features/post-page/types/post-page.types'
@@ -16,6 +17,15 @@ import { instagramApi } from '@/services'
 // PublicPostsItems проверить тип на соответствие приватному посту
 export const postPageApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    addPostComment: builder.mutation<CommentItems, { content: string; postId: number }>({
+      invalidatesTags: ['PostComments'],
+      // invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }, 'PostComments'],
+      query: ({ content, postId }) => ({
+        body: { content },
+        method: 'POST',
+        url: `v1/posts/${postId}/comments`,
+      }),
+    }),
     answerLikes: builder.query<string, AnswerLikesArgs>({
       query: ({ answerId, commentId, postId, ...params }) => ({
         params,
@@ -63,6 +73,7 @@ export const postPageApi = instagramApi.injectEndpoints({
       }),
     }),
     postComments: builder.query<CommentsResponse, GetPostCommentsArgs>({
+      providesTags: ['PostComments'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/comments`,
@@ -94,11 +105,10 @@ export const postPageApi = instagramApi.injectEndpoints({
         }
       },
     }),
-    uploadPostLikeStatus: builder.mutation<void, UploadPostLikeStatusArgs>({
-      query: ({ likeStatus, postId }) => ({
-        body: {
-          likeStatus,
-        },
+    uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
+      invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }],
+      query: ({ likeStatus = 'NONE', postId }) => ({
+        body: { likeStatus },
         method: 'PUT',
         url: `v1/posts/${postId}/like-status`,
       }),
@@ -113,6 +123,7 @@ export const postPageApi = instagramApi.injectEndpoints({
 })
 
 export const {
+  useAddPostCommentMutation,
   useAnswerLikesQuery,
   useCommentAnswersQuery,
   useCommentLikesQuery,

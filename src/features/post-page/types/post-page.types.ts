@@ -120,3 +120,5 @@ export interface UploadPostLikeStatusArgs {
   likeStatus: 'DISLIKE' | 'LIKE' | 'NONE'
   postId: number
 }
+
+export type PostLikeStatus = 'DISLIKE' | 'LIKE' | 'NONE'

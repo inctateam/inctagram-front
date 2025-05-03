@@ -26,7 +26,7 @@ const CommentForm = ({ onSubmit }: CommentFormProps) => {
       <Textarea
         autoResize
         className={
-          'px-0 scrollbar-thin scrollbar-none [&::-webkit-scrollbar]:hidden h-12 max-h-10 border-none'
+          'px-1 scrollbar-thin scrollbar-none [&::-webkit-scrollbar]:hidden h-12 max-h-10 border-none font-sm'
         }
         minHeight={30}
         onChange={handleChange}

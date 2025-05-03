@@ -53,6 +53,7 @@ const myDropDown = [
     label: 'Delete post',
   },
 ]
+
 const friendDropDown = [
   {
     icon: <PersonAdd />,
@@ -173,7 +174,7 @@ const PostModal = (props: PostModalProps) => {
             </DialogHeader>
             <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
               <div
-                className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
+                className={`flex flex-col overflow-y-auto px-6 pt-4 mb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
               >
                 <Description
                   avatar={avatarOwner}
@@ -194,7 +195,11 @@ const PostModal = (props: PostModalProps) => {
                     togglePostLike={handlerTogglePostLike}
                   />
                 )}
-                <LikesList avatarWhoLikes={avatarUrls} createdAt={createdAt} />
+                <LikesList
+                  avatarWhoLikes={avatarUrls}
+                  createdAt={createdAt}
+                  likesCount={post.likesCount}
+                />
                 {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
               </div>
             </DialogBody>

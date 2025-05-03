@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 
 import { useMeQuery } from '@/features/auth/api'
+import { HomePage } from '@/features/home-page/ui/home-page'
 import { PublicPage } from '@/features/home-page/ui/public-page'
 import { Spinner } from '@/shared/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -12,11 +13,11 @@ export default function Home() {
   const router = useRouter()
   const { data: me, error, isLoading } = useMeQuery()
 
-  useEffect(() => {
-    if (me) {
-      router.push(`/profile/${me.userId}`)
-    }
-  }, [me, router])
+  // useEffect(() => {
+  //   if (me) {
+  //     router.push(`/profile/${me.userId}`)
+  //   }
+  // }, [me, router])
 
   // 🔹 АВТОРИЗАЦИЯ GOOGLE ПРОДОЛЖАЕТСЯ И ЗАКАНЧИВАЕТСЯ НА СТРАНИЦЕ baseUrl/auth/google
   const code = searchParams.get('code')
@@ -34,4 +35,6 @@ export default function Home() {
   if (error || !me) {
     return <PublicPage me={me} />
   }
+
+  return <HomePage />
 }

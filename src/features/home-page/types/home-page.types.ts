@@ -1,4 +1,6 @@
 //public posts
+import { Nullable } from '@/shared/types'
+
 export interface PublicPostsOwner {
   firstName: string
   lastName: string
@@ -82,4 +84,35 @@ export interface PublicPostsArgs {
 }
 export interface TotalCountRegisteredUsersResponse {
   totalCount: number
+}
+
+//home page
+export interface PublicationsFollowersQueryArgs {
+  endCursorPostId?: number
+  pageNumber?: number
+  pageSize?: number
+}
+export interface PublicationsFollowersResponse {
+  items: Nullable<Array<PublicationsFollowersItem>>
+  nextCursor: number
+  page: number
+  pageSize: number
+  pagesCount: number
+  prevCursor: number
+  totalCount: number
+}
+export interface PublicationsFollowersItem {
+  avatarOwner: string
+  avatarWhoLikes: string[]
+  createdAt: string
+  description: string
+  id: number
+  images: PublicPostsImages[]
+  isLiked: boolean
+  likesCount: number
+  location: null | string
+  owner: PublicPostsOwner
+  ownerId: number
+  updatedAt: string
+  userName: string
 }
