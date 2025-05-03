@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react'
 
+import { useMeQuery } from '@/features/auth/api'
 import { usePublicationsFollowersQuery } from '@/features/home-page/api'
 import Publication from '@/features/home-page/ui/home-page/publication/publication'
 import { ProgressBar } from '@/shared/ui'
@@ -11,7 +12,9 @@ const INITIAL_CURSOR = 0
 const INITIAL_PAGE_SIZE = 4
 
 export const HomePage = () => {
+  // const [openPostId, setOpenPostId] = useState(false)
   const [cursor, setCursor] = useState(INITIAL_CURSOR)
+  const { data: me } = useMeQuery()
   const {
     data: publications,
     isError,
@@ -21,7 +24,12 @@ export const HomePage = () => {
     { endCursorPostId: cursor, pageSize: INITIAL_PAGE_SIZE },
     { refetchOnMountOrArgChange: true }
   )
-
+  // const handleOpenPostModal = () => {
+  //   setOpenPostId(prev => !prev)
+  // }
+  // const handleClosePostModal = () => {
+  //   setOpenPostId(prev => !prev)
+  // }
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -71,7 +79,13 @@ export const HomePage = () => {
 
         return (
           <div key={publication.id} ref={isLast ? lastItemRef : null}>
-            <Publication postImages={postImages} publication={publication} timeAgo={timeAgo} />
+            <Publication
+              me={me}
+              // handleOpenPostModal={handleOpenPostModal}
+              postImages={postImages}
+              publication={publication}
+              timeAgo={timeAgo}
+            />
           </div>
         )
       })}

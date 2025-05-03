@@ -1,22 +1,29 @@
 'use client'
 
+import { useState } from 'react'
+
 import { PersonAdd, PersonRemoveOutline } from '@/assets/icons'
 import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOutline'
+import { MeResponse } from '@/features/auth/types'
 import { PublicationsFollowersItem } from '@/features/home-page/types'
 import { usePostInteractions } from '@/features/home-page/ui/home-page/hooks/usePostInteractions'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst'
 import { LikesList } from '@/features/post-page/ui/interactionBlock/likeList'
+import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { Description } from '@/features/post-page/ui/postDescription'
 import { Dropdown, ImageContent } from '@/shared/ui'
 import { AvatarBlock } from '@/shared/ui/avatar-block'
 
 type Props = {
+  me: MeResponse | undefined
   postImages: string[]
   publication: PublicationsFollowersItem
   timeAgo: string
 }
-const Publication = ({ postImages, publication, timeAgo }: Props) => {
+const Publication = ({ me, postImages, publication, timeAgo }: Props) => {
+  const [openPostId, setOpenPostId] = useState(false)
+
   const {
     addPostCommentHandle,
     comments,
@@ -45,6 +52,12 @@ const Publication = ({ postImages, publication, timeAgo }: Props) => {
       return handleFollowToggle()
     }
   }
+  const handleOpenPostModal = () => {
+    setOpenPostId(prev => !prev)
+  }
+  const handleClosePostModal = () => {
+    setOpenPostId(prev => !prev)
+  }
 
   return (
     <div className={'flex flex-col w-[491px]'}>
@@ -69,11 +82,14 @@ const Publication = ({ postImages, publication, timeAgo }: Props) => {
       />
       <LikesList avatarWhoLikes={publication.avatarWhoLikes} likesCount={publication.likesCount} />
       {comments?.length > 0 && (
-        <p className={'mt-2 text-light-700 cursor-pointer'}>
+        <p className={'mt-2 text-light-700 cursor-pointer'} onClick={handleOpenPostModal}>
           View All Comments ( {comments?.length} )
         </p>
       )}
       <CommentForm onSubmit={addPostCommentHandle} />
+      <PostModal me={me} onOpenChange={handleClosePostModal} open={openPostId} post={publication}>
+        <ImageContent itemImages={publication.images.map(image => image.url)} />
+      </PostModal>
     </div>
   )
 }
