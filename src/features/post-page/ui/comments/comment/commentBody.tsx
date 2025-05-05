@@ -1,5 +1,6 @@
 import { AvatarType } from '@/features/post-page/types'
-import { Avatar, Typography } from '@/shared/ui'
+import { Description } from '@/features/post-page/ui/postDescription'
+
 type CommentBodyProps = {
   avatars: AvatarType[]
   content: string
@@ -8,7 +9,7 @@ type CommentBodyProps = {
 const CommentBody = ({ avatars, content, userName }: CommentBodyProps) => {
   return (
     <div className={'flex mt-4'}>
-      <div className={'flex justify-center items-start'}>
+      {/*      <div className={'flex justify-center items-start'}>
         <Avatar
           alt={'User Avatar'}
           className={'block sm:hidden'}
@@ -26,7 +27,8 @@ const CommentBody = ({ avatars, content, userName }: CommentBodyProps) => {
           </Typography>{' '}
           {content}
         </Typography>
-      </div>
+      </div>*/}
+      <Description avatar={avatars[0]?.url} description={content} userName={userName} />
     </div>
   )
 }
