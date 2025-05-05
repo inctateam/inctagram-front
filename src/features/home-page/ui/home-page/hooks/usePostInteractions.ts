@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import { usePublicPostCommentsQuery, usePublicPostsByIdQuery } from '@/features/home-page/api'
 import { PublicationsFollowersItem } from '@/features/home-page/types'
 import {
   useAddPostCommentMutation,
@@ -25,7 +26,15 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
   const [unFollow] = useRemoveFollowerMutation()
   const [updateLikeStatus] = useUploadPostLikeStatusMutation()
   const [addPostComment] = useAddPostCommentMutation()
-  const { data: publicationComments } = usePostCommentsQuery({ postId: publication.id })
+  // const { data: publicationComments } = usePostCommentsQuery({ postId: publication.id })
+  const {
+    /*    data: post,
+    error: errorPost,
+    isLoading: isLoadingPost,*/
+    refetch: refetchPost,
+  } = usePublicPostsByIdQuery({ postId: publication.id })
+  const { data: publicComments } = usePublicPostCommentsQuery({ postId: publication.id })
+  const { data: privateComments } = usePostCommentsQuery({ postId: publication.id })
 
   useEffect(() => {
     if (userByName?.isFollowing) {
@@ -49,6 +58,7 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
       //   setUnLike()
       // }
       await updateLikeStatus({ likeStatus, postId: publication.id }).unwrap()
+      refetchPost()
     } catch (e) {
       if (likeStatus === 'LIKE') {
         setUnLike()
@@ -96,10 +106,11 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
 
   return {
     addPostCommentHandle,
-    comments: publicationComments?.items || [],
     handleCopyLink,
     handleFollowToggle,
     handleLikeToggle,
     isFollowing,
+    privateComments: privateComments ?? { items: [] },
+    publicComments: publicComments ?? { items: [] },
   }
 }

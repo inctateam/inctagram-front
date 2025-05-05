@@ -23,15 +23,16 @@ type Props = {
 }
 const Publication = ({ me, postImages, publication, timeAgo }: Props) => {
   const [openPostId, setOpenPostId] = useState(false)
-
   const {
     addPostCommentHandle,
-    comments,
     handleCopyLink,
     handleFollowToggle,
     handleLikeToggle,
     isFollowing,
+    privateComments,
+    publicComments,
   } = usePostInteractions(publication)
+  const commentsPrivateOrPublic = me ? privateComments : publicComments
   const dropDownItems = [
     {
       action: isFollowing ? 'unfollow' : 'follow',
@@ -71,19 +72,31 @@ const Publication = ({ me, postImages, publication, timeAgo }: Props) => {
           <span className={'text-[12px] text-light-900 mb-1'}>●</span>
           <p className={'text-[12px] text-light-900'}>{timeAgo}</p>
         </div>
-        <Dropdown className={'bg-dark-500'} items={dropDownItems} onClick={handleActionDropdown} />
+        {me?.userId && (
+          <Dropdown
+            className={'bg-dark-500'}
+            items={dropDownItems}
+            onClick={handleActionDropdown}
+          />
+        )}
       </div>
       <ImageContent itemImages={postImages} />
-      <InteractionButtons isLiked={publication.isLiked} togglePostLike={handleLikeToggle} />
-      <Description
-        avatar={publication.avatarOwner}
-        description={publication.description}
-        userName={publication.userName}
-      />
+      <div className={'flex justify-start items-center gap-5'}>
+        {me?.userId && (
+          <InteractionButtons isLiked={publication.isLiked} togglePostLike={handleLikeToggle} />
+        )}
+      </div>
+      <div className={'flex items-start gap-3 my-3'}>
+        <Description
+          avatar={publication.avatarOwner}
+          description={publication.description}
+          userName={publication.userName}
+        />
+      </div>
       <LikesList avatarWhoLikes={publication.avatarWhoLikes} likesCount={publication.likesCount} />
-      {comments?.length > 0 && (
+      {commentsPrivateOrPublic.items.length > 0 && (
         <p className={'mt-2 text-light-700 cursor-pointer'} onClick={handleOpenPostModal}>
-          View All Comments ( {comments?.length} )
+          View All Comments ({commentsPrivateOrPublic.items.length})
         </p>
       )}
       <CommentForm onSubmit={addPostCommentHandle} />
