@@ -21,6 +21,8 @@ export const instagramApi = createApi({
     'MyProfile',
     'Notifications',
     'UsersByName',
+    'PublicUserProfile',
+    'PublicPostsByUserId',
     'PublicationsFollowers',
     'PostComments',
     'PostLikes',

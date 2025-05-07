@@ -75,12 +75,14 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     } else if (userByNameData?.isFollowing === false) {
       setFalse()
     }
-  }, [userByNameData?.isFollowing])
+  }, [setFalse, setTrue, userByNameData?.isFollowing])
   useEffect(() => {
     if (initialPosts?.items) {
+      console.log('posts', posts)
+      console.log('initialPosts.items', initialPosts?.items)
       setPosts(initialPosts.items) // Обновляем посты после загрузки данных
     }
-  }, [initialPosts]) // Следим за изменениями в initialPosts
+  }, [initialPosts, posts]) // Следим за изменениями в initialPosts
 
   useEffect(() => {
     const handleScroll = () => {
