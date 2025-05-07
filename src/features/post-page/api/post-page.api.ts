@@ -1,5 +1,6 @@
 import { PublicPostItem } from '@/features/home-page/types'
 import {
+  Answer,
   AnswerLikesArgs,
   AnswersResponse,
   CommentItems,
@@ -42,6 +43,16 @@ export const postPageApi = instagramApi.injectEndpoints({
       query: ({ commentId, postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
+      }),
+    }),
+    createCommentAnswer: builder.mutation<
+      Answer,
+      { commentId: number; content: string; postId: number }
+    >({
+      query: ({ commentId, content, postId }) => ({
+        body: { content },
+        method: 'POST',
+        url: `v1/posts/${postId}/comments/${commentId}/answers`,
       }),
     }),
     createPost: builder.mutation<PublicPostItem, { description: string; uploadIds: string[] }>({
@@ -133,6 +144,7 @@ export const {
   useAnswerLikesQuery,
   useCommentAnswersQuery,
   useCommentLikesQuery,
+  useCreateCommentAnswerMutation,
   useCreatePostMutation,
   useDeletePostMutation,
   usePostCommentsQuery,

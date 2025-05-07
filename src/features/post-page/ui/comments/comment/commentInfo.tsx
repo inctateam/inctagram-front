@@ -7,6 +7,7 @@ type CommentInfoProps = {
   isAuth: boolean
   isLiked?: boolean
   likeCount?: number
+  onAnswerClickHandler?: () => void
   onClick: (showAnswer: boolean) => void
   showAnswers?: boolean
 }
@@ -15,6 +16,7 @@ const CommentInfo = ({
   createdAt,
   isAuth,
   likeCount,
+  onAnswerClickHandler,
   onClick,
   showAnswers,
 }: CommentInfoProps) => {
@@ -29,7 +31,12 @@ const CommentInfo = ({
             <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
               Like: {likeCount}
             </Typography>
-            <Typography as={'p'} className={'text-light-900'} variant={'semiSmall'}>
+            <Typography
+              as={'p'}
+              className={'text-light-900 cursor-pointer'}
+              onClick={onAnswerClickHandler}
+              variant={'semiSmall'}
+            >
               Answer
             </Typography>
           </>
