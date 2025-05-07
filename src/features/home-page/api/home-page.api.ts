@@ -1,5 +1,4 @@
 import {
-  PublicPostByUserIdArgs,
   PublicPostCommentsArgs,
   PublicPostCommentsResponse,
   PublicPostItem,
