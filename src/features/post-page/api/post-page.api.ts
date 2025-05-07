@@ -80,6 +80,7 @@ export const postPageApi = instagramApi.injectEndpoints({
       }),
     }),
     postLikes: builder.query<CommentLikesResponse, GetPostCommentsArgs>({
+      providesTags: ['PostLikes'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/likes`,
@@ -106,7 +107,7 @@ export const postPageApi = instagramApi.injectEndpoints({
       },
     }),
     uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
-      invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }],
+      invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }, 'PostLikes'],
       query: ({ likeStatus = 'NONE', postId }) => ({
         body: { likeStatus },
         method: 'PUT',

@@ -80,7 +80,11 @@ const Publication = ({ me, postImages, publication, timeAgo }: Props) => {
           />
         )}
       </div>
-      <ImageContent itemImages={postImages} />
+      <ImageContent
+        className={'cursor-pointer'}
+        itemImages={postImages}
+        onClick={handleOpenPostModal}
+      />
       <div className={'flex justify-start items-center gap-5'}>
         {me?.userId && (
           <InteractionButtons isLiked={publication.isLiked} togglePostLike={handleLikeToggle} />
