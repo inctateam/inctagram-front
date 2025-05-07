@@ -8,9 +8,11 @@ import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOut
 import PersonAdd from '@/assets/icons/components/filled-outlined-pairs/PersonAdd'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
 import { MeResponse } from '@/features/auth/types'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
 import {
+  useAddPostCommentMutation,
   useDeletePostMutation,
   usePostCommentsQuery,
   usePostLikesQuery,
@@ -79,6 +81,7 @@ const PostModal = (props: PostModalProps) => {
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
   const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
+  const [addPostComment] = useAddPostCommentMutation()
 
   const avatarUrls: string[] =
     postLikes?.items
@@ -142,6 +145,16 @@ const PostModal = (props: PostModalProps) => {
       toast.error('The post has not been found')
     }
   }
+  const addPostCommentHandle = async (content: string) => {
+    if (content.length === 0) {
+      return
+    }
+    try {
+      await addPostComment({ content, postId: id }).unwrap()
+    } catch (e) {
+      handleRequestError(e)
+    }
+  }
 
   if (isError) {
     toast.error('The post has not been found')
@@ -200,7 +213,7 @@ const PostModal = (props: PostModalProps) => {
                   createdAt={createdAt}
                   likesCount={post.likesCount}
                 />
-                {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
+                {me?.userId && <CommentForm onSubmit={addPostCommentHandle} />}
               </div>
             </DialogBody>
           </div>

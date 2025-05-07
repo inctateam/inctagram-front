@@ -218,19 +218,3 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     </ScrollArea>
   )
 }
-// const onFollowButtonClickHandler = async () => {
-//   toggle()
-//   try {
-//     if (!isFollowing) {
-//       await follow({ userId }).unwrap()
-//       toast.success(`Success! You subscribed to ${userByNameData?.userName || 'user'}`)
-//     } else {
-//       await unfollow({ userId }).unwrap()
-//       toast.success('Subscription successfully cancelled')
-//     }
-//   } catch (e) {
-//     console.log(e)
-//   } finally {
-//     refetchUserByNameData()
-//   }
-// }

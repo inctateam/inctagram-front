@@ -12,7 +12,6 @@ const INITIAL_CURSOR = 0
 const INITIAL_PAGE_SIZE = 4
 
 export const HomePage = () => {
-  // const [openPostId, setOpenPostId] = useState(false)
   const [cursor, setCursor] = useState(INITIAL_CURSOR)
   const { data: me } = useMeQuery()
   const {
@@ -24,12 +23,6 @@ export const HomePage = () => {
     { endCursorPostId: cursor, pageSize: INITIAL_PAGE_SIZE },
     { refetchOnMountOrArgChange: true }
   )
-  // const handleOpenPostModal = () => {
-  //   setOpenPostId(prev => !prev)
-  // }
-  // const handleClosePostModal = () => {
-  //   setOpenPostId(prev => !prev)
-  // }
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -81,7 +74,6 @@ export const HomePage = () => {
           <div key={publication.id} ref={isLast ? lastItemRef : null}>
             <Publication
               me={me}
-              // handleOpenPostModal={handleOpenPostModal}
               postImages={postImages}
               publication={publication}
               timeAgo={timeAgo}

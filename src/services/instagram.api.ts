@@ -26,5 +26,6 @@ export const instagramApi = createApi({
     'PublicationsFollowers',
     'PostComments',
     'PostLikes',
+    'Post',
   ],
 })

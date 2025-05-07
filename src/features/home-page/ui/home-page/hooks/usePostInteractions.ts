@@ -46,7 +46,7 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
     } else {
       setUnLike()
     }
-  }, [publication.isLiked, userByName?.isFollowing, isFollowing])
+  }, [publication.isLiked, userByName?.isFollowing, isFollowing, setLike, setUnLike])
 
   const handleLikeToggle = async () => {
     const likeStatus = isLiked ? 'NONE' : 'LIKE'
