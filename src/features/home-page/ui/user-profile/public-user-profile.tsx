@@ -78,8 +78,6 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   }, [setFalse, setTrue, userByNameData?.isFollowing])
   useEffect(() => {
     if (initialPosts?.items) {
-      console.log('posts', posts)
-      console.log('initialPosts.items', initialPosts?.items)
       setPosts(initialPosts.items) // Обновляем посты после загрузки данных
     }
   }, [initialPosts, posts]) // Следим за изменениями в initialPosts
