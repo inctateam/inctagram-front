@@ -21,7 +21,7 @@ type CommentProps = {
 }
 const Comment = (props: CommentProps) => {
   const { comment, isAuth } = props
-  const { answerCount, content, createdAt, from, id, isLiked, likeCount, postId } = comment
+  const { content, createdAt, from, id, isLiked, likeCount, postId } = comment
   const { avatars, username } = from
   const [showAnswers, setShowAnswers] = useState(false)
   const {
