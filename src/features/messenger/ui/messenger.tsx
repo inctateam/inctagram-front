@@ -1,8 +1,8 @@
 import UserItem from '@/features/messenger/ui/UserItem/userItem'
-import MessegePanel, {
+import MessagePanel, {
   CurrentUser,
-  MessegeInput,
-} from '@/features/messenger/ui/messegePanel/messegePanel'
+  MessageInput,
+} from '@/features/messenger/ui/messegePanel/messagePanel'
 import SearchUserPanel from '@/features/messenger/ui/searchUserPanel/searchUserPanel'
 import { ScrollArea } from '@/shared/ui'
 
@@ -10,7 +10,7 @@ const Messenger = () => {
   return (
     <div className={'flex border border-dark-300 rounded-sm h-[600px] w-[972px]'}>
       <div className={'flex flex-col h-full w-[22.5rem] overflow-y-hidden'}>
-        <SearchUserPanel />
+        <SearchUserPanel className={'border-b border-dark-300'} />
         <ScrollArea>
           <UserItem />
           <UserItem />
@@ -25,8 +25,8 @@ const Messenger = () => {
       </div>
       <div className={'flex flex-col w-full'}>
         <CurrentUser />
-        <MessegePanel />
-        <MessegeInput />
+        <MessagePanel />
+        <MessageInput />
       </div>
     </div>
   )
