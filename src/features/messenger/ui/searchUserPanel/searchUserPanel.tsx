@@ -16,7 +16,7 @@ const SearchUserPanel = (props: Props) => {
   }
 
   return (
-    <div className={cn('flex px-3 py-4 bg-dark-500 border-r border-dark-300', className)}>
+    <div className={cn('flex items-center px-3 py-4 h-[4.5rem] bg-dark-500', className)}>
       <SearchTextField onChange={handleChange} value={searchValue} />
     </div>
   )

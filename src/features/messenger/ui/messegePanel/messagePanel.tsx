@@ -4,7 +4,7 @@ import { cn } from '@/shared/utils'
 
 const MessagePanel = () => {
   return (
-    <ScrollArea className={' overflow-y-hidden'}>
+    <ScrollArea className={'overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
         <UserMessageItem message={'Hi! How are you?'} ownerId={2061} time={'11:20'} />
         <UserMessageItem
@@ -53,7 +53,9 @@ export const CurrentUser = (props: CurrentUserProps) => {
   const { className, src, userName = 'Ekaterina Ivanova' } = props
 
   return (
-    <div className={cn('flex justify-start items-center p-3 gap-3 bg-dark-500', className)}>
+    <div
+      className={cn('flex justify-start items-center h-[72px] p-3 gap-3 bg-dark-500', className)}
+    >
       <Avatar alt={'user avatar'} size={12} src={src} />
       <Typography variant={'regular16'}>{userName}</Typography>
     </div>
