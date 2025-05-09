@@ -1,10 +1,11 @@
-import UserItem from '@/features/messenger/ui/UserItem/userItem'
+import Messenger from '@/features/messenger/ui/messenger'
+import { Typography } from '@/shared/ui'
 
 export default function MessengerPage() {
   return (
-    <div>
-      Messenger Page
-      <UserItem />
+    <div className={'flex flex-col gap-3'}>
+      <Typography variant={'h1'}>Messenger</Typography>
+      <Messenger />
     </div>
   )
 }
