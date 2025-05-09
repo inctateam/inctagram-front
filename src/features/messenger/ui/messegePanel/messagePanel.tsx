@@ -1,42 +1,21 @@
 import { CheckmarkOutline, DoneAllOutline } from '@/assets/icons'
+import { Message } from '@/features/messenger/types'
 import { Avatar, Button, ScrollArea, Textarea, Typography } from '@/shared/ui'
-import { cn } from '@/shared/utils'
+import { cn, timeAgo } from '@/shared/utils'
 
-const MessagePanel = () => {
+const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
   return (
     <ScrollArea className={'overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
-        <UserMessageItem message={'Hi! How are you?'} ownerId={2061} time={'11:20'} />
-        <UserMessageItem
-          isChecked
-          message={'Hi! I’m fine! Did you go into space yesterday? :D'}
-          ownerId={2050}
-          time={'11:23'}
-        />
-        <UserMessageItem
-          message={"Ahahahahaha, just kidding! I'm still just learning to fly and code :D"}
-          ownerId={2061}
-          time={'11:30'}
-        />
-        <UserMessageItem
-          message={"Ahahahahaha, just kidding! I'm still just learning to fly and code :D"}
-          ownerId={2061}
-          time={'11:30'}
-        />
-        <UserMessageItem
-          isChecked={false}
-          message={'Great! Dont give up!!!😎'}
-          ownerId={2050}
-          time={'11:40'}
-        />
-        <UserMessageItem
-          isChecked={false}
-          message={
-            'When a long text message is segmented into multiple physical SMS messages, a special header is added to each physical SMS message so that the receiving client knows that it is a multipart SMS message that must be reassembled by the client. These headers are known as segmentation or concatenation headers. 6 bytes (8-bits each) are required for these concatenation headers in each physical SMS message. These headers are placed in the User Data Header (UDH) field of the message, but they do count against the overall size limit of the message.'
-          }
-          ownerId={2050}
-          time={'11:40'}
-        />
+        {!dialogData.length ? (
+          <Typography className={'text-light-900 text-center'} variant={'regular16'}>
+            There are no messages
+          </Typography>
+        ) : (
+          dialogData.map(d => {
+            return <UserMessageItem dialogItem={d} key={d.id} />
+          })
+        )}
       </div>
     </ScrollArea>
   )
@@ -53,9 +32,7 @@ export const CurrentUser = (props: CurrentUserProps) => {
   const { className, src, userName = 'Ekaterina Ivanova' } = props
 
   return (
-    <div
-      className={cn('flex justify-start items-center h-[72px] p-3 gap-3 bg-dark-500', className)}
-    >
+    <div className={cn('flex justify-start items-center gap-3 bg-dark-500 p-3', className)}>
       <Avatar alt={'user avatar'} size={12} src={src} />
       <Typography variant={'regular16'}>{userName}</Typography>
     </div>
@@ -71,29 +48,23 @@ export const MessageInput = () => {
   )
 }
 
-type UserMessageItemProps = {
-  className?: string
-  isChecked?: boolean
-  message: string
-  ownerId: number
-  src?: string
-  time: string
-}
+// type UserMessageItemProps = {
+//   className?: string
+//   isChecked?: boolean
+//   message: string
+//   ownerId: number
+//   src?: string
+//   time: string
+// }
 
-export const UserMessageItem = (props: UserMessageItemProps) => {
-  const { className, isChecked = false, message, ownerId, src, time } = props
+export const UserMessageItem = ({ dialogItem }: { dialogItem: Message }) => {
+  const { createdAt, messageText, ownerId, status } = dialogItem
   const myId = 2050
   const isMyMessage = myId === ownerId
 
   return (
-    <div
-      className={cn(
-        'flex items-end gap-3',
-        isMyMessage ? 'justify-end' : 'justify-start',
-        className
-      )}
-    >
-      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={src} />}
+    <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>
+      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={''} />}
       <div
         className={cn(
           'flex flex-col px-3 py-2 gap-1 max-w-[275px] rounded-md',
@@ -101,17 +72,17 @@ export const UserMessageItem = (props: UserMessageItemProps) => {
         )}
       >
         <Typography className={'text-pretty'} variant={'regular14'}>
-          {message}
+          {messageText}
         </Typography>
         <div className={'flex items-center justify-end gap-1'}>
           <Typography
             className={cn('text-xs', isMyMessage ? 'text-accent-100' : 'text-light-900')}
             variant={'small'}
           >
-            {time}
+            {timeAgo(createdAt)}
           </Typography>
           {isMyMessage &&
-            (isChecked ? (
+            (status === 'READ' ? (
               <DoneAllOutline className={'w-4 h-4 text-accent-100'} />
             ) : (
               <CheckmarkOutline className={'w-4 h-4 text-accent-100'} />

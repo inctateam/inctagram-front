@@ -1,31 +1,47 @@
+import { LatestMessage } from '@/features/messenger/types'
 import { Avatar, Typography } from '@/shared/ui'
+import { timeAgo } from '@/shared/utils'
 
 type Props = {
-  avatarSrc?: string
-  lastMessage?: string
-  time?: string
-  userName?: string
+  lastMessage?: LatestMessage | undefined
+  onUserItemClick?: (lastMessage: LatestMessage) => void
 }
 const UserItem = (props: Props) => {
-  const {
-    avatarSrc,
-    lastMessage = 'You: Ahahahah, just kidding..',
-    time = '17:33',
-    userName = 'Ekaterina Ivanova',
-  } = props
+  const { lastMessage, onUserItemClick } = props
+  const trimMessageText = lastMessage?.messageText
+    ? truncate({ text: lastMessage?.messageText })
+    : ''
+
+  function truncate({ maxLength = 28, text }: { maxLength?: number; text: string }): string {
+    if (text.length <= maxLength) {
+      return text
+    }
+
+    return text.slice(0, maxLength - 3).trim() + '..'
+  }
+  const onItemClickHandler = () => {
+    if (lastMessage) {
+      onUserItemClick?.(lastMessage)
+    }
+  }
 
   return (
-    <div className={'flex w-full gap-3 p-3 bg-dark-500 active:bg-dark-100 hover:bg-dark-100'}>
-      <Avatar alt={'user avatar'} size={12} src={avatarSrc} />
-      <div className={'flex flex-col justify-between'}>
+    <div
+      className={'flex gap-3 px-3 py-3 bg-dark-500 active:bg-dark-100 hover:bg-dark-100'}
+      onClick={onItemClickHandler}
+    >
+      <div className={'flex w-12'}>
+        <Avatar alt={'user avatar'} size={12} src={lastMessage?.avatars[0].url} />
+      </div>
+      <div className={'flex flex-col w-full justify-between'}>
         <div className={'flex justify-between items-center'}>
-          <Typography variant={'regular14'}>{userName}</Typography>
+          <Typography variant={'regular14'}>{lastMessage?.userName}</Typography>
           <Typography className={'text-light-900'} variant={'small'}>
-            {time}
+            {timeAgo(lastMessage?.createdAt || '')}
           </Typography>
         </div>
         <Typography className={'text-light-900'} variant={'small'}>
-          {lastMessage}
+          {trimMessageText}
         </Typography>
       </div>
     </div>
