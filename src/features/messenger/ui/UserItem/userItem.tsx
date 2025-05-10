@@ -1,6 +1,6 @@
 import { LatestMessage } from '@/features/messenger/types'
+import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Typography } from '@/shared/ui'
-import { timeAgo } from '@/shared/utils'
 
 type Props = {
   lastMessage?: LatestMessage | undefined
@@ -37,7 +37,7 @@ const UserItem = (props: Props) => {
         <div className={'flex justify-between items-center'}>
           <Typography variant={'regular14'}>{lastMessage?.userName}</Typography>
           <Typography className={'text-light-900'} variant={'small'}>
-            {timeAgo(lastMessage?.createdAt || '')}
+            {formatMessageDate(lastMessage?.createdAt || '')}
           </Typography>
         </div>
         <Typography className={'text-light-900'} variant={'small'}>

@@ -9,8 +9,9 @@ import {
   PlusCircle,
 } from '@/assets/icons'
 import { Message, MessageType } from '@/features/messenger/types'
+import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
-import { cn, timeAgo } from '@/shared/utils'
+import { cn } from '@/shared/utils'
 
 const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
   return (
@@ -122,7 +123,7 @@ export const UserMessageItem = ({ dialogItem }: { dialogItem: Message }) => {
             className={cn('text-xs', isMyMessage ? 'text-accent-100' : 'text-light-900')}
             variant={'small'}
           >
-            {timeAgo(createdAt)}
+            {formatMessageDate(createdAt, true)}
           </Typography>
           {isMyMessage &&
             (status === 'READ' ? (
