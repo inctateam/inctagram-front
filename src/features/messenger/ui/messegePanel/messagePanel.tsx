@@ -1,6 +1,16 @@
-import { CheckmarkOutline, DoneAllOutline } from '@/assets/icons'
-import { Message } from '@/features/messenger/types'
-import { Avatar, Button, ScrollArea, Textarea, Typography } from '@/shared/ui'
+import { ChangeEvent, useState } from 'react'
+
+import {
+  CheckmarkOutline,
+  DoneAllOutline,
+  ImageOutline,
+  MicOutline,
+  PlayCircle,
+  PlayCircleOutline,
+  PlusCircle,
+} from '@/assets/icons'
+import { Message, MessageType } from '@/features/messenger/types'
+import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn, timeAgo } from '@/shared/utils'
 
 const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
@@ -40,22 +50,46 @@ export const CurrentUser = (props: CurrentUserProps) => {
 }
 
 export const MessageInput = () => {
+  const [messageType, setMessageType] = useState<MessageType>('TEXT')
+  const [message, setMessage] = useState('')
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value)
+  }
+
   return (
-    <div className={'flex h-12'}>
-      <Textarea autoResize={false} />
-      <Button variant={'text'}>Send message</Button>
+    <div
+      className={'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'}
+    >
+      {messageType === 'VOICE' && (
+        <div className={'flex gap-1'}>
+          <IconButton onClick={() => setMessageType('TEXT')}>
+            <PlusCircle className={'rotate-45'} />
+          </IconButton>
+          <IconButton>
+            <PlayCircle />
+          </IconButton>
+        </div>
+      )}
+      {messageType !== 'VOICE' && (
+        <TextField onChange={handleChange} placeholder={'Type message...'} value={message} />
+      )}
+      {message.trim().length > 0 && (
+        <Button variant={'text'}>{messageType === 'VOICE' ? 'Send voice' : 'Send message'}</Button>
+      )}
+      {message.trim().length === 0 && (
+        <div className={'flex gap-3'}>
+          <IconButton onDoubleClick={() => setMessageType('VOICE')}>
+            <MicOutline />
+          </IconButton>
+          <IconButton onDoubleClick={() => setMessageType('IMAGE')}>
+            <ImageOutline />
+          </IconButton>
+        </div>
+      )}
     </div>
   )
 }
-
-// type UserMessageItemProps = {
-//   className?: string
-//   isChecked?: boolean
-//   message: string
-//   ownerId: number
-//   src?: string
-//   time: string
-// }
 
 export const UserMessageItem = ({ dialogItem }: { dialogItem: Message }) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
