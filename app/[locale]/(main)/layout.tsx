@@ -7,7 +7,7 @@ import { Sidebar } from '@/shared/ui/sidebar'
 
 export default function HomeLayout({
   children,
-  modal,
+  // modal,
 }: Readonly<{
   children: React.ReactNode
   modal: React.ReactNode
@@ -20,7 +20,7 @@ export default function HomeLayout({
         <div className={'flex gap-6 justify-space-between w-full'}>
           {data && <Sidebar />}
           {children}
-          {modal}
+          {/*{modal}*/}
         </div>
       </CenteredLayout>
     </>
