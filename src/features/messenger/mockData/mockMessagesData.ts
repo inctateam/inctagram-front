@@ -5,14 +5,14 @@ export const latestMessages: GetLatestMessages = {
     {
       avatars: [
         {
-          createdAt: '2025-05-09T09:52:05.849Z',
+          createdAt: '2025-05-06T09:58:05.849Z',
           fileSize: 300,
           height: 300,
           url: '',
           width: 300,
         },
       ],
-      createdAt: '2025-05-09T09:52:06.591Z',
+      createdAt: '2025-05-10T09:58:06.591Z',
       id: 123,
       messageText: "Ahahahahaha, just kidding! I'm still just learning to fly and code :D",
       messageType: 'TEXT',
@@ -146,7 +146,7 @@ export const latestMessages: GetLatestMessages = {
     {
       avatars: [
         {
-          createdAt: '2025-05-09T09:52:05.849Z',
+          createdAt: '2025-04-09T09:52:05.849Z',
           fileSize: 300,
           height: 300,
           url: '',

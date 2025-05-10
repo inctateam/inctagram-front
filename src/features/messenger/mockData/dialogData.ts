@@ -33,7 +33,7 @@ export const dialogMessagesData: GetMessagesByUser = {
       updatedAt: '2025-05-09T09:52:06.591Z',
     },
     {
-      createdAt: '2025-05-09T09:52:06.591Z',
+      createdAt: '2025-05-09T09:53:06.591Z',
       id: 1156,
       messageText: "Ahahahahaha, just kidding! I'm still just learning to fly and code :D",
       messageType: 'TEXT',
@@ -53,7 +53,7 @@ export const dialogMessagesData: GetMessagesByUser = {
       updatedAt: '2025-05-09T09:52:06.591Z',
     },
     {
-      createdAt: '2025-05-09T09:52:06.591Z',
+      createdAt: '2025-05-10T09:56:06.591Z',
       id: 115645,
       messageText:
         'When a long text message is segmented into multiple physical SMS messages, a special header is added to each physical SMS message so that the receiving client knows that it is a multipart SMS message that must be reassembled by the client. These headers are known as segmentation or concatenation headers. 6 bytes (8-bits each) are required for these concatenation headers in each physical SMS message. These headers are placed in the User Data Header (UDH) field of the message, but they do count against the overall size limit of the message.',
