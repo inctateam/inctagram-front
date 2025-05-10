@@ -7,7 +7,7 @@ import MessagePanel, {
   CurrentUser,
   MessageInput,
 } from '@/features/messenger/ui/messegePanel/messagePanel'
-import SearchUserPanel from '@/features/messenger/ui/searchUserPanel/searchUserPanel'
+import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
 import { ScrollArea } from '@/shared/ui'
 
 import { dialogMessagesData } from '../mockData/dialogData'
@@ -20,23 +20,34 @@ const Messenger = () => {
   }
 
   return (
-    <div className={'flex border border-dark-300 rounded-sm h-[600px] w-[972px]'}>
+    <div
+      className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}
+      onBlur={() => setCurrentUser(null)}
+    >
       <div className={'flex flex-col h-full w-[24rem] border-r border-dark-300 overflow-y-hidden'}>
-        <SearchUserPanel className={'border-b border-dark-300'} />
-        <ScrollArea className={'overflow-y-hidden'}>
+        <div
+          className={
+            'flex justify-center items-center bg-dark-500 border-b h-[5rem] border-dark-300  px-3 py-4'
+          }
+        >
+          <SearchUserInput />
+        </div>
+        <ScrollArea className={'h-full overflow-y-hidden'}>
           {latestMessages.items.map((m: LatestMessage) => {
             return <UserItem key={m.id} lastMessage={m} onUserItemClick={onUserItemClick} />
           })}
         </ScrollArea>
       </div>
       <div className={'flex flex-col w-full'}>
-        <div className={'flex bg-dark-500 h-[71px] border-b border-dark-300'}>
+        <div className={'flex bg-dark-500 h-[4.75rem] p-3 border-b border-dark-300'}>
           {currentUser && (
             <CurrentUser src={currentUser.avatars[0].url} userName={currentUser.userName} />
           )}
         </div>
-        <MessagePanel dialogData={dialogMessagesData.items} />
-        <MessageInput />
+        <div className={'flex flex-col overflow-y-hidden'}>
+          <MessagePanel dialogData={dialogMessagesData.items} />
+          <MessageInput />
+        </div>
       </div>
     </div>
   )

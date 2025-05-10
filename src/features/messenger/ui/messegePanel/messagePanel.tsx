@@ -14,7 +14,7 @@ import { cn, timeAgo } from '@/shared/utils'
 
 const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
   return (
-    <ScrollArea className={'overflow-y-hidden'}>
+    <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
         {!dialogData.length ? (
           <Typography className={'text-light-900 text-center'} variant={'regular16'}>
@@ -41,7 +41,7 @@ export const CurrentUser = (props: CurrentUserProps) => {
   const { className, src, userName = 'Ekaterina Ivanova' } = props
 
   return (
-    <div className={cn('flex justify-start items-center gap-3 bg-dark-500 p-3', className)}>
+    <div className={cn('flex justify-start items-center gap-3 bg-dark-500', className)}>
       <Avatar alt={'user avatar'} size={12} src={src} />
       <Typography variant={'regular16'}>{userName}</Typography>
     </div>
