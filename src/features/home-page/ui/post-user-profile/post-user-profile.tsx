@@ -33,15 +33,17 @@ export const PostUserProfile = ({ me, onDelete, post }: Props) => {
           size={'small'}
         />
       </div>
-      <PostModal
-        me={me}
-        onDelete={handleDelete}
-        onOpenChange={handleClosePostModal}
-        open={openPostId}
-        post={post}
-      >
-        <ImageContent itemImages={post.images.map(image => image.url)} />
-      </PostModal>
+      {openPostId && (
+        <PostModal
+          me={me}
+          onDelete={handleDelete}
+          onOpenChange={handleClosePostModal}
+          open={openPostId}
+          post={post}
+        >
+          <ImageContent itemImages={post.images.map(image => image.url)} />
+        </PostModal>
+      )}
     </>
   )
 }

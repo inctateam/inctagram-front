@@ -75,12 +75,11 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     } else if (userByNameData?.isFollowing === false) {
       setFalse()
     }
-  }, [setFalse, setTrue, userByNameData?.isFollowing])
-  useEffect(() => {
+
     if (initialPosts?.items) {
       setPosts(initialPosts.items) // Обновляем посты после загрузки данных
     }
-  }, [initialPosts, posts]) // Следим за изменениями в initialPosts
+  }, [userByNameData?.isFollowing, initialPosts, setTrue, setFalse]) // Следим за изменениями в initialPosts
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,15 +114,14 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
       return
     }
 
-    try {
-      if (!isFollowing) {
-        await follow({ userId }).unwrap()
-        toast.success(`Success! You subscribed to ${userByNameData?.userName || 'user'}`)
-      } else {
-        await unfollow({ userId }).unwrap()
-        toast.success('Subscription successfully cancelled')
-      }
+    const action = isFollowing ? unfollow : follow
+    const successMessage = isFollowing
+      ? 'Subscription successfully cancelled'
+      : `Success! You subscribed to ${userByNameData?.userName || 'user'}`
 
+    try {
+      await action({ userId }).unwrap()
+      toast.success(successMessage)
       // Обновим данные пользователя после действия
       await refetchUserByNameData()
     } catch (e) {

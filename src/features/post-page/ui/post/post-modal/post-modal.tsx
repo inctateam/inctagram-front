@@ -69,6 +69,7 @@ const friendDropDown = [
 const PostModal = (props: PostModalProps) => {
   const { children, me, onDelete, onOpenChange, open, post } = props
   const { avatarOwner, createdAt, description, id, ownerId, userName } = post
+  const [postLikesCount, setPostLikesCount] = useState(post.likesCount)
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
   const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
   const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
@@ -134,13 +135,15 @@ const PostModal = (props: PostModalProps) => {
     }
   }
   const handlerTogglePostLike = async () => {
-    try {
-      const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+    const likeStatus = statusLiked ? 'NONE' : 'LIKE'
 
+    try {
+      setPostLikesCount(prev => (likeStatus === 'LIKE' ? prev + 1 : prev - 1))
       setStatusLiked(prev => !prev)
       await uploadPostLikeStatus({ likeStatus, postId: id }).unwrap()
       refetchPostLikes()
     } catch {
+      setPostLikesCount(prev => (likeStatus === 'LIKE' ? prev + 1 : prev - 1))
       setStatusLiked(prev => !prev)
       toast.error('The post has not been found')
     }
@@ -163,6 +166,7 @@ const PostModal = (props: PostModalProps) => {
   if (isLoading) {
     return <ProgressBar />
   }
+  console.log(id)
 
   // Возвращаем портал с модальным окном
   return createPortal(
@@ -211,7 +215,7 @@ const PostModal = (props: PostModalProps) => {
                 <LikesList
                   avatarWhoLikes={avatarUrls}
                   createdAt={createdAt}
-                  likesCount={post.likesCount}
+                  likesCount={postLikesCount}
                 />
                 {me?.userId && <CommentForm onSubmit={addPostCommentHandle} />}
               </div>
