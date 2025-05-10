@@ -6,7 +6,6 @@ import {
   ImageOutline,
   MicOutline,
   PlayCircle,
-  PlayCircleOutline,
   PlusCircle,
 } from '@/assets/icons'
 import { Message, MessageType } from '@/features/messenger/types'
@@ -61,31 +60,41 @@ export const MessageInput = () => {
     <div
       className={'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'}
     >
-      {messageType === 'VOICE' && (
-        <div className={'flex gap-1'}>
+      <div className={'flex'}>
+        {messageType !== 'TEXT' && (
           <IconButton onClick={() => setMessageType('TEXT')}>
             <PlusCircle className={'rotate-45'} />
           </IconButton>
+        )}
+
+        {messageType === 'VOICE' && (
           <IconButton>
             <PlayCircle />
           </IconButton>
-        </div>
+        )}
+      </div>
+
+      {messageType === 'IMAGE' && (
+        <div className={'text-muted-foreground text-sm'}>Image input coming soon...</div>
       )}
-      {messageType !== 'VOICE' && (
+
+      {messageType === 'TEXT' && (
         <TextField onChange={handleChange} placeholder={'Type message...'} value={message} />
       )}
-      {message.trim().length > 0 && (
+
+      {message.trim().length > 0 ? (
         <Button variant={'text'}>{messageType === 'VOICE' ? 'Send voice' : 'Send message'}</Button>
-      )}
-      {message.trim().length === 0 && (
-        <div className={'flex gap-3'}>
-          <IconButton onDoubleClick={() => setMessageType('VOICE')}>
-            <MicOutline />
-          </IconButton>
-          <IconButton onDoubleClick={() => setMessageType('IMAGE')}>
-            <ImageOutline />
-          </IconButton>
-        </div>
+      ) : (
+        messageType === 'TEXT' && (
+          <div className={'flex gap-3'}>
+            <IconButton onClick={() => setMessageType('VOICE')}>
+              <MicOutline />
+            </IconButton>
+            <IconButton onClick={() => setMessageType('IMAGE')}>
+              <ImageOutline />
+            </IconButton>
+          </div>
+        )
       )}
     </div>
   )
