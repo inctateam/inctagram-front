@@ -96,9 +96,11 @@ export const Post = ({ item, me }: Props) => {
           )}
         </Typography>
       </div>
-      <PostModal me={me} onOpenChange={handleClosePostModal} open={openPostId} post={item}>
-        <ImageContent itemImages={item.images.map(image => image.url)} />
-      </PostModal>
+      {openPostId && (
+        <PostModal me={me} onOpenChange={handleClosePostModal} open={openPostId} post={item}>
+          <ImageContent itemImages={item.images.map(image => image.url)} />
+        </PostModal>
+      )}
     </li>
   )
 }

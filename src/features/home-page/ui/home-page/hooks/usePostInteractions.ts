@@ -14,57 +14,38 @@ import {
   useGetUserByNameQuery,
   useRemoveFollowerMutation,
 } from '@/features/search/api/users-following-followers.api'
-import { useBoolean } from '@/shared/hooks'
 
-export const usePostInteractions = (publication: PublicationsFollowersItem) => {
-  const [isFollowing, setIsFollowing] = useState(true)
-  const [isLiked, { setFalse: setUnLike, setTrue: setLike }] = useBoolean(false)
-  const { data: userByName } = useGetUserByNameQuery({
-    userName: publication.userName,
-  })
+export const usePostInteractions = (
+  publication: PublicationsFollowersItem,
+  statusLiked?: boolean
+) => {
+  const { data: userByName } = useGetUserByNameQuery({ userName: publication.userName })
+  const [isFollowing, setIsFollowing] = useState<boolean>(() => !!userByName?.isFollowing)
+  const [isLiked, setIsLiked] = useState(statusLiked ?? publication.isLiked)
   const [follow] = useFollowingMutation()
   const [unFollow] = useRemoveFollowerMutation()
   const [updateLikeStatus] = useUploadPostLikeStatusMutation()
   const [addPostComment] = useAddPostCommentMutation()
-  // const { data: publicationComments } = usePostCommentsQuery({ postId: publication.id })
-  const {
-    /*    data: post,
-    error: errorPost,
-    isLoading: isLoadingPost,*/
-    refetch: refetchPost,
-  } = usePublicPostsByIdQuery({ postId: publication.id })
+
+  const { data: publicPost, refetch: refetchPost } = usePublicPostsByIdQuery({
+    postId: publication.id,
+  })
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: publication.id })
   const { data: privateComments } = usePostCommentsQuery({ postId: publication.id })
 
   useEffect(() => {
-    if (userByName?.isFollowing) {
-      setIsFollowing(userByName.isFollowing)
-    }
-
-    if (publication.isLiked) {
-      setLike()
-    } else {
-      setUnLike()
-    }
-  }, [publication.isLiked, userByName?.isFollowing, isFollowing])
+    setIsLiked(statusLiked ?? publication.isLiked)
+  }, [statusLiked, publication.isLiked])
 
   const handleLikeToggle = async () => {
     const likeStatus = isLiked ? 'NONE' : 'LIKE'
 
     try {
-      // if (likeStatus === 'LIKE') {
-      //   setLike()
-      // } else {
-      //   setUnLike()
-      // }
+      setIsLiked(prev => !prev) // optimistic update
       await updateLikeStatus({ likeStatus, postId: publication.id }).unwrap()
       refetchPost()
     } catch (e) {
-      if (likeStatus === 'LIKE') {
-        setUnLike()
-      } else {
-        setLike()
-      }
+      setIsLiked(prev => !prev) // rollback
       handleRequestError(e)
     }
   }
@@ -74,9 +55,8 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
       if (isFollowing) {
         await unFollow({ userId: publication.ownerId }).unwrap()
         setIsFollowing(false)
-        toast.success('You un-followed')
-      }
-      if (!isFollowing) {
+        toast.success('You unfollowed')
+      } else {
         await follow({ userId: publication.ownerId }).unwrap()
         setIsFollowing(true)
         toast.success('You followed')
@@ -86,15 +66,19 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
     }
   }
 
-  const handleCopyLink = () => {
-    const profileUrl = `${window.location.origin}/profile/${publication.ownerId}/${publication.id}`
+  const handleCopyLink = async () => {
+    const postUrl = `${window.location.origin}/profile/${publication.ownerId}/${publication.id}`
 
-    navigator.clipboard.writeText(profileUrl)
-    toast('Link copied to clipboard')
+    try {
+      await navigator.clipboard.writeText(postUrl)
+      toast('Link copied to clipboard')
+    } catch (e) {
+      handleRequestError(e)
+    }
   }
 
   const addPostCommentHandle = async (content: string) => {
-    if (content.length === 0) {
+    if (!content.trim()) {
       return
     }
     try {
@@ -110,7 +94,9 @@ export const usePostInteractions = (publication: PublicationsFollowersItem) => {
     handleFollowToggle,
     handleLikeToggle,
     isFollowing,
+    isLiked,
     privateComments: privateComments ?? { items: [] },
     publicComments: publicComments ?? { items: [] },
+    publicPost,
   }
 }

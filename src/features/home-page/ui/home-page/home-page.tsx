@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useMeQuery } from '@/features/auth/api'
 import { usePublicationsFollowersQuery } from '@/features/home-page/api'
@@ -12,11 +12,10 @@ const INITIAL_CURSOR = 0
 const INITIAL_PAGE_SIZE = 4
 
 export const HomePage = () => {
-  // const [openPostId, setOpenPostId] = useState(false)
   const [cursor, setCursor] = useState(INITIAL_CURSOR)
   const { data: me } = useMeQuery()
   const {
-    data: publications,
+    data: fetchedPublications,
     isError,
     isFetching,
     isLoading,
@@ -24,16 +23,22 @@ export const HomePage = () => {
     { endCursorPostId: cursor, pageSize: INITIAL_PAGE_SIZE },
     { refetchOnMountOrArgChange: true }
   )
-  // const handleOpenPostModal = () => {
-  //   setOpenPostId(prev => !prev)
-  // }
-  // const handleClosePostModal = () => {
-  //   setOpenPostId(prev => !prev)
-  // }
+
+  const [publications, setPublications] = useState(fetchedPublications?.items || [])
+
+  // Обновление локального состояния, если пришли новые публикации
+  useEffect(() => {
+    if (fetchedPublications?.items) {
+      if (Array.isArray(fetchedPublications?.items)) {
+        setPublications(prev => [...prev, ...fetchedPublications.items!])
+      }
+    }
+  }, [fetchedPublications?.items])
+
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (isFetching || !publications?.nextCursor) {
+      if (isFetching || !fetchedPublications?.nextCursor) {
         return
       }
 
@@ -44,7 +49,7 @@ export const HomePage = () => {
       observer.current = new IntersectionObserver(
         entries => {
           if (entries[0].isIntersecting) {
-            setCursor(publications.nextCursor!)
+            setCursor(fetchedPublications.nextCursor!)
           }
         },
         { threshold: 0.1 }
@@ -54,14 +59,24 @@ export const HomePage = () => {
         observer.current.observe(node)
       }
     },
-    [isFetching, publications?.nextCursor]
+    [isFetching, fetchedPublications?.nextCursor]
   )
+
+  const handleLikeToggle = (postId: number) => {
+    setPublications(prev =>
+      prev.map(p =>
+        p.id === postId
+          ? { ...p, isLiked: !p.isLiked, likesCount: p.likesCount + (p.isLiked ? -1 : 1) }
+          : p
+      )
+    )
+  }
 
   if (isError) {
     return <div className={'text-red-500 text-center'}>🚫 ERROR! Posts not found!</div>
   }
 
-  if (publications?.items?.length === 0 && !isLoading) {
+  if (publications.length === 0 && !isLoading) {
     return (
       <div className={'flex w-full justify-center items-start text-light-900'}>
         There are no publications yet 🙁
@@ -72,16 +87,16 @@ export const HomePage = () => {
   return (
     <div className={'flex flex-col w-full justify-center items-center gap-6'}>
       {(isLoading || isFetching) && <ProgressBar />}
-      {(publications?.items ?? []).map((publication, index, arr) => {
+      {publications.map((publication, index, arr) => {
         const timeAgo = formatDistanceToNow(new Date(publication.createdAt), { addSuffix: true })
         const postImages = publication.images.map(i => i.url)
         const isLast = index === arr.length - 1
 
         return (
-          <div key={publication.id} ref={isLast ? lastItemRef : null}>
+          <div key={`${publication.id}-${index}`} ref={isLast ? lastItemRef : null}>
             <Publication
               me={me}
-              // handleOpenPostModal={handleOpenPostModal}
+              onToggleLike={() => handleLikeToggle(publication.id)}
               postImages={postImages}
               publication={publication}
               timeAgo={timeAgo}

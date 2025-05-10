@@ -18,8 +18,8 @@ const Description = (props: PostDescriptionProps) => {
       <div>
         <Avatar alt={'User Avatar'} size={9} src={avatar} />
       </div>
-      <div className={'overflow-x-auto'}>
-        <Typography as={'p'} className={'text-balance mb-1'} variant={'regular14'}>
+      <div className={'flex flex-col'}>
+        <Typography as={'p'} className={'mb-1 break-all'} variant={'regular14'}>
           <Typography as={'span'} variant={'bold14'}>
             {userName}
           </Typography>{' '}

@@ -1,5 +1,4 @@
 import {
-  PublicPostByUserIdArgs,
   PublicPostCommentsArgs,
   PublicPostCommentsResponse,
   PublicPostItem,
@@ -31,12 +30,12 @@ export const homePageApi = instagramApi.injectEndpoints({
         url: `v1/public-posts/${postId}`,
       }),
     }),
-    publicPostsByUserId: builder.query<PublicPostsResponse, PublicPostByUserIdArgs>({
-      query: ({ endCursorPostId, userId, ...params }) => ({
-        params,
-        url: `v1/public-posts/user/${userId}/${endCursorPostId}`,
-      }),
-    }),
+    // publicPostsByUserId: builder.query<PublicPostsResponse, PublicPostByUserIdArgs>({
+    //   query: ({ endCursorPostId, userId, ...params }) => ({
+    //     params,
+    //     url: `v1/public-posts/user/${userId}/${endCursorPostId}`,
+    //   }),
+    // }),
     publicationsFollowers: builder.query<
       PublicationsFollowersResponse,
       PublicationsFollowersQueryArgs
@@ -76,7 +75,7 @@ export const homePageApi = instagramApi.injectEndpoints({
 export const {
   usePublicPostCommentsQuery,
   usePublicPostsByIdQuery,
-  usePublicPostsByUserIdQuery,
+  // usePublicPostsByUserIdQuery,
   usePublicPostsQuery,
   usePublicationsFollowersQuery,
   useTotalCountRegisteredUsersQuery,

@@ -14,28 +14,14 @@ type Props = {
 export const PostUserProfile = ({ me, onDelete, post }: Props) => {
   const [openPostId, setOpenPostId] = useState(false)
   const handleOpenPostModal = () => {
-    /*    if (!isExpanded) {
-          // Если разворачиваем описание — выбираем только текущее изображение
-          setItemImages([item.images[selectedIndex]])
-        } else {
-          // Если скрываем описание — возвращаем весь массив
-          setItemImages(item.images)
-        }*/
     setOpenPostId(prev => !prev)
   }
   const handleClosePostModal = () => {
-    /*    if (!isExpanded) {
-          // Если разворачиваем описание — выбираем только текущее изображение
-          setItemImages([item.images[selectedIndex]])
-        } else {
-          // Если скрываем описание — возвращаем весь массив
-          setItemImages(item.images)
-        }*/
     setOpenPostId(prev => !prev)
   }
 
   const handleDelete = () => {
-    onDelete(post.id) // Вызываем удаление поста
+    onDelete(post.id)
   }
 
   return (
@@ -47,15 +33,17 @@ export const PostUserProfile = ({ me, onDelete, post }: Props) => {
           size={'small'}
         />
       </div>
-      <PostModal
-        me={me}
-        onDelete={handleDelete}
-        onOpenChange={handleClosePostModal}
-        open={openPostId}
-        post={post}
-      >
-        <ImageContent itemImages={post.images.map(image => image.url)} />
-      </PostModal>
+      {openPostId && (
+        <PostModal
+          me={me}
+          onDelete={handleDelete}
+          onOpenChange={handleClosePostModal}
+          open={openPostId}
+          post={post}
+        >
+          <ImageContent itemImages={post.images.map(image => image.url)} />
+        </PostModal>
+      )}
     </>
   )
 }

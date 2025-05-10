@@ -1,5 +1,6 @@
 import { PublicPostItem } from '@/features/home-page/types'
 import {
+  Answer,
   AnswerLikesArgs,
   AnswersResponse,
   CommentItems,
@@ -44,6 +45,16 @@ export const postPageApi = instagramApi.injectEndpoints({
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
       }),
     }),
+    createCommentAnswer: builder.mutation<
+      Answer,
+      { commentId: number; content: string; postId: number }
+    >({
+      query: ({ commentId, content, postId }) => ({
+        body: { content },
+        method: 'POST',
+        url: `v1/posts/${postId}/comments/${commentId}/answers`,
+      }),
+    }),
     createPost: builder.mutation<PublicPostItem, { description: string; uploadIds: string[] }>({
       query: ({ description, uploadIds }) => {
         return {
@@ -67,6 +78,7 @@ export const postPageApi = instagramApi.injectEndpoints({
       }),
     }),
     post: builder.query<PublicPostItem, { postId: number }>({
+      providesTags: ['Post'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/id/${postId}`,
@@ -80,6 +92,7 @@ export const postPageApi = instagramApi.injectEndpoints({
       }),
     }),
     postLikes: builder.query<CommentLikesResponse, GetPostCommentsArgs>({
+      providesTags: ['PostLikes'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/likes`,
@@ -106,7 +119,11 @@ export const postPageApi = instagramApi.injectEndpoints({
       },
     }),
     uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
-      invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }],
+      invalidatesTags: [
+        { id: 'LIST', type: 'PublicationsFollowers' },
+        'PublicPostsByUserId',
+        'Post',
+      ],
       query: ({ likeStatus = 'NONE', postId }) => ({
         body: { likeStatus },
         method: 'PUT',
@@ -127,6 +144,7 @@ export const {
   useAnswerLikesQuery,
   useCommentAnswersQuery,
   useCommentLikesQuery,
+  useCreateCommentAnswerMutation,
   useCreatePostMutation,
   useDeletePostMutation,
   usePostCommentsQuery,
