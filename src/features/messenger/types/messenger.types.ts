@@ -47,3 +47,9 @@ export interface GetLatestMessages extends PaginationMessengerResponse {
 export interface GetMessagesByUser extends PaginationMessengerResponse {
   items: Message[]
 }
+
+export interface GetMessagesQueryParams {
+  cursor: number
+  pageSize: number
+  searchName: string
+}
