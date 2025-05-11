@@ -49,7 +49,7 @@ export interface GetMessagesByUser extends PaginationMessengerResponse {
 }
 
 export interface GetMessagesQueryParams {
-  cursor: number
-  pageSize: number
-  searchName: string
+  cursor?: number
+  pageSize?: number
+  searchName?: string
 }

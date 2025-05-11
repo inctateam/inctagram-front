@@ -49,12 +49,20 @@ export const CurrentUser = (props: CurrentUserProps) => {
   )
 }
 
-export const MessageInput = () => {
+type MessageTypeProps = {
+  sendMessage?: (text: string) => void
+}
+export const MessageInput = (props: MessageTypeProps) => {
+  const { sendMessage } = props
   const [messageType, setMessageType] = useState<MessageType>('TEXT')
   const [message, setMessage] = useState('')
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value)
+  }
+
+  const onSendMessageHandler = () => {
+    sendMessage?.(message)
   }
 
   return (
@@ -84,7 +92,9 @@ export const MessageInput = () => {
       )}
 
       {message.trim().length > 0 ? (
-        <Button variant={'text'}>{messageType === 'VOICE' ? 'Send voice' : 'Send message'}</Button>
+        <Button onClick={onSendMessageHandler} variant={'text'}>
+          {messageType === 'VOICE' ? 'Send voice' : 'Send message'}
+        </Button>
       ) : (
         messageType === 'TEXT' && (
           <div className={'flex gap-3'}>

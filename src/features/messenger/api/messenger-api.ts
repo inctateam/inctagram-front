@@ -33,3 +33,10 @@ export const messengerApi = instagramApi.injectEndpoints({
     }),
   }),
 })
+
+export const {
+  useDeleteMessageMutation,
+  useGetLatestMessagesQuery,
+  useGetMessagesByUserQuery,
+  useUpdateMessageStatusMutation,
+} = messengerApi
