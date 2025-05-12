@@ -13,7 +13,15 @@ import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
-const MessagePanel = ({ dialogData, myId }: { dialogData: Message[]; myId: number }) => {
+const MessagePanel = ({
+  dialogData,
+  myId,
+  userAvatar,
+}: {
+  dialogData: Message[]
+  myId: number
+  userAvatar: string
+}) => {
   return (
     <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
@@ -23,7 +31,7 @@ const MessagePanel = ({ dialogData, myId }: { dialogData: Message[]; myId: numbe
           </Typography>
         ) : (
           dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} myId={myId} />
+            return <UserMessageItem dialogItem={d} key={d.id} myId={myId} userAvatar={userAvatar} />
           })
         )}
       </div>
@@ -112,13 +120,21 @@ export const MessageInput = (props: MessageTypeProps) => {
   )
 }
 
-export const UserMessageItem = ({ dialogItem, myId }: { dialogItem: Message; myId: number }) => {
+export const UserMessageItem = ({
+  dialogItem,
+  myId,
+  userAvatar,
+}: {
+  dialogItem: Message
+  myId: number
+  userAvatar: string
+}) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
   const isMyMessage = myId === ownerId
 
   return (
     <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>
-      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={''} />}
+      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={userAvatar} />}
       <div
         className={cn(
           'flex flex-col px-3 py-2 gap-1 max-w-[275px] rounded-md',

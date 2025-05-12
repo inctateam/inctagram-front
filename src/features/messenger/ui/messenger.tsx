@@ -21,8 +21,9 @@ import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
 
 const Messenger = () => {
   const [sendMessageTrigger] = useSendMessageMutation()
-  const { data: meData } = useMeQuery()
+  const { data: meData, isLoading: meIsLoading } = useMeQuery()
   const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
+  const [dialoguePartnerId, setDialoguePartnerId] = useState<null | number>(null)
   const {
     data: latestMessages,
     isFetching: latestMessagesIsFetching,
@@ -30,19 +31,26 @@ const Messenger = () => {
   } = useGetLatestMessagesQuery({ params: {} })
   const {
     data: dialogData,
-    isFetching: dialogDataIsFetching,
+    // isFetching: dialogDataIsFetching,
     isLoading: dialogDataIsLoading,
   } = useGetMessagesByUserQuery(
-    { dialoguePartnerId: currentUser?.ownerId, params: {} },
-    // { dialoguePartnerId: currentUser?.receiverId, params: {} },
-    { skip: !currentUser?.receiverId }
+    { dialoguePartnerId: dialoguePartnerId!, params: {} },
+    { skip: dialoguePartnerId === null }
   )
 
   console.log('latestMessages', latestMessages)
   console.log('dialogData', dialogData)
+
   const onUserItemClick = (selectedUser: LatestMessage) => {
+    if (!meData) {
+      return
+    }
+    const dialoguePartnerId =
+      meData.userId === selectedUser.ownerId ? selectedUser.receiverId : selectedUser.ownerId
+
     setCurrentUser(selectedUser)
-    localStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
+    setDialoguePartnerId(dialoguePartnerId)
+    sessionStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
   }
 
   useEffect(() => {
@@ -61,7 +69,7 @@ const Messenger = () => {
     }
   }, [])
   useEffect(() => {
-    const savedUser = localStorage.getItem('messenger_current_user')
+    const savedUser = sessionStorage.getItem('messenger_current_user')
 
     if (savedUser) {
       try {
@@ -76,10 +84,9 @@ const Messenger = () => {
       return
     }
     sendMessageTrigger({ message, receiverId: currentUser.ownerId })
-    // sendMessageTrigger({ message, receiverId: currentUser.receiverId })
   }
 
-  if (latestMessagesIsLoading || dialogDataIsLoading) {
+  if (latestMessagesIsLoading || meIsLoading || !meData) {
     return <Spinner />
   }
 
@@ -88,7 +95,7 @@ const Messenger = () => {
       className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}
       // onBlur={() => setCurrentUser(null)}
     >
-      {(latestMessagesIsFetching || dialogDataIsFetching) && <ProgressBar />}
+      {(latestMessagesIsFetching || dialogDataIsLoading) && <ProgressBar />}
       <div className={'flex flex-col h-full w-[24rem] border-r border-dark-300 overflow-y-hidden'}>
         <div
           className={
@@ -110,7 +117,11 @@ const Messenger = () => {
           )}
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
-          <MessagePanel dialogData={dialogData?.items || []} myId={meData.userId} />
+          <MessagePanel
+            dialogData={dialogData?.items || []}
+            myId={meData.userId}
+            userAvatar={currentUser?.avatars[1].url || ''}
+          />
           <MessageInput sendMessage={sendMessage} />
         </div>
       </div>
