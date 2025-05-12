@@ -1,8 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import { useGetLatestMessagesQuery } from '@/features/messenger/api/messenger-api'
-import { LatestMessage, Message, MessageSendRequest } from '@/features/messenger/types'
+import { useMeQuery } from '@/features/auth/api'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
+import {
+  useGetLatestMessagesQuery,
+  useGetMessagesByUserQuery,
+  useSendMessageMutation,
+} from '@/features/messenger/api/messenger-api'
+import { LatestMessage } from '@/features/messenger/types'
 import UserItem from '@/features/messenger/ui/UserItem/userItem'
 import MessagePanel, {
   CurrentUser,
@@ -11,67 +17,78 @@ import MessagePanel, {
 import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
 import socket from '@/services/socket'
 import { WS_EVENTS_PATH } from '@/shared/constants/socket-events'
-import { ScrollArea } from '@/shared/ui'
+import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
 
 const Messenger = () => {
-  const { data: latestMessages } = useGetLatestMessagesQuery({ params: {} })
+  const [sendMessageTrigger] = useSendMessageMutation()
+  const { data: meData } = useMeQuery()
+  const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
+  const {
+    data: latestMessages,
+    isFetching: latestMessagesIsFetching,
+    isLoading: latestMessagesIsLoading,
+  } = useGetLatestMessagesQuery({ params: {} })
+  const {
+    data: dialogData,
+    isFetching: dialogDataIsFetching,
+    isLoading: dialogDataIsLoading,
+  } = useGetMessagesByUserQuery(
+    { dialoguePartnerId: currentUser?.ownerId, params: {} },
+    // { dialoguePartnerId: currentUser?.receiverId, params: {} },
+    { skip: !currentUser?.receiverId }
+  )
 
   console.log('latestMessages', latestMessages)
-  const [messages, setMessages] = useState<Message[]>([])
-  const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
+  console.log('dialogData', dialogData)
   const onUserItemClick = (selectedUser: LatestMessage) => {
     setCurrentUser(selectedUser)
+    localStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
   }
 
   useEffect(() => {
-    // подключение и слушатели
-    socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, (message: Message) => {
-      console.log('RECEIVE_MESSAGE')
-      setMessages(prev => [...prev, message])
+    socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, data => {
+      console.log('Receive message:', data)
     })
-
-    socket.on(WS_EVENTS_PATH.MESSAGE_SEND, (message: Message) => {
-      // обработка нового сообщения от другого пользователя
-      console.log('MESSAGE_SEND')
-      setMessages(prev => [...prev, message])
+    socket.on(WS_EVENTS_PATH.MESSAGE_SENT, data => {
+      console.log('MESSAGE_SENT', data)
     })
-
-    socket.on(WS_EVENTS_PATH.UPDATE_MESSAGE, (updatedMessage: Message) => {
-      setMessages(prev => prev.map(msg => (msg.id === updatedMessage.id ? updatedMessage : msg)))
-    })
-
-    socket.on(WS_EVENTS_PATH.MESSAGE_DELETED, (id: number) => {
-      setMessages(prev => prev.filter(msg => msg.id !== id))
-    })
-
     socket.on(WS_EVENTS_PATH.ERROR, err => {
       console.error('WebSocket error:', err)
     })
 
     return () => {
-      socket.off() // отключение всех слушателей при размонтировании
+      socket.off()
     }
   }, [])
+  useEffect(() => {
+    const savedUser = localStorage.getItem('messenger_current_user')
 
-  const sendMessage = (text: string) => {
-    console.log('send:', text)
-    // if (!currentUser) {
-    //   return
-    // }
-    const testMessage = 'Hello'
-    const testId = 2061
-    const message: MessageSendRequest = { message: testMessage, receiverId: testId }
+    if (savedUser) {
+      try {
+        setCurrentUser(JSON.parse(savedUser))
+      } catch (e) {
+        handleRequestError(e)
+      }
+    }
+  }, [])
+  const sendMessage = (message: string) => {
+    if (!currentUser) {
+      return
+    }
+    sendMessageTrigger({ message, receiverId: currentUser.ownerId })
+    // sendMessageTrigger({ message, receiverId: currentUser.receiverId })
+  }
 
-    socket.emit(WS_EVENTS_PATH.MESSAGE_SEND, message, (ack: any) => {
-      console.log('Acknowledged:', ack)
-    })
+  if (latestMessagesIsLoading || dialogDataIsLoading) {
+    return <Spinner />
   }
 
   return (
     <div
       className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}
-      onBlur={() => setCurrentUser(null)}
+      // onBlur={() => setCurrentUser(null)}
     >
+      {(latestMessagesIsFetching || dialogDataIsFetching) && <ProgressBar />}
       <div className={'flex flex-col h-full w-[24rem] border-r border-dark-300 overflow-y-hidden'}>
         <div
           className={
@@ -93,7 +110,7 @@ const Messenger = () => {
           )}
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
-          <MessagePanel dialogData={messages} />
+          <MessagePanel dialogData={dialogData?.items || []} myId={meData.userId} />
           <MessageInput sendMessage={sendMessage} />
         </div>
       </div>

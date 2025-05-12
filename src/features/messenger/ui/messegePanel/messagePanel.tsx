@@ -13,7 +13,7 @@ import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
-const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
+const MessagePanel = ({ dialogData, myId }: { dialogData: Message[]; myId: number }) => {
   return (
     <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
@@ -23,7 +23,7 @@ const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
           </Typography>
         ) : (
           dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} />
+            return <UserMessageItem dialogItem={d} key={d.id} myId={myId} />
           })
         )}
       </div>
@@ -63,6 +63,7 @@ export const MessageInput = (props: MessageTypeProps) => {
 
   const onSendMessageHandler = () => {
     sendMessage?.(message)
+    setMessage('')
   }
 
   return (
@@ -111,9 +112,8 @@ export const MessageInput = (props: MessageTypeProps) => {
   )
 }
 
-export const UserMessageItem = ({ dialogItem }: { dialogItem: Message }) => {
+export const UserMessageItem = ({ dialogItem, myId }: { dialogItem: Message; myId: number }) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
-  const myId = 2050
   const isMyMessage = myId === ownerId
 
   return (
