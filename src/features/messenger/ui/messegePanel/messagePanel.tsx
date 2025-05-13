@@ -15,11 +15,11 @@ import { cn } from '@/shared/utils'
 
 const MessagePanel = ({
   dialogData,
-  myId,
+  meId,
   userAvatar,
 }: {
   dialogData: Message[]
-  myId: number
+  meId: number
   userAvatar: string
 }) => {
   return (
@@ -31,7 +31,7 @@ const MessagePanel = ({
           </Typography>
         ) : (
           dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} myId={myId} userAvatar={userAvatar} />
+            return <UserMessageItem dialogItem={d} key={d.id} meId={meId} userAvatar={userAvatar} />
           })
         )}
       </div>
@@ -122,15 +122,15 @@ export const MessageInput = (props: MessageTypeProps) => {
 
 export const UserMessageItem = ({
   dialogItem,
-  myId,
+  meId,
   userAvatar,
 }: {
   dialogItem: Message
-  myId: number
+  meId: number
   userAvatar: string
 }) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
-  const isMyMessage = myId === ownerId
+  const isMyMessage = meId === ownerId
 
   return (
     <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>

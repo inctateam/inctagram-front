@@ -22,6 +22,7 @@ import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
 const Messenger = () => {
   const [sendMessageTrigger] = useSendMessageMutation()
   const { data: meData, isLoading: meIsLoading } = useMeQuery()
+  const meId = meData?.userId
   const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
   const [dialoguePartnerId, setDialoguePartnerId] = useState<null | number>(null)
   const {
@@ -34,8 +35,8 @@ const Messenger = () => {
     // isFetching: dialogDataIsFetching,
     isLoading: dialogDataIsLoading,
   } = useGetMessagesByUserQuery(
-    { dialoguePartnerId: dialoguePartnerId!, params: {} },
-    { skip: dialoguePartnerId === null }
+    { dialoguePartnerId: dialoguePartnerId!, meId: meId!, params: {} },
+    { skip: dialoguePartnerId === null || meId === undefined }
   )
 
   console.log('latestMessages', latestMessages)
@@ -46,7 +47,7 @@ const Messenger = () => {
       return
     }
     const dialoguePartnerId =
-      meData.userId === selectedUser.ownerId ? selectedUser.receiverId : selectedUser.ownerId
+      meId === selectedUser.ownerId ? selectedUser.receiverId : selectedUser.ownerId
 
     setCurrentUser(selectedUser)
     setDialoguePartnerId(dialoguePartnerId)
@@ -80,10 +81,10 @@ const Messenger = () => {
     }
   }, [])
   const sendMessage = (message: string) => {
-    if (!currentUser) {
+    if (!dialoguePartnerId) {
       return
     }
-    sendMessageTrigger({ message, receiverId: currentUser.ownerId })
+    sendMessageTrigger({ message, receiverId: dialoguePartnerId })
   }
 
   if (latestMessagesIsLoading || meIsLoading || !meData) {
@@ -119,7 +120,7 @@ const Messenger = () => {
         <div className={'flex flex-col overflow-y-hidden'}>
           <MessagePanel
             dialogData={dialogData?.items || []}
-            myId={meData.userId}
+            meId={meId!}
             userAvatar={currentUser?.avatars[1].url || ''}
           />
           <MessageInput sendMessage={sendMessage} />

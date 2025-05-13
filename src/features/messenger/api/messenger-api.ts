@@ -25,23 +25,40 @@ export const messengerApi = instagramApi.injectEndpoints({
     }),
     getMessagesByUser: builder.query<
       GetMessagesByUser,
-      { dialoguePartnerId: number; params: GetMessagesQueryParams }
+      { dialoguePartnerId: number; meId: number; params: GetMessagesQueryParams }
     >({
       merge: (currentCache, newItems) => ({
         ...currentCache,
         items: [...currentCache.items, ...newItems.items],
       }),
       async onCacheEntryAdded(
-        { dialoguePartnerId },
+        { dialoguePartnerId, meId },
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
       ) {
         await cacheDataLoaded
         const listener = (data: Message) => {
-          if (data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId) {
-            updateCachedData(draft => {
-              draft.items.push(data) // или push — зависит от порядка
-            })
+          // Проверяем, если сообщение относится к текущему диалогу
+          const isRelevant =
+            data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
+
+          if (!isRelevant) {
+            return
           }
+
+          // 🔔 Отправляем acknowledge, если это сообщение мне
+          if (data.receiverId === meId) {
+            socket.emit('acknowledge', { message: data, receiverId: meId })
+          }
+
+          updateCachedData(draft => {
+            const index = draft.items.findIndex(m => m.id === data.id)
+
+            if (index >= 0) {
+              draft.items[index] = data
+            } else {
+              draft.items.push(data)
+            }
+          })
         }
 
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, listener)
