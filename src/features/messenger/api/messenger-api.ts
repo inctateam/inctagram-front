@@ -65,9 +65,12 @@ export const messengerApi = instagramApi.injectEndpoints({
             return
           }
 
-          if (data.receiverId === meId) {
-            socket.emit('acknowledge', { message: data, receiverId: meId })
+          if (data.ownerId === meId) {
+            socket.emit('acknowledge', { message: data, receiverId: data.receiverId })
           }
+          // if (data.receiverId === meId) {
+          //   socket.emit('acknowledge', { message: data, receiverId: meId })
+          // }
 
           updateCachedData(draft => {
             const index = draft.items.findIndex(m => m.id === data.id)
