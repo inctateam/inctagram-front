@@ -15,8 +15,6 @@ import MessagePanel, {
   MessageInput,
 } from '@/features/messenger/ui/messegePanel/messagePanel'
 import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
-import socket from '@/services/socket'
-import { WS_EVENTS_PATH } from '@/shared/constants/socket-events'
 import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
 
 const Messenger = () => {
@@ -54,21 +52,21 @@ const Messenger = () => {
     sessionStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
   }
 
-  useEffect(() => {
-    socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, data => {
-      console.log('Receive message:', data)
-    })
-    socket.on(WS_EVENTS_PATH.MESSAGE_SENT, data => {
-      console.log('MESSAGE_SENT', data)
-    })
-    socket.on(WS_EVENTS_PATH.ERROR, err => {
-      console.error('WebSocket error:', err)
-    })
-
-    return () => {
-      socket.off()
-    }
-  }, [])
+  // useEffect(() => {
+  //   socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, data => {
+  //     console.log('Receive message:', data)
+  //   })
+  //   socket.on(WS_EVENTS_PATH.MESSAGE_SENT, data => {
+  //     console.log('MESSAGE_SENT', data)
+  //   })
+  //   socket.on(WS_EVENTS_PATH.ERROR, err => {
+  //     console.error('WebSocket error:', err)
+  //   })
+  //
+  //   return () => {
+  //     socket.off()
+  //   }
+  // }, [])
   useEffect(() => {
     const savedUser = sessionStorage.getItem('messenger_current_user')
 

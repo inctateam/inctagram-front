@@ -36,8 +36,8 @@ export const messengerApi = instagramApi.injectEndpoints({
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
       ) {
         await cacheDataLoaded
-        const listener = (data: Message) => {
-          // Проверяем, если сообщение относится к текущему диалогу
+        // 🔵 Слушаем RECEIVE_MESSAGE для отправителя (обновление сообщений)
+        const handleReceiveMessage = (data: Message) => {
           const isRelevant =
             data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
 
@@ -45,7 +45,26 @@ export const messengerApi = instagramApi.injectEndpoints({
             return
           }
 
-          // 🔔 Отправляем acknowledge, если это сообщение мне
+          updateCachedData(draft => {
+            const index = draft.items.findIndex(m => m.id === data.id)
+
+            if (index >= 0) {
+              draft.items[index] = data
+            } else {
+              draft.items.push(data)
+            }
+          })
+        }
+
+        // 🟠 Слушаем MESSAGE_SENT для получателя (нужно отправить acknowledge)
+        const handleMessageSent = (data: Message) => {
+          const isRelevant =
+            data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
+
+          if (!isRelevant) {
+            return
+          }
+
           if (data.receiverId === meId) {
             socket.emit('acknowledge', { message: data, receiverId: meId })
           }
@@ -61,10 +80,12 @@ export const messengerApi = instagramApi.injectEndpoints({
           })
         }
 
-        socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, listener)
+        socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
+        socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
 
         await cacheEntryRemoved
-        socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, listener)
+        socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
+        socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
       },
       query: ({ dialoguePartnerId, params }) => ({
         params,
