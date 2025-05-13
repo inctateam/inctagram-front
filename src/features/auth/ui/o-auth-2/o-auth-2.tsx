@@ -1,6 +1,7 @@
 'use client'
 
 import { GithubLogo, GoogleLogo } from '@/assets/icons'
+// import { baseUrl } from '@/shared/constants'
 import { IconButton } from '@/shared/ui'
 
 export const OAuth2 = () => {
@@ -15,8 +16,10 @@ export const OAuth2 = () => {
 
   // 🔹 АВТОРИЗАЦИЯ GOOGLE
   const handleGoogleLogin = async () => {
+    const redirectUrl = encodeURIComponent(window.location.origin + '/auth/google')
+
     window.location.assign(
-      'https://accounts.google.com/o/oauth2/v2/auth?client_id=272583913867-t74i019ufdvmarh05jlv8bcu1ak0a6o6.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=code&scope=email+profile'
+      `https://accounts.google.com/o/oauth2/v2/auth?client_id=272583913867-t74i019ufdvmarh05jlv8bcu1ak0a6o6.apps.googleusercontent.com&redirect_uri=${redirectUrl}&response_type=code&scope=email+profile`
     ) // 🔹 Перенаправляем пользователя на страницу авторизации
   }
 

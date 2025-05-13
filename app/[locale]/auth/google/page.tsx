@@ -20,7 +20,10 @@ const CallbackGooglePage = () => {
 
       if (code) {
         try {
-          const res = await loginWithGoogle({ code, redirectUrl: baseUrl }).unwrap()
+          const res = await loginWithGoogle({
+            code,
+            redirectUrl: `${baseUrl}/auth/google`,
+          }).unwrap()
 
           localStorage.setItem('access_token', res.accessToken)
           localStorage.setItem('email', res.email)
