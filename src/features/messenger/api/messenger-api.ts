@@ -9,9 +9,9 @@ import { instagramApi } from '@/services'
 import socket from '@/services/socket'
 import { WS_EVENTS_PATH } from '@/shared/constants/socket-events'
 
-export const messengerApi = instagramApi.injectEndpoints({
+const messengerApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
-    deleteMessage: builder.mutation<void, { id: number }>({
+    deleteMessageById: builder.mutation<void, { id: number }>({
       query: ({ id }) => ({
         method: 'DELETE',
         url: `v1/messanger/${id}`,
@@ -65,8 +65,14 @@ export const messengerApi = instagramApi.injectEndpoints({
             return
           }
 
-          if (data.ownerId === meId) {
-            socket.emit('acknowledge', { message: data, receiverId: data.receiverId })
+          if (data.receiverId === meId) {
+            socket.emit('acknowledge', { message: data, receiverId: meId }, response => {
+              if (response?.error) {
+                console.error('Acknowledge failed:', response.error)
+              } else {
+                console.log('Message acknowledged successfully')
+              }
+            })
           }
           // if (data.receiverId === meId) {
           //   socket.emit('acknowledge', { message: data, receiverId: meId })
@@ -119,7 +125,7 @@ export const messengerApi = instagramApi.injectEndpoints({
 })
 
 export const {
-  useDeleteMessageMutation,
+  useDeleteMessageByIdMutation,
   useGetLatestMessagesQuery,
   useGetMessagesByUserQuery,
   useSendMessageMutation,
