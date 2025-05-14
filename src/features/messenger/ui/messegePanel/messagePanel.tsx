@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, KeyboardEventHandler, useEffect, useRef, useState } from 'react'
 
 import {
   CheckmarkOutline,
@@ -64,6 +64,11 @@ export const MessageInput = (props: MessageTypeProps) => {
   const { sendMessage } = props
   const [messageType, setMessageType] = useState<MessageType>('TEXT')
   const [message, setMessage] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value)
@@ -72,6 +77,12 @@ export const MessageInput = (props: MessageTypeProps) => {
   const onSendMessageHandler = () => {
     sendMessage?.(message)
     setMessage('')
+  }
+  const onEnterMessageHandler: KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === 'Enter' && message.trim().length > 0) {
+      sendMessage?.(message.trim())
+      setMessage('')
+    }
   }
 
   return (
@@ -97,7 +108,13 @@ export const MessageInput = (props: MessageTypeProps) => {
       )}
 
       {messageType === 'TEXT' && (
-        <TextField onChange={handleChange} placeholder={'Type message...'} value={message} />
+        <TextField
+          onChange={handleChange}
+          onKeyDown={onEnterMessageHandler}
+          placeholder={'Type message...'}
+          ref={inputRef}
+          value={message}
+        />
       )}
 
       {message.trim().length > 0 ? (
