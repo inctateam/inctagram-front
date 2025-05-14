@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { toast } from 'react-toastify'
 
@@ -7,10 +7,17 @@ import CopyOutline from '@/assets/icons/components/filled-outlined-pairs/CopyOut
 import EditOutline from '@/assets/icons/components/filled-outlined-pairs/EditOutline'
 import PersonAdd from '@/assets/icons/components/filled-outlined-pairs/PersonAdd'
 import TrashOutline from '@/assets/icons/components/filled-outlined-pairs/TrashOutline'
-import { useMeQuery } from '@/features/auth/api'
+import { MeResponse } from '@/features/auth/types'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { usePublicPostCommentsQuery } from '@/features/home-page/api'
 import { PublicPostItem } from '@/features/home-page/types'
-import { useDeletePostMutation, usePostCommentsQuery } from '@/features/post-page/api'
+import {
+  useAddPostCommentMutation,
+  useDeletePostMutation,
+  usePostCommentsQuery,
+  usePostLikesQuery,
+  useUploadPostLikeStatusMutation,
+} from '@/features/post-page/api'
 import { Comments } from '@/features/post-page/ui/comments/comments'
 import { CommentForm } from '@/features/post-page/ui/interactionBlock/commentForm/commentForm'
 import { InteractionButtons } from '@/features/post-page/ui/interactionBlock/interactionButtonst/interactionButtons'
@@ -32,9 +39,10 @@ import { Description } from '../../postDescription'
 
 type PostModalProps = {
   children: ReactNode
+  me: MeResponse | undefined
   onDelete?: (postId: number) => void
   onOpenChange: (open: boolean) => void
-  open: boolean
+  open?: boolean
   post: PublicPostItem
 }
 const myDropDown = [
@@ -47,6 +55,7 @@ const myDropDown = [
     label: 'Delete post',
   },
 ]
+
 const friendDropDown = [
   {
     icon: <PersonAdd />,
@@ -58,28 +67,31 @@ const friendDropDown = [
   },
 ]
 const PostModal = (props: PostModalProps) => {
-  const { children, onDelete, onOpenChange, open, post } = props
-  const {
-    avatarOwner,
-    avatarWhoLikes,
-    createdAt,
-    description,
-    id,
-    isLiked,
-    likesCount,
-    ownerId,
-    userName,
-  } = post
+  const { children, me, onDelete, onOpenChange, open, post } = props
+  const { avatarOwner, createdAt, description, id, ownerId, userName } = post
+  const [postLikesCount, setPostLikesCount] = useState(post.likesCount)
   const [isEditPost, setIsEditPost] = useState(false) // Состояние для редактирования поста
   const [isDeletePost, setIsDeletePost] = useState(false) // Состояние для редактирования поста
   const [currentDescription, setCurrentDescription] = useState(description) // Состояние для описания
+  const { data: postLikes, refetch: refetchPostLikes } = usePostLikesQuery({ postId: id })
+  const [statusLiked, setStatusLiked] = useState<boolean | undefined>(undefined)
   const { data: publicComments } = usePublicPostCommentsQuery({ postId: id })
   const { data: privateComments } = usePostCommentsQuery({ postId: id })
-  const { data: me } = useMeQuery()
   const [deletePost, { isError, isLoading }] = useDeletePostMutation()
-  const comments = me?.userId ? privateComments : publicComments
+  const comments = me ? privateComments : publicComments
   const dropDownItems = me?.userId === post?.ownerId ? myDropDown : friendDropDown
   const currentUrl = useRef(window.location.href)
+  const [uploadPostLikeStatus] = useUploadPostLikeStatusMutation()
+  const [addPostComment] = useAddPostCommentMutation()
+
+  const avatarUrls: string[] =
+    postLikes?.items
+      ?.map(item => item.avatars[0]?.url) // может вернуть (string | undefined)[]
+      .filter((url): url is string => Boolean(url)) ?? [] // фильтруем undefined и приводим к string[]
+
+  useEffect(() => {
+    setStatusLiked(postLikes?.items.some(user => user.userId === me?.userId))
+  }, [postLikes, me?.userId])
 
   if (open) {
     // Используем window.history.pushState для изменения URL без перезагрузки страницы
@@ -106,14 +118,13 @@ const PostModal = (props: PostModalProps) => {
       setIsDeletePost(true)
     }
   }
-
   // Функция для обновления описания
   const handleDescriptionUpdate = (newDescription: string) => {
     setCurrentDescription(newDescription) // Обновляем описание в состоянии
   }
   const handleDeletePost = async (id: number) => {
     try {
-      await deletePost({ postId: id })
+      await deletePost({ postId: id }).unwrap()
       onOpenChange(true) // Закрываем модалку удаления
       if (onDelete) {
         onDelete(id) // удаляем из компоненты PublicUserProfile удалённый пост без перезагрузки страницы
@@ -121,6 +132,30 @@ const PostModal = (props: PostModalProps) => {
       toast.success('The post has been successfully deleted')
     } catch (error) {
       console.error('Error deleted post:', error)
+    }
+  }
+  const handlerTogglePostLike = async () => {
+    const likeStatus = statusLiked ? 'NONE' : 'LIKE'
+
+    try {
+      setPostLikesCount(prev => (likeStatus === 'LIKE' ? prev + 1 : prev - 1))
+      setStatusLiked(prev => !prev)
+      await uploadPostLikeStatus({ likeStatus, postId: id }).unwrap()
+      refetchPostLikes()
+    } catch {
+      setPostLikesCount(prev => (likeStatus === 'LIKE' ? prev + 1 : prev - 1))
+      setStatusLiked(prev => !prev)
+      toast.error('The post has not been found')
+    }
+  }
+  const addPostCommentHandle = async (content: string) => {
+    if (content.length === 0) {
+      return
+    }
+    try {
+      await addPostComment({ content, postId: id }).unwrap()
+    } catch (e) {
+      handleRequestError(e)
     }
   }
 
@@ -131,6 +166,7 @@ const PostModal = (props: PostModalProps) => {
   if (isLoading) {
     return <ProgressBar />
   }
+  console.log(id)
 
   // Возвращаем портал с модальным окном
   return createPortal(
@@ -155,7 +191,7 @@ const PostModal = (props: PostModalProps) => {
             </DialogHeader>
             <DialogBody className={'flex flex-col h-[31rem] max-sm:h-[248px]'}>
               <div
-                className={`flex flex-col overflow-y-auto px-6 pt-4 pb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
+                className={`flex flex-col overflow-y-auto px-6 pt-4 mb-5 flex-1 [&::-webkit-scrollbar]:hidden`}
               >
                 <Description
                   avatar={avatarOwner}
@@ -170,13 +206,18 @@ const PostModal = (props: PostModalProps) => {
                   'flex flex-col gap-2 bg-dark-300 border-t border-dark-100 px-6 pt-3 pb-2'
                 }
               >
-                {me?.userId && <InteractionButtons isLiked={isLiked} />}
+                {me?.userId && (
+                  <InteractionButtons
+                    isLiked={statusLiked}
+                    togglePostLike={handlerTogglePostLike}
+                  />
+                )}
                 <LikesList
-                  avatarWhoLikes={avatarWhoLikes}
+                  avatarWhoLikes={avatarUrls}
                   createdAt={createdAt}
-                  likesCount={likesCount}
+                  likesCount={postLikesCount}
                 />
-                {me?.userId && <CommentForm onSubmit={() => alert('submit comment')} />}
+                {me?.userId && <CommentForm onSubmit={addPostCommentHandle} />}
               </div>
             </DialogBody>
           </div>

@@ -6,9 +6,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/shared/ui'
+import { cn } from '@/shared/utils'
 import Image from 'next/image'
 
 type ImageCarouselProps = {
+  className?: string
   images: string[]
   onClick?: () => void
   selectedIndexCallBack?: (index: number) => void
@@ -16,6 +18,7 @@ type ImageCarouselProps = {
 }
 
 export function ImageCarousel({
+  className,
   images,
   onClick,
   selectedIndexCallBack,
@@ -28,7 +31,7 @@ export function ImageCarousel({
           <CarouselItem key={index}>
             <Image
               alt={`img ${index}`}
-              className={'w-full min-h-32 h-full object-cover'}
+              className={cn(`w-full min-h-32 h-full object-cover`, className)}
               height={400}
               onClick={onClick}
               priority

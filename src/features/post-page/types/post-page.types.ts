@@ -39,8 +39,15 @@ export interface CommentLikesItems {
   userName: string
 }
 
-export interface CommentLikesResponse extends ResponseParams {
+export interface CommentLikesResponse {
+  isLiked: boolean
   items: CommentLikesItems[]
+  nextCursor: null
+  page: number
+  pageSize: number
+  pagesCount: number
+  prevCursor: number
+  totalCount: number
 }
 
 //Answers
@@ -109,3 +116,9 @@ export interface Image {
 export interface UploadFileResponse {
   images: Image[]
 }
+export interface UploadPostLikeStatusArgs {
+  likeStatus: 'DISLIKE' | 'LIKE' | 'NONE'
+  postId: number
+}
+
+export type PostLikeStatus = 'DISLIKE' | 'LIKE' | 'NONE'

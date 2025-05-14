@@ -90,7 +90,7 @@ export const Sidebar = () => {
         />
 
         <SidebarItem
-          href={'/'}
+          href={PATH.MESSENGER}
           icon={<MessageCircle className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.MESSENGER}
           item={t('messenger')}
@@ -98,7 +98,7 @@ export const Sidebar = () => {
         />
 
         <SidebarItem
-          href={'/'}
+          href={PATH.PROFILE_SEARCH.replace(':id', String(getMeData?.userId))}
           icon={<SearchOutline className={'h-6 w-6'} />}
           isActive={activeItem === SIDEBAR_ITEMS.SEARCH}
           item={t('search')}

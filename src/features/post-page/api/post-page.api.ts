@@ -1,11 +1,14 @@
 import { PublicPostItem } from '@/features/home-page/types'
 import {
+  Answer,
   AnswerLikesArgs,
   AnswersResponse,
+  CommentItems,
   CommentLikesResponse,
   CommentsResponse,
   GetCommentAnswersArgs,
   GetPostCommentsArgs,
+  PostLikeStatus,
   UploadFileResponse,
   UserPostResponse,
   UserPostsArgs,
@@ -15,6 +18,15 @@ import { instagramApi } from '@/services'
 // PublicPostsItems проверить тип на соответствие приватному посту
 export const postPageApi = instagramApi.injectEndpoints({
   endpoints: builder => ({
+    addPostComment: builder.mutation<CommentItems, { content: string; postId: number }>({
+      invalidatesTags: ['PostComments'],
+      // invalidatesTags: [{ id: 'LIST', type: 'PublicationsFollowers' }, 'PostComments'],
+      query: ({ content, postId }) => ({
+        body: { content },
+        method: 'POST',
+        url: `v1/posts/${postId}/comments`,
+      }),
+    }),
     answerLikes: builder.query<string, AnswerLikesArgs>({
       query: ({ answerId, commentId, postId, ...params }) => ({
         params,
@@ -31,6 +43,16 @@ export const postPageApi = instagramApi.injectEndpoints({
       query: ({ commentId, postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/comments/${commentId}/likes`,
+      }),
+    }),
+    createCommentAnswer: builder.mutation<
+      Answer,
+      { commentId: number; content: string; postId: number }
+    >({
+      query: ({ commentId, content, postId }) => ({
+        body: { content },
+        method: 'POST',
+        url: `v1/posts/${postId}/comments/${commentId}/answers`,
       }),
     }),
     createPost: builder.mutation<PublicPostItem, { description: string; uploadIds: string[] }>({
@@ -56,18 +78,21 @@ export const postPageApi = instagramApi.injectEndpoints({
       }),
     }),
     post: builder.query<PublicPostItem, { postId: number }>({
+      providesTags: ['Post'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/id/${postId}`,
       }),
     }),
     postComments: builder.query<CommentsResponse, GetPostCommentsArgs>({
+      providesTags: ['PostComments'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/comments`,
       }),
     }),
     postLikes: builder.query<CommentLikesResponse, GetPostCommentsArgs>({
+      providesTags: ['PostLikes'],
       query: ({ postId, ...params }) => ({
         params,
         url: `v1/posts/${postId}/likes`,
@@ -93,6 +118,18 @@ export const postPageApi = instagramApi.injectEndpoints({
         }
       },
     }),
+    uploadPostLikeStatus: builder.mutation<void, { likeStatus: PostLikeStatus; postId: number }>({
+      invalidatesTags: [
+        { id: 'LIST', type: 'PublicationsFollowers' },
+        'PublicPostsByUserId',
+        'Post',
+      ],
+      query: ({ likeStatus = 'NONE', postId }) => ({
+        body: { likeStatus },
+        method: 'PUT',
+        url: `v1/posts/${postId}/like-status`,
+      }),
+    }),
     userPosts: builder.query<UserPostResponse, UserPostsArgs>({
       query: ({ userName, ...params }) => ({
         params,
@@ -103,9 +140,11 @@ export const postPageApi = instagramApi.injectEndpoints({
 })
 
 export const {
+  useAddPostCommentMutation,
   useAnswerLikesQuery,
   useCommentAnswersQuery,
   useCommentLikesQuery,
+  useCreateCommentAnswerMutation,
   useCreatePostMutation,
   useDeletePostMutation,
   usePostCommentsQuery,
@@ -113,5 +152,6 @@ export const {
   usePostQuery,
   useUploadDescriptionMutation,
   useUploadImageForPostMutation,
+  useUploadPostLikeStatusMutation,
   useUserPostsQuery,
 } = postPageApi

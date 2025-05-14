@@ -1,39 +1,27 @@
 import { useState } from 'react'
 
+import { MeResponse } from '@/features/auth/types'
 import { Post } from '@/features/home-page/ui/user-profile/types/user-profile.types'
 import { PostModal } from '@/features/post-page/ui/post/post-modal'
 import { ImageContent } from '@/shared/ui/image-content'
 
 type Props = {
+  me: MeResponse | undefined
   onDelete: (postId: number) => void // Функция для удаления поста
   post: Post
 }
 
-export const PostUserProfile = ({ onDelete, post }: Props) => {
+export const PostUserProfile = ({ me, onDelete, post }: Props) => {
   const [openPostId, setOpenPostId] = useState(false)
   const handleOpenPostModal = () => {
-    /*    if (!isExpanded) {
-          // Если разворачиваем описание — выбираем только текущее изображение
-          setItemImages([item.images[selectedIndex]])
-        } else {
-          // Если скрываем описание — возвращаем весь массив
-          setItemImages(item.images)
-        }*/
     setOpenPostId(prev => !prev)
   }
   const handleClosePostModal = () => {
-    /*    if (!isExpanded) {
-          // Если разворачиваем описание — выбираем только текущее изображение
-          setItemImages([item.images[selectedIndex]])
-        } else {
-          // Если скрываем описание — возвращаем весь массив
-          setItemImages(item.images)
-        }*/
     setOpenPostId(prev => !prev)
   }
 
   const handleDelete = () => {
-    onDelete(post.id) // Вызываем удаление поста
+    onDelete(post.id)
   }
 
   return (
@@ -47,6 +35,7 @@ export const PostUserProfile = ({ onDelete, post }: Props) => {
       </div>
       {openPostId && (
         <PostModal
+          me={me}
           onDelete={handleDelete}
           onOpenChange={handleClosePostModal}
           open={openPostId}

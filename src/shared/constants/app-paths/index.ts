@@ -1,9 +1,11 @@
 export const PATH = {
   CONFIRM_EMAIL: '/auth/registration-confirmation',
+  MESSENGER: '/messenger',
   PASSWORD_RECOVERY: '/auth/recovery', // forgot password page
   PASSWORD_RESET: '/auth/password-reset', // creating new password
   PRIVACY_POLICY: '/privacy-policy',
   PROFILE: '/profile/:id',
+  PROFILE_SEARCH: '/profile/:id/search',
   PROFILE_SETTINGS: '/profile/:id/settings',
   ROOT: '/',
   SIGN_IN: '/auth/sign-in', // login page

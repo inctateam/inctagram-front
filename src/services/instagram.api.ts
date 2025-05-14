@@ -16,5 +16,16 @@ export const instagramApi = createApi({
   }),
   endpoints: () => ({}),
   reducerPath: 'instagramApi',
-  tagTypes: ['Me', 'MyProfile', 'Notifications'],
+  tagTypes: [
+    'Me',
+    'MyProfile',
+    'Notifications',
+    'UsersByName',
+    'PublicUserProfile',
+    'PublicPostsByUserId',
+    'PublicationsFollowers',
+    'PostComments',
+    'PostLikes',
+    'Post',
+  ],
 })

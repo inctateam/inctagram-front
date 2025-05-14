@@ -1,11 +1,19 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { PaidStatus } from '@/assets/icons'
 import { useMeQuery } from '@/features/auth/api'
+import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import { PostUserProfile } from '@/features/home-page/ui/post-user-profile'
+import {
+  useFollowingMutation,
+  useGetUserByNameQuery,
+  useRemoveFollowerMutation,
+} from '@/features/search/api/users-following-followers.api'
 import { PATH } from '@/shared/constants'
+import { useBoolean } from '@/shared/hooks'
 import { Avatar, Button, ProgressBar, Typography } from '@/shared/ui'
 import { ScrollArea } from '@/shared/ui/scrollbar'
 
@@ -26,14 +34,20 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   const { data: isAuth } = useMeQuery()
 
   const { data: publicProfile, isLoading: profileLoading } = useGetPublicUserProfileQuery(userId)
-
+  const {
+    data: userByNameData,
+    isLoading: userByNameLoading,
+    refetch: refetchUserByNameData,
+  } = useGetUserByNameQuery({ userName: publicProfile?.userName || '' }, { skip: !publicProfile })
   const { data: initialPosts, isLoading: postsLoading } = useGetPublicPostsByUserIdQuery({
     pageSize: POSTS_PER_PAGE,
     userId,
   })
-
+  const [follow, { isLoading: loadingFollow }] = useFollowingMutation()
+  const [unfollow, { isLoading: loadingUnfollow }] = useRemoveFollowerMutation()
+  const isLoadingFollowAction = loadingFollow || loadingUnfollow
   const [posts, setPosts] = useState(initialPosts?.items || [])
-
+  const [isFollowing, { setFalse, setTrue }] = useBoolean(false)
   const [trigger, { isFetching: isFetchingMore }] = useLazyGetPublicPostsByUserIdQuery()
 
   const viewportRef = useRef<HTMLDivElement>(null)
@@ -56,10 +70,16 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
   }, [posts, isFetchingMore, trigger, userId, initialPosts])
 
   useEffect(() => {
+    if (userByNameData?.isFollowing === true) {
+      setTrue()
+    } else if (userByNameData?.isFollowing === false) {
+      setFalse()
+    }
+
     if (initialPosts?.items) {
       setPosts(initialPosts.items) // Обновляем посты после загрузки данных
     }
-  }, [initialPosts]) // Следим за изменениями в initialPosts
+  }, [userByNameData?.isFollowing, initialPosts, setTrue, setFalse]) // Следим за изменениями в initialPosts
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,8 +109,27 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
     // Удалить пост локально из состояния
     setPosts(prevPosts => prevPosts.filter(post => post.id !== postId))
   }
+  const onFollowButtonClickHandler = async () => {
+    if (isLoadingFollowAction) {
+      return
+    }
 
-  if (profileLoading || postsLoading) {
+    const action = isFollowing ? unfollow : follow
+    const successMessage = isFollowing
+      ? 'Subscription successfully cancelled'
+      : `Success! You subscribed to ${userByNameData?.userName || 'user'}`
+
+    try {
+      await action({ userId }).unwrap()
+      toast.success(successMessage)
+      // Обновим данные пользователя после действия
+      await refetchUserByNameData()
+    } catch (e) {
+      handleRequestError(e)
+    }
+  }
+
+  if (profileLoading || postsLoading || userByNameLoading) {
     return <ProgressBar />
   }
 
@@ -114,6 +153,15 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
                 <Typography variant={'h1'}>{publicProfile?.userName}</Typography>
                 {paidStatus && <PaidStatus className={'w-6 h-6'} />}
               </div>
+              {isAuth && publicProfile?.id !== isAuth.userId && (
+                <Button
+                  disabled={isLoadingFollowAction}
+                  onClick={onFollowButtonClickHandler}
+                  variant={isFollowing ? 'outline' : 'primary'}
+                >
+                  {isFollowing ? 'Unfollow' : 'Follow'}
+                </Button>
+              )}
               {isAuth && publicProfile?.id == isAuth.userId ? (
                 <Button asChild size={'medium'} variant={'secondary'}>
                   <a href={PATH.PROFILE_SETTINGS.replace(':id', userId.toString())}>
@@ -125,13 +173,15 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
             <div className={'flex gap-24 mt-5 mb-6'}>
               <div className={'flex flex-col items-start'}>
                 <Typography variant={'regular14'}>
-                  {publicProfile?.userMetadata.following}
+                  {/*{publicProfile?.userMetadata.following}*/}
+                  {userByNameData?.followingCount}
                 </Typography>
                 <Typography variant={'regular14'}>Following</Typography>
               </div>
               <div className={'flex flex-col items-start'}>
                 <Typography variant={'regular14'}>
-                  {publicProfile?.userMetadata.followers}
+                  {/*{publicProfile?.userMetadata.followers}*/}
+                  {userByNameData?.followersCount}
                 </Typography>
                 <Typography variant={'regular14'}>Followers</Typography>
               </div>
@@ -152,6 +202,7 @@ export const PublicUserProfile = ({ paidStatus = true, userId }: UserProfileProp
             ? posts.map(post => (
                 <div className={'w-[calc(25%-6px)] aspect-square'} key={post.id}>
                   <PostUserProfile
+                    me={isAuth}
                     onDelete={handlePostDeletion} // Передаем функцию удаления
                     post={post}
                   />

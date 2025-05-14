@@ -33,7 +33,7 @@
         "passwordMaxLength": "Максимальное количество символов 20",
         "passwordConfirmation": "Пароли должны совпадать",
         "usernameMinLength": "Минимальное количество символов 6",
-        "usernameMaxLength": "Максимальное количество символов 30",
+        "usernameMaxLength": "Максимальное количество символов 20",
         "requiredField": "Это поле обязательно"
       }
     },

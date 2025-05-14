@@ -45,10 +45,25 @@ export const userProfileApi = instagramApi.injectEndpoints({
       }
     >({
       forceRefetch: params => Boolean(params.currentArg?.endCursorPostId),
-      merge: (currentCache, newItems) => ({
-        ...currentCache,
-        items: [...currentCache.items, ...newItems.items],
-      }),
+      // merge: (currentCache, newItems) => ({
+      //   ...currentCache,
+      //   items: [...currentCache.items, ...newItems.items],
+      // }),
+      merge: (currentCache, newItems) => {
+        const combined = [...currentCache.items, ...newItems.items]
+
+        // Удаляем дубликаты по полю id
+        const uniqueItems = Array.from(new Map(combined.map(post => [post.id, post])).values())
+
+        return {
+          ...currentCache,
+          items: uniqueItems,
+          pageSize: newItems.pageSize,
+          totalCount: newItems.totalCount,
+          totalUsers: newItems.totalUsers,
+        }
+      },
+      providesTags: ['PublicPostsByUserId'],
       query: ({ endCursorPostId, pageSize, userId }) => ({
         method: 'GET',
         params: { pageSize },
@@ -60,6 +75,7 @@ export const userProfileApi = instagramApi.injectEndpoints({
       transformResponse: (response: GetPublicPostsByUserNameResponse) => response,
     }),
     getPublicUserProfile: builder.query<GetPublicUserProfileResponse, number>({
+      providesTags: ['PublicUserProfile'],
       query: profileId => ({
         method: 'GET',
         url: `v1/public-user/profile/${profileId}`,

@@ -1,8 +1,10 @@
 import imageDefault from '@/assets/icons/png/image-defolt.png'
 import { ImageCarousel } from '@/shared/ui'
+import { cn } from '@/shared/utils'
 import Image from 'next/image'
 
 type Props = {
+  className?: string
   itemImages: string[]
   onClick?: () => void
   selectedIndexCallBack?: (index: number) => void
@@ -10,6 +12,7 @@ type Props = {
 }
 
 export const ImageContent = ({
+  className,
   itemImages,
   onClick,
   selectedIndexCallBack,
@@ -19,7 +22,7 @@ export const ImageContent = ({
     return (
       <Image
         alt={'Post image'}
-        className={'h-full w-full object-cover'}
+        className={cn(`h-full w-full object-cover`, className)}
         onClick={onClick}
         priority
         src={imageDefault}
@@ -30,7 +33,7 @@ export const ImageContent = ({
     return (
       <Image
         alt={'Post image'}
-        className={'h-full w-full object-cover'}
+        className={cn(`h-full w-full object-cover`, className)}
         height={400}
         onClick={onClick}
         priority
@@ -42,6 +45,7 @@ export const ImageContent = ({
     // Показываем карусель
     return (
       <ImageCarousel
+        className={className}
         images={itemImages}
         onClick={onClick}
         selectedIndexCallBack={selectedIndexCallBack} // Передаем функцию обновления selectedIndex
