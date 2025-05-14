@@ -56,29 +56,6 @@ const messengerApi = instagramApi.injectEndpoints({
           })
         }
 
-        // 🟠 Слушаем MESSAGE_SENT для получателя
-        // const handleMessageSent = (data: Message) => {
-        // const isRelevant =
-        //   data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
-        //
-        // if (!isRelevant) {
-        //   return
-        // }
-        // if (data.receiverId === meId) {
-        //   socket.emit(WS_EVENTS_PATH.MESSAGE_SENT, { message: data, receiverId: meId })
-        // }
-
-        //   updateCachedData(draft => {
-        //     const index = draft.items.findIndex(m => m.id === data.id)
-        //
-        //     if (index >= 0) {
-        //       draft.items[index] = data
-        //     } else {
-        //       draft.items.push(data)
-        //     }
-        //   })
-        // }
-
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
         socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleReceiveMessage)
 
