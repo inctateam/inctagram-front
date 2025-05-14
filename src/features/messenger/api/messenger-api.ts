@@ -56,12 +56,38 @@ const messengerApi = instagramApi.injectEndpoints({
           })
         }
 
+        const handleMessageSent = (
+          data: Message,
+          callback: (payload: { message: Message; receiverId: number }) => void
+        ) => {
+          const isRelevant =
+            data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
+
+          if (!isRelevant) {
+            return
+          }
+
+          if (data.receiverId === meId) {
+            callback({ message: data, receiverId: meId })
+          }
+
+          updateCachedData(draft => {
+            const index = draft.items.findIndex(m => m.id === data.id)
+
+            if (index >= 0) {
+              draft.items[index] = data
+            } else {
+              draft.items.push(data)
+            }
+          })
+        }
+
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
-        socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleReceiveMessage)
+        socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
 
         await cacheEntryRemoved
         socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
-        socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleReceiveMessage)
+        socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
       },
       query: ({ dialoguePartnerId, params }) => ({
         params,
