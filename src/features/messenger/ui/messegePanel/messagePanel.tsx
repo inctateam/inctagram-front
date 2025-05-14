@@ -13,7 +13,15 @@ import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
-const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
+const MessagePanel = ({
+  dialogData,
+  meId,
+  userAvatar,
+}: {
+  dialogData: Message[]
+  meId: number
+  userAvatar: string
+}) => {
   return (
     <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
@@ -23,7 +31,7 @@ const MessagePanel = ({ dialogData }: { dialogData: Message[] }) => {
           </Typography>
         ) : (
           dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} />
+            return <UserMessageItem dialogItem={d} key={d.id} meId={meId} userAvatar={userAvatar} />
           })
         )}
       </div>
@@ -49,12 +57,21 @@ export const CurrentUser = (props: CurrentUserProps) => {
   )
 }
 
-export const MessageInput = () => {
+type MessageTypeProps = {
+  sendMessage?: (text: string) => void
+}
+export const MessageInput = (props: MessageTypeProps) => {
+  const { sendMessage } = props
   const [messageType, setMessageType] = useState<MessageType>('TEXT')
   const [message, setMessage] = useState('')
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value)
+  }
+
+  const onSendMessageHandler = () => {
+    sendMessage?.(message)
+    setMessage('')
   }
 
   return (
@@ -84,7 +101,9 @@ export const MessageInput = () => {
       )}
 
       {message.trim().length > 0 ? (
-        <Button variant={'text'}>{messageType === 'VOICE' ? 'Send voice' : 'Send message'}</Button>
+        <Button onClick={onSendMessageHandler} variant={'text'}>
+          {messageType === 'VOICE' ? 'Send voice' : 'Send message'}
+        </Button>
       ) : (
         messageType === 'TEXT' && (
           <div className={'flex gap-3'}>
@@ -101,14 +120,21 @@ export const MessageInput = () => {
   )
 }
 
-export const UserMessageItem = ({ dialogItem }: { dialogItem: Message }) => {
+export const UserMessageItem = ({
+  dialogItem,
+  meId,
+  userAvatar,
+}: {
+  dialogItem: Message
+  meId: number
+  userAvatar: string
+}) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
-  const myId = 2050
-  const isMyMessage = myId === ownerId
+  const isMyMessage = meId === ownerId
 
   return (
     <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>
-      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={''} />}
+      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={userAvatar} />}
       <div
         className={cn(
           'flex flex-col px-3 py-2 gap-1 max-w-[275px] rounded-md',
