@@ -37,8 +37,8 @@ const Messenger = () => {
     { skip: dialoguePartnerId === null || meId === undefined }
   )
 
-  console.log('latestMessages', latestMessages)
-  console.log('dialogData', dialogData)
+  // console.log('latestMessages', latestMessages)
+  // console.log('dialogData', dialogData)
 
   const onUserItemClick = (selectedUser: LatestMessage) => {
     if (!meData) {

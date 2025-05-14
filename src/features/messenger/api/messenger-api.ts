@@ -14,13 +14,13 @@ const messengerApi = instagramApi.injectEndpoints({
     deleteMessageById: builder.mutation<void, { id: number }>({
       query: ({ id }) => ({
         method: 'DELETE',
-        url: `v1/messanger/${id}`,
+        url: `v1/messenger/${id}`,
       }),
     }),
     getLatestMessages: builder.query<GetLatestMessages, { params: GetMessagesQueryParams }>({
       query: ({ params }) => ({
         params,
-        url: `v1/messanger`,
+        url: `v1/messenger`,
       }),
     }),
     getMessagesByUser: builder.query<
@@ -56,49 +56,39 @@ const messengerApi = instagramApi.injectEndpoints({
           })
         }
 
-        // 🟠 Слушаем MESSAGE_SENT для получателя (нужно отправить acknowledge)
-        const handleMessageSent = (data: Message) => {
-          const isRelevant =
-            data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
+        // 🟠 Слушаем MESSAGE_SENT для получателя
+        // const handleMessageSent = (data: Message) => {
+        // const isRelevant =
+        //   data.ownerId === dialoguePartnerId || data.receiverId === dialoguePartnerId
+        //
+        // if (!isRelevant) {
+        //   return
+        // }
+        // if (data.receiverId === meId) {
+        //   socket.emit(WS_EVENTS_PATH.MESSAGE_SENT, { message: data, receiverId: meId })
+        // }
 
-          if (!isRelevant) {
-            return
-          }
-
-          if (data.receiverId === meId) {
-            socket.emit('acknowledge', { message: data, receiverId: meId }, response => {
-              if (response?.error) {
-                console.error('Acknowledge failed:', response.error)
-              } else {
-                console.log('Message acknowledged successfully')
-              }
-            })
-          }
-          // if (data.receiverId === meId) {
-          //   socket.emit('acknowledge', { message: data, receiverId: meId })
-          // }
-
-          updateCachedData(draft => {
-            const index = draft.items.findIndex(m => m.id === data.id)
-
-            if (index >= 0) {
-              draft.items[index] = data
-            } else {
-              draft.items.push(data)
-            }
-          })
-        }
+        //   updateCachedData(draft => {
+        //     const index = draft.items.findIndex(m => m.id === data.id)
+        //
+        //     if (index >= 0) {
+        //       draft.items[index] = data
+        //     } else {
+        //       draft.items.push(data)
+        //     }
+        //   })
+        // }
 
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
-        socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
+        socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleReceiveMessage)
 
         await cacheEntryRemoved
         socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
-        socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
+        socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleReceiveMessage)
       },
       query: ({ dialoguePartnerId, params }) => ({
         params,
-        url: `v1/messanger/${dialoguePartnerId}`,
+        url: `v1/messenger/${dialoguePartnerId}`,
       }),
       transformResponse: (response: GetMessagesByUser) => ({
         ...response,
@@ -118,7 +108,7 @@ const messengerApi = instagramApi.injectEndpoints({
       query: ({ ids }) => ({
         body: ids,
         method: 'PUT',
-        url: `v1/messanger`,
+        url: `v1/messenger`,
       }),
     }),
   }),
