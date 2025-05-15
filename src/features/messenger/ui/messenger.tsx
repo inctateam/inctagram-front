@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation'
 const Messenger = () => {
   const router = useRouter()
   const [sendMessageTrigger] = useSendMessageMutation()
+  const [cursor, setCursor] = useState<number | undefined>(undefined)
   const { data: meData, isLoading: meIsLoading } = useMeQuery()
   const meId = meData?.userId
   const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
@@ -39,6 +40,7 @@ const Messenger = () => {
 
     setCurrentUser(selectedUser)
     setDialoguePartnerId(dialoguePartnerId)
+    setCursor(undefined) // сброс курсора при выборе нового пользователя
   }
 
   const sendMessage = (message: string) => {
@@ -84,8 +86,10 @@ const Messenger = () => {
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
           <MessagePanel
+            cursor={cursor}
             dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
+            setCursor={setCursor}
             userAvatar={currentUser?.avatars[1].url || ''}
           />
           <div

@@ -25,15 +25,19 @@ import { cn } from '@/shared/utils'
 const MESSAGES_LIMIT = 12
 
 const MessagePanel = ({
+  cursor,
   dialoguePartnerId,
   meId,
+  setCursor,
   userAvatar,
 }: {
+  cursor: number | undefined
   dialoguePartnerId?: number
   meId: number
+  setCursor: (val: number) => void
   userAvatar: string
 }) => {
-  const [cursor, setCursor] = useState<number | undefined>(undefined)
+  // const [cursor, setCursor] = useState<number | undefined>(undefined)
   const {
     data: dialogData,
     isFetching,
@@ -77,7 +81,7 @@ const MessagePanel = ({
         observer.current.observe(node)
       }
     },
-    [dialogData, isFetching]
+    [dialogData?.items, isFetching, setCursor]
   )
 
   return (
