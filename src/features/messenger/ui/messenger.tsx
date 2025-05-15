@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useMeQuery } from '@/features/auth/api'
 import {
   useGetLatestMessagesQuery,
-  useGetMessagesByUserQuery,
   useSendMessageMutation,
 } from '@/features/messenger/api/messenger-api'
 import { LatestMessage } from '@/features/messenger/types'
@@ -14,23 +13,22 @@ import MessagePanel, {
   MessageInput,
 } from '@/features/messenger/ui/messegePanel/messagePanel'
 import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
+import { PATH } from '@/shared/constants'
 import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
+import { useRouter } from 'next/navigation'
 
 const Messenger = () => {
+  const router = useRouter()
   const [sendMessageTrigger] = useSendMessageMutation()
   const { data: meData, isLoading: meIsLoading } = useMeQuery()
   const meId = meData?.userId
   const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
-  const [dialoguePartnerId, setDialoguePartnerId] = useState<null | number>(null)
+  const [dialoguePartnerId, setDialoguePartnerId] = useState<number | undefined>(undefined)
   const {
     data: latestMessages,
     isFetching: latestMessagesIsFetching,
     isLoading: latestMessagesIsLoading,
   } = useGetLatestMessagesQuery({ params: {} })
-  // const { data: dialogData, isLoading: dialogDataIsLoading } = useGetMessagesByUserQuery(
-  //   { dialoguePartnerId: dialoguePartnerId!, meId: meId!, params: {} },
-  //   { skip: dialoguePartnerId === null || meId === undefined }
-  // )
 
   const onUserItemClick = (selectedUser: LatestMessage) => {
     if (!meData) {
@@ -41,23 +39,7 @@ const Messenger = () => {
 
     setCurrentUser(selectedUser)
     setDialoguePartnerId(dialoguePartnerId)
-    // sessionStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
   }
-
-  /*  useEffect(() => {
-    const savedUser = sessionStorage.getItem('messenger_current_user')
-
-    if (savedUser) {
-      try {
-        setCurrentUser(JSON.parse(savedUser))
-      } catch (e) {
-        handleRequestError(e)
-      }
-    }
-    setCurrentUser(null)
-
-    return sessionStorage.removeItem('messenger_current_user')
-  }, [])*/
 
   const sendMessage = (message: string) => {
     if (!dialoguePartnerId) {
@@ -66,8 +48,11 @@ const Messenger = () => {
     sendMessageTrigger({ message, receiverId: dialoguePartnerId })
   }
 
-  if (latestMessagesIsLoading || meIsLoading || !meData) {
+  if (latestMessagesIsLoading || meIsLoading) {
     return <Spinner />
+  }
+  if (!meData) {
+    router.push(PATH.SIGN_IN)
   }
 
   return (
@@ -99,12 +84,17 @@ const Messenger = () => {
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
           <MessagePanel
-            // dialogData={dialogData?.items || []}
             dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
             userAvatar={currentUser?.avatars[1].url || ''}
           />
-          {dialoguePartnerId && <MessageInput sendMessage={sendMessage} />}
+          <div
+            className={
+              'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'
+            }
+          >
+            {dialoguePartnerId && <MessageInput sendMessage={sendMessage} />}
+          </div>
         </div>
       </div>
     </div>

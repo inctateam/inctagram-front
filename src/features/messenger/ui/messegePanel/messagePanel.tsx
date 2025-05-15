@@ -22,16 +22,14 @@ import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
-const MESSAGES_LIMIT = 5
+const MESSAGES_LIMIT = 12
 
 const MessagePanel = ({
-  // dialogData,
   dialoguePartnerId,
   meId,
   userAvatar,
 }: {
-  // dialogData: Message[]
-  dialoguePartnerId: number
+  dialoguePartnerId?: number
   meId: number
   userAvatar: string
 }) => {
@@ -49,7 +47,6 @@ const MessagePanel = ({
     { skip: dialoguePartnerId === null || meId === undefined }
   )
 
-  console.log('dialogData.items', dialogData?.items)
   const observer = useRef<IntersectionObserver | null>(null)
   const lastItemRef = useRef<HTMLDivElement | null>(null)
 
@@ -67,10 +64,8 @@ const MessagePanel = ({
         entries => {
           if (entries[0].isIntersecting) {
             const lastItemId = dialogData?.items[0]?.id
-            // const lastItemId = dialogData?.items[dialogData.items.length - 1]?.id
 
             if (lastItemId) {
-              console.log('lastItemId:____', lastItemId)
               setCursor(lastItemId)
             }
           }
@@ -87,26 +82,40 @@ const MessagePanel = ({
 
   return (
     <ScrollArea className={' h-[33rem] overflow-y-hidden'} viewportRef={lastItemRef}>
-      <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
-        {!dialogData?.items.length ? (
-          <Typography className={'text-light-900 text-center'} variant={'regular16'}>
-            There are no messages
+      {dialoguePartnerId ? (
+        <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
+          {isFetching && (
+            <div className={'flex justify-center items-center'}>
+              <Typography className={'text-light-900'} variant={'regular16'}>
+                Loading more messages....✉
+              </Typography>
+            </div>
+          )}
+          {!dialogData?.items.length ? (
+            <Typography className={'text-light-900 text-center'} variant={'regular16'}>
+              There are no messages
+            </Typography>
+          ) : (
+            dialogData?.items?.map((d, i) => {
+              return (
+                <UserMessageItem
+                  dialogItem={d}
+                  key={d.id}
+                  meId={meId}
+                  ref={i === 0 ? setLastItemRef : null}
+                  userAvatar={userAvatar}
+                />
+              )
+            })
+          )}
+        </div>
+      ) : (
+        <div className={'flex justify-center items-center h-[33rem] mt-5'}>
+          <Typography className={'text-light-900'} variant={'regular16'}>
+            Start a chat with the user from the list
           </Typography>
-        ) : (
-          dialogData?.items?.map((d, i) => {
-            return (
-              <UserMessageItem
-                dialogItem={d}
-                key={d.id}
-                meId={meId}
-                ref={i === 0 ? setLastItemRef : null}
-                // ref={i === dialogData?.items.length - 1 ? setLastItemRef : null}
-                userAvatar={userAvatar}
-              />
-            )
-          })
-        )}
-      </div>
+        </div>
+      )}
     </ScrollArea>
   )
 }
@@ -158,9 +167,10 @@ export const MessageInput = (props: MessageTypeProps) => {
   }
 
   return (
-    <div
-      className={'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'}
-    >
+    // <div
+    //   className={'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'}
+    // >
+    <>
       <div className={'flex'}>
         {messageType !== 'TEXT' && (
           <IconButton onClick={() => setMessageType('TEXT')}>
@@ -205,7 +215,8 @@ export const MessageInput = (props: MessageTypeProps) => {
           </div>
         )
       )}
-    </div>
+    </>
+    // </div>
   )
 }
 
