@@ -27,10 +27,10 @@ const Messenger = () => {
     isFetching: latestMessagesIsFetching,
     isLoading: latestMessagesIsLoading,
   } = useGetLatestMessagesQuery({ params: {} })
-  const { data: dialogData, isLoading: dialogDataIsLoading } = useGetMessagesByUserQuery(
-    { dialoguePartnerId: dialoguePartnerId!, meId: meId!, params: {} },
-    { skip: dialoguePartnerId === null || meId === undefined }
-  )
+  // const { data: dialogData, isLoading: dialogDataIsLoading } = useGetMessagesByUserQuery(
+  //   { dialoguePartnerId: dialoguePartnerId!, meId: meId!, params: {} },
+  //   { skip: dialoguePartnerId === null || meId === undefined }
+  // )
 
   const onUserItemClick = (selectedUser: LatestMessage) => {
     if (!meData) {
@@ -75,7 +75,8 @@ const Messenger = () => {
       className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}
       // onBlur={() => setCurrentUser(null)}
     >
-      {(latestMessagesIsFetching || dialogDataIsLoading) && <ProgressBar />}
+      {latestMessagesIsFetching && <ProgressBar />}
+      {/*{(latestMessagesIsFetching || dialogDataIsLoading) && <ProgressBar />}*/}
       <div className={'flex flex-col h-full w-[24rem] border-r border-dark-300 overflow-y-hidden'}>
         <div
           className={
@@ -98,7 +99,8 @@ const Messenger = () => {
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
           <MessagePanel
-            dialogData={dialogData?.items || []}
+            // dialogData={dialogData?.items || []}
+            dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
             userAvatar={currentUser?.avatars[1].url || ''}
           />

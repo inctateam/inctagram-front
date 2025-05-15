@@ -27,10 +27,16 @@ const messengerApi = instagramApi.injectEndpoints({
       GetMessagesByUser,
       { dialoguePartnerId: number; meId: number; params: GetMessagesQueryParams }
     >({
-      merge: (currentCache, newItems) => ({
-        ...currentCache,
-        items: [...currentCache.items, ...newItems.items],
-      }),
+      forceRefetch: params => Boolean(params.currentArg?.params?.cursor),
+      merge: (currentCache, newItems) => {
+        const existingIds = new Set(currentCache.items.map(item => item.id))
+        const filteredNewItems = newItems.items.filter(item => !existingIds.has(item.id))
+
+        return {
+          ...currentCache,
+          items: [...filteredNewItems, ...currentCache.items],
+        }
+      },
       async onCacheEntryAdded(
         { dialoguePartnerId, meId },
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
@@ -93,6 +99,8 @@ const messengerApi = instagramApi.injectEndpoints({
         params,
         url: `v1/messenger/${dialoguePartnerId}`,
       }),
+      serializeQueryArgs: ({ endpointName, queryArgs }) =>
+        `${endpointName}-${queryArgs.dialoguePartnerId}`,
       transformResponse: (response: GetMessagesByUser) => ({
         ...response,
         items: [...response.items].reverse(),

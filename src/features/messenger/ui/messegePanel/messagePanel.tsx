@@ -1,4 +1,12 @@
-import { ChangeEvent, KeyboardEventHandler, useEffect, useRef, useState } from 'react'
+import {
+  ChangeEvent,
+  KeyboardEventHandler,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   CheckmarkOutline,
@@ -8,30 +16,94 @@ import {
   PlayCircle,
   PlusCircle,
 } from '@/assets/icons'
+import { useGetMessagesByUserQuery } from '@/features/messenger/api/messenger-api'
 import { Message, MessageType } from '@/features/messenger/types'
 import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
 
+const MESSAGES_LIMIT = 5
+
 const MessagePanel = ({
-  dialogData,
+  // dialogData,
+  dialoguePartnerId,
   meId,
   userAvatar,
 }: {
-  dialogData: Message[]
+  // dialogData: Message[]
+  dialoguePartnerId: number
   meId: number
   userAvatar: string
 }) => {
+  const [cursor, setCursor] = useState<number | undefined>(undefined)
+  const {
+    data: dialogData,
+    isFetching,
+    // isLoading: dialogDataIsLoading,
+  } = useGetMessagesByUserQuery(
+    {
+      dialoguePartnerId: dialoguePartnerId!,
+      meId: meId!,
+      params: { cursor, pageSize: MESSAGES_LIMIT },
+    },
+    { skip: dialoguePartnerId === null || meId === undefined }
+  )
+
+  console.log('dialogData.items', dialogData?.items)
+  const observer = useRef<IntersectionObserver | null>(null)
+  const lastItemRef = useRef<HTMLDivElement | null>(null)
+
+  const setLastItemRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetching) {
+        return
+      }
+
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting) {
+            const lastItemId = dialogData?.items[0]?.id
+            // const lastItemId = dialogData?.items[dialogData.items.length - 1]?.id
+
+            if (lastItemId) {
+              console.log('lastItemId:____', lastItemId)
+              setCursor(lastItemId)
+            }
+          }
+        },
+        { threshold: 0.5 }
+      )
+
+      if (node) {
+        observer.current.observe(node)
+      }
+    },
+    [dialogData, isFetching]
+  )
+
   return (
-    <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
+    <ScrollArea className={' h-[33rem] overflow-y-hidden'} viewportRef={lastItemRef}>
       <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
-        {!dialogData.length ? (
+        {!dialogData?.items.length ? (
           <Typography className={'text-light-900 text-center'} variant={'regular16'}>
             There are no messages
           </Typography>
         ) : (
-          dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} meId={meId} userAvatar={userAvatar} />
+          dialogData?.items?.map((d, i) => {
+            return (
+              <UserMessageItem
+                dialogItem={d}
+                key={d.id}
+                meId={meId}
+                ref={i === 0 ? setLastItemRef : null}
+                // ref={i === dialogData?.items.length - 1 ? setLastItemRef : null}
+                userAvatar={userAvatar}
+              />
+            )
           })
         )}
       </div>
@@ -137,20 +209,22 @@ export const MessageInput = (props: MessageTypeProps) => {
   )
 }
 
-export const UserMessageItem = ({
-  dialogItem,
-  meId,
-  userAvatar,
-}: {
-  dialogItem: Message
-  meId: number
-  userAvatar: string
-}) => {
+export const UserMessageItem = forwardRef<
+  HTMLDivElement,
+  {
+    dialogItem: Message
+    meId: number
+    userAvatar: string
+  }
+>(({ dialogItem, meId, userAvatar }, ref) => {
   const { createdAt, messageText, ownerId, status } = dialogItem
   const isMyMessage = meId === ownerId
 
   return (
-    <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>
+    <div
+      className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}
+      ref={ref}
+    >
       {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={userAvatar} />}
       <div
         className={cn(
@@ -178,4 +252,4 @@ export const UserMessageItem = ({
       </div>
     </div>
   )
-}
+})
