@@ -1,8 +1,7 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useMeQuery } from '@/features/auth/api'
-import { handleRequestError } from '@/features/auth/utils/handleRequestError'
 import {
   useGetLatestMessagesQuery,
   useGetMessagesByUserQuery,
@@ -42,10 +41,10 @@ const Messenger = () => {
 
     setCurrentUser(selectedUser)
     setDialoguePartnerId(dialoguePartnerId)
-    sessionStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
+    // sessionStorage.setItem('messenger_current_user', JSON.stringify(selectedUser))
   }
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const savedUser = sessionStorage.getItem('messenger_current_user')
 
     if (savedUser) {
@@ -55,7 +54,11 @@ const Messenger = () => {
         handleRequestError(e)
       }
     }
-  }, [])
+    setCurrentUser(null)
+
+    return sessionStorage.removeItem('messenger_current_user')
+  }, [])*/
+
   const sendMessage = (message: string) => {
     if (!dialoguePartnerId) {
       return
@@ -99,7 +102,7 @@ const Messenger = () => {
             meId={meId!}
             userAvatar={currentUser?.avatars[1].url || ''}
           />
-          <MessageInput sendMessage={sendMessage} />
+          {dialoguePartnerId && <MessageInput sendMessage={sendMessage} />}
         </div>
       </div>
     </div>
