@@ -8,10 +8,9 @@ import {
 } from '@/features/messenger/api/messenger-api'
 import { LatestMessage } from '@/features/messenger/types'
 import UserItem from '@/features/messenger/ui/UserItem/userItem'
-import MessagePanel, {
-  CurrentUser,
-  MessageInput,
-} from '@/features/messenger/ui/messegePanel/messagePanel'
+import CurrentUser from '@/features/messenger/ui/messegePanel/currentUser/currentUser'
+import MessagePanel from '@/features/messenger/ui/messegePanel/messagePanel'
+import MessengerInput from '@/features/messenger/ui/messegePanel/messangerInput/MessangerInput'
 import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
 import { PATH } from '@/shared/constants'
 import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
@@ -81,7 +80,7 @@ const Messenger = () => {
       <div className={'flex flex-col w-full'}>
         <div className={'flex bg-dark-500 h-[4.75rem] p-3 border-b border-dark-300'}>
           {currentUser && (
-            <CurrentUser src={currentUser.avatars[0].url} userName={currentUser.userName} />
+            <CurrentUser src={currentUser?.avatars[0]?.url || ''} userName={currentUser.userName} />
           )}
         </div>
         <div className={'flex flex-col overflow-y-hidden'}>
@@ -90,14 +89,14 @@ const Messenger = () => {
             dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
             setCursor={setCursor}
-            userAvatar={currentUser?.avatars[1].url || ''}
+            userAvatar={currentUser?.avatars[1]?.url || ''}
           />
           <div
             className={
               'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'
             }
           >
-            {dialoguePartnerId && <MessageInput sendMessage={sendMessage} />}
+            {dialoguePartnerId && <MessengerInput sendMessage={sendMessage} />}
           </div>
         </div>
       </div>
