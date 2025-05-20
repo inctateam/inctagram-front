@@ -38,9 +38,13 @@ const MessagePanel = ({
 
   // Сохраняем позицию скролла при смене диалога
   useEffect(() => {
+    const currentScrollPositions = scrollPositions.current
+    const currentDialogueId = dialoguePartnerId
+    const currentViewportRef = viewportRef.current
+
     return () => {
-      if (viewportRef.current && dialoguePartnerId) {
-        scrollPositions.current[dialoguePartnerId] = viewportRef.current.scrollTop
+      if (currentViewportRef && currentDialogueId) {
+        currentScrollPositions[currentDialogueId] = currentViewportRef.scrollTop
       }
     }
   }, [dialoguePartnerId])
