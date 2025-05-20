@@ -42,11 +42,11 @@ const Messenger = () => {
     setCursor(undefined) // сброс курсора при выборе нового пользователя
   }
 
-  const sendMessage = (message: string) => {
+  const sendMessage = async (message: string) => {
     if (!dialoguePartnerId) {
       return
     }
-    sendMessageTrigger({ message, receiverId: dialoguePartnerId })
+    await sendMessageTrigger({ message, receiverId: dialoguePartnerId })
   }
 
   if (latestMessagesIsLoading || meIsLoading) {

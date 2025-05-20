@@ -34,6 +34,7 @@ const MessagePanel = ({
   const scrollPositions = useRef<Record<number, number>>({})
   const prevScrollTopRef = useRef(0)
   const prevScrollHeightRef = useRef(0)
+  const lastMessageIdRef = useRef<null | number>(null)
 
   // Сохраняем позицию скролла при смене диалога
   useEffect(() => {
@@ -51,7 +52,17 @@ const MessagePanel = ({
     if (!viewportEl || !dialogData?.items.length) {
       return
     }
+    const lastMessage = dialogData.items[dialogData.items.length - 1]
 
+    // если появился новый ID, которого не было до этого
+    if (lastMessage.id !== lastMessageIdRef.current) {
+      lastMessageIdRef.current = lastMessage.id
+      requestAnimationFrame(() => {
+        if (viewportRef.current) {
+          viewportRef.current.scrollTop = viewportRef.current.scrollHeight
+        }
+      })
+    }
     const savedScroll = scrollPositions.current[dialoguePartnerId!]
 
     if (savedScroll !== undefined && cursor === undefined) {
