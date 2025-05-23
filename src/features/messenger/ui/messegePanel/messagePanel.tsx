@@ -1,181 +1,154 @@
-import { ChangeEvent, KeyboardEventHandler, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
-import {
-  CheckmarkOutline,
-  DoneAllOutline,
-  ImageOutline,
-  MicOutline,
-  PlayCircle,
-  PlusCircle,
-} from '@/assets/icons'
-import { Message, MessageType } from '@/features/messenger/types'
-import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
-import { Avatar, Button, IconButton, ScrollArea, TextField, Typography } from '@/shared/ui'
-import { cn } from '@/shared/utils'
+import { useGetMessagesByUserQuery } from '@/features/messenger/api/messenger-api'
+import UserMessageItem from '@/features/messenger/ui/messegePanel/userMessageItem/userMessageItem'
+import { ProgressBar, ScrollArea, Typography } from '@/shared/ui'
+
+const MESSAGES_LIMIT = 12
 
 const MessagePanel = ({
-  dialogData,
+  cursor,
+  dialoguePartnerId,
   meId,
+  setCursor,
   userAvatar,
 }: {
-  dialogData: Message[]
+  cursor: number | undefined
+  dialoguePartnerId?: number
   meId: number
+  setCursor: (val: number) => void
   userAvatar: string
 }) => {
+  const { data: dialogData, isFetching } = useGetMessagesByUserQuery(
+    {
+      dialoguePartnerId: dialoguePartnerId!,
+      meId: meId!,
+      params: { cursor, pageSize: MESSAGES_LIMIT },
+    },
+    { skip: dialoguePartnerId === null || meId === undefined }
+  )
+
+  const observer = useRef<IntersectionObserver | null>(null)
+  const viewportRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollPositions = useRef<Record<number, number>>({})
+  const prevScrollTopRef = useRef(0)
+  const prevScrollHeightRef = useRef(0)
+  const lastMessageIdRef = useRef<null | number>(null)
+
+  // Сохраняем позицию скролла при смене диалога
+  useEffect(() => {
+    const currentScrollPositions = scrollPositions.current
+    const currentDialogueId = dialoguePartnerId
+    const currentViewportRef = viewportRef.current
+
+    return () => {
+      if (currentViewportRef && currentDialogueId) {
+        currentScrollPositions[currentDialogueId] = currentViewportRef.scrollTop
+      }
+    }
+  }, [dialoguePartnerId])
+
+  // После загрузки сообщений — восстанавливаем/компенсируем скролл
+  useEffect(() => {
+    const viewportEl = viewportRef.current
+
+    if (!viewportEl || !dialogData?.items.length) {
+      return
+    }
+    const lastMessage = dialogData.items[dialogData.items.length - 1]
+
+    // если появился новый ID, которого не было до этого
+    if (lastMessage.id !== lastMessageIdRef.current) {
+      lastMessageIdRef.current = lastMessage.id
+      requestAnimationFrame(() => {
+        if (viewportRef.current) {
+          viewportRef.current.scrollTop = viewportRef.current.scrollHeight
+        }
+      })
+    }
+    const savedScroll = scrollPositions.current[dialoguePartnerId!]
+
+    if (savedScroll !== undefined && cursor === undefined) {
+      // Смена диалога — восстановить сохранённый scroll
+      viewportEl.scrollTop = savedScroll
+    } else if (cursor !== undefined) {
+      // Подгрузка новых сообщений — компенсировать смещение
+      const newScrollHeight = viewportEl.scrollHeight
+      const scrollDiff = newScrollHeight - prevScrollHeightRef.current
+
+      viewportEl.scrollTop = prevScrollTopRef.current + scrollDiff
+    } else {
+      // Первая загрузка — прокрутить вниз
+      viewportEl.scrollTop = viewportEl.scrollHeight
+    }
+  }, [dialogData?.items, cursor, dialoguePartnerId])
+
+  // Реф для верхнего сообщения (наблюдение за появлением)
+  const setLastItemRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetching) {
+        return
+      }
+
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting) {
+            const lastItemId = dialogData?.items[0]?.id
+
+            if (lastItemId && viewportRef.current) {
+              // Сохраняем текущий scrollTop и scrollHeight
+              prevScrollTopRef.current = viewportRef.current.scrollTop
+              prevScrollHeightRef.current = viewportRef.current.scrollHeight
+              // Запрашиваем следующую порцию
+              setCursor(lastItemId)
+            }
+          }
+        },
+        { threshold: 1 }
+      )
+
+      if (node) {
+        observer.current.observe(node)
+      }
+    },
+    [dialogData?.items, isFetching, setCursor]
+  )
+
   return (
-    <ScrollArea className={' h-[33rem] overflow-y-hidden'}>
-      <div className={'flex flex-col flex-grow gap-6 px-6 py-16 bg-dark-700'}>
-        {!dialogData.length ? (
-          <Typography className={'text-light-900 text-center'} variant={'regular16'}>
-            There are no messages
+    <ScrollArea className={'h-[33rem] mt-6 overflow-y-hidden'} viewportRef={viewportRef}>
+      {isFetching && <ProgressBar />}
+      {dialoguePartnerId ? (
+        <div className={'flex flex-col flex-grow gap-6 px-6 mb-16 bg-dark-700'}>
+          {!dialogData?.items.length && !isFetching ? (
+            <Typography className={'text-light-900 text-center'} variant={'regular16'}>
+              There are no messages
+            </Typography>
+          ) : (
+            dialogData?.items.map((d, i) => (
+              <UserMessageItem
+                dialogItem={d}
+                key={d.id}
+                meId={meId}
+                ref={i === 0 ? setLastItemRef : null}
+                userAvatar={userAvatar}
+              />
+            ))
+          )}
+        </div>
+      ) : (
+        <div className={'flex justify-center items-center h-[33rem] mt-5'}>
+          <Typography className={'text-light-900'} variant={'regular16'}>
+            Start a chat with the user from the list
           </Typography>
-        ) : (
-          dialogData.map(d => {
-            return <UserMessageItem dialogItem={d} key={d.id} meId={meId} userAvatar={userAvatar} />
-          })
-        )}
-      </div>
+        </div>
+      )}
     </ScrollArea>
   )
 }
 
 export default MessagePanel
-
-type CurrentUserProps = {
-  className?: string
-  src?: string
-  userName?: string
-}
-export const CurrentUser = (props: CurrentUserProps) => {
-  const { className, src, userName = 'Ekaterina Ivanova' } = props
-
-  return (
-    <div className={cn('flex justify-start items-center gap-3 bg-dark-500', className)}>
-      <Avatar alt={'user avatar'} size={12} src={src} />
-      <Typography variant={'regular16'}>{userName}</Typography>
-    </div>
-  )
-}
-
-type MessageTypeProps = {
-  sendMessage?: (text: string) => void
-}
-export const MessageInput = (props: MessageTypeProps) => {
-  const { sendMessage } = props
-  const [messageType, setMessageType] = useState<MessageType>('TEXT')
-  const [message, setMessage] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value)
-  }
-
-  const onSendMessageHandler = () => {
-    sendMessage?.(message)
-    setMessage('')
-  }
-  const onEnterMessageHandler: KeyboardEventHandler<HTMLInputElement> = e => {
-    if (e.key === 'Enter' && message.trim().length > 0) {
-      sendMessage?.(message.trim())
-      setMessage('')
-    }
-  }
-
-  return (
-    <div
-      className={'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'}
-    >
-      <div className={'flex'}>
-        {messageType !== 'TEXT' && (
-          <IconButton onClick={() => setMessageType('TEXT')}>
-            <PlusCircle className={'rotate-45'} />
-          </IconButton>
-        )}
-
-        {messageType === 'VOICE' && (
-          <IconButton>
-            <PlayCircle />
-          </IconButton>
-        )}
-      </div>
-
-      {messageType === 'IMAGE' && (
-        <div className={'text-muted-foreground text-sm'}>Image input coming soon...</div>
-      )}
-
-      {messageType === 'TEXT' && (
-        <TextField
-          onChange={handleChange}
-          onKeyDown={onEnterMessageHandler}
-          placeholder={'Type message...'}
-          ref={inputRef}
-          value={message}
-        />
-      )}
-
-      {message.trim().length > 0 ? (
-        <Button onClick={onSendMessageHandler} variant={'text'}>
-          {messageType === 'VOICE' ? 'Send voice' : 'Send message'}
-        </Button>
-      ) : (
-        messageType === 'TEXT' && (
-          <div className={'flex gap-3'}>
-            <IconButton onClick={() => setMessageType('VOICE')}>
-              <MicOutline />
-            </IconButton>
-            <IconButton onClick={() => setMessageType('IMAGE')}>
-              <ImageOutline />
-            </IconButton>
-          </div>
-        )
-      )}
-    </div>
-  )
-}
-
-export const UserMessageItem = ({
-  dialogItem,
-  meId,
-  userAvatar,
-}: {
-  dialogItem: Message
-  meId: number
-  userAvatar: string
-}) => {
-  const { createdAt, messageText, ownerId, status } = dialogItem
-  const isMyMessage = meId === ownerId
-
-  return (
-    <div className={cn('flex items-end gap-3', isMyMessage ? 'justify-end' : 'justify-start')}>
-      {!isMyMessage && <Avatar alt={'user avatar'} size={9} src={userAvatar} />}
-      <div
-        className={cn(
-          'flex flex-col px-3 py-2 gap-1 max-w-[275px] rounded-md',
-          isMyMessage ? 'bg-accent-700' : 'bg-dark-300'
-        )}
-      >
-        <Typography className={'text-pretty'} variant={'regular14'}>
-          {messageText}
-        </Typography>
-        <div className={'flex items-center justify-end gap-1'}>
-          <Typography
-            className={cn('text-xs', isMyMessage ? 'text-accent-100' : 'text-light-900')}
-            variant={'small'}
-          >
-            {formatMessageDate(createdAt, true)}
-          </Typography>
-          {isMyMessage &&
-            (status === 'READ' ? (
-              <DoneAllOutline className={'w-4 h-4 text-accent-100'} />
-            ) : (
-              <CheckmarkOutline className={'w-4 h-4 text-accent-100'} />
-            ))}
-        </div>
-      </div>
-    </div>
-  )
-}

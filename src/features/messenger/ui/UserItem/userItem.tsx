@@ -31,7 +31,7 @@ const UserItem = (props: Props) => {
       onClick={onItemClickHandler}
     >
       <div className={'flex w-12'}>
-        <Avatar alt={'user avatar'} size={12} src={lastMessage?.avatars[0].url} />
+        <Avatar alt={'user avatar'} size={12} src={lastMessage?.avatars[0]?.url || ''} />
       </div>
       <div className={'flex flex-col w-full justify-between'}>
         <div className={'flex justify-between items-center'}>
