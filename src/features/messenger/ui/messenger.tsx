@@ -42,11 +42,20 @@ const Messenger = () => {
     setCursor(undefined) // сброс курсора при выборе нового пользователя
   }
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = async (
+    message: string,
+    isVoice: boolean = false,
+    audioBuffer?: Uint8Array
+  ) => {
     if (!dialoguePartnerId) {
       return
     }
-    await sendMessageTrigger({ message, receiverId: dialoguePartnerId })
+
+    if (isVoice && audioBuffer) {
+      await sendMessageTrigger({ audioBuffer, isVoice, message: '', receiverId: dialoguePartnerId })
+    } else {
+      await sendMessageTrigger({ message, receiverId: dialoguePartnerId })
+    }
   }
 
   if (latestMessagesIsLoading || meIsLoading) {

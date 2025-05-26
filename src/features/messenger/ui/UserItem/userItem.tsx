@@ -27,7 +27,9 @@ const UserItem = (props: Props) => {
 
   return (
     <div
-      className={'flex gap-3 px-3 py-3 bg-dark-500 active:bg-dark-100 hover:bg-dark-100'}
+      className={
+        'flex gap-3 px-3 py-3 bg-dark-500 active:bg-dark-100 hover:bg-dark-100 hover:cursor-pointer'
+      }
       onClick={onItemClickHandler}
     >
       <div className={'flex w-12'}>

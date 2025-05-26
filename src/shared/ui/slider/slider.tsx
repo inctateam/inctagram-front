@@ -1,13 +1,14 @@
 import * as SliderPrimitive from '@radix-ui/react-slider'
 
 type Props = {
+  className?: string
   setZoom: (zoom: number) => void
   zoom: number
 }
 
-export const Slider = ({ setZoom, zoom }: Props) => (
+export const Slider = ({ className, setZoom, zoom }: Props) => (
   <SliderPrimitive.Root
-    className={'cursor-pointer select-none relative flex items-center w-[100px] h-[20px]'}
+    className={`cursor-pointer select-none relative flex items-center w-auto h-[20px], ${className}`}
     max={150}
     min={50}
     onValueChange={values => setZoom(values[0] / 50)}

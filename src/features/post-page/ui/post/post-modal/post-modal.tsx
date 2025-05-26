@@ -166,7 +166,6 @@ const PostModal = (props: PostModalProps) => {
   if (isLoading) {
     return <ProgressBar />
   }
-  console.log(id)
 
   // Возвращаем портал с модальным окном
   return createPortal(

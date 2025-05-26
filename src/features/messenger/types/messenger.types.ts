@@ -27,8 +27,10 @@ export interface LatestMessage {
 }
 
 export interface MessageSendRequest {
-  message: string
-  receiverId: number
+  audioBuffer?: Uint8Array // буфер для голосовых сообщений, необязателен
+  isVoice?: boolean // флаг для голосового сообщения
+  message: FormData | string // либо FormData, либо текстовое сообщение
+  receiverId: number // ID получателя
 }
 export interface MessageUpdateRequest {
   id: number
