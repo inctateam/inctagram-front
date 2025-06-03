@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { useGetMessagesByUserQuery } from '@/features/messenger/api/messenger-api'
-import UserMessageItem from '@/features/messenger/ui/messegePanel/userMessageItem/userMessageItem'
+import UserMessageItem from '@/features/messenger/ui/messegePanel/user-message-item'
 import { ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 
 const MESSAGES_LIMIT = 12
 
-const MessagePanel = ({
+export const MessagePanel = ({
   cursor,
   dialoguePartnerId,
   meId,
@@ -150,5 +150,3 @@ const MessagePanel = ({
     </ScrollArea>
   )
 }
-
-export default MessagePanel
