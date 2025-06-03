@@ -1,7 +1,8 @@
-import { forwardRef } from 'react'
+import React, { forwardRef, useState } from 'react'
 
 import { CheckmarkOutline, DoneAllOutline } from '@/assets/icons'
 import { Message } from '@/features/messenger/types'
+import { ContextMenuMessage } from '@/features/messenger/ui/messegePanel/context-menu-message'
 import { formatMessageDate } from '@/features/messenger/utils/formatMessageDate'
 import { Avatar, Typography } from '@/shared/ui'
 import { cn } from '@/shared/utils'
@@ -14,8 +15,29 @@ const UserMessageItem = forwardRef<
     userAvatar: string
   }
 >(({ dialogItem, meId, userAvatar }, ref) => {
-  const { createdAt, messageText, ownerId, status } = dialogItem
+  const { createdAt, id, messageText, ownerId, status } = dialogItem
   const isMyMessage = meId === ownerId
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (!isMyMessage) {
+      return
+    }
+    e.preventDefault()
+    setContextMenu({ x: e.clientX, y: e.clientY })
+  }
+
+  const handleCloseMenu = () => setContextMenu(null)
+
+  const handleEdit = () => {
+    alert(`Редактировать сообщение:, ${id}`)
+    handleCloseMenu()
+  }
+
+  const handleDelete = () => {
+    alert(`Удалить сообщение:, ${id}`)
+    handleCloseMenu()
+  }
 
   return (
     <div
@@ -28,6 +50,7 @@ const UserMessageItem = forwardRef<
           'flex flex-col px-3 py-2 gap-1 max-w-[275px] rounded-md',
           isMyMessage ? 'bg-accent-700' : 'bg-dark-300'
         )}
+        onContextMenu={handleContextMenu}
       >
         <Typography className={'text-pretty'} variant={'regular14'}>
           {messageText}
@@ -47,6 +70,15 @@ const UserMessageItem = forwardRef<
             ))}
         </div>
       </div>
+      {contextMenu && (
+        <ContextMenuMessage
+          onClose={handleCloseMenu}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+          x={contextMenu.x}
+          y={contextMenu.y}
+        />
+      )}
     </div>
   )
 })
