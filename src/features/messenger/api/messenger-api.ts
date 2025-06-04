@@ -75,6 +75,12 @@ const messengerApi = instagramApi.injectEndpoints({
           })
         }
 
+        const deleteMessageHandler = ({ id }: { id: number }) => {
+          updateCachedData(draft => {
+            draft.items = draft.items.filter(message => message.id !== id)
+          })
+        }
+
         const handleMessageSent = (
           data: Message,
           callback: (payload: { message: Message; receiverId: number }) => void
@@ -104,11 +110,13 @@ const messengerApi = instagramApi.injectEndpoints({
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
         socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
         socket.on(WS_EVENTS_PATH.UPDATE_MESSAGE, updateMessageHandler)
+        socket.on(WS_EVENTS_PATH.MESSAGE_DELETED, deleteMessageHandler)
 
         await cacheEntryRemoved
         socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
         socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
         socket.off(WS_EVENTS_PATH.UPDATE_MESSAGE, updateMessageHandler)
+        socket.off(WS_EVENTS_PATH.MESSAGE_DELETED, deleteMessageHandler)
       },
       query: ({ dialoguePartnerId, params }) => ({
         params,

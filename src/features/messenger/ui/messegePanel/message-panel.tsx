@@ -7,21 +7,25 @@ import { ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 
 const MESSAGES_LIMIT = 12
 
-export const MessagePanel = ({
-  cursor,
-  dialoguePartnerId,
-  meId,
-  onEditMessage,
-  setCursor,
-  userAvatar,
-}: {
+type Props = {
   cursor: number | undefined
+  deleteMessage: (id: number) => void
   dialoguePartnerId?: number
   meId: number
   onEditMessage: (editMessage: Message) => void
   setCursor: (val: number) => void
   userAvatar: string
-}) => {
+}
+
+export const MessagePanel = ({
+  cursor,
+  deleteMessage,
+  dialoguePartnerId,
+  meId,
+  onEditMessage,
+  setCursor,
+  userAvatar,
+}: Props) => {
   const { data: dialogData, isFetching } = useGetMessagesByUserQuery(
     {
       dialoguePartnerId: dialoguePartnerId!,
@@ -134,6 +138,7 @@ export const MessagePanel = ({
           ) : (
             dialogData?.items.map((d, i) => (
               <UserMessageItem
+                deleteMessage={deleteMessage}
                 dialogItem={d}
                 key={d.id}
                 meId={meId}
