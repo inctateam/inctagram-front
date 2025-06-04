@@ -30,6 +30,7 @@ export const MessengerInput = (props: MessengerInputTypeProps) => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setMessage('')
+        inputRef.current?.blur()
         onCancelEdit?.()
       }
     }
