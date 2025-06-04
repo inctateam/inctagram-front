@@ -37,7 +37,11 @@ const MessengerInput = (props: MessengerInputTypeProps) => {
   }
   const onEnterMessageHandler: KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter' && message.trim().length > 0) {
-      sendMessage?.(message.trim())
+      if (isEditMode && editMessage) {
+        updateMessage?.({ ...editMessage, messageText: message })
+      } else {
+        sendMessage?.(message.trim())
+      }
       setMessage('')
     }
   }

@@ -76,12 +76,8 @@ const Messenger = () => {
   }
 
   return (
-    <div
-      className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}
-      // onBlur={() => setCurrentUser(null)}
-    >
+    <div className={'flex border border-dark-300 rounded-sm h-[630px] w-[972px]'}>
       {latestMessagesIsFetching && <ProgressBar />}
-      {/*{(latestMessagesIsFetching || dialogDataIsLoading) && <ProgressBar />}*/}
       <div className={'flex flex-col h-full w-[24rem] border-r border-dark-300 overflow-y-hidden'}>
         <div
           className={
