@@ -12,13 +12,18 @@ const UserMessageItem = forwardRef<
   {
     dialogItem: Message
     meId: number
+    onEditMessage: (editMessage: Message) => void
     userAvatar: string
   }
->(({ dialogItem, meId, userAvatar }, ref) => {
-  const { createdAt, id, messageText, ownerId, status } = dialogItem
+>(({ dialogItem, meId, onEditMessage, userAvatar }, ref) => {
+  const { createdAt, id, messageText, ownerId, status, updatedAt } = dialogItem
   const isMyMessage = meId === ownerId
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
-
+  const isUpdatedMessage = createdAt !== updatedAt
+  const formattedDate = `${isUpdatedMessage ? 'Updated ' : ''}${formatMessageDate(
+    isUpdatedMessage ? updatedAt : createdAt,
+    true
+  )}`
   const handleContextMenu = (e: React.MouseEvent) => {
     if (!isMyMessage) {
       return
@@ -30,7 +35,7 @@ const UserMessageItem = forwardRef<
   const handleCloseMenu = () => setContextMenu(null)
 
   const handleEdit = () => {
-    alert(`Редактировать сообщение:, ${id}`)
+    onEditMessage(dialogItem)
     handleCloseMenu()
   }
 
@@ -60,7 +65,7 @@ const UserMessageItem = forwardRef<
             className={cn('text-xs', isMyMessage ? 'text-accent-100' : 'text-light-900')}
             variant={'small'}
           >
-            {formatMessageDate(createdAt, true)}
+            {formattedDate}
           </Typography>
           {isMyMessage &&
             (status === 'READ' ? (

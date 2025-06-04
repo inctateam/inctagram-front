@@ -42,7 +42,7 @@ export const ContextMenuMessage = ({
       <Button
         className={'w-full justify-start'}
         onClick={onEdit}
-        startIcon={<Trash />}
+        startIcon={<Edit />}
         variant={'secondary'}
       >
         Редактировать
@@ -50,7 +50,7 @@ export const ContextMenuMessage = ({
       <Button
         className={'w-full justify-start'}
         onClick={onDelete}
-        startIcon={<Edit />}
+        startIcon={<Trash />}
         variant={'secondary'}
       >
         Удалить
