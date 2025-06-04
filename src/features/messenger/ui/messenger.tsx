@@ -5,8 +5,9 @@ import { useMeQuery } from '@/features/auth/api'
 import {
   useGetLatestMessagesQuery,
   useSendMessageMutation,
+  useUpdateMessageMutation,
 } from '@/features/messenger/api/messenger-api'
-import { LatestMessage } from '@/features/messenger/types'
+import { LatestMessage, Message } from '@/features/messenger/types'
 import UserItem from '@/features/messenger/ui/UserItem/userItem'
 import { MessagePanel } from '@/features/messenger/ui/messegePanel'
 import CurrentUser from '@/features/messenger/ui/messegePanel/current-user'
@@ -19,7 +20,10 @@ import { useRouter } from 'next/navigation'
 const Messenger = () => {
   const router = useRouter()
   const [sendMessageTrigger] = useSendMessageMutation()
+  const [updateMessageTrigger] = useUpdateMessageMutation()
   const [cursor, setCursor] = useState<number | undefined>(undefined)
+  const [isEditModeForMessage, setIsEditModeForMessage] = useState<boolean>(false)
+  const [editMessage, setEditMessage] = useState<Message | null>(null)
   const { data: meData, isLoading: meIsLoading } = useMeQuery()
   const meId = meData?.userId
   const [currentUser, setCurrentUser] = useState<LatestMessage | null>(null)
@@ -41,7 +45,22 @@ const Messenger = () => {
     setDialoguePartnerId(dialoguePartnerId)
     setCursor(undefined) // сброс курсора при выборе нового пользователя
   }
+  const onEditMessage = (editMessage: Message) => {
+    if (!editMessage) {
+      return
+    }
+    setIsEditModeForMessage(true)
+    setEditMessage(editMessage)
+  }
 
+  const updateMessageHandler = async (updatedMessage: Message) => {
+    const { id, messageText } = updatedMessage
+
+    console.log(updatedMessage)
+    await updateMessageTrigger({ id, message: messageText })
+    setIsEditModeForMessage(false)
+    setEditMessage(null)
+  }
   const sendMessage = async (message: string) => {
     if (!dialoguePartnerId) {
       return
@@ -88,6 +107,7 @@ const Messenger = () => {
             cursor={cursor}
             dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
+            onEditMessage={onEditMessage}
             setCursor={setCursor}
             userAvatar={currentUser?.avatars[1]?.url || ''}
           />
@@ -96,7 +116,14 @@ const Messenger = () => {
               'flex justify-between items-center h-12 px-6 py-3 gap-3 border-t border-dark-300'
             }
           >
-            {dialoguePartnerId && <MessengerInput sendMessage={sendMessage} />}
+            {dialoguePartnerId && (
+              <MessengerInput
+                editMessage={editMessage}
+                isEditMode={isEditModeForMessage}
+                sendMessage={sendMessage}
+                updateMessage={updateMessageHandler}
+              />
+            )}
           </div>
         </div>
       </div>

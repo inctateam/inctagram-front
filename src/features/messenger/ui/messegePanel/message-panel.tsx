@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { useGetMessagesByUserQuery } from '@/features/messenger/api/messenger-api'
+import { Message } from '@/features/messenger/types'
 import UserMessageItem from '@/features/messenger/ui/messegePanel/user-message-item'
 import { ProgressBar, ScrollArea, Typography } from '@/shared/ui'
 
@@ -10,12 +11,14 @@ export const MessagePanel = ({
   cursor,
   dialoguePartnerId,
   meId,
+  onEditMessage,
   setCursor,
   userAvatar,
 }: {
   cursor: number | undefined
   dialoguePartnerId?: number
   meId: number
+  onEditMessage: (editMessage: Message) => void
   setCursor: (val: number) => void
   userAvatar: string
 }) => {
@@ -119,6 +122,14 @@ export const MessagePanel = ({
     [dialogData?.items, isFetching, setCursor]
   )
 
+  // const onEditMessage = (editMessage: Message) => {
+  //   if (!editMessage) {
+  //     return
+  //   }
+  //   setIsEditModeForMessage(true)
+  //   setEditMessage(editMessage)
+  // }
+
   return (
     <ScrollArea className={'h-[33rem] mt-6 overflow-y-hidden'} viewportRef={viewportRef}>
       {isFetching && <ProgressBar />}
@@ -134,6 +145,7 @@ export const MessagePanel = ({
                 dialogItem={d}
                 key={d.id}
                 meId={meId}
+                onEditMessage={onEditMessage}
                 ref={i === 0 ? setLastItemRef : null}
                 userAvatar={userAvatar}
               />

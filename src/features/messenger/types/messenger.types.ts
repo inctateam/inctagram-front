@@ -53,3 +53,8 @@ export interface GetMessagesQueryParams {
   pageSize?: number
   searchName?: string
 }
+
+export interface MessageUpdateRequest {
+  id: number
+  message: string
+}

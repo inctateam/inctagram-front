@@ -12,9 +12,10 @@ const UserMessageItem = forwardRef<
   {
     dialogItem: Message
     meId: number
+    onEditMessage: (editMessage: Message) => void
     userAvatar: string
   }
->(({ dialogItem, meId, userAvatar }, ref) => {
+>(({ dialogItem, meId, onEditMessage, userAvatar }, ref) => {
   const { createdAt, id, messageText, ownerId, status } = dialogItem
   const isMyMessage = meId === ownerId
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
@@ -30,7 +31,9 @@ const UserMessageItem = forwardRef<
   const handleCloseMenu = () => setContextMenu(null)
 
   const handleEdit = () => {
-    alert(`Редактировать сообщение:, ${id}`)
+    // alert(`Редактировать сообщение:, ${id}`)
+    // console.log('dialogItem', dialogItem)
+    onEditMessage(dialogItem)
     handleCloseMenu()
   }
 
