@@ -122,14 +122,6 @@ export const MessagePanel = ({
     [dialogData?.items, isFetching, setCursor]
   )
 
-  // const onEditMessage = (editMessage: Message) => {
-  //   if (!editMessage) {
-  //     return
-  //   }
-  //   setIsEditModeForMessage(true)
-  //   setEditMessage(editMessage)
-  // }
-
   return (
     <ScrollArea className={'h-[33rem] mt-6 overflow-y-hidden'} viewportRef={viewportRef}>
       {isFetching && <ProgressBar />}
