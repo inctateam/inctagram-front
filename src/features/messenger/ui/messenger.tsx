@@ -56,7 +56,6 @@ const Messenger = () => {
   const updateMessageHandler = async (updatedMessage: Message) => {
     const { id, messageText } = updatedMessage
 
-    console.log(updatedMessage)
     await updateMessageTrigger({ id, message: messageText })
     setIsEditModeForMessage(false)
     setEditMessage(null)
