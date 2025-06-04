@@ -3,19 +3,15 @@ import { createPortal } from 'react-dom'
 
 import { Edit, Trash } from '@/assets/icons'
 import { Button } from '@/shared/ui'
-export const ContextMenuMessage = ({
-  onClose,
-  onDelete,
-  onEdit,
-  x,
-  y,
-}: {
+
+type Props = {
   onClose: () => void
   onDelete: () => void
   onEdit: () => void
   x: number
   y: number
-}) => {
+}
+export const ContextMenuMessage = ({ onClose, onDelete, onEdit, x, y }: Props) => {
   const menuRef = useRef(null)
 
   useEffect(() => {

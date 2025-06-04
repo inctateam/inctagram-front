@@ -1,4 +1,4 @@
-import Messenger from '@/features/messenger/ui/messenger'
+import { Messenger } from '@/features/messenger/ui/messenger'
 import { Typography } from '@/shared/ui'
 
 export default function MessengerPage() {

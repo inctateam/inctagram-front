@@ -1,8 +1,10 @@
 'use client'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { useMeQuery } from '@/features/auth/api'
 import {
+  useDeleteMessageByIdMutation,
   useGetLatestMessagesQuery,
   useSendMessageMutation,
   useUpdateMessageMutation,
@@ -11,16 +13,17 @@ import { LatestMessage, Message } from '@/features/messenger/types'
 import UserItem from '@/features/messenger/ui/UserItem/userItem'
 import { MessagePanel } from '@/features/messenger/ui/messegePanel'
 import CurrentUser from '@/features/messenger/ui/messegePanel/current-user'
-import MessengerInput from '@/features/messenger/ui/messegePanel/messenger-input'
+import { MessengerInput } from '@/features/messenger/ui/messegePanel/messenger-input'
 import SearchUserInput from '@/features/messenger/ui/searchUserPanel/searchUserInput'
 import { PATH } from '@/shared/constants'
 import { ProgressBar, ScrollArea, Spinner } from '@/shared/ui'
 import { useRouter } from 'next/navigation'
 
-const Messenger = () => {
+export const Messenger = () => {
   const router = useRouter()
   const [sendMessageTrigger] = useSendMessageMutation()
   const [updateMessageTrigger] = useUpdateMessageMutation()
+  const [deleteMessageTrigger] = useDeleteMessageByIdMutation()
   const [cursor, setCursor] = useState<number | undefined>(undefined)
   const [isEditModeForMessage, setIsEditModeForMessage] = useState<boolean>(false)
   const [editMessage, setEditMessage] = useState<Message | null>(null)
@@ -43,7 +46,11 @@ const Messenger = () => {
 
     setCurrentUser(selectedUser)
     setDialoguePartnerId(dialoguePartnerId)
-    setCursor(undefined) // сброс курсора при выборе нового пользователя
+    // сброс курсора при выборе нового пользователя
+    setCursor(undefined)
+    // Очистка состояния при смене собеседника
+    setEditMessage(null)
+    setIsEditModeForMessage(false)
   }
   const onEditMessage = (editMessage: Message) => {
     if (!editMessage) {
@@ -54,17 +61,31 @@ const Messenger = () => {
   }
 
   const updateMessageHandler = async (updatedMessage: Message) => {
-    const { id, messageText } = updatedMessage
+    try {
+      await updateMessageTrigger({
+        id: updatedMessage.id,
+        message: updatedMessage.messageText,
+      }).unwrap()
+      setIsEditModeForMessage(false)
+      setEditMessage(null)
+    } catch {
+      toast.error('Ошибка обновления')
+    }
+  }
 
-    await updateMessageTrigger({ id, message: messageText })
-    setIsEditModeForMessage(false)
-    setEditMessage(null)
+  const deleteMessageHandler = async (id: number) => {
+    await deleteMessageTrigger({ id })
   }
   const sendMessage = async (message: string) => {
-    if (!dialoguePartnerId) {
+    if (!dialoguePartnerId || !message.trim()) {
       return
     }
     await sendMessageTrigger({ message, receiverId: dialoguePartnerId })
+  }
+
+  const cancelEditHandler = () => {
+    setIsEditModeForMessage(false)
+    setEditMessage(null)
   }
 
   if (latestMessagesIsLoading || meIsLoading) {
@@ -100,6 +121,7 @@ const Messenger = () => {
         <div className={'flex flex-col overflow-y-hidden'}>
           <MessagePanel
             cursor={cursor}
+            deleteMessage={deleteMessageHandler}
             dialoguePartnerId={dialoguePartnerId}
             meId={meId!}
             onEditMessage={onEditMessage}
@@ -115,6 +137,7 @@ const Messenger = () => {
               <MessengerInput
                 editMessage={editMessage}
                 isEditMode={isEditModeForMessage}
+                onCancelEdit={cancelEditHandler}
                 sendMessage={sendMessage}
                 updateMessage={updateMessageHandler}
               />
@@ -125,5 +148,3 @@ const Messenger = () => {
     </div>
   )
 }
-
-export default Messenger

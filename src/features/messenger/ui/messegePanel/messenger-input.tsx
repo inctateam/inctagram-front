@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEventHandler, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 
 import { ImageOutline, MicOutline, PlayCircle, PlusCircle } from '@/assets/icons'
 import { Message, MessageType } from '@/features/messenger/types'
@@ -7,42 +7,61 @@ import { Button, IconButton, TextField } from '@/shared/ui'
 type MessengerInputTypeProps = {
   editMessage: Message | null
   isEditMode: boolean
+  onCancelEdit?: () => void // добавлен для обработки Escape
   sendMessage?: (text: string) => void
   updateMessage: (updatedMessage: Message) => void
 }
-const MessengerInput = (props: MessengerInputTypeProps) => {
-  const { editMessage, isEditMode, sendMessage, updateMessage } = props
+export const MessengerInput = (props: MessengerInputTypeProps) => {
+  const { editMessage, isEditMode, onCancelEdit, sendMessage, updateMessage } = props
   const [messageType, setMessageType] = useState<MessageType>('TEXT')
   const [message, setMessage] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Эффект для установки текста и фокуса при переходе в режим редактирования
   useEffect(() => {
-    inputRef.current?.focus()
     if (isEditMode && editMessage) {
-      setMessage(editMessage?.messageText)
+      setMessage(editMessage.messageText)
+      inputRef.current?.focus()
     }
-  }, [editMessage, editMessage?.messageText, isEditMode])
+  }, [isEditMode, editMessage])
+
+  // Эффект для обработки Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMessage('')
+        inputRef.current?.blur()
+        onCancelEdit?.()
+      }
+    }
+
+    if (isEditMode) {
+      window.addEventListener('keydown', handleKeyDown)
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isEditMode, onCancelEdit])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value)
   }
 
   const onSendMessageHandler = () => {
-    if (isEditMode && editMessage) {
+    if (message.trim().length === 0) {
+      return
+    } else if (isEditMode && editMessage) {
       updateMessage?.({ ...editMessage, messageText: message })
     } else {
-      sendMessage?.(message)
+      sendMessage?.(message.trim())
     }
     setMessage('')
+    onCancelEdit?.()
   }
-  const onEnterMessageHandler: KeyboardEventHandler<HTMLInputElement> = e => {
+  const onEnterMessageHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && message.trim().length > 0) {
-      if (isEditMode && editMessage) {
-        updateMessage?.({ ...editMessage, messageText: message })
-      } else {
-        sendMessage?.(message.trim())
-      }
-      setMessage('')
+      onSendMessageHandler()
     }
   }
 
@@ -95,5 +114,3 @@ const MessengerInput = (props: MessengerInputTypeProps) => {
     </>
   )
 }
-
-export default MessengerInput
