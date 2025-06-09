@@ -4,6 +4,7 @@ import {
   GetMessagesQueryParams,
   Message,
   MessageSendRequest,
+  MessageUpdateRequest,
 } from '@/features/messenger/types'
 import { instagramApi } from '@/services'
 import socket from '@/services/socket'
@@ -27,10 +28,16 @@ const messengerApi = instagramApi.injectEndpoints({
       GetMessagesByUser,
       { dialoguePartnerId: number; meId: number; params: GetMessagesQueryParams }
     >({
-      merge: (currentCache, newItems) => ({
-        ...currentCache,
-        items: [...currentCache.items, ...newItems.items],
-      }),
+      forceRefetch: params => Boolean(params.currentArg?.params?.cursor),
+      merge: (currentCache, newItems) => {
+        const existingIds = new Set(currentCache.items.map(item => item.id))
+        const filteredNewItems = newItems.items.filter(item => !existingIds.has(item.id))
+
+        return {
+          ...currentCache,
+          items: [...filteredNewItems, ...currentCache.items],
+        }
+      },
       async onCacheEntryAdded(
         { dialoguePartnerId, meId },
         { cacheDataLoaded, cacheEntryRemoved, updateCachedData }
@@ -53,6 +60,24 @@ const messengerApi = instagramApi.injectEndpoints({
             } else {
               draft.items.push(data)
             }
+          })
+        }
+
+        const updateMessageHandler = (data: Message) => {
+          updateCachedData(draft => {
+            const index = draft.items.findIndex(m => m.id === data.id)
+
+            if (index >= 0) {
+              return
+            } else {
+              draft.items[index] = data
+            }
+          })
+        }
+
+        const deleteMessageHandler = ({ id }: { id: number }) => {
+          updateCachedData(draft => {
+            draft.items = draft.items.filter(message => message.id !== id)
           })
         }
 
@@ -84,15 +109,21 @@ const messengerApi = instagramApi.injectEndpoints({
 
         socket.on(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
         socket.on(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
+        socket.on(WS_EVENTS_PATH.UPDATE_MESSAGE, updateMessageHandler)
+        socket.on(WS_EVENTS_PATH.MESSAGE_DELETED, deleteMessageHandler)
 
         await cacheEntryRemoved
         socket.off(WS_EVENTS_PATH.RECEIVE_MESSAGE, handleReceiveMessage)
         socket.off(WS_EVENTS_PATH.MESSAGE_SENT, handleMessageSent)
+        socket.off(WS_EVENTS_PATH.UPDATE_MESSAGE, updateMessageHandler)
+        socket.off(WS_EVENTS_PATH.MESSAGE_DELETED, deleteMessageHandler)
       },
       query: ({ dialoguePartnerId, params }) => ({
         params,
         url: `v1/messenger/${dialoguePartnerId}`,
       }),
+      serializeQueryArgs: ({ endpointName, queryArgs }) =>
+        `${endpointName}-${queryArgs.dialoguePartnerId}`,
       transformResponse: (response: GetMessagesByUser) => ({
         ...response,
         items: [...response.items].reverse(),
@@ -104,6 +135,16 @@ const messengerApi = instagramApi.injectEndpoints({
           socket.emit(WS_EVENTS_PATH.RECEIVE_MESSAGE, body, () => {
             resolve({ data: undefined })
           })
+        })
+      },
+    }),
+    updateMessage: builder.mutation<void, MessageUpdateRequest>({
+      queryFn: async body => {
+        return new Promise(resolve => {
+          socket.emit(WS_EVENTS_PATH.UPDATE_MESSAGE, body, () => {
+            resolve({ data: undefined })
+          })
+          // socket.emit(WS_EVENTS_PATH.UPDATE_MESSAGE, body)
         })
       },
     }),
@@ -122,5 +163,6 @@ export const {
   useGetLatestMessagesQuery,
   useGetMessagesByUserQuery,
   useSendMessageMutation,
+  useUpdateMessageMutation,
   useUpdateMessageStatusMutation,
 } = messengerApi
